@@ -93,7 +93,8 @@ def main(argv=None):
     if args.ranking:
         print(report.combined_ranking(sensitivity.combined_ranking(assumptions, overrides=overrides))); chosen = True
     if args.thermal:
-        print(report.thermal_table(cavity.study(p))); chosen = True
+        print(report.thermal_table(cavity.study(p)) + "\n"
+              + report.farm_sweep_table(cavity.farm_sweep(assumptions, overrides), assumptions)); chosen = True
     if args.trace:
         print(report.trace_table(results["materials"]["trace_budget"], d)); chosen = True
     if args.monte_carlo:
@@ -114,22 +115,26 @@ def main(argv=None):
 
 
 def design_cavity(p, d, results):
-    return cavity.check(p, d, results["geometry"], results["heat"]["stack"], side_gaps=False)
+    g, h = results["geometry"], results["heat"]
+    return (cavity.check_main(p, d, g, h, side_gaps=False), cavity.check_farm(p, d, g, h),
+            cavity.check_assembled(p, d, g, h))
 
 
 def write_reports(folder, assumptions, overrides, p, d, results):
     folder.mkdir(parents=True, exist_ok=True)
     base, rows = sensitivity.tornado(assumptions, d, overrides)
     n_mc = 2000
+    farm_sweep = report.farm_sweep_table(cavity.farm_sweep(assumptions, overrides), assumptions)
     files = {
         "key_tables.md": report.key_tables(p),
         "design.md": report.summary(p, d, results, design_cavity(p, d, results)),
-        "thermal.md": report.thermal_table(cavity.study(p)),
+        "thermal.md": report.thermal_table(cavity.study(p)) + "\n" + farm_sweep,
         "trace.md": report.trace_table(results["materials"]["trace_budget"], d),
         "validation.md": report.validation(validation.run(p)),
         "sensitivity.md": report.tornado(base, rows, assumptions, d) + "\n"
                           + report.combined_ranking(sensitivity.combined_ranking(assumptions, overrides=overrides)) + "\n"
-                          + report.monte_carlo(sensitivity.monte_carlo(assumptions, d, n_mc, overrides=overrides), n_mc),
+                          + report.monte_carlo(sensitivity.monte_carlo(assumptions, d, n_mc, overrides=overrides), n_mc)
+                          + "\n" + farm_sweep,
         "assumptions.md": report.assumptions_table(assumptions),
         "stats.json": json.dumps(report.stats_json(p, d, results), indent=2) + "\n",
     }

@@ -16,7 +16,7 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 
 | Item | Choice |
 |---|---|
-| Form | Co-rotating stack of an even number of tori on one shared hub: a pair, or 6 tori grouped A A B B C C (passively stable up to ~22–25 tori) |
+| Form | Co-rotating stack on one shared hub, in two sections side by side along the axis: the **main section**, an even number of tori (a pair, or 6 grouped A A B B C C), and the **farm section**, one farm ring per torus on its own spokes (proposed). Passively stable up to ~22–25 tori |
 | Size | **900 m / 60 s** or **1.6 km / 80 s** tori, width ratio r/w = 16; **2.5 km / 100 s** as a candidate for mature clusters (section 8, to decide) |
 | Gravity | Structure rated for 1 g, run at whatever g proves healthy |
 | Location | Near Earth, ~1 AU from the Sun, mining near-Earth asteroids; each cluster built at (and sharing the orbit of) its S-type "mine island"; spreading by seeds, not by moving habitats |
@@ -27,12 +27,12 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Atmosphere | 70 kPa, 29% O₂ (sea-level O₂ partial pressure, ~39% less nitrogen) |
 | Interior light | Artificial overcast sky (sulfur plasma lamps); tori on staggered days (2 phases 12 h apart for a pair, 3 phases 8 h apart for 6); **seasonal sky** following the host asteroid's orbit, with no seasonal storage |
 | Climate | One per habitat (all its valleys alike, connected for migration), set by the solar array's size, the lighting, the orbit's seasons, the water in the air and the night-time cooling. First sites: temperate, North-Atlantic-like, mild wet winters (~6–8 °C) and cool summers (~16–19 °C); temperature set by the coolant loops, independent of light |
-| Heat | Coolant loops to radiators along the spokes, between the farm ring and the rim, in the drum between hub and rims; heat leaves through the stack's two open ends and the gaps |
+| Heat | Coolant loops to radiators: the valleys' heat on the tori's spokes, in the drum between hub and tori, leaving through its two open ends and the gaps; the farm's heat on the farm rings' own spokes, in the open farm section |
 | Power | Despun solar array on a mast at one hub end, always facing the Sun, sized for the valley's sky, the other loads and the farm tiers lit, so that even locked to the spinning stack it keeps the habitat alive and fed; separate free-flying solar array for industry |
 | Materials | S-type asteroid (Fe-Ni grains for steel, silicate tailings for the shield) + small C-type asteroid (water, N, C, soil, P, K); M-types and comets optional; all bulk materials from these bodies |
 | Interior | A natural narrow valley, anywhere from an arid canyon to a fern gully, its climate set per habitat by the solar array's size, the lighting, the orbit's seasons, the water in the air and the night-time cooling; ≥ 50% wilderness, cliff dwellings behind extra soil |
 | Transport | Elevators in the spokes between hub and rim; a one-way antispinward train loop in a tube on the hub-facing side of each torus, joining the elevators; everything between 0 and 1 g |
-| Food | Primarily plant-based: a farm ring in each torus's plane at ~0.4 r, three tiers under sulfur lamps and light pipes (potatoes, wheat, soybeans, lentils, berries, flax, greens), the number of tiers lit setting the population; the valley's permaculture and food forest add fruit, nuts, corn, squash and beans; algae, gas-fermented bacterial protein, mushroom + larvae cycle and aquaponics fish as supplements and margins; animal options kept as backups (proposed, to discuss: flooded taro/rice terraces, B12 fermentation) |
+| Food | Primarily plant-based: a farm ring per torus at ~0.4 r in the stack's farm section, three tiers under sulfur lamps and light pipes (potatoes, wheat, soybeans, lentils, berries, flax, greens), the number of tiers lit setting the population; the valley's permaculture and food forest add fruit, nuts, corn, squash and beans; algae, gas-fermented bacterial protein, mushroom + larvae cycle and aquaponics fish as supplements and margins; animal options kept as backups (proposed, to discuss: flooded taro/rice terraces, B12 fermentation) |
 
 | Key numbers, per torus | 900 m / 60 s | 1.6 km / 80 s | 2.5 km / 100 s (candidate) |
 |---|---|---|---|
@@ -61,28 +61,31 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Floor area | 64 ha | 192 ha |
 | Mass (excl. shared hub and factory) | ~26 Mt | ~77 Mt |
 | Material mined (H-like host) | ~37 Mt | ~110 Mt |
-| Stack length (10–40 m clear gaps between the envelopes) | ~160–220 m | ~480–660 m |
+| Main section length (10–40 m clear gaps between the envelopes) | ~160–220 m | ~480–660 m |
+| Whole stack with its farm section (50 m between sections, 10 m between farm rings) | ~330 m | ~900 m |
 | People fed, 1 / 2 / 3 tiers lit | ~2,000 / ~4,000 / ~6,100 | ~6,000 / ~12,000 / ~18,300 |
 | Constant valley lighting load (sulfur) | ~105 MW | ~315 MW |
 | Farm lighting, per tier lit | ~64 MW | ~190 MW |
 | Despun solar array at 1 AU: valley + per tier lit | ~0.53 + ~0.3 km² | ~1.6 + ~0.9 km² |
-| Heat to reject with three tiers lit | ~310 MW | ~930 MW |
-| Ideal limit of the two open ends (black bodies at ~285 K) | ~1.6 GW | ~1.6 GW |
-| Drum maximum, preliminary radiative exchange (ends only; section 13) | ~1.2 GW | ~1.2 GW |
+| Heat with three tiers lit: main section (valleys) + farm section | ~115 + ~190 MW | ~345 + ~580 MW |
+| Main section: ideal limit of the drum's two open ends (black bodies at ~285 K) | ~1.6 GW | ~1.6 GW |
+| Ray-traced heat margins, main / farm section, three tiers lit (section 13) | ~5.8× / ~5.3× traced together (~11× / ~8× each alone) | ~2.4× / ~2.5× traced together (~3.9× / ~3.6× each alone) |
 
 ```
   sunlight ↓   (always perpendicular to the axis)
 
      (A)  (A)  (B)  (B)  (C)  (C)
-      |    |    |    |    |    |
- ◀ [dock]══════════ hub ══════════[bearing]━━━━━━━━━━━━━━ ▶ spin axis → ecliptic north
-      |    |    |    |    |    |                 └ despun solar array on its mast
-     (A)  (A)  (B)  (B)  (C)  (C)                   (edge-on here: it faces the Sun)
+      |    |    |    |    |    |      [F] [F] [F] [F] [F] [F]
+ ◀ [dock]═════════════ hub ═════════════════════════════════[bearing]━━━━━━━ ▶ spin axis → ecliptic north
+      |    |    |    |    |    |      [F] [F] [F] [F] [F] [F]          └ despun solar array on its mast
+     (A)  (A)  (B)  (B)  (C)  (C)                                       (edge-on here: it faces the Sun)
+     └──────── main section ─────┘    └─────── farm section ───────┘
 
   (A)…(C)  tori, tube sections: rock jacket under a double skin (bumper + crawl space);
            rim tunnels A–A, B–B, C–C
-  |        spokes: farm rings (three lit tiers) at ~0.4 r, radiators between farm ring and rim
-  heat leaves through both open ends ◀ ▶ and the gaps
+  |        chord spokes, radiators for the valleys' heat on them
+  [F]      farm rings at ~0.4 r (three lit tiers each, one per torus) on their own spokes and radiators
+  heat leaves through both open ends ◀ ▶ of the tori's drum, the gaps, and the open farm section
   (section along the axis, not to scale; A noon, B dawn/dusk, C night, 8 h offsets)
 ```
 
@@ -833,6 +836,7 @@ Straight rim-to-rim chords pass just outside the hub, tangent to a circle slight
 - **Crossed lacing is built in**, carrying spin-up and docking torque.
 - **The hub floats in the net**, held centred by light stabilising lines, with compliant joints on the rigid elevator, pipe and power shafts.
 - **The window is the factory's space**: the hole left in the middle of the net is exactly where the factory and dock sit.
+- **Nothing pressurised in the plane (proposed: the farm section, section 13).** Every chord crosses the torus plane from rim to near the hub, so a farm ring in that plane at ~0.4 r would sit across all of them: the chords would have to pass through a pressurised ring, or be split at it, making the ring carry the rim's whole load. With the farm rings in their own section, the chords run clear.
 
 ### Elevators and rim trains (adopted)
 
@@ -1020,7 +1024,7 @@ Sunlight falls with the square of the distance:
 
 ### Farm rings: electric light in three tiers (adopted)
 
-Each torus grows its staple food in a farm ring in its own plane, lit by the same sulfur lamps and light pipes as the valley's sky and powered by the same despun solar array. This replaces the sun-fed rings lit by mirrors around the hub (section 17.29): there are no mirrors, no glass and no flicker, the gaps stay narrow (10–40 m), and the population grows with the array, whose size isn't tied to the stack's geometry.
+Each torus grows its staple food in a farm ring of its own, in the stack's farm section, lit by the same sulfur lamps and light pipes as the valley's sky and powered by the same despun solar array. This replaces the sun-fed rings lit by mirrors around the hub (section 17.29): there are no mirrors, no glass and no flicker, the gaps stay narrow (10–40 m), and the population grows with the array, whose size isn't tied to the stack's geometry.
 
 ```
         towards the hub ↑
@@ -1033,22 +1037,25 @@ Each torus grows its staple food in a farm ring in its own plane, lit by the sam
             │ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ │  │ 2.5 m
             └────────────────────────────────────┘ ─┘
             ←── ~0.9 × tube width along the axis (~50 m at 900 m) ──→
-        "down" ↓ outward: radiators on the spokes, then the main ring
+        "down" ↓ outward: radiators on the farm spokes
 ```
-(section through the ring in the torus plane; `≡` light pipes just above the canopy, `▒` crops; floors at ~0.39–0.40 g)
+(section through the ring in its own plane; `≡` light pipes just above the canopy, `▒` crops; floors at ~0.39–0.40 g)
 
 **Layout:**
-- **In each torus's own plane, on its own spokes,** at ~0.4 r: ~360 m at 900 m, ~640 m at 1.6 km, ~1,000 m at 2.5 km. The ring stays within the plane's thickness, shares the torus's spokes and elevators (a farm stop on each) and carries its own weight in hoop tension (its rim moves at only ~38 m/s at 900 m), so the spokes only keep it centred. A separate ring in the gap was rejected (section 17.26).
-- **Order outward from the axis:** hub → free stretch along the spokes → farm ring → radiators → main ring. No reflected light crosses the inner stretch any more, so it is free, a reserve for more radiators.
+- **A farm section of its own (proposed, 28 Oct 2026).** The farm rings, one per torus, sit side by side on the shared hub beyond the tori (at the despun array's end, next to the largest power load), ~50 m from the last torus and ~10 m apart, each on its own spokes, at ~0.4 r: ~360 m at 900 m, ~640 m at 1.6 km, ~1,000 m at 2.5 km. Earlier they sat in each torus's plane, where the tori's chord spokes would have had to pass through them (section 12). Each section is modelled on its own, and their interaction checked last; the arrangement can be revisited later.
+  - **Own spokes, cheap:** a farm ring carries its own weight in hoop tension (its rim moves at only ~38 m/s at 900 m), and spokes to hold it cost ~1% of its mass (~0.6 kt at 900 m, ~3 kt at 1.6 km).
+  - **Stack:** a six-stack of 900 m tori grows from ~480 m to ~900 m along the axis, but the farm rings are light (~50 kt next to a ~12.8 Mt torus), so passive stability doesn't change (~22 tori of 900 m with a 20% margin). The longer hub lowers its bending modes (stack dynamics, still open).
+  - **Access:** people, produce, oxygen and CO₂ travel between valleys and farm through the hub, not along shared spokes; most routine farm work is automated.
+- **Order outward from the axis in a farm ring's plane:** hub → farm spokes → farm ring → its radiators, out to ~1 r on the farm spokes (section 13, heat rejection). The tori's planes keep their whole spokes for the valleys' radiators.
 - **Three tiers** stacked radially, ~2.5 m floor to floor so that people can walk upright between the crops, ~8.5 m tall in all with floors and services. Width along the axis ~0.9 of the tube width (~50 m at 900 m, ~90 m at 1.6 km, ~140 m at 2.5 km). About 80% of each tier is planted; the rest is aisles, seedlings and processing. Dwarf varieties of wheat and soybean, and potatoes, fit under a 2.5 m tier; tall crops (corn) grow in the valley.
 - **All three tiers are built with the torus** (the ring is cheap next to the torus); how many are lit is set by the despun array and decides the population (below).
 
 **Light, air and shielding:**
 - **The same lamps as the sky:** non-rotating sulfur bulbs fed by the central microwave sources (section 13, sulfur lighting), with light pipes running just above each tier's canopy. With the pipes close to the crops and white walls around them, ~85% of the lamps' light reaches the leaves (an estimate), against ~75% through the valley's light box.
 - **Its own schedule:** each zone runs the day length its crop needs, and the zones are staggered so that the farm's load is constant around the clock, like the tori's days. Wheat, a long-day crop that grows best under long or continuous light, flowers here even in a pair, whose valleys never get more than 12 h days.
-- **Its own atmosphere (to decide):** plants need CO₂ and water, not 70 kPa, so a lower pressure lightens the shell; CO₂ enriched to ~1,000 ppm, as in NASA's growth chambers, whose yields the sizing uses. The farm makes most of the habitat's oxygen and takes up its CO₂, exchanged with the valleys' air through ducts in the spokes. Transpired water is condensed as clean water.
+- **Its own atmosphere (to decide):** plants need CO₂ and water, not 70 kPa, so a lower pressure lightens the shell; CO₂ enriched to ~1,000 ppm, as in NASA's growth chambers, whose yields the sizing uses. At the valleys' 70 kPa its air holds ~0.6 kt of N₂ per 900 m torus's ring (~7% more nitrogen, so ~7% more C-type), ~1.8 kt at 1.6 km (~4%); a lower pressure needs less. The farm makes most of the habitat's oxygen and takes up its CO₂, exchanged with the valleys' air through ducts along the hub. Transpired water is condensed as clean water.
 - **Light shielding:** crops tolerate deep-space cosmic-ray doses. People working there limit their time, as in any lightly shielded zone, and most routine work can be automated. Only the seed bank needs the full shield.
-- **Mass (rough):** a ~1 cm steel shell (~26 ha at 900 m) plus growing systems at ~100 kg per m² planted come to ~50 kt per 900 m torus, ~0.4% of its mass; ~150 kt at 1.6 km.
+- **Mass (rough):** a ~1 cm steel shell (~26 ha at 900 m) plus growing systems at ~100 kg per m² planted come to ~50 kt per 900 m torus, ~0.4% of its mass; ~150 kt at 1.6 km; plus its own spokes (~1%) and air.
 
 **Built for the highest density.** The farm ring is built as efficient as possible; it is the biosphere that is high or low density. A habitat that lights fewer tiers simply has fewer people, or exports food. Dark foods (bacteria, mushrooms, larvae, fish) and algae stay as margins on top (section 16).
 
@@ -1185,40 +1192,44 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 
 - **The shield jacket is a near-perfect insulator.** For water, conduction resistance ≈ 7 m / 0.6 W/m·K ≈ 12 m²K/W, so pushing 100 W/m² through it would need a temperature difference of over 1,000 K; compacted crushed rock conducts similarly poorly.
 - **Everything that enters the habitat leaves through pumped coolant loops** to the radiators: sky lighting, farm lighting, algae lighting, people, machines.
-- **Radiators along the spokes (adopted).** The stack encloses a wide, short drum of empty space between the hub and the rims. Its main openings are the two ends, facing along the axis, and the Sun is always perpendicular to the axis, so no direct sunlight reaches the spokes: inside each torus plane the radiators are shaded by the rim tube, which spans the plane's thickness. Without a solar cylinder the 10–40 m gaps also open the drum sideways, adding vents (~0.2 km² per gap at 900 m, against ~2.2 km² per end); sunlight crossing a gap stays in the gap plane, outside the torus planes. The radiators sit on the stretch between the farm ring and the rim, shaded on both sides by the farm ring and the main ring; the inner stretch, between hub and farm ring, is free as a reserve.
+- **Radiators along the spokes (adopted), one set per section (proposed).** Each section rejects its own heat: the main section the valleys' (sky, other loads), the farm section the farm tiers'. With three tiers lit the farm is ~60% of the heat (~96 of ~154 MW per 900 m torus), and none of it now passes through the tori's drum. Sunlight is always perpendicular to the axis, so panels facing along the axis are edge-on to it.
   - A passive loop needs radiators colder than the habitat, say ~285 K (~375 W/m²); warmer radiators would need heat pumps.
+- **Main section: the drum.** The tori enclose a wide, short drum of empty space between the hub and the rims. Its main openings are the two ends, facing along the axis, so no direct sunlight reaches the spokes: inside each torus plane the radiators are shaded by the rim tube, which spans the plane's thickness. The 10–40 m gaps also open the drum sideways; sunlight crossing a gap stays in the gap plane, outside the torus planes. The valleys' radiators sit on the tori's spokes from ~0.4 r out to the envelopes.
   - **Ideal limit:** if the drum were a black-body cavity at the radiators' temperature, heat would leave through the openings as if they were a radiator at that temperature. That is an upper bound, not a design figure: the panels are finite, not perfectly black, and see each other.
-  - **Each end face of the stack**, from the axis outward (900 m torus); the dock and the vent sit at different radii, so they don't compete:
+  - **Each end face of the drum**, from the axis outward (900 m torus); the dock and the vent sit at different radii, so they don't compete:
 
 | From the axis | What's there | Share of the end opening |
 |---|---|---|
-| 0–60 m | Hub tip: at one end the dock on the axis (ships approach along the axis, matching the spin); at the other the despun solar array's bearing and mast | ~0.5% |
-| Out to ~840 m | Open vent into the drum; the radiators (at ~380–840 m) look straight out through it | ~99% (~2.2 km²) |
-| 840–900 m | The end torus's tube | |
+| 0–60 m | Hub tip: at one end the dock on the axis (ships approach along the axis, matching the spin); at the other the hub continues to the farm section and the despun array | ~0.5% |
+| Out to ~836 m | Open vent into the drum; the radiators (at ~360–836 m) look straight out through it | ~99% (~2.2 km²) |
+| 836–900 m | The end torus's envelope | |
 
-  - The despun array, seen along the axis, is edge-on and blocks almost none of its end's vent. At 1.6 km the opening is ~7 km², in the same proportions. (The vent's outer edge is the tori's envelope, rock jacket and crawl space included: ~836 m at 900 m.)
+  - The vent's outer edge is the tori's envelope, rock jacket and crawl space included. At 1.6 km the opening is ~7 km², in the same proportions. At the farm end, the farm section stands ~50 m beyond the vent (below).
 
-| Stack | Heat to reject (sulfur lamps) | Ideal limit of the two end openings (~285 K) |
+| Stack | Valleys' heat (main section) | Ideal limit of the two end openings (~285 K) |
 |---|---|---|
-| 2 × 900 m | ~115 MW, + ~64 MW per farm tier lit (~310 MW with three) | ~1.6 GW (openings ~4.4 km²) |
-| 6 × 900 m | ~345 MW, + ~190 MW per tier lit (~930 MW with three) | ~1.6 GW |
-| Break-even, 900 m tori | ~29 tori with no farm lit; ~18 / ~13 / ~10–11 with 1 / 2 / 3 tiers lit | ~1.6 GW |
-| 1.6 km tori | ~180 MW per torus, + ~102 MW per tier lit | ~5.3 GW (openings ~14 km²): break-even ~29 tori with no farm lit, ~11 with three tiers |
+| 2 × 900 m | ~115 MW | ~1.6 GW (openings ~4.4 km²) |
+| 6 × 900 m | ~345 MW | ~1.6 GW |
+| 1.6 km tori | ~180 MW per torus | ~5.2 GW (openings ~14 km²) |
+| Break-even | ~29 tori, at any number of farm tiers lit | |
 
-  - The opening area is fixed while heat grows with the number of tori. These break-evens are upper bounds.
-  - **Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`).** Rays traced from the panels (emissivity ~0.9, as for AZ-93 white paint) through the drum, with the hub, farm rings and the tori's inner faces insulated (the rock jacket is a near-perfect insulator), so they re-radiate what they receive. Panels also catch each other's radiation, so the drum rejects at most **~75–80% of the ideal limit** (~1.2 GW at 900 m, ~3.9 GW at 1.6 km), and only with panels covering most of the radiator annuli:
+- **Farm section: open.** No torus surrounds the farm rings, so their radiators, on the farm spokes from the rings out to ~1 r, see open space around them; only the neighbouring farm planes, the rings and the hub stand in the way.
+- **Preliminary radiative exchange, per section (`habitat_model/cavity.py`, `reports/thermal.md`).** Rays traced from the panels (emissivity ~0.9, as for AZ-93 white paint), with the hub, the farm rings and the tori's inner faces insulated (the rock jacket is a near-perfect insulator), so they re-radiate what they receive; each section on its own, with its ends open:
 
-| Stack, tiers lit | Heat | Margin, ideal | Margin, ray-traced (ends only / with the side gaps) | Panels needed (one face) |
-|---|---|---|---|---|
-| 6 × 900 m, 1 tier | ~540 MW | 3.1× | 2.3× / 2.5× | ~100 ha (ideal ~80 ha) |
-| 6 × 900 m, 2 tiers | ~730 MW | 2.2× | 1.7× / 1.8× | ~165 ha (ideal ~110 ha) |
-| 6 × 900 m, 3 tiers | ~920 MW | 1.8× | 1.3× / 1.4× | ~250 ha (ideal ~140 ha) |
-| 6 × 1.6 km, 3 tiers | ~2.9 GW | 1.8× | 1.3× / 1.4× | ~740 ha (ideal ~430 ha) |
+| Stack, tiers lit | Main section: heat / margin, ends only / panels | Farm section: heat / margin / panels |
+|---|---|---|
+| 6 × 900 m, 1 tier | ~345 MW / 3.9× / ~59 ha | ~190 MW / 11× / ~30 ha |
+| 6 × 900 m, 2 tiers | ~345 MW / 3.9× / ~59 ha | ~385 MW / 5.3× / ~63 ha |
+| 6 × 900 m, 3 tiers | ~345 MW / 3.9× / ~59 ha | ~580 MW / 3.6× / ~100 ha |
+| 6 × 1.6 km, 3 tiers | ~1.1 GW / 3.9× / ~184 ha | ~1.8 GW / 3.4× / ~318 ha |
 
-  - **So heat limits a stack of 900 m or 1.6 km tori to ~8 with three tiers lit, ~11 with two and ~15 with one** (ends only), against ~10–11, ~13 and ~18 from the ideal limit: still above six, with a thinner margin. The side gaps add only ~5–10% (the 10 m gaps are narrow next to the ~70 m envelopes). Not yet modelled: sunlight through the gaps, the spokes and cables, the envelopes' rounded faces, and a real panel layout (plan §6).
+  (Panels: one face of two-sided panels; ideally ~51 ha for the main section and ~86 ha for the farm section of a 900 m six-stack with three tiers lit.) The drum rejects at most ~84% of its ideal limit (~1.4 GW at 900 m, ~4.4 GW at 1.6 km).
+  - **Together (the final check): the whole stack traced as one scene.** The farm radiators, out to ~1 r, span most of the drum's farm-end opening (the drum reaches ~840 m at 900 m), so they shade it: with them at full coverage the drum's panels lose ~40% of what escaped with the farm section left out. The tori's outer side in turn faces the farm section. Both sections run at the same temperature, so what one absorbs from the other it sends back, and each section's net output is its own emission times the share that escapes the whole stack. The two panel coverages are swept together (more farm panels shade the drum, more drum panels the farm section's near end): a 900 m six-stack with three tiers lit keeps **~2.4× (main) and ~2.5× (farm)** at once, ~2.6× / ~2.9× with two tiers, against ~1.3× when the farm rings sat in the tori's planes and all the heat went through the drum. (A first estimate looked only at the farm rings, not their radiators, and gave ~3.3× / ~2.6×; review of the pull request.)
+  - **So heat limits the stack again, just below stability:** traced together, the stack cools ~16–18 tori of 900 m with their farm rings (~16 with three tiers lit, also at 1.6 km), against ~22 (~25) for passive stability; six tori keep a wide margin. Each section on its own would cool ~28 tori (drum) and 40 rings or more, which is why the assembled check is the one that counts.
+  - **The farm radiators' reach matters most:** it is a guess (0.6–1.4 r). At 0.6 r a 900 m six-stack with three tiers lit is at the edge (~1.0× in the farm section, panels at full coverage), ~1.4× with two tiers; at 1.4 r ~2.8×–3.5×. The sensitivity sweep can't see it (no ray tracing there), so `reports/thermal.md` and `reports/sensitivity.md` sweep it on its own. Not yet modelled: sunlight through the gaps, the spokes and cables, the envelopes' rounded faces and real panel layouts (plan §6).
   - **Natural circulation:** spin gravity points outward along the spokes, so warm coolant rises towards the hub and cooled coolant sinks back to the rim. A thermosiphon loop can run without pumps (the driving force weakens near the hub).
-  - **Light panels:** at ~285 K a 900 m torus needs ~16 ha of radiating surface for the valley and other loads, plus ~8.5 ha per farm tier lit: ~41 ha with three tiers, ~21 ha of two-sided panels in the ideal case; the ray tracing above puts it nearer ~40 ha of panels per torus in a six-stack (~2 kt at ~5 kg/m²). The stretch between farm ring and rim offers ~2.6 ha per spoke (~460 m × 56 m), so ~16 spokes carry it. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
-  - A shared coolant loop across co-rotating tori keeps the radiator load steady whichever tori are lit.
+  - **Light panels:** a 900 m torus needs ~10 ha of panels for its valley in a six-stack (~16 ha of radiating surface ideally), and its farm ring ~17 ha with three tiers lit, ~1.3 kt per torus in all at ~5 kg/m². A torus spoke between ~0.4 r and the envelope offers ~2.7 ha (~480 m × 56 m), so a few spokes carry the valley's share. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
+  - A shared coolant loop across co-rotating tori keeps the drum's load steady whichever tori are lit; the farm's load is constant by design (its zones are staggered).
 - **Day and night cooling (adopted direction).** Each torus has its own heat exchangers on the shared radiator loops, so its cooling follows its own day and night. Colder nights cost almost no energy: over a full day the valley gains and loses the same heat either way; a colder night only moves more of it out at night, and in the morning the lamps' waste heat (~70–80% of their power, already in the coolant above the ceiling) can warm the valley instead of going straight to the radiators.
   - **Heat to move:** only the air and the top ~10 cm of soil follow the daily cycle, ~0.15–0.25 MJ per m² per °C. A ~5 °C swing (oceanic coast) means ~0.8–1.3 MJ/m² a night, ~6–9 MW over 12 h for a 900 m torus; a ~15 °C swing (arid canyon) ~2.3–3.8 MJ/m², ~17–28 MW, about the light the valley absorbs by day and well within the radiators' capacity.
   - **A cold ceiling at night,** as the clear night sky cools the ground on Earth: with coolant in the ceiling at ~0 °C over ground at 15 °C, the ground radiates ~75 W/m², ~24 MW over a 900 m valley, with no fans or draughts.
@@ -1468,7 +1479,7 @@ Further reductions: the 915 MHz microwave sources (~20–25% less power), concen
   - **Starchy calories from water (proposed, to discuss):** taro in flooded terraces (Hawaiian loʻi), rice, lotus root, water chestnut. Flooded terraces on the lower canyon walls add shielding mass too.
   - **Small permaculture areas** supplement the diet: with the food forest, ~7% of the working diet (fruit and nut trees, corn, squash and beans).
   - **Food forest and edible wilderness (low-density biospheres, with few farm tiers lit):** a food forest next to the permaculture. Near the villages, trees that give good timber or fruit and nuts are favoured (chestnut and walnut, for example, give both), and the rest of the wilderness stays edible as a backup (oaks, pines, cherries and hazels give acorns, pine nuts, fruit and hazelnuts; acorns need leaching to remove their tannins).
-  - **Farm rings, the staple diet:** three tiers in each torus's plane at ~0.4 r under sulfur lamps (section 13): potatoes, wheat, soybeans, lentils, berries, flax and greens, ~93% of a 2,500 kcal working diet. Each tier lit feeds ~1,000 people per 900 m torus conservatively (~3,250 at 1.6 km, ~7,900 at 2.5 km), for ~31 kW of electricity per person; a habitat lights as many tiers as its array allows, and a low-density one exports food:
+  - **Farm rings, the staple diet:** three tiers in a farm ring per torus at ~0.4 r, in the stack's farm section, under sulfur lamps (section 13): potatoes, wheat, soybeans, lentils, berries, flax and greens, ~93% of a 2,500 kcal working diet. Each tier lit feeds ~1,000 people per 900 m torus conservatively (~3,250 at 1.6 km, ~7,900 at 2.5 km), for ~31 kW of electricity per person; a habitat lights as many tiers as its array allows, and a low-density one exports food:
     - at ~0.4 g (cheaper structure);
     - plants orient fine in low g;
     - crops tolerate deep-space cosmic-ray doses, so the rings can be lightly shielded;
@@ -1685,7 +1696,8 @@ Investigated for the outer system, where sunlight is weak; **rejected for now be
 ### 17.26 Farm ring as a separate ring in the gap
 
 - **Idea:** the farm ring sits in the gap between two tori, on its own spokes, with sunlight entering the gap beside it.
-- **Rejected:** it blocks part of the gap it collects light through, needs its own spokes, hub link and elevators, and its width is limited by the gap. In the torus's own plane (adopted), it shares spokes and elevators and the gaps stay narrow.
+- **Rejected:** it blocks part of the gap it collects light through, needs its own spokes, hub link and elevators, and its width is limited by the gap. In the torus's own plane (adopted at the time), it shared spokes and elevators and the gaps stayed narrow.
+- **Revisited (28 Oct 2026):** the farm is electric now, so the sunlight reasons are gone, and in the torus's plane every chord spoke would have had to cross the farm ring (section 12). The farm rings move to a **farm section of their own** beside the tori (section 13), grouped rather than alternating with the tori: alternating would nearly double the spacing between tori and halve the stability limit (~22 → ~12 tori of 900 m), while grouped light rings leave it unchanged. They need their own spokes (~1% of their mass), and transport through the hub.
 
 ### 17.27 Magnetic shielding (an artificial magnetosphere)
 
@@ -1850,7 +1862,7 @@ Status of the gaps identified so far:
 | Iron for L and LL hosts | Preliminary design: free metal only (magnetic separation), mining more rock on large hosts. Molten-oxide electrolysis noted as a likely better option, not factored: anode life, energy and current efficiency at scale not yet public (industrial cell 2025, demonstration plant planned 2026). Itokawa and Apophis resolved by building 400 m demonstration pairs instead of 900 m pairs (section 15) |
 | Size | 900 m and 1.6 km shortlisted. **To decide:** 2.5 km / 100 s as a later candidate (section 8): structurally fine, limited by nitrogen (~100 Mt of C-type per torus) and slower replication |
 | Despun solar array | Adopted (section 13); ~2.6× larger with three farm tiers lit than for the valley alone. **Open:** bearing and drive redundancy, magnetic bearing design, a rotary transformer at 100 MW–GW scale, buffering the locked array's pulsing output, a second dock now that one hub end carries the array, concentrators for the outer system |
-| Heat rejection | Architecture chosen (coolant loops, radiators on the spokes between farm ring and rim, venting through the open ends and gaps, thermosiphon). Ideal limit treated as an upper bound; a preliminary radiative exchange model (section 13) gives ~75–80% of it, so with three farm tiers lit heat limits a stack of 900 m tori to ~8 (~11 with two), still above six. **Open:** sunlight through the gaps, spokes and cables, real panel layout, loop sizing (plan §6, brought forward) |
+| Heat rejection | Architecture chosen (coolant loops, radiators on the spokes, thermosiphon), one set per section (proposed): the valleys' heat in the tori's drum, venting through its open ends and gaps; the farm's in the open farm section. Ideal limit treated as an upper bound. A preliminary radiative exchange model (section 13) gives a 900 m six-stack with three tiers lit ~3.9× margin in the drum and ~3.6× in the farm section (~3.3× / ~2.6× counting the sections' facing ends as lost), so heat no longer limits the stack (~28 tori for the drum, against ~22 for stability). **Open:** sunlight through the gaps, spokes and cables, real panel layouts, the farm radiators' reach, loop sizing (plan §6) |
 | Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~2.5× that from Ryugu to Eros (~21 PJ against ~8 PJ per 900 m torus, parametric model); **open:** logistics and factory throughput, now the pacing items |
 | Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under sulfur lamps costs ~31 kW of electricity per person with conservative yields (~18 kW at the best demonstrated), so each tier lit (~1,000 people per 900 m torus) needs ~32 MW and ~0.15 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under sulfur light at ~0.4 g; 915 MHz sources (~20% less power); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
 | Nitrogen | C-type sized by nitrogen again (~5 Mt per 900 m torus, ~27 Mt per 1.6 km torus at ~70% recovery); **open:** recovery from organics and ammonium salts |
@@ -1861,8 +1873,8 @@ Status of the gaps identified so far:
 | Lamps | Direction chosen (non-rotating sulfur bulbs, light pipes, central 915 MHz sources); **open:** bulbs at kW scale and 915 MHz, source lifetime, waveguide losses and plant spacing, cathode materials |
 | Jacket thermal control | Resolved by the rock jacket; only water-filled parts must stay inside the warm envelope |
 | Spokes and cable net | Wire, net and spin-up checked (section 12): ~1 GPa is a safety factor of ~2 on 1,960 MPa bridge wire or more on thinner wire, from carbonyl-refined iron; the chord net weighs the same as radial spokes; a partial ring is hung in arcs of ≥ ~4θr, spinning at ≤ ~0.7 of the final rate (its chords carry twice their finished load), with joints locked while building (~1% of the hoop force, plus bending) and released after closure (provisional). **To decide:** the safety factor. **Open:** finite-element model of a tube segment (checking the r^2.3 hull and frames), the hub's stabilising lines, wire drawn from refined asteroid iron (Earth test) |
-| Stack stiffness | **Open:** bending modes of the shared hub and rim links must stay well above the spin rate |
-| Farm rings | Chosen (section 13): electric, three tiers ~2.5 m apart in each torus's plane at ~0.4 r, the same sulfur lamps and light pipes as the valley, built for the highest density, tiers lit as the array allows; radiators between farm ring and rim. The sun-fed ring with hub mirrors is superseded (17.29). **Open:** crop trials (yields, dwarf varieties, ~0.4 g), the farm's atmosphere (pressure, CO₂, gas exchange with the valleys), shielding against workers' dose, light-pipe layout and heat at 2.5 m tier spacing, automation |
+| Stack stiffness | **Open:** bending modes of the shared hub and rim links must stay well above the spin rate; the farm section nearly doubles the hub's length (~480 → ~900 m for a 900 m six-stack) |
+| Farm rings | Chosen (section 13): electric, three tiers ~2.5 m apart, one ring per torus at ~0.4 r, the same sulfur lamps and light pipes as the valley, built for the highest density, tiers lit as the array allows. **Proposed (28 Oct 2026):** in their own farm section on the shared hub, on their own spokes and radiators, rather than in the tori's planes, where the chord spokes would have to cross them; to revisit once each section is modelled. The sun-fed ring with hub mirrors is superseded (17.29). **Open:** crop trials (yields, dwarf varieties, ~0.4 g), the farm's atmosphere (pressure, CO₂, gas exchange with the valleys along the hub), shielding against workers' dose, light-pipe layout and heat at 2.5 m tier spacing, automation, transport between valleys and farm through the hub |
 | Diet | Working diet proposed (section 13): ~93% from the farm, ~7% from the valley, ~100 g of protein a day. **Open:** fat only ~11% of calories (more soybeans, flax or nuts), vitamin B12 by fermentation, variety and acceptance, crop trials for lentils and flax under lamps |
 | Glass | Needed for the ceiling diffuser, the lamps' quartz bulbs and possibly the light pipes (the farm rings no longer need windows). **Open:** acid-leach silica process from chondritic silicates, rolled-glass forming, aluminium recovery for pipe linings |
 | Copper | **Open:** extraction line for dispersed copper, high-voltage distribution, aluminium or iron conductors |
@@ -1896,6 +1908,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 - Steel plate at 500 MPa working stress (SF 2), ρ = 7,900 kg/m³; wire at ~1 GPa working stress (range 800–1,200 MPa: a safety factor of ~2 on 1,960 MPa bridge wire, more on thinner wire; section 12); CFRP at 1,000 MPa, ρ = 1,600 kg/m³.
 - Circular tube cross-section with diameter = floor width; thin-shell approximations (poor for 400–900 m with a 5.5–7 m jacket).
 - Hub, dock and factory mass as rough guesses.
+- Farm section (proposed): one farm ring per torus at ~0.4 r, 10 m apart, 50 m from the tori; its atmosphere at the valleys' 70 kPa until its pressure is decided (30–70 kPa swept); its radiators reaching to ~1 r on the farm spokes (a guess).
 - Soil 1.6 t/m³, regolith 1.8 t/m³, fill 1 m.
 - Rotation comfort < 2 rpm; g tolerance unknown (0.15–1 g).
 - Spin-up exhaust velocity ~3 km/s for water thrusters.
@@ -1912,6 +1925,11 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **28 October 2026**
+- **Farm rings in a farm section of their own (proposed; sections 0, 12, 13, 17.26, 18):** one farm ring per torus, on its own spokes and radiators, grouped on the shared hub beyond the tori. In the tori's planes every chord spoke would have had to cross the farm ring. The two sections are modelled separately and put together last; to revisit later.
+  - Stack: a 900 m six-stack goes from ~480 to ~900 m long; stability is unchanged (~22 tori), since the farm rings are light; the longer hub is for the stack dynamics.
+  - Heat: the farm's heat no longer passes through the tori's drum. Traced as one scene, a 900 m six-stack with three tiers lit keeps ~2.4× margin in the drum and ~2.5× in the farm section at once, against ~1.3× before; heat limits the stack to ~16–18 tori of 900 m, just below stability (~22).
+  - Review of the pull request: the first coupling estimate left out the farm radiators, which shade most of the drum's farm end (it gave ~3.3× / ~2.6× and "heat no longer limits the stack"); the whole stack is now traced as one scene. The farm radiators' reach (0.6–1.4 r, a guess) is swept on its own: at 0.6 r three tiers lit leave no margin. The stats panel's JSON now exports the whole stack's stability (with the farm section), not the tori's alone. A second look: the tori's side facing the farm section is bounded by their envelopes (~907 m at 900 m), with their outer surface as its own insulated cylinder, rather than reaching out to wherever the rays are stopped; with long farm radiators that had hidden ~10–15% of the farm section's output.
+  - Farm atmosphere now counted: at 70 kPa, ~7% more nitrogen at 900 m (~4% at 1.6 km, ~3% at 2.5 km), so the C-type per 900 m torus is ~5.05 Mt (the notes' ~5 Mt).
 - **Independent review of the system model** (GitHub issue #1), addressed:
   - **The rock jacket and crawl space are now outside the tube in the geometry.** The earlier pitch (tube width + gap) left the neighbouring jackets overlapping. Pitch is now the envelope's diameter plus a clear gap: ~80 m at 900 m, ~124 m at 1.6 km. Passive stability allows ~22 tori of 900 m (~25 of 1.6 km) with a 20% margin, not ~27 (~29); a six-stack of 900 m tori is ~480–660 m long (sections 0, 11).
   - **The jacket has a finite thickness:** ~10% more shield rock at 900 m than the thin-shell estimate, ~5.5% at 1.6 km, ~22% at 400 m. A 900 m torus is ~12.8 Mt (~40 t per m² of floor), a 1.6 km torus ~41.5 Mt, a 2.5 km torus ~108 Mt (sections 0, 5c, 5e, 8, 9, 10, 15). The fill's shielding credit now follows the actual fill.

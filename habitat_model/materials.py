@@ -84,7 +84,7 @@ def sphere_diameter(mass_kg, bulk_density_t_m3):
 def s_type_needed(p, mass, host_class):
     """S-type rock per torus: enough free metal for the steel, and enough tailings for shield and regolith."""
     f = metal_fraction(p, host_class)
-    metal = mass["steel"] * (1 + p.hub_factory_metal_frac)
+    metal = mass["steel"] * (1 + p.hub_factory_metal_frac) + mass["farm_steel"]
     silicate = mass["shield"] + mass["regolith"]
     for_metal = metal / f
     for_rock = silicate / (1 - f)
@@ -103,7 +103,8 @@ def compute(p, d, geo, mass):
     tailings = s["s_type"] * (1 - metal_fraction(p, d.host_class))
 
     water = mass["water_needed"] + (mass["spinup_propellant"] if d.water_spinup else 0.0)
-    c_for_n = mass["n2"] / (p.c_nitrogen_wt * p.nitrogen_recovery)
+    n2 = mass["n2"] + mass["farm_n2"]          # the valley's air and the farm ring's
+    c_for_n = n2 / (p.c_nitrogen_wt * p.nitrogen_recovery)
     c_for_water = water / p.c_water_wt
     c_type = max(c_for_n, c_for_water)
 

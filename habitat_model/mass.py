@@ -9,14 +9,16 @@ M_H2O = 0.0180153
 WATER_PER_O2 = 2 * M_H2O / M_O2   # 2 H2O -> 2 H2 + O2: ~1.126 kg of water per kg of O2
 
 
-def air(p, geo):
-    """N2 and O2 masses (kg) at the design pressure, keeping sea-level O2 partial pressure."""
+def air(p, volume, pressure_kpa):
+    """N2 and O2 masses (kg) at a total pressure, keeping sea-level O2 partial pressure."""
+    if pressure_kpa <= p.o2_partial_kpa:
+        raise ValueError(f"pressure {pressure_kpa} kPa is at or below the O2 partial pressure")
     rt = R_GAS * p.air_temperature_k
-    p_n2 = (p.pressure_kpa - p.o2_partial_kpa) * 1e3
+    p_n2 = (pressure_kpa - p.o2_partial_kpa) * 1e3
     p_o2 = p.o2_partial_kpa * 1e3
     return {
-        "n2": p_n2 * geo["volume"] * M_N2 / rt,
-        "o2": p_o2 * geo["volume"] * M_O2 / rt,
+        "n2": p_n2 * volume * M_N2 / rt,
+        "o2": p_o2 * volume * M_O2 / rt,
     }
 
 
@@ -41,7 +43,7 @@ def spoke_factor(p, rim_speed):
 
 def compute(p, d, geo):
     floor = geo["floor_area"]
-    gases = air(p, geo)
+    gases = air(p, geo["volume"], p.pressure_kpa)
 
     soil_depth = p.fill_depth_m * p.fill_soil_frac
     regolith_depth = p.fill_depth_m - soil_depth
@@ -68,7 +70,8 @@ def compute(p, d, geo):
     # is in the air as O2, so only the lakes add mass on the rim.
     water_soil = soil_depth * p.soil_water_vol_frac * 1e3 * floor
     water_lakes = p.lake_water_t_m2 * 1e3 * floor
-    water_o2 = gases["o2"] * WATER_PER_O2
+    farm_air = air(p, geo["farm_volume"], p.farm_pressure_kpa)
+    water_o2 = (gases["o2"] + farm_air["o2"]) * WATER_PER_O2       # the valley's O2 and the farm ring's
     water_needed = water_soil + water_lakes + water_o2
 
     hull_1g = p.hull_frames_ref_mt * 1e9 * (geo["radius"] / p.hull_frames_ref_radius_m) ** p.hull_frames_exponent
@@ -78,8 +81,11 @@ def compute(p, d, geo):
     spokes = rim * spoke_factor(p, geo["rim_speed"])
     total = rim + spokes
 
-    farm_ring = (geo["farm_shell_area"] * p.farm_shell_m * p.steel_density
-                 + p.farm_growing_kg_m2 * geo["crop_area_per_tier"] * p.farm_tiers_built)
+    # Farm section, per farm ring: shell and growing systems, its own spokes (the ring is the
+    # rim they hold, at the farm's rim speed), and its own atmosphere.
+    farm_shell = geo["farm_shell_area"] * p.farm_shell_m * p.steel_density
+    farm_ring = farm_shell + p.farm_growing_kg_m2 * geo["crop_area_per_tier"] * p.farm_tiers_built
+    farm_spokes = (farm_ring + farm_air["n2"] + farm_air["o2"]) * spoke_factor(p, geo["farm_rim_speed"])
 
     return {
         "n2": gases["n2"],
@@ -104,5 +110,10 @@ def compute(p, d, geo):
         "per_floor": total / floor,
         "spinup_propellant": total * geo["rim_speed"] / (p.spinup_exhaust_km_s * 1e3),
         # Not on the rim, so not carried by the spokes and not in the total (§13).
-        "farm_ring": farm_ring,
+        "farm_ring": farm_ring,                 # shell and growing systems, as in the notes
+        "farm_spokes": farm_spokes,
+        "farm_steel": farm_shell + farm_spokes,
+        "farm_n2": farm_air["n2"],
+        "farm_o2": farm_air["o2"],
+        "farm_total": farm_ring + farm_spokes + farm_air["n2"] + farm_air["o2"],
     }

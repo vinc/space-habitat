@@ -1,6 +1,6 @@
 # Validation against the notes
 
-197 figures from notes.md checked: **189 within 5%**; 192 within their configured tolerance (5%, or 10–15% for 12 checks of counts and energies quoted as ranges); 5 known mismatches, 0 unexplained.
+193 figures from notes.md checked: **188 within 5%**; 190 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 3 known mismatches, 0 unexplained.
 
 This checks that the model reproduces the notes' own figures from the same assumptions; it does not validate the physical design.
 
@@ -9,10 +9,8 @@ This checks that the model reproduces the notes' own figures from the same assum
 | § | Figure | Notes | Model | Diff | Why |
 |---|---|---|---|---|---|
 | §5c | Hull and frames, 400 m | 0.0500 Mt | 0.0465 Mt | -7.1% | the notes round 0.047 Mt to 0.05 |
-| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.123 Mt | -17.7% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
-| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.1% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
-| §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 4.71 Mt | -5.8% | the notes round 4.7 Mt up to ~5 |
-| §10 | C-type water contained, 900 m | 0.320 Mt | 0.302 Mt | -5.8% | follows the rounded ~5 Mt of C-type |
+| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.124 Mt | -17.5% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
+| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.4% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
 
 ## All checks
 
@@ -83,25 +81,25 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §9 | Period at 0.3 g, 900 m | 110 s | 110 s | -0.4% | ✓ |
 | §9 | Period at 0.3 g, 1.6 km | 146 s | 146 s | +0.0% | ✓ |
 | §9 | Period at 0.3 g, 2.5 km | 183 s | 183 s | -0.2% | ✓ |
-| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.123 Mt | -17.7% | ✗ |
-| §7 | Water needed (soil, O₂, lakes), 1.6 km | 0.400 Mt | 0.400 Mt | +0.1% | ✓ |
-| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.1% | ✗ |
+| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.124 Mt | -17.5% | ✗ |
+| §7 | Water needed (soil, O₂, lakes), 1.6 km | 0.400 Mt | 0.401 Mt | +0.3% | ✓ |
+| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.4% | ✗ |
 | §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.400 Mt | 0.402 Mt | +0.6% | ✓ |
 | §7 | Spin-up propellant (water, 3 km/s), 1.6 km | 1.70 Mt | 1.74 Mt | +2.3% | ✓ |
 | §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.60 Mt | 5.64 Mt | +0.6% | ✓ |
-| §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 4.71 Mt | -5.8% | ✗ |
-| §7 | C-type sized by nitrogen, 1.6 km | 27.0 Mt | 26.5 Mt | -1.9% | ✓ |
-| §7 | C-type sized by nitrogen, 2.5 km | 100 Mt | 101 Mt | +1.0% | ✓ |
-| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 8.22 Mt | +2.7% | ✓ |
-| §10 | C-type water contained, 900 m | 0.320 Mt | 0.302 Mt | -5.8% | ✗ |
-| §10 | C-type water contained, 1.6 km | 1.70 Mt | 1.69 Mt | -0.3% | ✓ |
-| §10 | C-type water contained, 2.5 km | 6.50 Mt | 6.46 Mt | -0.6% | ✓ |
-| §10 | C-type diameter, 900 m | 200 m | 196 m | -2.1% | ✓ |
-| §10 | C-type diameter, 1.6 km | 350 m | 348 m | -0.6% | ✓ |
-| §10 | C-type diameter, 2.5 km | 540 m | 544 m | +0.7% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 900 m | 1.50 Mt | 1.46 Mt | -2.6% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 1.6 km | 7.50 Mt | 7.50 Mt | +0.1% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 2.5 km | 28.0 Mt | 27.8 Mt | -0.6% | ✓ |
+| §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 5.05 Mt | +1.0% | ✓ |
+| §7 | C-type sized by nitrogen, 1.6 km | 27.0 Mt | 27.5 Mt | +2.0% | ✓ |
+| §7 | C-type sized by nitrogen, 2.5 km | 100 Mt | 104 Mt | +3.6% | ✓ |
+| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 8.22 Mt | +2.8% | ✓ |
+| §10 | C-type water contained, 900 m | 0.320 Mt | 0.323 Mt | +1.0% | ✓ |
+| §10 | C-type water contained, 1.6 km | 1.70 Mt | 1.76 Mt | +3.7% | ✓ |
+| §10 | C-type water contained, 2.5 km | 6.50 Mt | 6.63 Mt | +2.0% | ✓ |
+| §10 | C-type diameter, 900 m | 200 m | 200 m | +0.2% | ✓ |
+| §10 | C-type diameter, 1.6 km | 350 m | 353 m | +0.7% | ✓ |
+| §10 | C-type diameter, 2.5 km | 540 m | 548 m | +1.5% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 900 m | 1.50 Mt | 1.48 Mt | -1.2% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 1.6 km | 7.50 Mt | 7.57 Mt | +0.9% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 2.5 km | 28.0 Mt | 28.0 Mt | -0.1% | ✓ |
 | §10 | Regolith (0.5 m), 900 m | 0.290 Mt | 0.286 Mt | -1.3% | ✓ |
 | §10 | Regolith (0.5 m), 1.6 km | 0.900 Mt | 0.905 Mt | +0.5% | ✓ |
 | §10 | Regolith (0.5 m), 2.5 km | 2.20 Mt | 2.21 Mt | +0.4% | ✓ |
@@ -109,12 +107,12 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §10 | Soil (0.5 m), 1.6 km | 0.800 Mt | 0.804 Mt | +0.5% | ✓ |
 | §10 | Soil (0.5 m), 2.5 km | 2.00 Mt | 1.96 Mt | -1.8% | ✓ |
 | §10 | S-type, H host, 900 m | 14.0 Mt | 13.6 Mt | -2.8% | ✓ |
-| §10 | S-type, H host, 1.6 km | 44.0 Mt | 44.1 Mt | +0.3% | ✓ |
-| §10 | S-type, H host, 2.5 km | 165 Mt | 164 Mt | -0.8% | ✓ |
-| §10 | S-type, LL host, 900 m | 32.0 Mt | 32.5 Mt | +1.4% | ✓ |
-| §10 | S-type, LL host, 1.6 km | 165 Mt | 167 Mt | +1.1% | ✓ |
-| §10 | S-type, LL host, 2.5 km | 620 Mt | 618 Mt | -0.3% | ✓ |
-| §10 | S-type, L host, 900 m | 16.0 Mt | 16.2 Mt | +1.4% | ✓ |
+| §10 | S-type, H host, 1.6 km | 44.0 Mt | 44.5 Mt | +1.2% | ✓ |
+| §10 | S-type, H host, 2.5 km | 165 Mt | 165 Mt | -0.2% | ✓ |
+| §10 | S-type, LL host, 900 m | 32.0 Mt | 32.9 Mt | +2.9% | ✓ |
+| §10 | S-type, LL host, 1.6 km | 165 Mt | 168 Mt | +2.0% | ✓ |
+| §10 | S-type, LL host, 2.5 km | 620 Mt | 622 Mt | +0.3% | ✓ |
+| §10 | S-type, L host, 900 m | 16.0 Mt | 16.5 Mt | +2.9% | ✓ |
 | §10 | S-type diameter, H host, 900 m | 235 m | 235 m | +0.0% | ✓ |
 | §13 | Valley lighting, 900 m | 53.0 MW | 52.6 MW | -0.8% | ✓ |
 | §13 | Valley lighting, 1.6 km | 166 MW | 166 MW | +0.1% | ✓ |
@@ -172,11 +170,7 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §13 | Capacity of the end openings, 900 m | 1.60 GW | 1.64 GW | +2.3% | ✓ |
 | §13 | Capacity of the end openings, 1.6 km | 5.30 GW | 5.21 GW | -1.7% | ✓ |
 | §13 | Break-even, 900 m, no farm lit | 29.0 tori | 28.5 tori | -1.6% | ✓ |
-| §13 | Break-even, 900 m, 1 tiers lit | 18.0 tori | 18.3 tori | +1.7% | ✓ |
-| §13 | Break-even, 900 m, 2 tiers lit | 13.0 tori | 13.5 tori | +3.6% | ✓ |
-| §13 | Break-even, 900 m, 3 tiers lit | 10.5 tori | 10.7 tori | +1.5% | ✓ |
 | §13 | Break-even, 1.6 km, no farm lit | 29.0 tori | 28.7 tori | -0.9% | ✓ |
-| §13 | Break-even, 1.6 km, three tiers lit | 11.0 tori | 10.7 tori | -2.4% | ✓ |
 | §13 | Heat, 900 m pair, three tiers lit | 310 MW | 307 MW | -0.9% | ✓ |
 | §13 | Heat, 900 m six-stack, three tiers lit | 930 MW | 922 MW | -0.9% | ✓ |
 | §13 | Array mass, 900 m, valley | 0.800 kt | 0.794 kt | -0.7% | ✓ |
@@ -189,8 +183,8 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §11 | Max tori, 1.6 km, 10 m gaps, 20% margin | 25.0 tori | 25.0 tori | +0.0% | ✓ |
 | §11 | Max tori, 0.9 km, 40 m gaps, 20% margin | 16.0 tori | 16.0 tori | +0.0% | ✓ |
 | §11 | Stack length at the limit, 900 m | 1,800 m | 1,770 m | -1.9% | ✓ |
-| §0 | Six-stack length, 10 m gaps | 480 m | 482 m | +0.3% | ✓ |
-| §0 | Six-stack length, 40 m gaps | 660 m | 662 m | +0.2% | ✓ |
+| §0 | Six-stack main section length, 10 m gaps | 480 m | 482 m | +0.3% | ✓ |
+| §0 | Six-stack main section length, 40 m gaps | 660 m | 662 m | +0.2% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Itokawa | 0.760 km² | 0.756 km² | -0.5% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Eros | 0.840 km² | 0.840 km² | +0.0% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Torifune | 0.420 km² | 0.418 km² | -0.4% | ✓ |
@@ -205,13 +199,13 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §15 | Array, 900 m, per tier, Apophis 2029 | 0.260 km² | 0.255 km² | -2.0% | ✓ |
 | §15 | Array, 1.6 km valley, seasonal sky, Eros | 1.45 km² | 1.44 km² | -0.8% | ✓ |
 | §15 | Array, 1.6 km, per tier, Eros | 1.51 km² | 1.48 km² | -1.7% | ✓ |
-| §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.08 tori | +7.8% | ✓ (tolerance 15%) |
-| §15 | 900 m tori supported by Didymos | 30.0 tori | 30.8 tori | +2.7% | ✓ |
-| §15 | 900 m tori supported by Torifune | 6.00 tori | 6.16 tori | +2.7% | ✓ |
-| §15 | 900 m tori supported by Ryugu | 90.0 tori | 95.5 tori | +6.1% | ✓ (tolerance 15%) |
-| §15 | 900 m tori supported by Bennu | 15.0 tori | 15.5 tori | +3.3% | ✓ |
-| §15 | 1.6 km tori supported by Ryugu | 17.0 tori | 17.0 tori | -0.0% | ✓ |
-| §15 | Processing energy, 900 m | 0.300 GW·yr | 0.261 GW·yr | -13.1% | ✓ (tolerance 15%) |
+| §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.06 tori | +6.3% | ✓ (tolerance 15%) |
+| §15 | 900 m tori supported by Didymos | 30.0 tori | 30.4 tori | +1.2% | ✓ |
+| §15 | 900 m tori supported by Torifune | 6.00 tori | 6.07 tori | +1.2% | ✓ |
+| §15 | 900 m tori supported by Ryugu | 90.0 tori | 89.1 tori | -1.0% | ✓ |
+| §15 | 900 m tori supported by Bennu | 15.0 tori | 14.5 tori | -3.6% | ✓ |
+| §15 | 1.6 km tori supported by Ryugu | 17.0 tori | 16.3 tori | -3.9% | ✓ |
+| §15 | Processing energy, 900 m | 0.300 GW·yr | 0.277 GW·yr | -7.8% | ✓ (tolerance 15%) |
 | §15 | Shipping energy at 4.5 km/s | 120,000,000 J/kg | 121,000,000 J/kg | +1.1% | ✓ |
 | §15 | Shipping energy at 6.3 km/s | 175,000,000 J/kg | 175,000,000 J/kg | +0.1% | ✓ |
 | §15 | Shipping energy at 8.5 km/s | 250,000,000 J/kg | 246,000,000 J/kg | -1.7% | ✓ |

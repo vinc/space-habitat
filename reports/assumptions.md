@@ -8,9 +8,14 @@
 | `farm_ring_width_frac` | 0.9000 | w | fixed | design | §13, farm ring width ~0.9 of the tube width |
 | `farm_planted_frac` | 0.8000 | fraction of each tier | 0.7000–0.8500 | estimate | §13, ~80% of each tier planted |
 | `farm_ring_height_m` | 8.500 | m | fixed | design | §13, three tiers ~2.5 m apart, ~8.5 m in all |
+| `farm_ring_gap_m` | 10.00 | m | fixed | design | farm section: clear gap between neighbouring farm rings (as between tori) |
+| `farm_section_gap_m` | 50.00 | m | fixed | design | farm section: clear gap between the last torus envelope and the first farm ring |
+| `radiator_inner_frac` | 0.4000 | r | fixed | design | main section: radiator panels on the spokes from ~0.4 r out to the tori's envelopes (the stretch the in-plane farm ring used to bound) |
+| `farm_radiator_outer_frac` | 1.000 | r | 0.6000–1.400 | guess | farm section: radiator panels on the farm spokes from the farm rings out to this radius (a guess, to model) |
 | `farm_tiers_built` | 3.000 | tiers | fixed | design | §13, all three tiers built with the torus |
 | `pressure_kpa` | 70.00 | kPa | fixed | design | §3c, design atmosphere |
 | `o2_partial_kpa` | 20.27 | kPa | fixed | design | §3c, sea-level O2 partial pressure (20% of 101.325 kPa) |
+| `farm_pressure_kpa` | 70.00 | kPa | 30.00–70.00 | guess | §13, the farm's own atmosphere (to decide): lower pressure possible; the valley's 70 kPa taken (conservative) |
 | `air_temperature_k` | 288.1 | K | fixed | design | §3b |
 | `shield_areal_t_m2` | 11.00 | t/m2 | 9.000–13.00 | sourced | §5b, Globus & Strout (2017): ~11 t/m2 of rock for 20 mSv/yr; plan §2 checks it |
 | `rock_per_water_shield` | 1.571 | t rock / t water | 1.400–1.750 | sourced | §6, Globus: 11 t/m2 of regolith ~ 7 t/m2 of water |

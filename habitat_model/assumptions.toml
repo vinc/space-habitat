@@ -52,6 +52,32 @@ unit = "m"
 source = "§13, three tiers ~2.5 m apart, ~8.5 m in all"
 status = "design"
 
+[geometry.farm_ring_gap_m]
+value = 10
+unit = "m"
+source = "farm section: clear gap between neighbouring farm rings (as between tori)"
+status = "design"
+
+[geometry.farm_section_gap_m]
+value = 50
+unit = "m"
+source = "farm section: clear gap between the last torus envelope and the first farm ring"
+status = "design"
+
+[geometry.radiator_inner_frac]
+value = 0.4
+unit = "r"
+source = "main section: radiator panels on the spokes from ~0.4 r out to the tori's envelopes (the stretch the in-plane farm ring used to bound)"
+status = "design"
+
+[geometry.farm_radiator_outer_frac]
+value = 1.0
+unit = "r"
+low = 0.6
+high = 1.4
+source = "farm section: radiator panels on the farm spokes from the farm rings out to this radius (a guess, to model)"
+status = "guess"
+
 [geometry.farm_tiers_built]
 value = 3
 unit = "tiers"
@@ -71,6 +97,14 @@ value = 20.265
 unit = "kPa"
 source = "§3c, sea-level O2 partial pressure (20% of 101.325 kPa)"
 status = "design"
+
+[atmosphere.farm_pressure_kpa]
+value = 70.0
+unit = "kPa"
+low = 30
+high = 70
+source = "§13, the farm's own atmosphere (to decide): lower pressure possible; the valley's 70 kPa taken (conservative)"
+status = "guess"
 
 [atmosphere.air_temperature_k]
 value = 288.15

@@ -1,4 +1,9 @@
-"""Torus geometry: the 1 g family, floor, tube, hub, stack and farm ring (§1, §2, §3a, §12, §13)."""
+"""Geometry: the 1 g family, the tori of the main section, and the farm section (§1, §2, §3a, §12, §13).
+
+The stack has two sections on one shared hub: the main section (the tori, with their valleys)
+and the farm section (the farm rings, one per torus, on their own spokes), side by side along
+the axis with a gap between them. Each is modelled on its own; the stack only adds them up.
+"""
 
 import math
 
@@ -35,6 +40,9 @@ def compute(p, d):
     farm_radius = p.farm_ring_radius_frac * r
     farm_width = p.farm_ring_width_frac * w
     farm_ring_area = 2 * math.pi * farm_radius * farm_width
+    farm_pitch = farm_width + p.farm_ring_gap_m
+    main_length = d.n_tori * pitch
+    farm_length = d.n_tori * farm_pitch
     return {
         "radius": r,
         "accel": accel,
@@ -55,7 +63,17 @@ def compute(p, d):
         "hub_radius": hub,
         "hub_gravity": d.g * hub / r,
         "pitch": pitch,
-        "stack_length": d.n_tori * pitch,
+        "main_length": main_length,
+        "stack_length": main_length + p.farm_section_gap_m + farm_length,
+        # Farm section: one farm ring per torus, beyond the main section's farm end.
+        "farm_pitch": farm_pitch,
+        "farm_length": farm_length,
+        "farm_section_gap": p.farm_section_gap_m,
+        "farm_omega": omega,
+        "farm_rim_speed": omega * farm_radius,
+        "farm_volume": 2 * math.pi * farm_radius * farm_width * p.farm_ring_height_m,
+        "radiator_inner": p.radiator_inner_frac * r,
+        "farm_radiator_outer": p.farm_radiator_outer_frac * r,
         "farm_radius": farm_radius,
         "farm_width": farm_width,
         "farm_height": p.farm_ring_height_m,
