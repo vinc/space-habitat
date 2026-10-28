@@ -81,49 +81,49 @@ The stack spins freely about its centre of mass, so a mismatch moves the spin ax
 
 ## Tube cross-section: hull and frames by finite elements
 
-One metre of tube in the plane of its cross-section (`structure_model/tube_section.py`): the pressure hull and the outer cell wall as membrane skins, the jacket's transverse bulkheads (one every 10 m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall holding the section along the radius. Every part is sized fully stressed at 300 MPa (von Mises; half that in compression, an allowance for stiffeners), or held at its minimum gauge (1 cm for the skins, 5 mm for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners (vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are together in one column.
+One metre of tube in the plane of its cross-section (`structure_model/tube_section.py`): the pressure hull and the outer cell wall as membrane skins, the jacket's transverse bulkheads (one every 10 m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall holding the section along the radius. Every part is sized fully stressed at 300 MPa (von Mises at every integration point; half that in compression, blended with tension by the compression's share of the stress state, an allowance for stiffeners), or held at its minimum gauge (1 cm for the skins, 5 mm for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners (vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are together in one column. Each anchor is a fitting through the jacket's depth, holding the radial line of nodes at its angle. **Sizing:** *fully stressed* when every part is within 2% of its allowable or at its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds (heavier than needed); *over* when some part still exceeds it (not a design).
 
 ### Chords anchored at the tube's two sides (one net in each side plane), vaulted ceiling
 
-| Torus | Load (MN per m of tube) | Hull (Mt) | Outer wall (Mt) | Bulkheads (Mt) | Panels, cell walls, bumper (Mt) | Hull and frames (Mt) | System model, r^2.3 (Mt) | Difference | Steel per torus (with spokes) vs model |
-|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 10.1 | 0.015 | 0.022 | 0.0081 | 0.011 | **0.056** | 0.046 | +20% | +7% |
-| 900 m | 20.8 | 0.080 | 0.093 | 0.057 | 0.045 | **0.28** | 0.30 | -8% | -2% |
-| 1.6 km | 36.0 | 0.42 | 0.32 | 0.30 | 0.14 | **1.2** | 1.1 | +4% | +1% |
-| 2.5 km | 56.5 | 2.1 | 1.2 | 0.99 | 0.32 | **4.6** | 3.1 | +47% | +7% |
+| Torus | Load (MN per m of tube) | Hull (Mt) | Outer wall (Mt) | Bulkheads (Mt) | Panels, cell walls, bumper (Mt) | Hull and frames (Mt) | System model, r^2.3 (Mt) | Difference | Steel per torus (with spokes) vs model | Sizing |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 400 m | 10.1 | 0.015 | 0.022 | 0.0062 | 0.011 | **0.054** | 0.046 | +16% | +6% | fully stressed |
+| 900 m | 20.8 | 0.078 | 0.091 | 0.055 | 0.045 | **0.27** | 0.30 | -10% | -3% | fully stressed |
+| 1.6 km | 35.9 | 0.31 | 0.29 | 0.40 | 0.14 | **1.1** | 1.1 | +1% | +0% | fully stressed |
+| 2.5 km | 56.3 | 1.0 | 1.0 | 2.0 | 0.32 | **4.3** | 3.1 | +37% | +5% | fully stressed |
 
 ### Where the chords anchor
 
 Anchors on the hub-facing crest (one net in the torus's mid-plane), at the two sides, or spread over the hub-facing half (anchors that would push are released; the rest share the load). Anchor loads per metre of tube; compression is the largest compressive force in a skin; displacement includes the section's ovalisation.
 
-| Torus | Anchors | Ceiling | Steel (t per m of tube) | Per torus (Mt) | Anchor loads (MN/m) | Max skin compression (MN/m) | Max displacement (m) |
-|---|---|---|---|---|---|---|---|
-| 900 m | crest | vaulted | 159 | 0.87 | 180°: 21.8 | 33 | 0.44 |
-| 900 m | crest | hung | 164 | 0.90 | 180°: 21.8 | 33 | 0.44 |
-| 900 m | sides | vaulted | 50.3 | 0.28 | 90°: 10.4, 270°: 10.4 | 2.9 | 0.10 |
-| 900 m | sides | hung | 53.1 | 0.29 | 90°: 10.4, 270°: 10.4 | 3.4 | 0.11 |
-| 900 m | fan | vaulted | 49.6 | 0.27 | 90°: 9.16, 120°: 0.891, 150°: 0.110, 180°: 0.431, 210°: 0.110, 240°: 0.891, 270°: 9.16 | 3.3 | 0.12 |
-| 900 m | fan | hung | 52.7 | 0.29 | 90°: 9.33, 120°: 0.826, 150°: 0.0634, 180°: 0.355, 210°: 0.0634, 240°: 0.826, 270°: 9.33 | 3.4 | 0.13 |
-| 1.6 km | crest | vaulted | 766 | 7.5 | 180°: 42.1 | 110 | 1.1 |
-| 1.6 km | crest | hung | 776 | 7.6 | 180°: 42.2 | 110 | 1.1 |
-| 1.6 km | sides | vaulted | 120 | 1.2 | 90°: 18.0, 270°: 18.0 | 5.8 | 0.25 |
-| 1.6 km | sides | hung | 125 | 1.2 | 90°: 18.0, 270°: 18.0 | 6.7 | 0.27 |
-| 1.6 km | fan | vaulted | 117 | 1.1 | 90°: 17.6, 180°: 0.704, 270°: 17.6 | 7.1 | 0.31 |
-| 1.6 km | fan | hung | 123 | 1.2 | 90°: 17.7, 180°: 0.550, 270°: 17.7 | 7.4 | 0.32 |
-| 2.5 km | crest | vaulted | 3,170 | 48 | 180°: 83.5 | 320 | 2.5 |
-| 2.5 km | sides | vaulted | 305 | 4.6 | 90°: 28.2, 270°: 28.2 | 10 | 0.68 |
-| 2.5 km | fan | vaulted | 297 | 4.5 | 90°: 27.5, 180°: 1.32, 270°: 27.5 | 14 | 0.84 |
+| Torus | Anchors | Ceiling | Steel (t per m of tube) | Per torus (Mt) | Anchor loads (MN/m) | Max skin compression (MN/m) | Max displacement (m) | Sizing |
+|---|---|---|---|---|---|---|---|---|
+| 900 m | crest | vaulted | 168 | 0.92 | 180°: 21.9 | 29 | 0.41 | fully stressed |
+| 900 m | crest | hung | 179 | 0.98 | 180°: 22.0 | 29 | 0.41 | fully stressed |
+| 900 m | sides | vaulted | 49.4 | 0.27 | 90°: 10.4, 270°: 10.4 | 1.7 | 0.080 | fully stressed |
+| 900 m | sides | hung | 52.7 | 0.29 | 90°: 10.4, 270°: 10.4 | 1.6 | 0.11 | fully stressed |
+| 900 m | fan | vaulted | 48.3 | 0.26 | 90°: 9.65, 150°: 0.343, 180°: 0.767, 210°: 0.343, 270°: 9.65 | 1.2 | 0.12 | fully stressed |
+| 900 m | fan | hung | 52.1 | 0.29 | 90°: 10.1, 150°: 0.0316, 180°: 0.598, 210°: 0.0316, 270°: 10.1 | 2.4 | 0.12 | fully stressed |
+| 1.6 km | crest | vaulted | 833 | 8.1 | 180°: 42.7 | 97 | 1.1 | safe, up to 4% spare |
+| 1.6 km | crest | hung | 854 | 8.3 | 180°: 42.9 | 96 | 1.1 | fully stressed |
+| 1.6 km | sides | vaulted | 117 | 1.1 | 90°: 18.0, 270°: 18.0 | 3.7 | 0.19 | fully stressed |
+| 1.6 km | sides | hung | 124 | 1.2 | 90°: 18.0, 270°: 18.0 | 5.0 | 0.26 | fully stressed |
+| 1.6 km | fan | vaulted | 113 | 1.1 | 90°: 17.4, 180°: 1.19, 270°: 17.4 | 3.4 | 0.28 | fully stressed |
+| 1.6 km | fan | hung | 121 | 1.2 | 90°: 17.7, 180°: 0.606, 270°: 17.7 | 5.4 | 0.31 | fully stressed |
+| 2.5 km | crest | vaulted | 3,610 | 55 | 180°: 87.6 | 300 | 2.4 | safe, up to 3% spare |
+| 2.5 km | sides | vaulted | 284 | 4.3 | 90°: 28.1, 270°: 28.1 | 13 | 0.48 | fully stressed |
+| 2.5 km | fan | vaulted | 273 | 4.2 | 90°: 27.5, 180°: 1.11, 270°: 27.5 | 13 | 0.71 | fully stressed |
 
 ### Sensitivity at 900 m (sides, vaulted)
 
 | Change | Hull and frames (Mt) | vs base |
 |---|---|---|
-| `plate_stress_mpa` = 200 | 0.337 | +22% |
-| `plate_stress_mpa` = 500 | 0.247 | -10% |
-| `skin_min_gauge_m` = 0.005 | 0.228 | -17% |
-| `skin_min_gauge_m` = 0.02 | 0.431 | +57% |
-| `cell_wall_min_gauge_m` = 0.01 | 0.310 | +12% |
-| `bumper_m` = 0.003 | 0.285 | +3% |
+| `plate_stress_mpa` = 200 | 0.323 | +20% |
+| `plate_stress_mpa` = 500 | 0.243 | -10% |
+| `skin_min_gauge_m` = 0.005 | 0.215 | -20% |
+| `skin_min_gauge_m` = 0.02 | 0.425 | +57% |
+| `cell_wall_min_gauge_m` = 0.01 | 0.304 | +12% |
+| `bumper_m` = 0.003 | 0.280 | +4% |
 
 Not modelled: buckling of the parts in compression (sized with an allowance only), segment joints and seals, the anchors' local details, and the valley's buildings, light box and ceiling.
 

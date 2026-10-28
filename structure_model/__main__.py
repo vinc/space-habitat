@@ -144,6 +144,14 @@ def imbalance_section(p, mismatch):
 MT = 1e9
 
 
+def sizing_status(out):
+    if out["converged"]:
+        return "fully stressed"
+    if out["sized"]:
+        return f"safe, up to {out['slack']:.0%} spare"
+    return f"**over by {out['utilisation'] - 1:.0%}**"
+
+
 def tube_section_report(p):
     ts = tube_section
     rows = []
@@ -157,7 +165,8 @@ def tube_section_report(p):
         rows.append([size_label(r), num(out["load"] / 1e6), num(t["hull"] / MT, 2), num(t["outer_wall"] / MT, 2),
                      num(t["bulkheads"] / MT, 2), num((t["panels"] + t["cell_walls"] + t["bumper"]) / MT, 2),
                      f"**{num(t['total'] / MT, 2)}**", num(out["model_hull_frames"] / MT, 2),
-                     f"{t['total'] / out['model_hull_frames'] - 1:+.0%}", f"{steel_fe / steel_model - 1:+.0%}"])
+                     f"{t['total'] / out['model_hull_frames'] - 1:+.0%}", f"{steel_fe / steel_model - 1:+.0%}",
+                     sizing_status(out)])
     layout = []
     for r in (900, 1600, 2500):
         for anchors in ts.ANCHORS:
@@ -168,7 +177,8 @@ def tube_section_report(p):
                 forces = ", ".join(f"{a}°: {num(f / 1e6)}" for a, f in sorted(out["anchor_force"].items()) if f > 0)
                 layout.append([size_label(r), anchors, ceiling, num(out["per_metre"]["total"] / 1e3),
                                num(out["per_torus"]["total"] / MT, 2), forces,
-                               num(-out["max_compression"] / 1e6, 2), num(out["max_displacement"], 2)])
+                               num(-out["max_compression"] / 1e6, 2), num(out["max_displacement"], 2),
+                               sizing_status(out)])
     sens = []
     base = ts.run(p, 900, "sides", "vaulted")["per_torus"]["total"]
     for name, value in (("plate_stress_mpa", 200), ("plate_stress_mpa", 500), ("skin_min_gauge_m", 0.005),
@@ -183,23 +193,27 @@ def tube_section_report(p):
         f"{p.cell_size_m:g} m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, "
         "bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall "
         "holding the section along the radius. Every part is sized fully stressed at "
-        f"{p.plate_stress_mpa:g} MPa (von Mises; half that in compression, an allowance for stiffeners), or held "
+        f"{p.plate_stress_mpa:g} MPa (von Mises at every integration point; half that in compression, blended "
+        "with tension by the compression's share of the stress state, an allowance for stiffeners), or held "
         f"at its minimum gauge ({p.skin_min_gauge_m * 100:g} cm for the skins, {p.cell_wall_min_gauge_m * 1000:g} mm "
         "for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing "
         "of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners "
         "(vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are "
-        "together in one column.",
+        "together in one column. Each anchor is a fitting through the jacket's depth, holding the radial line of "
+        "nodes at its angle. **Sizing:** *fully stressed* when every part is within 2% of its allowable or at "
+        "its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds "
+        "(heavier than needed); *over* when some part still exceeds it (not a design).",
         "### Chords anchored at the tube's two sides (one net in each side plane), vaulted ceiling",
         table(["Torus", "Load (MN per m of tube)", "Hull (Mt)", "Outer wall (Mt)", "Bulkheads (Mt)",
                "Panels, cell walls, bumper (Mt)", "Hull and frames (Mt)", "System model, r^2.3 (Mt)",
-               "Difference", "Steel per torus (with spokes) vs model"], rows),
+               "Difference", "Steel per torus (with spokes) vs model", "Sizing"], rows),
         "### Where the chords anchor",
         "Anchors on the hub-facing crest (one net in the torus's mid-plane), at the two sides, or spread over the "
         "hub-facing half (anchors that would push are released; the rest share the load). Anchor loads per metre "
         "of tube; compression is the largest compressive force in a skin; displacement includes the section's "
         "ovalisation.",
         table(["Torus", "Anchors", "Ceiling", "Steel (t per m of tube)", "Per torus (Mt)",
-               "Anchor loads (MN/m)", "Max skin compression (MN/m)", "Max displacement (m)"], layout),
+               "Anchor loads (MN/m)", "Max skin compression (MN/m)", "Max displacement (m)", "Sizing"], layout),
         "### Sensitivity at 900 m (sides, vaulted)",
         table(["Change", "Hull and frames (Mt)", "vs base"], sens),
         "Not modelled: buckling of the parts in compression (sized with an allowance only), segment joints and "

@@ -12,14 +12,15 @@ floor side (away from the axis) and 180° on the hub-facing side.
 - Loads: spin gravity on the rock (resting on the outer wall on the floor side, on the hull on the
   hub-facing side), on the valley's fill, lakes and air (on the floor half of the hull), on the
   bumper and on the steel itself; the air pressure on the hull.
-- Supports: the chords' anchors, on the outer wall at chosen angles. Each holds the section along x
-  only. A chord sized at the working stress stretches by sigma L / E whatever its load, so all the
+- Supports: the chords' anchors at chosen angles, each a fitting through the jacket's depth that
+  holds the radial line of nodes at its angle, along x only. A chord sized at the working stress stretches by sigma L / E whatever its load, so all the
   anchors move together and fixed supports are exact. Anchors that would push are released.
 
 The sizing is fully stressed: each skin element and each bulkhead element is resized until its
-von Mises stress reaches the working stress, or held at its minimum gauge. Thin plates in
-compression buckle long before that, so parts mostly in compression are sized at half the
-working stress, an allowance for their stiffeners rather than a buckling analysis. The skins also carry
+von Mises stress reaches the working stress at every integration point, or held at its minimum
+gauge. Thin plates in compression buckle long before that, so compression is allowed only half the
+working stress, blended with tension by the compression's share of the stress state (pure shear
+gets three quarters): an allowance for stiffeners rather than a buckling analysis. The skins also carry
 the hull's lengthwise pressure load (p a / 2) and the pillowing of their panels between bulkheads
 and cell walls. Where the rock presses on the hull against the air (a vaulted ceiling), the hull's
 panels need stiffeners; hung cell floors (the alternative, notes §5e) are membranes instead.
@@ -104,9 +105,20 @@ class Mesh:
         self.outer = np.stack([nid[-1], nxt[-1]], axis=-1)
         self.hull_nodes, self.outer_nodes = nid[0], nid[-1]
         self.symmetry_nodes = np.concatenate([nid[:, 0], nid[:, n_around // 2]])
+        self.columns = nid.T                                       # nodes through the jacket, per angle
 
-    def outer_node_at(self, degrees):
-        return self.outer_nodes[int(round(degrees / 360 * self.nt)) % self.nt]
+    def column_at(self, degrees):
+        return int(round(degrees / 360 * self.nt)) % self.nt
+
+
+def allowance(s1, s2):
+    """Share of the working stress allowed for principal stresses s1, s2 (or forces per unit length):
+    1 in pure tension, COMPRESSION_KNOCKDOWN in pure compression, and in between in proportion to the
+    compression's share of the stress state (pure shear: halfway). Continuous, so the sizing settles."""
+    compression = np.maximum(0, -s1) + np.maximum(0, -s2)
+    total = np.abs(s1) + np.abs(s2)
+    share = np.divide(compression, total, out=np.zeros_like(total, dtype=float), where=total > 0)
+    return 1 - (1 - COMPRESSION_KNOCKDOWN) * share
 
 
 def _plane_stress(nu=NU):
@@ -176,7 +188,8 @@ class Model:
         m = self.mesh = Mesh(inp, n_radial, n_around)
         self.qc = m.xy[m.quads]
         self.kq = quad_unit_stiffness(self.qc)
-        self.b0, _ = _b_matrix(self.qc, 0.0, 0.0)
+        g = 1 / math.sqrt(3)
+        self.bg = np.stack([_b_matrix(self.qc, xi, eta)[0] for xi in (-g, g) for eta in (-g, g)])  # (4, n, 3, 8)
         self.qarea = quad_areas(self.qc)
         self.qx = self.qc[..., 0].mean(axis=1)
         self.kh, self.eh, self.lh = bar_unit_stiffness(m.xy[m.hull])
@@ -198,10 +211,11 @@ class Model:
         force = rock * w2 * self.qx
         floor_side = cos >= 0
         on_outer = floor_side | (self.ceiling == "hung")
-        # Wall node pairs of each element's column: outer (local nodes 1, 2) or hull (0, 3).
-        for local_pair, mask in (((1, 2), on_outer), ((0, 3), ~on_outer)):
-            for k in local_pair:
-                np.add.at(f, 2 * m.quads[mask, k], force[mask] / 2)
+        # Onto the two wall nodes of each element's column (j, j+1): the outer wall's or the hull's.
+        col = np.arange(len(m.quads)) % m.nt
+        for wall, mask in ((m.outer_nodes, on_outer), (m.hull_nodes, ~on_outer)):
+            for pair in (col, (col + 1) % m.nt):
+                np.add.at(f, 2 * wall[pair[mask]], force[mask] / 2)
         # Fill, lakes and air on the floor half of the hull, by projected width.
         hx, hy = m.xy[m.hull_nodes, 0], m.xy[m.hull_nodes, 1]
         width = np.abs(np.roll(hy, -1) - np.roll(hy, 1)) / 2
@@ -246,24 +260,35 @@ class Model:
         m = self.mesh
         k = self._stiffness(t_hull, t_outer, tau)
         f = self.f_fixed + self._steel_loads(t_hull, t_outer, tau, extra_hull)
-        anchors = [m.outer_node_at(a) for a in self.angles]
+        # Each anchor is a fitting through the jacket's depth: it holds the whole radial line of nodes
+        # at its angle along x (a single node would be a point load, with stresses growing without
+        # bound as the plate around it is thickened). A fitting that would push is released.
+        anchors = [m.column_at(a) for a in self.angles]
         while True:
-            fixed = np.unique(np.concatenate([2 * np.array(anchors), 2 * m.symmetry_nodes + 1]))
+            held = np.concatenate([m.columns[j] for j in anchors])
+            fixed = np.unique(np.concatenate([2 * held, 2 * m.symmetry_nodes + 1]))
             free = np.setdiff1d(np.arange(self.n_dofs), fixed)
             u = np.zeros(self.n_dofs)
             u[free] = np.linalg.solve(k[np.ix_(free, free)], f[free])
             reaction = k @ u - f
-            pushing = [n for n in anchors if reaction[2 * n] > 1e-6 * abs(f).max()]
+            pull = {j: -float(reaction[2 * m.columns[j]].sum()) for j in anchors}
+            pushing = [j for j in anchors if pull[j] < -1e-6 * abs(f).max()]
             if not pushing or len(pushing) == len(anchors):
                 break
-            anchors = [n for n in anchors if n not in pushing]
+            anchors = [j for j in anchors if j not in pushing]
         ue = u[self.qdofs]
-        stress = np.einsum("ij,njk,nk->ni", _plane_stress(), self.b0, ue)    # per unit thickness: Pa
-        sx, sy, txy = stress.T
+        # Stresses at the four Gauss points (per unit thickness: Pa), and each point's use of its
+        # allowable (the working stress, or the compression allowance where compression dominates).
+        stress = np.einsum("ij,gnjk,nk->gni", _plane_stress(), self.bg, ue)
+        sx, sy, txy = stress[..., 0], stress[..., 1], stress[..., 2]
         vm = np.sqrt(sx * sx - sx * sy + sy * sy + 3 * txy * txy)
+        centre, radius = (sx + sy) / 2, np.hypot((sx - sy) / 2, txy)
+        utilisation = (vm / (self.inp.sigma * allowance(centre + radius, centre - radius))).max(axis=0)
+        vm = vm.max(axis=0)
         n_hull = E * t_hull * np.einsum("na,na->n", (u[self.hdofs[:, 2:]] - u[self.hdofs[:, :2]]), self.eh) / self.lh
         n_outer = E * t_outer * np.einsum("na,na->n", (u[self.odofs[:, 2:]] - u[self.odofs[:, :2]]), self.eo) / self.lo
-        return {"u": u, "f": f, "reaction": reaction, "anchors": anchors, "vm": vm, "stress": stress,
+        return {"u": u, "f": f, "reaction": reaction, "anchors": anchors, "pull": pull, "vm": vm, "stress": stress,
+                "utilisation": utilisation,
                 "n_hull": n_hull, "n_outer": n_outer, "pushing": len(pushing) == len(anchors) and bool(pushing)}
 
     # Local panel loads on the skins (normal pressures, Pa), per edge.
@@ -282,7 +307,21 @@ class Model:
         rock_on_outer = rock_column * inp.floor_scale * g_out * np.clip(cos, 0, None)
         return outward, rock_on_outer, rock_on_hull
 
-    def size(self, max_iter=80, tol=1e-4):
+    def _skin_sizes(self, s, loads):
+        """Skin thicknesses needed for the forces of a solution."""
+        inp = self.inp
+        hull_pillow, outer_pillow, n_long = loads
+        h1, h2 = s["n_hull"] + hull_pillow, n_long + hull_pillow
+        o1, o2 = s["n_outer"] + outer_pillow, outer_pillow
+        need_h = np.sqrt(h1 * h1 - h1 * h2 + h2 * h2) / (inp.sigma * allowance(h1, h2))
+        need_o = np.sqrt(o1 * o1 - o1 * o2 + o2 * o2) / (inp.sigma * allowance(o1, o2))
+        return need_h, need_o
+
+    def size(self, max_iter=200, tol=0.02):
+        """Fully stressed sizing, until every part is within `tol` of its allowable (or at its minimum gauge)
+        and none is over it by more than `tol`; the stresses are checked at every integration point.
+        The result says whether that was reached (`converged`), and if not, whether at least no part is
+        over its allowable (`sized`: safe but heavier than needed) or some still are (not a design)."""
         inp = self.inp
         nt, ne = self.mesh.nt, len(self.mesh.quads)
         t_hull, t_outer = np.full(nt, inp.skin_min), np.full(nt, inp.skin_min)
@@ -298,28 +337,37 @@ class Model:
                       if self.ceiling == "hung" else np.zeros(nt))
         outer_pillow = outer_q * r_c / 2
         extra_hull = stiffener + cell_floor
-        last = None
-        for it in range(max_iter):
+        loads = (hull_pillow, outer_pillow, n_long)
+        converged = False
+        for it in range(1, max_iter + 1):
             s = self.solve(t_hull, t_outer, tau, extra_hull)
-            nh, no = s["n_hull"], s["n_outer"]
-            # Skins: von Mises of (hoop + pillow, lengthwise + pillow) per unit length.
-            h1, h2 = nh + hull_pillow, n_long + hull_pillow
-            o1, o2 = no + outer_pillow, outer_pillow
-            knock = COMPRESSION_KNOCKDOWN
-            t_hull = np.maximum(inp.skin_min, np.sqrt(h1 * h1 - h1 * h2 + h2 * h2)
-                                / (inp.sigma * np.where(h1 < 0, knock, 1.0)))
-            t_outer = np.maximum(inp.skin_min, np.sqrt(o1 * o1 - o1 * o2 + o2 * o2)
-                                 / (inp.sigma * np.where(o1 < 0, knock, 1.0)))
-            sx, sy, txy = s["stress"].T
-            centre, radius = (sx + sy) / 2, np.hypot((sx - sy) / 2, txy)
-            compressed = -(centre - radius) > (centre + radius)
-            tau = np.maximum(tau_min, tau * s["vm"] / (inp.sigma * np.where(compressed, knock, 1.0)))
-            masses = self.masses(t_hull, t_outer, tau, extra_hull)
-            if last is not None and abs(masses["total"] - last) < tol * masses["total"]:
+            need_h, need_o = self._skin_sizes(s, loads)
+            util = self._utilisation(s, t_hull, t_outer, tau, need_h, need_o, tau_min)
+            if util["max"] <= 1 + tol and util["slack"] <= tol:
+                converged = True
                 break
-            last = masses["total"]
-        s = self.solve(t_hull, t_outer, tau, extra_hull)
-        return self._result(s, t_hull, t_outer, tau, extra_hull, stiffener, cell_floor, it + 1)
+            # Skins: von Mises of (hoop + pillow, lengthwise + pillow) per unit length.
+            t_hull, t_outer = np.maximum(inp.skin_min, need_h), np.maximum(inp.skin_min, need_o)
+            tau = np.maximum(tau_min, tau * s["utilisation"])
+        if not converged:      # report the sizes returned, not the ones before the last resizing
+            s = self.solve(t_hull, t_outer, tau, extra_hull)
+            util = self._utilisation(s, t_hull, t_outer, tau, *self._skin_sizes(s, loads), tau_min)
+        out = self._result(s, t_hull, t_outer, tau, extra_hull, stiffener, cell_floor, it)
+        out.update(converged=converged, sized=util["max"] <= 1 + tol, utilisation=util["max"], slack=util["slack"])
+        return out
+
+    def _utilisation(self, s, t_hull, t_outer, tau, need_h, need_o, tau_min):
+        """Worst use of an allowable over all parts, and the worst spare capacity of a part above its
+        minimum gauge (which a fully stressed design leaves at ~0)."""
+        skin = self.inp.skin_min
+        parts = ((need_h / t_hull, t_hull, skin), (need_o / t_outer, t_outer, skin), (s["utilisation"], tau, tau_min))
+        worst = max(float(u.max()) for u, _, _ in parts)
+        slack = 0.0
+        for u, t, minimum in parts:
+            above = t > minimum * (1 + 1e-6)
+            if above.any():
+                slack = max(slack, float((1 - u[above]).max()))
+        return {"max": worst, "slack": slack}
 
     def masses(self, t_hull, t_outer, tau, extra_hull):
         """Steel per metre of tube (kg/m), by part."""
@@ -341,8 +389,7 @@ class Model:
         per_m = self.masses(t_hull, t_outer, tau, extra_hull)
         per_torus = {k: v * 2 * math.pi * inp.centre for k, v in per_m.items()}
         load = float(s["f"][0::2].sum())
-        anchor_force = {round(math.degrees(m.phi[(n - m.outer_nodes[0])])): -float(s["reaction"][2 * n])
-                        for n in s["anchors"]}
+        anchor_force = {round(math.degrees(m.phi[j])): s["pull"][j] for j in s["anchors"]}
         compression = min(float(s["n_hull"].min()), float(s["n_outer"].min()))
         disp = np.hypot(s["u"][0::2], s["u"][1::2])
         return {
@@ -350,7 +397,7 @@ class Model:
             "per_metre": per_m, "per_torus": per_torus,
             "t_hull": t_hull, "t_outer": t_outer, "tau": tau, "stiffener": stiffener, "cell_floor": cell_floor,
             "load": load, "rock_load": self.rock_load, "anchor_force": anchor_force,
-            "reaction_sum": -float(s["reaction"][2 * np.array(s["anchors"])].sum()),
+            "reaction_sum": sum(s["pull"][j] for j in s["anchors"]),
             "max_compression": compression,            # N/m, most negative skin force
             "max_displacement": float(disp.max()),
             "vm_max": float(s["vm"].max()), "solution": s,

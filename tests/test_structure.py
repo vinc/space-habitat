@@ -208,13 +208,60 @@ class TestTubeSection(unittest.TestCase):
         forces = self.runs["fan"]["anchor_force"]
         self.assertGreater((forces[90] + forces[270]) / self.runs["fan"]["load"], 0.8)
 
-    def test_fully_stressed(self):
-        r = self.runs["sides"]
-        inp = r["inputs"]
-        s = r["solution"]
-        self.assertLessEqual(s["vm"].max(), 1.05 * inp.sigma)
-        self.assertTrue((r["t_hull"] >= inp.skin_min).all() and (r["t_outer"] >= inp.skin_min).all())
-        self.assertTrue((r["tau"] >= inp.wall_min / inp.cell - 1e-12).all())
+    def test_fully_stressed_at_every_integration_point(self):
+        for name in ("sides", "fan"):
+            r = self.runs[name]
+            inp = r["inputs"]
+            self.assertTrue(r["converged"], name)
+            self.assertLessEqual(r["utilisation"], 1.02)
+            self.assertLessEqual(r["solution"]["utilisation"].max(), 1.02)
+            self.assertTrue((r["t_hull"] >= inp.skin_min).all() and (r["t_outer"] >= inp.skin_min).all())
+            self.assertTrue((r["tau"] >= inp.wall_min / inp.cell - 1e-12).all())
+
+    def test_sizing_converges_at_every_size(self):
+        # Review on PR #4: local stresses, not just the total mass, must settle.
+        for r in (400, 1600, 2500):
+            out = tube_section.run(self.p, r, "sides", "vaulted")
+            self.assertTrue(out["converged"], r)
+            self.assertLessEqual(out["utilisation"], 1.02)
+
+    def test_unfinished_sizing_is_flagged(self):
+        inp = self.runs["sides"]["inputs"]
+        out = tube_section.Model(inp, "sides").size(max_iter=2)
+        self.assertFalse(out["converged"])
+        self.assertFalse(out["sized"])
+        self.assertGreater(out["utilisation"], 1.02)
+
+    def test_allowance_is_continuous(self):
+        k = tube_section.COMPRESSION_KNOCKDOWN
+        a = tube_section.allowance
+        self.assertEqual(float(a(np.array(1.0), np.array(0.5))), 1.0)
+        self.assertAlmostEqual(float(a(np.array(-1.0), np.array(-0.2))), k)
+        self.assertAlmostEqual(float(a(np.array(1.0), np.array(-1.0))), (1 + k) / 2)
+        self.assertAlmostEqual(float(a(np.array(1.0), np.array(-1e-9))), 1.0, places=6)
+
+    def test_rock_rests_on_the_walls(self):
+        # Review on PR #4: the rock's weight enters at the hull or the outer wall, never inside the jacket.
+        inp = self.runs["sides"]["inputs"]
+        for ceiling in tube_section.CEILINGS:
+            m = tube_section.Model(inp, "sides", ceiling)
+            f = m.f_fixed.reshape(-1, 2)
+            interior = m.mesh.columns[:, 1:-1].ravel()
+            np.testing.assert_allclose(f[interior], 0, atol=1e-9)
+            # The rock goes on the outer wall (floor side; and hub side when hung) or on the hull (hub side,
+            # vaulted), in full: rock + bumper on the outer wall, rock + fill + pressure on the hull.
+            hub_side = np.cos(m.mesh.phi) < 0
+            outer_x = f[m.mesh.outer_nodes, 0]
+            hull_x = f[m.mesh.hull_nodes, 0]
+            if ceiling == "hung":
+                self.assertGreater(outer_x[hub_side].sum(), 0)
+            else:
+                self.assertLess(abs(outer_x[hub_side].sum()), 0.01 * m.rock_load)
+            total = f[:, 0].sum()
+            fill = inp.floor_mass * inp.omega ** 2 * inp.centre
+            self.assertAlmostEqual((total - m.rock_load) / (fill + m.bumper_mass * inp.omega ** 2 * inp.centre), 1,
+                                   delta=0.05)
+            self.assertGreater(hull_x.sum() + outer_x.sum(), 0.99 * total)
 
     def test_close_to_the_system_model_at_900_m(self):
         r = self.runs["sides"]
