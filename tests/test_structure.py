@@ -7,7 +7,7 @@ import numpy as np
 
 from habitat_model import Design, evaluate, load, params
 from habitat_model.mass import spoke_factor
-from structure_model import cable_net, net_statics, spinup, wire
+from structure_model import cable_net, net_statics, spinup, tube_section, wire
 from structure_model.__main__ import main
 
 
@@ -138,6 +138,7 @@ class TestWire(unittest.TestCase):
         with redirect_stdout(out):
             self.assertEqual(main([]), 0)
         self.assertIn("Tangent-chord net", out.getvalue())
+        self.assertIn("Tube cross-section", out.getvalue())
 
 
 if __name__ == "__main__":
@@ -157,3 +158,69 @@ class TestUniformChordArea(unittest.TestCase):
             peak = n["tension_end"] / n["wire_area_uniform"] + n["self_load_stress"]
             self.assertAlmostEqual(peak / sigma, 1, places=9)
             self.assertAlmostEqual(n["tension_mid_uniform"] / n["wire_area_uniform"], sigma, delta=1)
+
+
+class TestTubeSection(unittest.TestCase):
+    """The tube's cross-section by finite elements (plan §2.1)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.p = params(load())
+        cls.runs = {a: tube_section.run(cls.p, 900, a, "vaulted") for a in tube_section.ANCHORS}
+
+    def test_quad_patch(self):
+        # A uniform strain gives a uniform stress and balanced nodal forces.
+        square = np.array([[[0.0, 0.0], [2.0, 0.0], [2.0, 1.0], [0.0, 1.0]]])
+        k = tube_section.quad_unit_stiffness(square)[0]
+        u = np.zeros(8)
+        u[0::2] = 1e-3 * square[0, :, 0]
+        np.testing.assert_allclose(k @ u @ np.tile([0.0, 1.0], 4), 0, atol=1e-3)
+        np.testing.assert_allclose((k @ u)[0::2].sum(), 0, atol=1e-3)
+        b, _ = tube_section._b_matrix(square, 0.0, 0.0)
+        stress = tube_section._plane_stress() @ b[0] @ u
+        e = tube_section.E / (1 - tube_section.NU ** 2) * 1e-3
+        np.testing.assert_allclose(stress, [e, tube_section.NU * e, 0], rtol=1e-9)
+
+    def test_pressure_alone_gives_the_hoop_force(self):
+        inp = self.runs["sides"]["inputs"]
+        from dataclasses import replace
+        bare = replace(inp, rock_density=0.0, floor_mass=0.0, omega=0.0, bumper=0.0)
+        model = tube_section.Model(bare, "sides")
+        nt, ne = model.mesh.nt, len(model.mesh.quads)
+        s = model.solve(np.full(nt, 0.01), np.full(nt, 0.01), np.full(ne, 1e-9))
+        np.testing.assert_allclose(s["n_hull"], inp.pressure * inp.a, rtol=0.01)
+
+    def test_equilibrium_and_rim_load(self):
+        res = evaluate(self.p, Design(radius_m=900, n_tori=1))
+        g, m = res["geometry"], res["mass"]
+        for r in self.runs.values():
+            self.assertAlmostEqual(r["reaction_sum"] / r["load"], 1, places=6)
+        # The load per metre is about the rim's (with the system model's hull) at the centre line.
+        centre = g["radius"] - g["tube_radius"]
+        rim_load = m["rim"] / (2 * math.pi * centre) * g["omega"] ** 2 * centre
+        self.assertAlmostEqual(self.runs["sides"]["load"] / rim_load, 1, delta=0.03)
+
+    def test_anchors_at_the_sides(self):
+        crest, sides, fan = (self.runs[a]["per_torus"]["total"] for a in ("crest", "sides", "fan"))
+        self.assertGreater(crest, 2 * sides)
+        self.assertAlmostEqual(fan / sides, 1, delta=0.05)
+        # In the fan, the side anchors take most of the load.
+        forces = self.runs["fan"]["anchor_force"]
+        self.assertGreater((forces[90] + forces[270]) / self.runs["fan"]["load"], 0.8)
+
+    def test_fully_stressed(self):
+        r = self.runs["sides"]
+        inp = r["inputs"]
+        s = r["solution"]
+        self.assertLessEqual(s["vm"].max(), 1.05 * inp.sigma)
+        self.assertTrue((r["t_hull"] >= inp.skin_min).all() and (r["t_outer"] >= inp.skin_min).all())
+        self.assertTrue((r["tau"] >= inp.wall_min / inp.cell - 1e-12).all())
+
+    def test_close_to_the_system_model_at_900_m(self):
+        r = self.runs["sides"]
+        self.assertAlmostEqual(r["per_torus"]["total"] / r["model_hull_frames"], 1, delta=0.3)
+
+    def test_mesh_converged(self):
+        coarse = self.runs["sides"]["per_metre"]["total"]
+        fine = tube_section.run(self.p, 900, "sides", "vaulted", n_radial=6, n_around=216)["per_metre"]["total"]
+        self.assertAlmostEqual(fine / coarse, 1, delta=0.01)

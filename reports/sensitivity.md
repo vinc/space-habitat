@@ -118,16 +118,16 @@ Each input drawn independently from a triangular distribution (low, value, high)
 
 | Output | Unit | 5th percentile | Median | 95th percentile |
 |---|---|---|---|---|
-| Mass per m² of floor | t/m² | 35.1 | 40.3 | 45.8 |
-| Rock mined per torus (S-type) | Mt | 13.9 | 17.4 | 22.0 |
-| C-type per torus | Mt | 4.13 | 4.97 | 6.22 |
-| Despun array at the site | km² | 1.28 | 1.51 | 1.87 |
-| People per torus |  | 1,830 | 2,320 | 2,940 |
-| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 4.05 | 4.61 | 5.22 |
-| Processing energy per torus | PJ | 7.07 | 9.17 | 11.8 |
-| Shipping energy per torus | PJ | 16.0 | 23.8 | 36.1 |
-| Processing + shipping per torus | PJ | 24.9 | 33.3 | 45.2 |
-| Energy-limited generation time | yr | 4.73 | 6.34 | 8.60 |
+| Mass per m² of floor | t/m² | 35.0 | 40.4 | 46.0 |
+| Rock mined per torus (S-type) | Mt | 13.9 | 17.5 | 22.3 |
+| C-type per torus | Mt | 4.12 | 4.97 | 6.17 |
+| Despun array at the site | km² | 1.27 | 1.51 | 1.87 |
+| People per torus |  | 1,820 | 2,310 | 2,920 |
+| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 4.06 | 4.62 | 5.21 |
+| Processing energy per torus | PJ | 6.95 | 9.11 | 11.9 |
+| Shipping energy per torus | PJ | 15.8 | 23.7 | 35.7 |
+| Processing + shipping per torus | PJ | 24.6 | 33.1 | 45.6 |
+| Energy-limited generation time | yr | 4.68 | 6.29 | 8.66 |
 
 # Farm radiators' reach: `farm_radiator_outer_frac` across its range
 

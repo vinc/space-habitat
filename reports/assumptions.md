@@ -31,6 +31,11 @@
 | `hull_frames_ref_radius_m` | 900.0 | m | fixed | design | §5c |
 | `hull_frames_exponent` | 2.300 | exponent of r | 2.100–2.500 | estimate | §5c, fitted to the 900 m and 1.6 km estimates |
 | `hull_min_gauge_frac` | 0.3000 | fraction of the 1 g hull | 0.2000–0.5000 | estimate | §9, hull and frames floored at ~30% of their 1 g mass |
+| `plate_stress_mpa` | 300.0 | MPa (working, von Mises) | 200.0–500.0 | guess | §5d used 500 MPa for the first design's ring and 250 MPa for plain carbonyl iron; ~300 MPa is a 690 MPa structural steel at a factor of ~2.3 |
+| `skin_min_gauge_m` | 0.01000 | m of steel | 0.005000–0.02000 | estimate | §12, hull at minimum gauge (1 cm per hull): the pressure hull and the outer cell wall |
+| `cell_wall_min_gauge_m` | 0.005000 | m of steel | 0.003000–0.01000 | guess | bulkheads and cell walls of the rock jacket at their thinnest |
+| `cell_size_m` | 10.00 | m | fixed | design | spacing of the jacket's bulkheads and cell walls, as the chords' anchors (§12) |
+| `bumper_m` | 0.002000 | m of steel | 0.001000–0.003000 | estimate | §13, thin outer bumper (~1-3 mm) |
 | `wire_stress_mpa` | 1,000 | MPa (working) | 800.0–1,200 | estimate | structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire |
 | `steel_density` | 7,900 | kg/m3 | fixed | sourced | §5a |
 | `hub_factory_metal_frac` | 0.2500 | fraction of torus steel | 0.1500–0.5000 | guess | §10, hub, dock and factory (guess): 1.1 -> 1.4 Mt, 5.8 -> 7.3 Mt, 22 -> 27 Mt |
