@@ -2,7 +2,7 @@
 
 Section 1 of `plan.md`. It recomputes the design notes' numbers from one set of assumptions, checks them against the notes, and ranks the assumptions by how much they move the results.
 
-Plain Python 3.11+ and numpy. Run it from the repository root:
+Plain Python 3.11+ and numpy 2.0+ (`pip install -r requirements.txt`). Run it from the repository root:
 
 ```bash
 python -m habitat_model --size 900 --stack six --tiers 2 --host L --site Eros
@@ -34,7 +34,7 @@ Outputs, instead of the default design summary:
 | `--json FILE` | headline numbers for the 3D model's stats panel |
 | `--write-reports DIR` | all of the above as files (see `reports/`) |
 
-Tests: `python -m unittest discover -s tests`.
+Tests: `python -m unittest discover -s tests`. GitHub Actions (`.github/workflows/ci.yml`) runs them, with command-line smoke tests, on Python 3.11 and 3.13 for every pull request and push to `main`.
 
 ## Layout
 
