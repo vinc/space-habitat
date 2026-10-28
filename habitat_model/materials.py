@@ -27,6 +27,51 @@ TRACE_PPM = {
 }
 
 
+# Demand per torus, tonnes, (low, high), for a 900 m torus; scaled with the floor area, or with
+# the spoke steel ("steel"). None: needed but not yet estimated (unbudgeted). Recovery: share of the
+# contained inventory a plausible extraction line gets out. Nearly all are guesses from the notes.
+TRACE_DEMAND = {
+    "Cu": ((100, 1000), "floor", 0.5, "guess (§10): wiring, motors, magnetrons, rotary transformer; recovery 'about half'"),
+    "Ni": ((10000, 50000), "floor", 0.8, "guess (§10, §14): cladding, Invar, nickel-iron batteries; carbonyl recovery"),
+    "Mn": ((0.003, 0.007), "steel", 0.2, "estimate: ~0.3-0.7% Mn in pearlitic wire; Mn sits in the silicates"),
+    "P": ((300, 300), "floor", 0.5, "notes §10: soil"),
+    "K": ((2000, 5000), "floor", 0.3, "guess (§10): soil, battery electrolyte; needs leaching"),
+    "Na": ((1000, 1000), "floor", 0.3, "notes §13: ~1.4 kt of Na2O for soda-lime glass"),
+    "B": ((0.001, 0.01), "floor", 0.1, "guess (§10): PV doping, grams a year"),
+    "Ga": ((0, 0.005), "floor", 0.1, "notes §13: LEDs only if chosen (kilograms)"),
+    "W": ((0.001, 0.05), "floor", 0.1, "guess (§13): lamp and magnetron cathodes (kilograms)"),
+    "Ag": ((0, 0), "floor", 0.1, "notes §10: avoided, copper instead"),
+    "Li": ((0, 0), "floor", 0.1, "notes §10: nickel-iron batteries preferred"),
+    "Co": ((0, 0), "floor", 0.8, "notes §10: maraging wire rejected; by-product"),
+    "Cr": (None, "floor", 0.5, "heat-resisting steels for receivers and furnaces: not estimated"),
+    "Sn": (None, "floor", 0.1, "solder: not estimated"),
+    "Mo": (None, "floor", 0.1, "small alloying: not estimated"),
+    "Zn": (None, "floor", 0.3, "coatings: not estimated"),
+}
+REFERENCE_FLOOR_900 = 2 * math.pi * 900 * 900 / 16   # m^2, floor of a 900 m torus
+
+
+def trace_budget(trace, floor_area, spoke_steel):
+    """Contained, recoverable and needed, per element, in kg; surplus or deficit against the high demand."""
+    out = {}
+    for element, contained in trace.items():
+        total = (contained["s_type"] or 0.0) + contained["c_type"]
+        demand, basis, recovery, note = TRACE_DEMAND.get(element, (None, "floor", None, "no use identified"))
+        if demand is None or recovery is None:
+            out[element] = {"contained": total, "recoverable": None if recovery is None else total * recovery,
+                            "demand": None, "balance": None,
+                            "status": "unbudgeted" if element in TRACE_DEMAND else "no demand", "note": note}
+            continue
+        scale = spoke_steel if basis == "steel" else 1e3 * floor_area / REFERENCE_FLOOR_900
+        lo, hi = demand[0] * scale, demand[1] * scale
+        recoverable = total * recovery
+        out[element] = {"contained": total, "recoverable": recoverable, "demand": (lo, hi),
+                        "balance": recoverable - hi,
+                        "status": "ok" if recoverable >= hi else ("short at the high demand" if recoverable >= lo else "deficit"),
+                        "note": note}
+    return out
+
+
 def metal_fraction(p, host_class):
     return {"H": p.metal_wt_H, "L": p.metal_wt_L, "LL": p.metal_wt_LL}[host_class]
 
@@ -84,6 +129,7 @@ def compute(p, d, geo, mass):
         "c_carbon_contained": c_type * p.c_carbon_wt,
         "mined": s["s_type"] + c_type,
         "trace": trace,
+        "trace_budget": trace_budget(trace, geo["floor_area"], mass["spokes"]),
     }
 
 

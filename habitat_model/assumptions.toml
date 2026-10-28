@@ -96,12 +96,20 @@ high = 1.75
 source = "§6, Globus: 11 t/m2 of regolith ~ 7 t/m2 of water"
 status = "sourced"
 
-[shield.fill_water_equiv_t_m2]
-value = 1.17
-unit = "t/m2 water-equivalent"
-low = 1.05
-high = 1.25
-source = "§6, 1 m soil/regolith mix"
+[shield.rock_density]
+value = 2.0
+unit = "t/m3"
+low = 1.8
+high = 2.2
+source = "§5e, compacted crushed rock: ~5.5 m for 11 t/m2"
+status = "estimate"
+
+[shield.crawl_space_m]
+value = 1.5
+unit = "m"
+low = 1.0
+high = 2.0
+source = "§13, double outer skin: empty crawl space of ~1-2 m outside the rock cells"
 status = "estimate"
 
 [shield.fill_depth_m]
@@ -183,9 +191,9 @@ status = "estimate"
 [structure.wire_stress_mpa]
 value = 1000
 unit = "MPa (working)"
-low = 700
+low = 800
 high = 1200
-source = "§5c, §12: drawn pearlitic wire ~1.8-2 GPa ultimate; plan §3 checks it for asteroid iron"
+source = "structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire"
 status = "estimate"
 
 [structure.steel_density]
@@ -576,6 +584,14 @@ source = "§13, implied by ~40 mol per person"
 status = "estimate"
 
 # --- Heat -------------------------------------------------------------------
+
+[heat.radiator_emissivity]
+value = 0.9
+unit = "fraction"
+low = 0.79
+high = 0.93
+source = "AZ-93 white paint 0.91 +/- 0.02; silvered Teflon OSR ~0.79 (thermal control coating patent US 10,100,203)"
+status = "sourced"
 
 [heat.radiator_temp_k]
 value = 285

@@ -2,7 +2,7 @@
 
 Check the design's load-bearing assumptions with models before going deeper. The parametric system model comes first: it recomputes the design notes' numbers from one set of assumptions and ranks them by how much they matter. That ranking sets the priorities for the detailed models.
 
-**Order** (set by the sensitivity ranking of model 1, `reports/sensitivity.md`): 1 → 2 and 3 in parallel → 4 (needs the structural stiffness from 2) → 5 → 6. Section 7 lists what only Earth tests can settle; the top two inputs of the ranking (C-type nitrogen recovery and baking energy) are among them.
+**Order** (set by the combined sensitivity ranking of model 1 over representative designs, `reports/sensitivity.md`, revised after the review in issue #1): 1 → 2 and 3 in parallel, with a preliminary thermal check done alongside → 4 (needs the structural stiffness from 2) → 5 → 6 → 7. Section 8 lists what only Earth tests can settle; C-type nitrogen recovery and baking energy, near the top of the ranking, are among them.
 
 ---
 
@@ -21,7 +21,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - check: §0 key numbers (floor 32 / 100 / 245 ha), §2
 - [x] **Mass:** rock shield (11 t/m², minus fill credit), double skin, hull and frames (r^2.3), cable spokes `M·ρv²/(σ − ρv²/2)`, fill, water, N₂, farm ring, array, radiators
   - check: §5c table (~2.2 / 11.9 / 40 / 105 / 238 Mt; t per m² of floor)
-- [x] **Materials and mining:** metal needed vs host class (H / L / LL free metal, optional iron from the silicates), shield rock from tailings, rock mined per torus; C-type sized by nitrogen (0.24 wt%, 70% recovery); trace-element budget (Cu, B, Sn…) per torus vs source bodies
+- [x] **Materials and mining:** metal needed vs host class (H / L / LL free metal, optional iron from the silicates), shield rock from tailings, rock mined per torus; C-type sized by nitrogen (0.24 wt%, 70% recovery); trace-element budget (Cu, B, Sn…) per torus vs source bodies: contained, recoverable, demand and surplus (`--trace`)
   - check: §8 mined per torus, §10 bill of materials and trace table, §15 "tori supported" per candidate host
 - [x] **Power and light:** valley lighting (light per m² of floor per day, lamp efficacy, ceiling losses), farm per tier lit, other loads, despun array with the survival sizing (×1.57), seasonal sizing by orbit (aphelion, half sky for the valley, full farm), concentrator option
   - check: §0 and §13 power tables, §15 seasonal sizing table
@@ -49,12 +49,15 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - processing energy
 - [x] Optional: Monte Carlo over all ranges for the spread of the key outputs
 - [x] Rank the assumptions, then re-order sections 2–6 accordingly
+- [ ] Source the trace-element demands and recoveries (mostly guesses taken from the notes; Cr, Sn, Mo and Zn not yet estimated)
 
 ### 1.5 Outputs
 - [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
 - [x] JSON export for the 3D model's stats panel
 
-**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 185 of 197 checked figures within 5%, the rest rounding in the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, sections 2–6 re-ordered by it (structure, radiation, stack dynamics, second tier, heat).
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 189 of 197 checked figures within 5% (192 within their configured tolerance) after correcting the notes (`reports/validation.md`); this shows the model reproduces the notes, not that the design is physically validated. Ranking in `reports/sensitivity.md`; sections 2–7 re-ordered by it.
+
+**Review (issue #1), addressed:** the tube's rock jacket and crawl space are now in the geometry (pitch, gaps, end openings, stability) and the jacket has a finite thickness; the fill credit follows the actual fill; the heat capacity is labelled an ideal limit, with a preliminary radiative exchange model alongside; an unknown Δv stays unknown; shipping, total energy and generation time are in the sensitivity outputs, ranked over several designs; the trace budget compares demand with recoverable supply; the validation headline separates the literal 5% from the configured tolerances.
 
 **Done when:** every key table in the notes is reproduced or corrected, and the assumptions are ranked by impact.
 
@@ -62,16 +65,22 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 2. Structure
 
-**Why second:** the wire's working stress is the largest structural input: 700–1,200 MPa moves the S-type rock mined per torus by −12% to +33% at 900 m (−16% to +43% at 2.5 km), because on L and LL hosts metal, not shield rock, sizes the mining. Hull and frames (r^2.3 fit) and the hub/factory metal (a guess) add up to +15% and +20%.
+**Why second:** under way. The steel inputs move the S-type rock mined per torus by up to ~+20% (wire stress, hull and frames, hub and factory metal), the jacket's geometry sets the pitch, mass and stack limits, and the stack dynamics need its stiffness.
+
+**Status:** the wire, the cable net and the spin-up are done in `structure_model/` (findings and sources in its README, report in `reports/structure.md`). ~1 GPa is reachable at a safety factor of ~2 on bridge wire, or with thinner wire; the range is narrowed to 800–1,200 MPa (10th in the combined ranking). The rim loads were updated for the jacket's finite thickness (review, issue #1). The finite-element segment model and the hub's stabilising lines are next.
 
 - [ ] Finite-element model of one tube segment (CalculiX, FEniCS or sfepy):
   - rock cells and double skin
   - floor fill and hung ceiling cells
   - loads: 1 g spin and 70 kPa of air
-- [ ] Cable net: chord geometry, tension distribution, taper, compliant joints
-- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
+- [x] Cable net: chord geometry, tension distribution, taper, compliant joints
+- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way (provisional)
+  - done: assembled statics with one tension per chord, rigid segments and joint springs (`structure_model/net_statics.py`): arcs must span ≥ ~4θr (~270 m at 900 m); their chords carry 2× the finished load, so spin ≤ ~0.71 of the final rate; joints locked while building (~1% of the hoop force, plus bending), released after closure
+  - checks: tension-only law for every chord, segment balance, and small displacements at the reported spin; stages failing them (pinned joints, some sliding cases) are left unresolved
+  - open: a geometrically nonlinear, prestressed analysis for those, flexible segments (the joint moments of longer arcs), the hub and its stabilising lines, the actual sequence
 - [ ] Hub held in the net by stabilising lines
-- [ ] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
+- [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
+  - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)
 - [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate; stiffness for model 4 (stack dynamics)
 
 **Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
@@ -80,7 +89,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 3. Radiation transport (the shield is ~85% of the mass)
 
-**Why third:** 9–13 t/m² of shield moves the mass per m² of floor by ±18% and the S-type rock by ±13%, at every size.
+**Why third:** 9–13 t/m² of shield moves the mass per m² of floor by about −20% / +22%, at every size.
 
 - [ ] Tool: Geant4 (via GRAS or MULASSIS) run locally, or NASA's OLTARIS / HZETRN
 - [ ] Shield composition: L and LL chondritic tailings after metal removal (~2 t/m³), CI-like clays for comparison, water or polyethylene inner layers
@@ -110,24 +119,24 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ---
 
-## 5. Second tier
+## 5. Replication logistics
 
-**Why fifth:** the farm inputs set the population: light on the crops moves people per torus by −17% to +25%, wheat yield by −7% to +25%, farm light delivery the array by −4% to +9%. Replication logistics matter too: with the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking.
+**Why fifth:** once shipping is counted, its inputs top the combined ranking (`reports/sensitivity.md`): the electric propulsion's exhaust speed (−31% / +61% on shipping energy) and the water shipped, set by the lake water per m² of floor, a guess (−30% / +51%). With the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking. C-type nitrogen recovery and baking energy, also near the top, are Earth tests (section 8).
 
-- [ ] **Light-box and farm optics:** ray trace of the magnesium-oxide cavity, diffuser and light pipes. Check the ~75% (valley) and ~85% (farm) delivery, and the light uniformity at 2.5 m tier spacing
-- [ ] **Closed atmosphere and ecology:** compartment model (ODEs) of O₂, CO₂, N₂, water and soil carbon across farm, valley, soil, people and algae
-  - validate by replaying Biosphere 2 (O₂ from ~21% to ~14% in ~16 months)
-  - failure scenarios: a farm tier dark, a soil respiration burst, a leak
-  - output: buffer and control needs
-- [ ] **Replication logistics:** stock-and-flow or discrete-event model of mining, factory throughput, shipping and imported vitamins per generation. Output: doubling time, and the share of each child habitat that is made locally
+- [ ] Stock-and-flow or discrete-event model of mining, factory throughput, shipping and imported vitamins per generation. Output: doubling time, and the share of each child habitat that is made locally
+- [ ] Water budget per torus with a breakdown (soil, lakes, O₂, ballast, spin-up), replacing the lake-water guess; which water is shipped and which is made locally
+- [ ] Transfer Δv from current ephemerides for the chosen S/C pairs (the system model uses the notes' table), and propulsion options (exhaust speed, efficiency, propellant source)
+
+**Changes the design if:** shipping dominates the generation time enough to favour a different C-type partner, local water, or a different propulsion.
 
 ---
 
 ## 6. Heat rejection
 
-**Why last:** the radiator temperature (275–295 K) moves the heat margin by only −13% to +15%, and a 900 m six-stack has ~1.8× margin even with three tiers lit.
+**Why sixth:** a preliminary radiative exchange model now exists (below): the drum rejects ~75–80% of the ideal end-aperture limit, so a 900 m six-stack with three tiers lit has ~1.3× margin (not 1.8×) and heat limits a stack to ~8 tori. Still above six, so the rest can follow the dynamics and logistics, but no longer last.
 
-- [ ] Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
+- [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps
+- [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
 - [ ] Check that no direct sunlight reaches the radiators (Sun perpendicular to the axis, including through the gaps)
 - [ ] Coolant loops: thermosiphon sizing along the spokes, fluids (ammonia, water), pressure drops
 - [ ] Valley thermal model: day/night swing with the cold ceiling, wet vs dry valley
@@ -137,12 +146,24 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ---
 
-## 7. Earth tests (models can't settle these)
+## 7. Second tier
+
+**Why seventh:** the farm inputs set the population (light on the crops −17% / +25% on people per torus, wheat yield −7% / +25%) and the light delivery moves the array by under 10%; the closed atmosphere is a control question rather than a sizing one.
+
+- [ ] **Light-box and farm optics:** ray trace of the magnesium-oxide cavity, diffuser and light pipes. Check the ~75% (valley) and ~85% (farm) delivery, and the light uniformity at 2.5 m tier spacing
+- [ ] **Closed atmosphere and ecology:** compartment model (ODEs) of O₂, CO₂, N₂, water and soil carbon across farm, valley, soil, people and algae
+  - validate by replaying Biosphere 2 (O₂ from ~21% to ~14% in ~16 months)
+  - failure scenarios: a farm tier dark, a soil respiration burst, a leak
+  - output: buffer and control needs
+
+---
+
+## 8. Earth tests (models can't settle these)
 
 - [ ] **C-type baking (top of the ranking):** nitrogen recovery and energy per kg from CI-like meteorite or simulant. Recovery (50–90%) moves the C-type per torus by −22% to +40%; baking energy (1–2 MJ/kg) moves the processing energy by ±28%. Lab data, not a model, settles both.
 - [ ] Growth-chamber trials of the working diet under sulfur lamps (CO₂ ~1,000 ppm, 2.5 m tiers), especially lentils and flax, whose yields are estimates
 - [ ] Non-rotating sulfur bulb at kW scale, fed by a 915 MHz source
-- [ ] Wire drawing from meteoritic iron-nickel or a simulant (the wire's strength is the top structural input, section 2)
+- [ ] Wire drawing from carbonyl-refined meteoritic iron, and from the as-separated metal for comparison (the wire's strength sets the spoke mass, section 2)
 - [ ] Magnetic separation of free metal from L and LL chondrite material (meteorites or simulant)
 - [ ] Partial-gravity health data (spaceflight, centrifuge studies)
 - [ ] Growth chambers on 1.05–1.8-year cycles for candidate species

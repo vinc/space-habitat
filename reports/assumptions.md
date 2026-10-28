@@ -14,7 +14,8 @@
 | `air_temperature_k` | 288.1 | K | fixed | design | §3b |
 | `shield_areal_t_m2` | 11.00 | t/m2 | 9.000–13.00 | sourced | §5b, Globus & Strout (2017): ~11 t/m2 of rock for 20 mSv/yr; plan §2 checks it |
 | `rock_per_water_shield` | 1.571 | t rock / t water | 1.400–1.750 | sourced | §6, Globus: 11 t/m2 of regolith ~ 7 t/m2 of water |
-| `fill_water_equiv_t_m2` | 1.170 | t/m2 water-equivalent | 1.050–1.250 | estimate | §6, 1 m soil/regolith mix |
+| `rock_density` | 2.000 | t/m3 | 1.800–2.200 | estimate | §5e, compacted crushed rock: ~5.5 m for 11 t/m2 |
+| `crawl_space_m` | 1.500 | m | 1.000–2.000 | estimate | §13, double outer skin: empty crawl space of ~1-2 m outside the rock cells |
 | `fill_depth_m` | 1.000 | m | fixed | design | §6 |
 | `fill_soil_frac` | 0.5000 | fraction of the fill depth | fixed | design | §10, 0.5 m soil + 0.5 m regolith |
 | `soil_density` | 1.600 | t/m3 | 1.300–1.800 | estimate | §6, moist agricultural soil (unsourced) |
@@ -25,7 +26,7 @@
 | `hull_frames_ref_radius_m` | 900.0 | m | fixed | design | §5c |
 | `hull_frames_exponent` | 2.300 | exponent of r | 2.100–2.500 | estimate | §5c, fitted to the 900 m and 1.6 km estimates |
 | `hull_min_gauge_frac` | 0.3000 | fraction of the 1 g hull | 0.2000–0.5000 | estimate | §9, hull and frames floored at ~30% of their 1 g mass |
-| `wire_stress_mpa` | 1,000 | MPa (working) | 700.0–1,200 | estimate | §5c, §12: drawn pearlitic wire ~1.8-2 GPa ultimate; plan §3 checks it for asteroid iron |
+| `wire_stress_mpa` | 1,000 | MPa (working) | 800.0–1,200 | estimate | structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire |
 | `steel_density` | 7,900 | kg/m3 | fixed | sourced | §5a |
 | `hub_factory_metal_frac` | 0.2500 | fraction of torus steel | 0.1500–0.5000 | guess | §10, hub, dock and factory (guess): 1.1 -> 1.4 Mt, 5.8 -> 7.3 Mt, 22 -> 27 Mt |
 | `spinup_exhaust_km_s` | 3.000 | km/s | 2.000–4.000 | estimate | §7, water thrusters |
@@ -76,6 +77,7 @@
 | `kcal_berries` | 3.300 | kcal/g dry | 3.000–3.600 | estimate | §13, implied by ~150 mol per person |
 | `kcal_flax` | 5.600 | kcal/g dry | 5.200–5.900 | estimate | §13, implied by ~190 mol per person |
 | `kcal_greens` | 2.900 | kcal/g dry | 2.500–3.300 | estimate | §13, implied by ~40 mol per person |
+| `radiator_emissivity` | 0.9000 | fraction | 0.7900–0.9300 | sourced | AZ-93 white paint 0.91 +/- 0.02; silvered Teflon OSR ~0.79 (thermal control coating patent US 10,100,203) |
 | `radiator_temp_k` | 285.0 | K | 275.0–295.0 | estimate | §13, passive loops colder than the habitat |
 | `crush_mj_kg` | 0.08500 | MJ per kg of S-type rock | 0.05000–0.1500 | estimate | §5e, §10: ~1e15 J for ~12 Mt, ~3e15 J for ~32 Mt |
 | `bake_mj_kg` | 1.500 | MJ per kg of C-type | 1.000–2.000 | estimate | §19, C-type processing ~1-2 MJ/kg (unsourced) |

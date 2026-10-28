@@ -9,36 +9,39 @@
 | Tube width / hub radius | 56.2 m / 60.8 m |  |
 | Floor area | 31.8 ha | 191 ha |
 | Air volume | 13.6 million m³ | 81.7 million m³ |
-| Pitch / stack length | 66.2 m | 398 m |
+| Rock jacket / envelope radius (jacket + crawl space) | 5.5 m / 35.1 m |  |
+| Pitch / clear gap / stack length | 80.2 m / 10.0 m | 482 m |
 | Farm ring: radius / crops per tier | 360 m / 9.16 ha |  |
 
 ## Mass
 
 |  | Per torus | Stack of 6 |
 |---|---|---|
-| Rock shield (after fill credit) | 10.1 Mt | 60.4 Mt |
+| Rock shield (after fill credit) | 11.0 Mt | 66.1 Mt |
 | Fill (soil + regolith) | 0.541 Mt | 3.24 Mt |
 | Hull and frames | 0.300 Mt | 1.80 Mt |
-| Cable spokes | 0.800 Mt | 4.80 Mt |
+| Cable spokes | 0.868 Mt | 5.21 Mt |
 | Water needed / N₂ / O₂ | 0.123 Mt / 7.92 kt / 3.68 kt |  |
-| **Total** (excl. hub and factory) | **11.8 Mt** | **70.8 Mt** |
-| Per m² of floor | 37.1 t |  |
+| **Total** (excl. hub and factory) | **12.8 Mt** | **76.9 Mt** |
+| Per m² of floor | 40.3 t |  |
 | Farm ring / array / radiator panels | 48.6 / 4.18 / 0.812 kt |  |
-| Spin-up propellant (water, if used) | 0.371 Mt |  |
+| Spin-up propellant (water, if used) | 0.402 Mt |  |
 
 ## Materials and mining
 
 |  | Per torus | Stack of 6 |
 |---|---|---|
-| Metal needed (with hub, dock, factory) | 1.37 Mt | 8.25 Mt |
-| S-type (L host), sized by metal | 15.3 Mt (~244 m) | 91.6 Mt |
-| Spare tailings | 3.55 Mt |  |
+| Metal needed (with hub, dock, factory) | 1.46 Mt | 8.76 Mt |
+| S-type (L host), sized by metal | 16.2 Mt (~249 m) | 97.4 Mt |
+| Spare tailings | 3.47 Mt |  |
 | C-type, sized by nitrogen | 4.71 Mt (~196 m) | 28.3 Mt |
 | Water / carbon in the C-type | 0.302 / 0.212 Mt |  |
-| **Mined** | **20.0 Mt** | **120 Mt** |
-| Copper contained (S + C) | 1.39 + 0.594 kt |  |
+| **Mined** | **20.9 Mt** | **126 Mt** |
+| Copper contained (S + C) | 1.48 + 0.594 kt |  |
 
-Eros (LL-like, ~6,700,000 Mt) supplies ~220,000 tori of this size by free metal; Ryugu (~450 Mt) ~95 by nitrogen.
+Trace elements (demands mostly guesses from the notes; `--trace` for the table): short: K; unbudgeted: Cr, Zn, Mo, Sn.
+
+Eros (LL-like, ~6,700,000 Mt) supplies ~210,000 tori of this size by free metal; Ryugu (~450 Mt) ~95 by nitrogen.
 
 ## Power and light
 
@@ -65,22 +68,24 @@ Eros (LL-like, ~6,700,000 Mt) supplies ~220,000 tori of this size by free metal;
 |  | Per torus | Stack of 6 |
 |---|---|---|
 | Heat to reject | 122 MW | 729 MW |
-| Capacity of the two open ends (~285 K) |  | 1.66 GW |
-| Margin / break-even |  | 2.3× / 14 tori |
-| Radiating surface (two-sided panels: half) | 32.5 ha | 195 ha |
+| Ideal limit: the two open ends as black bodies at ~285 K |  | 1.64 GW |
+| Ideal margin / break-even (upper bounds) |  | 2.2× / 13 tori |
+| Ideal radiating surface, black body, lower bound (two-sided panels: half) | 32.5 ha | 195 ha |
+
+Preliminary radiative exchange (ray tracing in the drum, emissivity 0.9, ends only): the drum rejects at most 1.28 GW (78% of the ideal limit), a margin of 1.8×; it needs 161 ha of panels (15% of the radiator annuli), against 108 ha ideally.
 
 ## Stability (rigid stack)
 
 |  | Per torus | Stack of 6 |
 |---|---|---|
-| I_axis / I_transverse |  | 1.94 (stable with a 20% margin) |
-| Max tori at this gap: no margin / 10% / 20% |  | 33 / 30 / 27 |
+| I_axis / I_transverse |  | 1.91 (stable with a 20% margin) |
+| Max tori at this gap: no margin / 10% / 20% |  | 27 / 24 / 22 |
 
 ## Processing and replication
 
 |  | Per torus | Stack of 6 |
 |---|---|---|
-| Crushing S-type / baking C-type | 1.30 / 7.07 PJ |  |
+| Crushing S-type / baking C-type | 1.38 / 7.07 PJ |  |
 | Shipping 0.163 Mt of volatiles (Ryugu → Eros, 4.7 km/s) | 20.8 PJ |  |
-| Energy | 29.1 PJ | 175 PJ |
-| Generation time at 1 GW (energy only) |  | 5.5 years |
+| Energy, processing + shipping | 29.2 PJ | 175 PJ |
+| Generation time at 1 GW (energy only) |  | 5.6 years |

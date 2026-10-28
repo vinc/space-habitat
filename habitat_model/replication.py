@@ -21,11 +21,14 @@ def compute(p, d, geo, mass, materials):
 
     # The C-type is refined at its source; only the products are shipped (§15).
     shipped = mass["n2"] + materials["water_to_source"] + p.organics_shipped_t_m2 * 1e3 * geo["floor_area"]
+    # An unknown delta-v (no value in the notes, none given) leaves shipping and the totals
+    # unknown (None), not zero; the processing-only figures are then lower bounds.
     dv = d.delta_v_km_s if d.delta_v_km_s is not None else DELTA_V_KM_S.get((d.c_partner, d.site))
-    shipping = shipped * shipping_energy_per_kg(p, dv) if dv is not None else 0.0
+    shipping = shipped * shipping_energy_per_kg(p, dv) if dv is not None else None
 
-    per_torus = processing + shipping
-    stack = d.n_tori * per_torus
+    power = d.factory_power_gw * 1e9
+    per_torus = processing + shipping if shipping is not None else None
+    stack = d.n_tori * per_torus if per_torus is not None else None
     return {
         "crushing": crushing,
         "baking": baking,
@@ -36,5 +39,6 @@ def compute(p, d, geo, mass, materials):
         "energy_per_torus": per_torus,
         "energy_stack": stack,
         # Energy alone; logistics and factory throughput are the real pacing items (§13).
-        "generation_time_yr": stack / (d.factory_power_gw * 1e9) / YEAR,
+        "generation_time_yr": stack / power / YEAR if stack is not None else None,
+        "generation_time_lower_bound_yr": d.n_tori * processing / power / YEAR,
     }

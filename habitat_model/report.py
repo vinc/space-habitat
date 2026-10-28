@@ -23,6 +23,11 @@ def num(x, sig=3):
     return f"{rounded:,.{digits}f}"
 
 
+def pj(x):
+    """Energy in PJ, or 'unknown' when a contribution is unknown."""
+    return "unknown" if x is None else f"{num(x / PJ)} PJ"
+
+
 def table(header, rows):
     lines = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
     lines += ["| " + " | ".join(str(c) for c in row) + " |" for row in rows]
@@ -115,7 +120,7 @@ def key_tables(p):
 
 # --- One design -------------------------------------------------------------
 
-def summary(p, d, r):
+def summary(p, d, r, cavity_result=None):
     g, m, mat, f, pw, h, st, rep = (r[k] for k in
                                      ("geometry", "mass", "materials", "food", "power", "heat", "stability", "replication"))
     n = d.n_tori
@@ -134,7 +139,8 @@ def summary(p, d, r):
         ["Tube width / hub radius", f"{num(g['width'])} m / {num(g['hub_radius'])} m", ""],
         ["Floor area", f"{num(g['floor_area'] / HA)} ha", f"{num(n * g['floor_area'] / HA)} ha"],
         ["Air volume", f"{num(g['volume'] / 1e6)} million m³", f"{num(n * g['volume'] / 1e6)} million m³"],
-        ["Pitch / stack length", f"{num(g['pitch'])} m", f"{num(g['stack_length'])} m"],
+        ["Rock jacket / envelope radius (jacket + crawl space)", f"{num(g['jacket'], 2)} m / {num(g['envelope_radius'])} m", ""],
+        ["Pitch / clear gap / stack length", f"{num(g['pitch'])} m / {num(g['gap'])} m", f"{num(g['stack_length'])} m"],
         ["Farm ring: radius / crops per tier", f"{num(g['farm_radius'])} m / {num(g['crop_area_per_tier'] / HA)} ha", ""],
     ])
     section("Mass", [
@@ -158,6 +164,12 @@ def summary(p, d, r):
         ["**Mined**", f"**{num(mat['mined'] / MT)} Mt**", f"**{num(n * mat['mined'] / MT)} Mt**"],
         ["Copper contained (S + C)", f"{num(trace['Cu']['s_type'] / 1e6)} + {num(trace['Cu']['c_type'] / 1e6)} kt", ""],
     ])
+    budget = mat["trace_budget"]
+    short = [e for e, b in budget.items() if b["status"] not in ("ok", "no demand")]
+    out.append("\nTrace elements (demands mostly guesses from the notes; `--trace` for the table): "
+               + ("all budgeted elements covered at their high demand" if not any(budget[e]["status"] != "unbudgeted" for e in short)
+                  else "short: " + ", ".join(e for e in short if budget[e]["status"] != "unbudgeted"))
+               + "; unbudgeted: " + (", ".join(e for e in short if budget[e]["status"] == "unbudgeted") or "none") + ".")
     if site.kind == "S":
         tori = tori_supported(p, site, m, mat)
         out.append(f"\n{d.site} ({site.host_class}-like, ~{num(site.mass_mt)} Mt) supplies ~{num(tori, 2)} tori of this size by free metal; "
@@ -179,10 +191,18 @@ def summary(p, d, r):
     ])
     section("Heat", [
         ["Heat to reject", f"{num(h['per_torus'] / MW)} MW", f"{num(h['stack'] / MW)} MW"],
-        [f"Capacity of the two open ends (~{p.radiator_temp_k:g} K)", "", f"{num(h['capacity'] / GW)} GW"],
-        ["Margin / break-even", "", f"{num(h['margin'], 2)}× / {num(h['break_even_tori'], 2)} tori"],
-        ["Radiating surface (two-sided panels: half)", f"{num(h['radiating_surface'] / HA)} ha", f"{num(h['stack'] / h['flux'] / HA)} ha"],
+        [f"Ideal limit: the two open ends as black bodies at ~{p.radiator_temp_k:g} K", "", f"{num(h['capacity'] / GW)} GW"],
+        ["Ideal margin / break-even (upper bounds)", "", f"{num(h['margin'], 2)}× / {num(h['break_even_tori'], 2)} tori"],
+        ["Ideal radiating surface, black body, lower bound (two-sided panels: half)", f"{num(h['radiating_surface'] / HA)} ha", f"{num(h['stack'] / h['flux'] / HA)} ha"],
     ])
+    if cavity_result:
+        c = cavity_result
+        out.append(("\nPreliminary radiative exchange (ray tracing in the drum, emissivity "
+                    f"{p.radiator_emissivity:g}, ends only): the drum rejects at most {num(c['max_output'] / GW)} GW "
+                    f"({c['max_vs_ideal']:.0%} of the ideal limit), a margin of {num(c['margin'], 2)}×; ")
+                   + (f"it needs {num(c['needed']['panel_area'] / HA)} ha of panels ({c['needed']['coverage']:.0%} of the "
+                      f"radiator annuli), against {num(c['ideal_panel_area'] / HA)} ha ideally."
+                      if c["needed"] else "**it can't reject the load.**"))
     section("Stability (rigid stack)", [
         ["I_axis / I_transverse", "", f"{num(st['inertia_ratio'])} ({'stable' if st['stable'] else 'NOT stable'} with a {p.stability_margin:.0%} margin)"],
         ["Max tori at this gap: no margin / 10% / 20%", "", f"{st['max_tori_no_margin']} / {st['max_tori_10pct']} / {st['max_tori']}"],
@@ -191,9 +211,11 @@ def summary(p, d, r):
     section("Processing and replication", [
         ["Crushing S-type / baking C-type", f"{num(rep['crushing'] / PJ)} / {num(rep['baking'] / PJ)} PJ", ""],
         [f"Shipping {num(rep['shipped'] / MT)} Mt of volatiles ({d.c_partner} → {d.site}, "
-         + (f"{dv} km/s)" if dv is not None else "no Δv known: pass --dv)"), f"{num(rep['shipping'] / PJ)} PJ", ""],
-        ["Energy", f"{num(rep['energy_per_torus'] / PJ)} PJ", f"{num(rep['energy_stack'] / PJ)} PJ"],
-        [f"Generation time at {d.factory_power_gw:g} GW (energy only)", "", f"{num(rep['generation_time_yr'], 2)} years"],
+         + (f"{dv} km/s)" if dv is not None else "no Δv known: pass --dv)"), pj(rep['shipping']), ""],
+        ["Energy, processing + shipping", pj(rep['energy_per_torus']), pj(rep['energy_stack'])],
+        [f"Generation time at {d.factory_power_gw:g} GW (energy only)", "",
+         f"{num(rep['generation_time_yr'], 2)} years" if rep["generation_time_yr"] is not None
+         else f"unknown (≥ {num(rep['generation_time_lower_bound_yr'], 2)} years for processing alone)"],
     ])
     return "\n".join(out) + "\n"
 
@@ -203,9 +225,14 @@ def summary(p, d, r):
 def validation(outcomes):
     bad = [o for o in outcomes if not o.ok]
     unexplained = [o for o in bad if not o.check.known]
+    within5 = sum(abs(o.diff) <= 0.05 for o in outcomes)
+    relaxed = sum(o.check.tol > 0.05 for o in outcomes)
     out = ["# Validation against the notes", "",
-           f"{len(outcomes)} figures from notes.md checked; {len(outcomes) - len(bad)} within tolerance (5% unless noted), "
-           f"{len(bad) - len(unexplained)} known mismatches, {len(unexplained)} unexplained.", ""]
+           f"{len(outcomes)} figures from notes.md checked: **{within5} within 5%**; {len(outcomes) - len(bad)} within "
+           f"their configured tolerance (5%, or 10–15% for {relaxed} checks of counts and energies quoted as ranges); "
+           f"{len(bad) - len(unexplained)} known mismatches, {len(unexplained)} unexplained.", "",
+           "This checks that the model reproduces the notes' own figures from the same assumptions; "
+           "it does not validate the physical design.", ""]
     out.append("## Mismatches\n")
     known = [o for o in outcomes if o.check.known]
     out.append(table(["§", "Figure", "Notes", "Model", "Diff", "Why"],
@@ -215,12 +242,14 @@ def validation(outcomes):
     out.append("\n## All checks\n")
     out.append(table(["§", "Figure", "Notes", "Model", "Diff", ""],
                      [[o.check.section, o.check.label, f"{num(o.check.reference)} {o.check.unit}",
-                       f"{num(o.model)} {o.check.unit}", f"{o.diff:+.1%}", "✓" if o.ok else "✗"] for o in outcomes]))
+                       f"{num(o.model)} {o.check.unit}", f"{o.diff:+.1%}",
+                       ("✓" if abs(o.diff) <= 0.05 else f"✓ (tolerance {o.check.tol:.0%})") if o.ok else "✗"]
+                      for o in outcomes]))
     return "\n".join(out) + "\n"
 
 
 def tornado(base, rows, assumptions, design, top=None):
-    names = list(METRICS)
+    names = [m for m in METRICS if base[m] is not None]
     header = ["Rank", "Assumption", "Status", "Range"] + [f"{METRICS[m][0]} ({METRICS[m][1]})" if METRICS[m][1] else METRICS[m][0]
                                                        for m in names]
     base_row = ["", "**Baseline**", "", ""] + [f"**{num(base[m])}**" for m in names]
@@ -236,14 +265,60 @@ def tornado(base, rows, assumptions, design, top=None):
     size = f"{design.radius_m / 1000:g} km" if design.radius_m >= 1000 else f"{design.radius_m:g} m"
     intro = (f"One-at-a-time sweep for {design.n_tori} × {size}, {design.tiers_lit} tier(s) lit, "
              f"{design.host_class} host at {design.site}. Each cell: change of the output with the input at its "
-             "low / high end. Ranked by the largest swing on any output.")
+             "low / high end. Ranked by the largest swing on any output."
+             + ("" if len(names) == len(METRICS) else
+                " Left out as unknown for this design: " + ", ".join(METRICS[m][0] for m in METRICS if m not in names) + "."))
     return "\n".join(["# Sensitivity (tornado)", "", intro, "", table(header, [base_row] + body)]) + "\n"
 
 
 def monte_carlo(stats, n):
     rows = [[METRICS[m][0], METRICS[m][1], num(s["p5"]), num(s["p50"]), num(s["p95"])] for m, s in stats.items()]
-    return "\n".join([f"# Monte Carlo ({n} samples, triangular over every range)", "",
+    return "\n".join([f"# Monte Carlo ({n} samples)", "",
+                      "Each input drawn independently from a triangular distribution (low, value, high). The spread "
+                      "shows what the chosen ranges imply; it is not a physical confidence interval.", "",
                       table(["Output", "Unit", "5th percentile", "Median", "95th percentile"], rows)]) + "\n"
+
+
+def combined_ranking(ranking):
+    rows = [[i + 1, f"`{name}`", r["status"], METRICS[r["metric"]][0], f"{r['low']:+.0%} / {r['high']:+.0%}", r["design"]]
+            for i, (name, r) in enumerate(ranking)]
+    return "\n".join(["# Combined ranking", "",
+                      "Each input's largest swing on any output, over representative designs (sizes, host classes "
+                      "and sites; `sensitivity.REPRESENTATIVE`), with the output and design where it occurs.", "",
+                      table(["Rank", "Assumption", "Status", "Largest effect on", "Low / high", "Design"], rows)]) + "\n"
+
+
+def trace_table(budget, design):
+    def t(x):
+        return "—" if x is None else num(x / 1e3, 2)
+    rows = [[e, t(b["contained"]), t(b["recoverable"]),
+             "—" if b["demand"] is None else f"{num(b['demand'][0] / 1e3, 2)}–{num(b['demand'][1] / 1e3, 2)}",
+             t(b["balance"]), b["status"], b["note"]] for e, b in budget.items()]
+    size = f"{design.radius_m / 1000:g} km" if design.radius_m >= 1000 else f"{design.radius_m:g} m"
+    return "\n".join([f"# Trace-element budget, per {size} torus ({design.host_class} host)", "",
+                      "Contained in the torus's S-type and C-type rock, recoverable at the assumed recovery, against "
+                      "the demand (tonnes). Most demands and recoveries are guesses taken from the notes; S-type "
+                      "abundances are H values for the majors, so nickel and cobalt are overstated for L and LL hosts.", "",
+                      table(["Element", "Contained (t)", "Recoverable (t)", "Demand (t)", "Surplus at high demand (t)",
+                             "Status", "Basis"], rows)]) + "\n"
+
+
+def thermal_table(rows):
+    body = [[r["label"], num(r["load"] / MW), num(r["ideal"] / GW, 2), num(r["ideal"] / r["load"], 2),
+             num(r["ends"]["max_output"] / GW, 2), num(r["ends"]["margin"], 2), num(r["gaps"]["margin"], 2),
+             num(r["ideal_panels"] / HA) if r["ideal_panels"] else "—",
+             num(r["ends"]["needed"]["panel_area"] / HA) if r["ends"]["needed"] else "**not enough**",
+             r["limit"]] for r in rows]
+    return "\n".join([
+        "# Heat rejection: ideal limit and preliminary radiative exchange", "",
+        "The ideal limit treats both end openings as black bodies at the radiator temperature. The radiative "
+        "exchange model (`habitat_model/cavity.py`) traces rays from finite panels (emissivity and temperature "
+        "from the assumptions) through the drum between hub and tori, with the hub, farm rings and the tori's "
+        "inner faces insulated, and escape through the ends only or also through the side gaps. "
+        "Panel areas are one face of two-sided panels.", "",
+        table(["Stack, tiers lit", "Heat (MW)", "Ideal limit (GW)", "Ideal margin", "Drum maximum, ends only (GW)",
+               "Margin, ends only", "Margin, ends + gaps", "Panels, ideal (ha)", "Panels needed, ends only (ha)",
+               "Max tori by heat, ends only"], body)]) + "\n"
 
 
 def assumptions_table(assumptions):
@@ -275,8 +350,11 @@ def stats_json(p, d, r):
             "floor_ha": n * g["floor_area"] / HA, "mass_mt": n * m["total"] / MT, "mined_mt": n * mat["mined"] / MT,
             "length_m": g["stack_length"], "people": n * f["people"], "power_mw": n * pw["total"] / MW,
             "array_site_km2": n * pw["array_site"] / KM2, "heat_mw": h["stack"] / MW,
-            "heat_capacity_mw": h["capacity"] / MW, "heat_margin": h["margin"],
+            "heat_ideal_limit_mw": h["capacity"] / MW, "heat_ideal_margin": h["margin"],
             "inertia_ratio": r["stability"]["inertia_ratio"], "max_tori": r["stability"]["max_tori"],
-            "generation_time_yr": r["replication"]["generation_time_yr"],
+            "energy_pj": None if r["replication"]["energy_stack"] is None else r["replication"]["energy_stack"] / PJ,
+            "processing_energy_pj": n * r["replication"]["processing"] / PJ,
+            "generation_time_yr": r["replication"]["generation_time_yr"],          # null when the delta-v is unknown
+            "generation_time_lower_bound_yr": r["replication"]["generation_time_lower_bound_yr"],
         },
     }
