@@ -183,9 +183,9 @@ status = "estimate"
 [structure.wire_stress_mpa]
 value = 1000
 unit = "MPa (working)"
-low = 700
+low = 800
 high = 1200
-source = "§5c, §12: drawn pearlitic wire ~1.8-2 GPa ultimate; plan §3 checks it for asteroid iron"
+source = "structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire"
 status = "estimate"
 
 [structure.steel_density]

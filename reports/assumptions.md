@@ -25,7 +25,7 @@
 | `hull_frames_ref_radius_m` | 900.0 | m | fixed | design | §5c |
 | `hull_frames_exponent` | 2.300 | exponent of r | 2.100–2.500 | estimate | §5c, fitted to the 900 m and 1.6 km estimates |
 | `hull_min_gauge_frac` | 0.3000 | fraction of the 1 g hull | 0.2000–0.5000 | estimate | §9, hull and frames floored at ~30% of their 1 g mass |
-| `wire_stress_mpa` | 1,000 | MPa (working) | 700.0–1,200 | estimate | §5c, §12: drawn pearlitic wire ~1.8-2 GPa ultimate; plan §3 checks it for asteroid iron |
+| `wire_stress_mpa` | 1,000 | MPa (working) | 800.0–1,200 | estimate | structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire |
 | `steel_density` | 7,900 | kg/m3 | fixed | sourced | §5a |
 | `hub_factory_metal_frac` | 0.2500 | fraction of torus steel | 0.1500–0.5000 | guess | §10, hub, dock and factory (guess): 1.1 -> 1.4 Mt, 5.8 -> 7.3 Mt, 22 -> 27 Mt |
 | `spinup_exhaust_km_s` | 3.000 | km/s | 2.000–4.000 | estimate | §7, water thrusters |

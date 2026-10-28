@@ -64,14 +64,18 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Why second:** the wire's working stress is the largest structural input: 700–1,200 MPa moves the S-type rock mined per torus by −12% to +33% at 900 m (−16% to +43% at 2.5 km), because on L and LL hosts metal, not shield rock, sizes the mining. Hull and frames (r^2.3 fit) and the hub/factory metal (a guess) add up to +15% and +20%.
 
+**Status:** the wire, the cable net and the spin-up are done in `structure_model/` (findings and sources in its README, report in `reports/structure.md`). ~1 GPa is reachable at a safety factor of ~2 on bridge wire, or with thinner wire; the range is narrowed to 800–1,200 MPa, which drops it from 5th to 8th in the ranking. The finite-element segment model and the hub's stabilising lines are next.
+
 - [ ] Finite-element model of one tube segment (CalculiX, FEniCS or sfepy):
   - rock cells and double skin
   - floor fill and hung ceiling cells
   - loads: 1 g spin and 70 kPa of air
-- [ ] Cable net: chord geometry, tension distribution, taper, compliant joints
-- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
+- [x] Cable net: chord geometry, tension distribution, taper, compliant joints
+- [x] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
+  - found: arcs must span ≥ ~4θr (~270 m at 900 m), and their joints carry ~1% of a full ring's hoop force until it closes
 - [ ] Hub held in the net by stabilising lines
-- [ ] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
+- [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
+  - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)
 - [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate; stiffness for model 4 (stack dynamics)
 
 **Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
@@ -142,7 +146,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] **C-type baking (top of the ranking):** nitrogen recovery and energy per kg from CI-like meteorite or simulant. Recovery (50–90%) moves the C-type per torus by −22% to +40%; baking energy (1–2 MJ/kg) moves the processing energy by ±28%. Lab data, not a model, settles both.
 - [ ] Growth-chamber trials of the working diet under sulfur lamps (CO₂ ~1,000 ppm, 2.5 m tiers), especially lentils and flax, whose yields are estimates
 - [ ] Non-rotating sulfur bulb at kW scale, fed by a 915 MHz source
-- [ ] Wire drawing from meteoritic iron-nickel or a simulant (the wire's strength is the top structural input, section 2)
+- [ ] Wire drawing from carbonyl-refined meteoritic iron, and from the as-separated metal for comparison (the wire's strength is the top structural input, section 2)
 - [ ] Magnetic separation of free metal from L and LL chondrite material (meteorites or simulant)
 - [ ] Partial-gravity health data (spaceflight, centrifuge studies)
 - [ ] Growth chambers on 1.05–1.8-year cycles for candidate species

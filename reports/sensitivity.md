@@ -9,10 +9,10 @@ One-at-a-time sweep for 6 × 900 m, 2 tier(s) lit, L host at Eros. Each cell: ch
 | 2 | `bake_mj_kg` | estimate | 1.00–2.00 MJ per kg of C-type |  |  |  |  |  |  | -28% / +28% |
 | 3 | `pv_efficiency` | estimate | 0.180–0.280 fraction |  |  |  | +39% / -11% |  |  |  |
 | 4 | `metal_wt_L` | sourced | 0.0700–0.110 free metal, wt fraction |  | +29% / -18% |  |  |  |  | +4% / -3% |
-| 5 | `wire_stress_mpa` | estimate | 700–1,200 MPa (working) | +3% / -1% | +33% / -12% |  |  |  |  | +5% / -2% |
-| 6 | `crop_light_mol` | estimate | 30.0–45.0 mol/m2/day on the crops |  |  |  | -11% / +17% | -17% / +25% | +10% / -12% |  |
-| 7 | `shield_areal_t_m2` | sourced | 9.00–13.0 t/m2 | -18% / +18% | -13% / +13% |  |  |  |  | -2% / +2% |
-| 8 | `yield_wheat` | sourced | 0.150–0.400 g/mol |  |  |  |  | -7% / +25% |  |  |
+| 5 | `crop_light_mol` | estimate | 30.0–45.0 mol/m2/day on the crops |  |  |  | -11% / +17% | -17% / +25% | +10% / -12% |  |
+| 6 | `shield_areal_t_m2` | sourced | 9.00–13.0 t/m2 | -18% / +18% | -13% / +13% |  |  |  |  | -2% / +2% |
+| 7 | `yield_wheat` | sourced | 0.150–0.400 g/mol |  |  |  |  | -7% / +25% |  |  |
+| 8 | `wire_stress_mpa` | estimate | 800–1,200 MPa (working) | +2% / -1% | +19% / -12% |  |  |  |  | +3% / -2% |
 | 9 | `radiator_temp_k` | estimate | 275–295 K |  |  |  |  |  | -13% / +15% |  |
 | 10 | `hub_factory_metal_frac` | guess | 0.150–0.500 fraction of torus steel |  | -8% / +20% |  |  |  |  | -1% / +3% |
 | 11 | `hull_frames_ref_mt` | estimate | 0.200–0.450 Mt at the reference radius | -1% / +1% | -10% / +15% |  |  |  |  | -2% / +2% |
@@ -50,10 +50,10 @@ One-at-a-time sweep for 6 × 900 m, 2 tier(s) lit, L host at Eros. Each cell: ch
 
 | Output | Unit | 5th percentile | Median | 95th percentile |
 |---|---|---|---|---|
-| Mass per m² of floor | t/m² | 32.8 | 37.3 | 41.7 |
-| Rock mined per torus (S-type) | Mt | 13.0 | 16.6 | 21.6 |
+| Mass per m² of floor | t/m² | 32.7 | 37.2 | 41.6 |
+| Rock mined per torus (S-type) | Mt | 12.9 | 16.1 | 20.7 |
 | C-type per torus | Mt | 3.93 | 4.74 | 5.90 |
 | Despun array at the site | km² | 1.28 | 1.52 | 1.88 |
 | People per torus |  | 1,830 | 2,310 | 2,910 |
 | Heat margin (capacity / stack heat) | × | 1.94 | 2.22 | 2.55 |
-| Processing energy per torus | PJ | 6.67 | 8.68 | 11.2 |
+| Processing energy per torus | PJ | 6.65 | 8.62 | 11.1 |
