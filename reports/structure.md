@@ -32,32 +32,48 @@ Long-term creep of a spoke at 1000 MPa on 1,960 MPa wire (relaxation r = 30 f/fu
 
 ## Tangent-chord net (chords tangent at 1.1 × the hub radius, one anchor every 10 m)
 
-| Torus | Chord angle at the rim | Net, uniform chords (Mt) | System model spokes (Mt) | Chords vs radial spokes | Saved by tapering | Taper (mid / end area) | Tension per chord end (MN) | Wire area per chord end (cm²) | Bow at mid-chord (m) |
+Uniform chords keep one area all along, sized at mid-chord where their own spin load adds most; tapered chords at uniform stress need only the end area at their ends.
+
+| Torus | Chord angle at the rim | Net, uniform chords (Mt) | System model spokes (Mt) | Chords vs radial spokes | Saved by tapering | Taper (mid / end area) | Tension per chord end (MN) | Uniform chord area (cm²) | Tapered chord, end area (cm²) | Bow at mid-chord (m) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 400 m | 4.3° | 0.0816 | 0.0816 | -0.01% | 0.5% | 1.02 | 50.8 | 516 | 508 | 0.46 |
+| 900 m | 4.3° | 0.868 | 0.868 | -0.02% | 1.2% | 1.04 | 105 | 1,080 | 1,050 | 2.3 |
+| 1.6 km | 4.3° | 4.87 | 4.88 | -0.04% | 2.2% | 1.06 | 180 | 1,920 | 1,800 | 7.4 |
+| 2.5 km | 4.3° | 19.1 | 19.1 | -0.06% | 3.6% | 1.10 | 279 | 3,090 | 2,790 | 18 |
+
+## Building the ring: assembled statics (provisional)
+
+Each chord is one elastic member with a single tension; the rim is cut into rigid segments one tube width long, linked by joints that are *sliding* (shear only: free along the rim, as intended once the ring is closed), *pinned* (tension and shear) or *locked* (also bending); slack chords are dropped. Loads at full spin; cable stresses and joint forces scale with spin². 'None': no equilibrium, the partial ring is a mechanism with those joints. Residual: the worst force or moment imbalance of a segment, relative to its load. The chords are sized for the finished ring (uniform area).
+
+| Torus | Stage | Joints | Chord tensions (MN) | Max chord vs finished | Peak cable stress (MPa) | Max spin fraction within 1 GPa | Max joint tension (MN, share of full hoop) | Max joint moment (GN·m) | Residual |
 |---|---|---|---|---|---|---|---|---|---|
-| 400 m | 4.3° | 0.0816 | 0.0816 | -0.01% | 0.5% | 1.02 | 50.8 | 508 | 0.46 |
-| 900 m | 4.3° | 0.868 | 0.868 | -0.02% | 1.2% | 1.04 | 105 | 1,050 | 2.3 |
-| 1.6 km | 4.3° | 4.87 | 4.88 | -0.04% | 2.2% | 1.06 | 180 | 1,800 | 7.4 |
-| 2.5 km | 4.3° | 19.1 | 19.1 | -0.06% | 3.6% | 1.10 | 279 | 2,790 | 18 |
+| 900 m | finished ring | sliding | 99.7–109 | 1.0 | 1,040 | 0.98 | — | — | 3e-09 |
+| 1.6 km | finished ring | sliding | 179–181 | 1.0 | 1,000 | 1.00 | — | — | 1e-10 |
+| 900 m | finished ring | locked | 37.9–38.0 | 0.36 | 386 | 1.0 | 12,000 (63.8%) | 0.072 | 2e-11 |
+| 1.6 km | finished ring | locked | 90.7–91.0 | 0.50 | 535 | 1.0 | 28,600 (49.7%) | 0.11 | 1e-11 |
+| 400 m | two arcs of 119 m (shortest) | locked | 99.8–100 | 2.0 | 1,960 | 0.72 | 34.6 (0.9%) | 2.2 | 7e-06 |
+| 400 m | two arcs of 119 m (shortest) | pinned | **none** |  |  |  |  |  | 7e-02 |
+| 900 m | two arcs of 268 m (shortest) | locked | 213–214 | 2.0 | 2,010 | 0.71 | 176 (0.9%) | 6.0 | 8e-06 |
+| 900 m | two arcs of 268 m (shortest) | pinned | 157–256 | 2.5 | 2,400 | 0.65 | 178 (1.0%) | — | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | locked | 355–356 | 2.0 | 1,910 | 0.72 | 546 (0.9%) | 26 | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | pinned | 186–569 | 3.2 | 3,020 | 0.58 | 530 (0.9%) | — | 8e-06 |
+| 2.5 km | two arcs of 743 m (shortest) | locked | 556–557 | 2.0 | 1,900 | 0.72 | 1,400 (1.0%) | 59 | 1e-05 |
+| 2.5 km | two arcs of 743 m (shortest) | pinned | 372–682 | 2.4 | 2,310 | 0.66 | 1,410 (1.0%) | — | 8e-06 |
+| 900 m | two arcs of 401 m | locked | 153–155 | 1.5 | 1,460 | 0.83 | 234 (1.2%) | 68 | 1e-05 |
+| 900 m | two arcs of 401 m | pinned | **none** |  |  |  |  |  | 5e-01 |
+| 900 m | two arcs of 803 m | locked | 122–125 | 1.2 | 1,190 | 0.92 | 373 (2.0%) | 220 | 1e-05 |
+| 900 m | two arcs of 803 m | pinned | 0–316 (46 slack) | 3.0 | 2,950 | 0.58 | 200 (1.1%) | — | 1e-05 |
 
-## Building the ring: opposite arcs in a partial net
-
-Each arc's two end zones are single-laced and pull the arc lengthwise; the joints carry that tension until the ring closes. Values at full spin (they scale with spin²; at half spin, a quarter).
-
-| Torus | Single-laced end zone (m) | Shortest arc (m) | Its rim mass (Mt) | Joint tension (MN) | vs a full ring's hoop force | Plate steel at 500 MPa (m²) | Joint tension at half spin (MN) |
-|---|---|---|---|---|---|---|---|
-| 400 m | 59.5 | 119 | 0.12 | 44.8 | 1.1% | 0.090 | 11.2 |
-| 900 m | 134 | 268 | 0.56 | 208 | 1.1% | 0.42 | 51.9 |
-| 1.6 km | 238 | 476 | 1.7 | 637 | 1.1% | 1.3 | 159 |
-| 2.5 km | 372 | 743 | 4.2 | 1,540 | 1.1% | 3.1 | 385 |
+Rigid segments make this a crude model: the joint moments of the longer locked arcs, in particular, depend on the segments' real flexibility. It settles the force balance, not the construction sequence.
 
 ## Imbalance: one arc 1% heavier than its partner
 
-The stack spins freely about its centre of mass, so a mismatch moves the hub off the spin axis (it doesn't load a bearing). Hub, dock and factory taken as 25% of the torus steel. The gap between the hub and the chords' tangent circle (0.1 × the hub radius) must exceed the offset.
+The stack spins freely about its centre of mass, so a mismatch moves the spin axis away from the assembly's geometric centre: an estimate of that offset only. The hub and the net move together, so this is not a loss of clearance between them; their relative motion needs the stabilising lines' stiffness (still open). Hub, dock and factory taken as 25% of the torus steel.
 
-| Torus | Shortest arc (Mt) | Hub offset, first pair alone (m) | Gap hub to chords (m) | Hub offset, finished torus if never ballasted (cm) |
-|---|---|---|---|---|
-| 400 m | 0.12 | 1.8 | 2.70 | 18 |
-| 900 m | 0.56 | 3.6 | 6.08 | 39 |
-| 1.6 km | 1.7 | 5.6 | 10.8 | 64 |
-| 2.5 km | 4.2 | 7.5 | 16.9 | 92 |
+| Torus | Shortest arc (Mt) | Axis offset, first pair alone (m) | Axis offset, finished torus if never ballasted (cm) |
+|---|---|---|---|
+| 400 m | 0.12 | 1.8 | 18 |
+| 900 m | 0.56 | 3.6 | 39 |
+| 1.6 km | 1.7 | 5.6 | 64 |
+| 2.5 km | 4.2 | 7.5 | 92 |
 

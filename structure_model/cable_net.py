@@ -83,6 +83,10 @@ def compute(radius, rim_mass, omega, hub_radius, stress_pa, density, anchor_spac
         "tension_mid_uniform": t_end * stress_pa / (stress_pa - self_load),
         "self_load_stress": self_load,
         "taper_ratio": math.exp(density * v ** 2 * g["efficiency"] ** 2 / (2 * stress_pa)),
-        "wire_area_end": t_end / stress_pa,
+        # A tapered chord at uniform stress needs t_end / sigma at its ends and more toward the middle;
+        # a uniform chord needs one area all along, sized where its own spin load adds most (mid-chord).
+        "wire_area_tapered_end": t_end / stress_pa,
+        "wire_area_uniform": t_end / (stress_pa - self_load),
+        "uniform_peak_stress": t_end / (t_end / (stress_pa - self_load)) + self_load,
         "bow": bowing(omega, c, g["half_length"], stress_pa, density),
     }

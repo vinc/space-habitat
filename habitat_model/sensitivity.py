@@ -59,11 +59,12 @@ def tornado(assumptions, design, overrides=None):
     return base, rows
 
 
-def combined_ranking(assumptions, designs=REPRESENTATIVE):
-    """For each input, its largest swing on any output across the designs, and where it occurs."""
+def combined_ranking(assumptions, designs=REPRESENTATIVE, overrides=None):
+    """For each input, its largest swing on any output across the designs, and where it occurs.
+    Overridden inputs are held at their override in every design and left out of the sweep."""
     best = {}
     for label, design in designs.items():
-        _, rows = tornado(assumptions, design)
+        _, rows = tornado(assumptions, design, overrides)
         for row in rows:
             metric, (lo, hi) = max(row.effects.items(), key=lambda kv: abs(kv[1][1] - kv[1][0]))
             if row.name not in best or row.score > best[row.name]["score"]:

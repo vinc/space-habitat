@@ -11,7 +11,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import cable_net, spinup, wire
+from . import cable_net, net_statics, spinup, wire
 
 SIZES = (400, 900, 1600, 2500)
 
@@ -40,7 +40,7 @@ def wire_section(p):
 
 
 def net_section(p, spacing):
-    rows, build = [], []
+    rows = []
     for r in SIZES:
         res = evaluate(p, Design(radius_m=r, n_tori=1))
         g, m = res["geometry"], res["mass"]
@@ -48,25 +48,65 @@ def net_section(p, spacing):
                               p.steel_density, anchor_spacing=spacing)
         rows.append([size_label(r), f"{math.degrees(n['theta']):.1f}°", num(n["mass_uniform"] / 1e9),
                      num(m["spokes"] / 1e9), f"{n['chord_vs_radial']:+.2%}", f"{n['taper_saving']:.1%}",
-                     num(n["taper_ratio"]), num(n["tension_end"] / 1e6), num(n["wire_area_end"] * 1e4),
-                     num(n["bow"], 2)])
-        lam = m["rim"] / (2 * math.pi * r)
-        s = spinup.partial_arc(r, n["theta"], lam, g["omega"])
-        arc_mass = lam * s["min_arc"]
-        build.append([size_label(r), num(s["end_zone"]), num(s["min_arc"]), num(arc_mass / 1e9, 2),
-                      num(s["joint_tension"] / 1e6), f"{s['joint_tension_vs_hoop']:.1%}",
-                      num(s["joint_steel_area"], 2), num(s["joint_tension"] / 4 / 1e6)])
+                     num(n["taper_ratio"]), num(n["tension_end"] / 1e6), num(n["wire_area_uniform"] * 1e4),
+                     num(n["wire_area_tapered_end"] * 1e4), num(n["bow"], 2)])
     return "\n\n".join([
         f"## Tangent-chord net (chords tangent at 1.1 × the hub radius, one anchor every {spacing:g} m)",
+        "Uniform chords keep one area all along, sized at mid-chord where their own spin load adds most; "
+        "tapered chords at uniform stress need only the end area at their ends.",
         table(["Torus", "Chord angle at the rim", "Net, uniform chords (Mt)", "System model spokes (Mt)",
                "Chords vs radial spokes", "Saved by tapering", "Taper (mid / end area)",
-               "Tension per chord end (MN)", "Wire area per chord end (cm²)", "Bow at mid-chord (m)"], rows),
-        "## Building the ring: opposite arcs in a partial net\n\n"
-        "Each arc's two end zones are single-laced and pull the arc lengthwise; the joints carry that "
-        "tension until the ring closes. Values at full spin (they scale with spin²; at half spin, a quarter).",
-        table(["Torus", "Single-laced end zone (m)", "Shortest arc (m)", "Its rim mass (Mt)",
-               "Joint tension (MN)", "vs a full ring's hoop force", "Plate steel at 500 MPa (m²)",
-               "Joint tension at half spin (MN)"], build),
+               "Tension per chord end (MN)", "Uniform chord area (cm²)", "Tapered chord, end area (cm²)",
+               "Bow at mid-chord (m)"], rows),
+    ])
+
+
+def _stage(p, r, arc_factor, joints):
+    res = evaluate(p, Design(radius_m=r, n_tori=1))
+    g, m = res["geometry"], res["mass"]
+    sigma = p.wire_stress_mpa * 1e6
+    n = cable_net.compute(r, m["rim"], g["omega"], g["hub_radius"], sigma, p.steel_density)
+    lam = m["rim"] / (2 * math.pi * r)
+    arc = None if arc_factor is None else arc_factor * 4 * n["theta"] * r
+    s = net_statics.solve(r, n["tangent_radius"], lam, g["omega"], n["wire_area_uniform"], p.steel_density,
+                          arc_length=arc, segment_length=g["width"], joints=joints, stress_pa=sigma)
+    return n, s, arc
+
+
+def construction_section(p):
+    rows = []
+    cases = [(r, None, "sliding") for r in (900, 1600)]
+    cases += [(r, None, "locked") for r in (900, 1600)]
+    cases += [(r, f, j) for r in (400, 900, 1600, 2500) for f, j in ((1, "locked"), (1, "pinned"))]
+    cases += [(900, f, j) for f in (1.5, 3) for j in ("locked", "pinned")]
+    for r, f, j in cases:
+        n, s, arc = _stage(p, r, f, j)
+        stage = "finished ring" if arc is None else f"two arcs of {num(arc)} m" + (" (shortest)" if f == 1 else "")
+        if not s["equilibrium"]:
+            rows.append([size_label(r), stage, j, "**none**", "", "", "", "", "", f"{s['residual']:.0e}"])
+            continue
+        rows.append([size_label(r), stage, j,
+                     f"{num(s['tension_min'] / 1e6)}–{num(s['tension_max'] / 1e6)}"
+                     + (f" ({s['slack_chords']} slack)" if s["slack_chords"] else ""),
+                     num(s["tension_max"] / n["tension_end"], 2),
+                     num(s["peak_stress"] / 1e6), num(min(s["max_spin_fraction"], 1.0), 2),
+                     "—" if j == "sliding" else
+                     f"{num(s['joint_axial_max'] / 1e6)} ({s['joint_axial_max'] / s['hoop_full_ring']:.1%})",
+                     num(s["joint_moment_max"] / 1e9, 2) if j == "locked" else "—",
+                     f"{s['residual']:.0e}"])
+    return "\n\n".join([
+        "## Building the ring: assembled statics (provisional)",
+        "Each chord is one elastic member with a single tension; the rim is cut into rigid segments one tube "
+        "width long, linked by joints that are *sliding* (shear only: free along the rim, as intended once the "
+        "ring is closed), *pinned* (tension and shear) or *locked* (also bending); slack chords are dropped. "
+        "Loads at full spin; cable stresses and joint forces scale with spin². 'None': no equilibrium, the "
+        "partial ring is a mechanism with those joints. Residual: the worst force or moment imbalance of a "
+        "segment, relative to its load. The chords are sized for the finished ring (uniform area).",
+        table(["Torus", "Stage", "Joints", "Chord tensions (MN)", "Max chord vs finished",
+               "Peak cable stress (MPa)", "Max spin fraction within 1 GPa",
+               "Max joint tension (MN, share of full hoop)", "Max joint moment (GN·m)", "Residual"], rows),
+        "Rigid segments make this a crude model: the joint moments of the longer locked arcs, in particular, "
+        "depend on the segments' real flexibility. It settles the force balance, not the construction sequence.",
     ])
 
 
@@ -81,15 +121,15 @@ def imbalance_section(p, mismatch):
         hub = 0.25 * m["steel"]  # hub, dock and factory metal, as in the system model
         first = spinup.imbalance_offset(mismatch * arc, r, 2 * arc + hub)
         full = spinup.imbalance_offset(mismatch * arc, r, m["total"] + hub)
-        margin = 0.1 * g["hub_radius"]
-        rows.append([size_label(r), num(arc / 1e9, 2), num(first, 2), num(margin), num(full * 100, 2)])
+        rows.append([size_label(r), num(arc / 1e9, 2), num(first, 2), num(full * 100, 2)])
     return "\n\n".join([
         f"## Imbalance: one arc {mismatch:.0%} heavier than its partner\n\n"
-        "The stack spins freely about its centre of mass, so a mismatch moves the hub off the spin axis "
-        "(it doesn't load a bearing). Hub, dock and factory taken as 25% of the torus steel. The gap between "
-        "the hub and the chords' tangent circle (0.1 × the hub radius) must exceed the offset.",
-        table(["Torus", "Shortest arc (Mt)", "Hub offset, first pair alone (m)", "Gap hub to chords (m)",
-               "Hub offset, finished torus if never ballasted (cm)"], rows),
+        "The stack spins freely about its centre of mass, so a mismatch moves the spin axis away from the "
+        "assembly's geometric centre: an estimate of that offset only. The hub and the net move together, "
+        "so this is not a loss of clearance between them; their relative motion needs the stabilising "
+        "lines' stiffness (still open). Hub, dock and factory taken as 25% of the torus steel.",
+        table(["Torus", "Shortest arc (Mt)", "Axis offset, first pair alone (m)",
+               "Axis offset, finished torus if never ballasted (cm)"], rows),
     ])
 
 
@@ -101,7 +141,8 @@ def main(argv=None):
     args = ap.parse_args(argv)
     p = params(load(), **dict(args.set))
     print("\n\n".join(["# Structure: wire, cable net and spin-up", wire_section(p),
-                       net_section(p, args.anchor_spacing), imbalance_section(p, args.mismatch)]) + "\n")
+                       net_section(p, args.anchor_spacing), construction_section(p),
+                       imbalance_section(p, args.mismatch)]) + "\n")
     return 0
 
 

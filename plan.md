@@ -74,8 +74,9 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - floor fill and hung ceiling cells
   - loads: 1 g spin and 70 kPa of air
 - [x] Cable net: chord geometry, tension distribution, taper, compliant joints
-- [x] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
-  - found: arcs must span ≥ ~4θr (~270 m at 900 m), and their joints carry ~1% of a full ring's hoop force until it closes
+- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way (provisional)
+  - done: assembled statics with one tension per chord, rigid segments and joint springs (`structure_model/net_statics.py`): arcs must span ≥ ~4θr (~270 m at 900 m); their chords carry 2× the finished load, so spin ≤ ~0.71 of the final rate; joints locked while building (~1% of the hoop force, plus bending), released after closure
+  - open: flexible segments (the joint moments of longer arcs), the hub and its stabilising lines, the actual sequence
 - [ ] Hub held in the net by stabilising lines
 - [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
   - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)

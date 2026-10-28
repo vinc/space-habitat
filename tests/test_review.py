@@ -146,3 +146,12 @@ class TestValidationHeadline(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestRankingOverrides(unittest.TestCase):
+    def test_overrides_reach_the_combined_ranking(self):
+        a = load()
+        plain = dict(sensitivity.combined_ranking(a))
+        fixed = dict(sensitivity.combined_ranking(a, overrides={"ep_exhaust_km_s": 20.0}))
+        self.assertIn("ep_exhaust_km_s", plain)
+        self.assertNotIn("ep_exhaust_km_s", fixed)   # held at the override, not swept

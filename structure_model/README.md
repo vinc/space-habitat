@@ -11,7 +11,8 @@ python -m structure_model --anchor-spacing 20 --mismatch 0.02 --set wire_stress_
 |---|---|
 | `wire.py` | strength classes of bridge wire, safety factors, thin-wire strength, relaxation and creep |
 | `cable_net.py` | chord geometry, tension along a chord, uniform vs tapered mass, comparison with radial spokes, bowing |
-| `spinup.py` | single-laced end zones of a partial ring, tension in its joints, hub offset from a mass mismatch |
+| `spinup.py` | single-laced end zones of a partial ring, a local estimate of its joint tension, axis offset from a mass mismatch |
+| `net_statics.py` | assembled statics of a ring or of two opposite arcs: one tension per chord, rigid segments, sliding / pinned / locked joints, tension-only chords, residual check |
 
 ## Findings
 
@@ -38,20 +39,22 @@ Cold-drawn wire relaxes ~5% in 1,000 h at half its strength (r = 30 f/f_u − 10
 - With 1.1 × the hub radius as the tangent circle, θ ≈ 4.3° at every size (the geometry is self-similar), as in the notes.
 - **Tapering** the chords to uniform stress saves only 1.2% at 900 m, 2.2% at 1.6 km and 3.6% at 2.5 km; uniform cables are fine.
 - **Bowing.** The across-chord component of the spin load (ω² c) bows each chord away from the axis by ρω²cL²/2σ: ~2.3 m at 900 m, ~7 m at 1.6 km, ~18 m at 2.5 km. The window for the hub and factory grows by that much; the chords cross at their bowed positions.
-- At one anchor every 10 m, each chord end carries ~105 MN at 900 m (~1,050 cm² of wire, a cable ~37 cm across), ~180 MN at 1.6 km.
+- At one anchor every 10 m, each chord end carries ~105 MN at 900 m and ~180 MN at 1.6 km. A **uniform** chord needs ~1,080 cm² at 900 m (a cable ~37 cm across) and ~1,920 cm² at 1.6 km, sized at mid-chord where its own spin load adds most; ~1,050 / ~1,800 cm² is only the end area of a tapered chord.
 
-### Spin-up of a partial ring: ~1% of the hoop force, in the joints, until the ring closes
+### Spin-up of a partial ring (provisional)
 
-- A chord's far end lands 2θ r off the point opposite (134 m at 900 m, 238 m at 1.6 km). Two opposite arcs therefore each have a **single-laced zone of 2θ r at each end**, where anchors keep only the chord whose far end lands on the other arc.
-- A single chord pulls its anchor along the rim with tan θ of its radial load. Both end zones pull outward, so **the arc is in tension along its length** by λω²r · 2θr · tan θ ≈ 2λω²c², which is **~1.1% of a self-supporting ring's hoop force** at every size: ~210 MN at 900 m (~0.4 m² of plate at 500 MPa), ~640 MN at 1.6 km, ~1.5 GN at 2.5 km, at full spin. A test sums the pulls anchor by anchor and agrees within 2%.
-- **Shortest arc:** every anchor has at least one chord only if each arc spans more than 4θ r: ~270 m at 900 m (about five 56 m segments, ~0.56 Mt with rock), ~480 m at 1.6 km. The notes' "hang segments in opposite pairs" becomes "hang arcs of at least ~4θ r in opposite pairs".
-- **Ways to handle it:** joints rated for ~1% of the hoop force (a small steel cost, and the joints then need more than "seal and carry shear"); or fill the end zones with rock only once the next arcs are hung; or build at partial spin (the tension scales with spin², a quarter at half spin).
-- **Imbalance:** the stack spins freely about its centre of mass, so a mismatch between paired arcs shifts the hub off the spin axis rather than loading a bearing: a 1% mismatch on the first pair of 900 m arcs moves the hub ~3.6 m, inside the ~6 m gap between the hub and the chords' tangent circle (gap 0.1 × hub radius). Ballast must correct it before the gap closes; at 2.5 km the first pair's 7.5 m offset uses half of the 17 m gap.
+- A chord's far end lands 2θ r off the point opposite (134 m at 900 m, 238 m at 1.6 km). Two opposite arcs therefore each have a **single-laced zone of 2θ r at each end**, where anchors keep only the chord whose far end lands on the other arc. Every anchor has a chord only if each arc spans more than 4θ r: ~270 m at 900 m (about five 56 m segments, ~0.56 Mt with rock), ~480 m at 1.6 km.
+- **Assembled statics** (`net_statics.py`): each chord is one elastic member with a single tension, the rim is cut into rigid segments, and the joints are springs, *sliding* (free along the rim, shear only), *pinned* (tension and shear) or *locked* (also bending). Slack chords are dropped, and each segment's force and moment balance is checked (residuals ~1e-5 or better). It reproduces the finished net: with sliding joints, chord tensions within ±4% of the formula (the spread is the discrete anchor positions). A first, local estimate (`spinup.partial_arc`) assigned tensions anchor by anchor, so one cable could carry different tensions at its two ends; it is kept only as a cross-check of the joint tension.
+- **The chords carry twice their finished load on the shortest arcs.** With locked joints every chord of a ~4θ r arc pulls ~2× its finished tension: ~2,000 MPa at full spin in cables sized for 1 GPa. Stresses scale with spin², so **this stage must stay below ~0.71 of the final spin rate** (at every size), or use extra cables, or hang longer arcs (0.83 at ~1.5 × 4θ r, 0.92 at ~3 ×, at 900 m).
+- **The joints carry tension and bending until the ring closes.** ~0.9–1% of a full ring's hoop force on the shortest arcs (~176 MN at 900 m at full spin, ~550 MN at 1.6 km), close to the local estimate's 1.1%, plus a moment (~6 GN·m at 900 m). Longer locked arcs carry less chord load but much larger moments (~70 GN·m at 1.5 × 4θ r, ~220 GN·m at 3 × at 900 m): with rigid segments that depends heavily on the model, and it is the case for the finite-element model.
+- **Sliding joints can't hold a partial ring** (no equilibrium: the end segments have nothing to resist their pull along the rim), and pinned joints only some arc lengths. So the joints must be locked during construction.
+- **And released once the ring is closed:** with locked joints the closed ring behaves as a hoop and the hull takes ~64% of the load at 900 m (~50% at 1.6 km) in this model, as the notes warn (strain compatibility). The joints must slide along the rim after closure, or the spokes be made stiffer.
+- **Imbalance:** the stack spins freely about its centre of mass, so a mismatch between paired arcs shifts the spin axis away from the assembly's geometric centre rather than loading a bearing: ~3.6 m for a 1% mismatch on the first pair of 900 m arcs, ~7.5 m at 2.5 km. The hub and the net move together, so this is not a loss of clearance between them; their relative motion needs the stabilising lines' stiffness, still open.
 
 ## Still open in plan §2
 
 - Finite-element model of one tube segment (rock cells, double skin, floor fill, hung ceiling cells; 1 g and 70 kPa) to check the r^2.3 hull-and-frames estimate. sfepy is available from PyPI here as a source package (it needs compiling); a small purpose-built shell model in numpy is the alternative.
-- The hub held in the net by stabilising lines (stiffness needed against the offsets above), and the net's stiffness for the stack dynamics (plan §4).
+- The hub held in the net by stabilising lines (its motion relative to the net under imbalance), and the net's stiffness for the stack dynamics (plan §4).
 - Fatigue: the spin load is static; the cyclic loads (rim trains, ballast transfers, day/night temperatures) are small and belong with the stack dynamics.
 
 ## Sources

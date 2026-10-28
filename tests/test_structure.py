@@ -7,7 +7,7 @@ import numpy as np
 
 from habitat_model import Design, evaluate, load, params
 from habitat_model.mass import spoke_factor
-from structure_model import cable_net, spinup, wire
+from structure_model import cable_net, net_statics, spinup, wire
 from structure_model.__main__ import main
 
 
@@ -48,32 +48,51 @@ class TestCableNet(unittest.TestCase):
 
 
 class TestSpinUp(unittest.TestCase):
-    def test_partial_arc_tension_against_discrete_anchors(self):
-        """Sum the chord pulls anchor by anchor on two opposite arcs and compare with the formula."""
-        r, c, lam, omega = 900.0, 66.8, 2e6, 0.1047
-        theta = math.asin(c / r)
-        arc = 600.0
-        n = 6000
-        phis = np.linspace(0, arc / r, n)
-        ds = arc / (n - 1)
-        load = lam * omega ** 2 * r * ds                  # radial pull per anchor
-        span = math.pi - 2 * theta
-        tangential = np.zeros(n)
-        for i, phi in enumerate(phis):
-            partners = [d for d in (+span, -span)
-                        if 0 <= (phi + d - math.pi) % (2 * math.pi) <= arc / r]
-            self.assertTrue(partners, "every anchor has a chord on an arc longer than 4 theta")
-            tension = load / (len(partners) * math.cos(theta))
-            for d in partners:
-                p0 = r * np.array([math.cos(phi), math.sin(phi)])
-                q = r * np.array([math.cos(phi + d), math.sin(phi + d)])
-                u = (q - p0) / np.linalg.norm(q - p0)
-                tangential[i] += tension * (u @ np.array([-math.sin(phi), math.cos(phi)]))
-        along = -np.cumsum(tangential)                    # tension carried along the arc
-        self.assertAlmostEqual(abs(tangential.sum()) / along.max(), 0, places=2)
-        expected = spinup.partial_arc(r, theta, lam, omega)["joint_tension"]
-        self.assertAlmostEqual(along.max() / expected, 1, delta=0.02)
-        self.assertGreater(along.min(), -1e-6 * expected)  # tension, never compression
+    """Assembled statics: one tension per chord, rigid segments, joint springs (review on PR #2)."""
+
+    def setUp(self):
+        self.p = params(load())
+        self.sigma = self.p.wire_stress_mpa * 1e6
+        r = 900
+        res = evaluate(self.p, Design(radius_m=r, n_tori=1))
+        g, m = res["geometry"], res["mass"]
+        self.r, self.g = r, g
+        self.net = cable_net.compute(r, m["rim"], g["omega"], g["hub_radius"], self.sigma, self.p.steel_density)
+        self.lam = m["rim"] / (2 * math.pi * r)
+
+    def solve(self, arc, joints):
+        return net_statics.solve(self.r, self.net["tangent_radius"], self.lam, self.g["omega"],
+                                 self.net["wire_area_uniform"], self.p.steel_density, arc_length=arc,
+                                 segment_length=self.g["width"], joints=joints, stress_pa=self.sigma)
+
+    def test_finished_ring_matches_the_net_formula(self):
+        s = self.solve(None, "sliding")
+        self.assertTrue(s["equilibrium"])
+        self.assertLess(s["residual"], 1e-6)
+        self.assertEqual(s["slack_chords"], 0)
+        self.assertAlmostEqual(float(np.mean(s["tensions"])) / self.net["tension_end"], 1, delta=0.02)
+
+    def test_locked_joints_in_a_closed_ring_take_hoop_load(self):
+        # Strain compatibility (notes §12): stiff joints along the rim make the hull a hoop.
+        s = self.solve(None, "locked")
+        self.assertGreater(s["joint_axial_max"] / s["hoop_full_ring"], 0.3)
+        self.assertLess(s["tension_max"], self.net["tension_end"])
+
+    def test_shortest_arcs_double_the_chord_load(self):
+        arc = 4 * self.net["theta"] * self.r
+        s = self.solve(arc, "locked")
+        self.assertTrue(s["equilibrium"])
+        self.assertAlmostEqual(s["tension_max"] / self.net["tension_end"], 2, delta=0.1)
+        # Stresses scale with spin^2: the stage stays within the allowable only below ~0.7 of the final spin.
+        self.assertAlmostEqual(s["max_spin_fraction"], 0.71, delta=0.03)
+        # Joint tension close to the single-arc estimate of spinup.partial_arc (~1.1% of the hoop force).
+        estimate = spinup.partial_arc(self.r, self.net["theta"], self.lam, self.g["omega"])
+        self.assertAlmostEqual(s["joint_axial_max"] / estimate["joint_tension"], 1, delta=0.25)
+        self.assertGreater(s["joint_axial_min"], 0)  # tension, not compression
+
+    def test_sliding_joints_cannot_hold_a_partial_ring(self):
+        s = self.solve(4 * self.net["theta"] * self.r, "sliding")
+        self.assertFalse(s["equilibrium"])
 
     def test_imbalance(self):
         self.assertAlmostEqual(spinup.imbalance_offset(1e6, 900, 1e9), 0.9)
@@ -97,3 +116,18 @@ class TestWire(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestUniformChordArea(unittest.TestCase):
+    def test_uniform_chord_stays_within_the_allowable(self):
+        p = params(load())
+        sigma = p.wire_stress_mpa * 1e6
+        for r in (900, 2500):
+            res = evaluate(p, Design(radius_m=r, n_tori=1))
+            g, m = res["geometry"], res["mass"]
+            n = cable_net.compute(r, m["rim"], g["omega"], g["hub_radius"], sigma, p.steel_density)
+            self.assertGreater(n["wire_area_uniform"], n["wire_area_tapered_end"])
+            # Peak stress of the uniform chord, at mid-chord: end tension over its area plus its own spin load.
+            peak = n["tension_end"] / n["wire_area_uniform"] + n["self_load_stress"]
+            self.assertAlmostEqual(peak / sigma, 1, places=9)
+            self.assertAlmostEqual(n["tension_mid_uniform"] / n["wire_area_uniform"], sigma, delta=1)

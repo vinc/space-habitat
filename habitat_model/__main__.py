@@ -91,7 +91,7 @@ def main(argv=None):
         base, rows = sensitivity.tornado(assumptions, d, overrides)
         print(report.tornado(base, rows, assumptions, d)); chosen = True
     if args.ranking:
-        print(report.combined_ranking(sensitivity.combined_ranking(assumptions))); chosen = True
+        print(report.combined_ranking(sensitivity.combined_ranking(assumptions, overrides=overrides))); chosen = True
     if args.thermal:
         print(report.thermal_table(cavity.study(p))); chosen = True
     if args.trace:
@@ -128,7 +128,7 @@ def write_reports(folder, assumptions, overrides, p, d, results):
         "trace.md": report.trace_table(results["materials"]["trace_budget"], d),
         "validation.md": report.validation(validation.run(p)),
         "sensitivity.md": report.tornado(base, rows, assumptions, d) + "\n"
-                          + report.combined_ranking(sensitivity.combined_ranking(assumptions)) + "\n"
+                          + report.combined_ranking(sensitivity.combined_ranking(assumptions, overrides=overrides)) + "\n"
                           + report.monte_carlo(sensitivity.monte_carlo(assumptions, d, n_mc, overrides=overrides), n_mc),
         "assumptions.md": report.assumptions_table(assumptions),
         "stats.json": json.dumps(report.stats_json(p, d, results), indent=2) + "\n",
