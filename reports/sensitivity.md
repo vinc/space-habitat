@@ -135,13 +135,13 @@ The farm radiators' outer radius (guess, 0.60–1.4 of the floor radius) sets th
 
 | Stack, tiers lit | Reach (× floor radius) | Farm alone | Assembled farm margin | Assembled main margin | Assembled coverage main / farm | Cools both? |
 |---|---|---|---|---|---|---|
-| 900 m six, 2 tiers | 0.60 | 1.8 | 1.4 | 2.2 | 20% / 100% | yes |
-| 900 m six, 2 tiers | 0.80 | 3.5 | 2.4 | 2.5 | 35% / 100% | yes |
+| 900 m six, 2 tiers | 0.60 | 1.8 | 1.4 | 1.4 | 10% / 75% | yes |
+| 900 m six, 2 tiers | 0.80 | 3.5 | 2.5 | 2.5 | 35% / 100% | yes |
 | 900 m six, 2 tiers | 1.0 (default) | 5.5 | 2.9 | 2.6 | 75% / 35% | yes |
-| 900 m six, 2 tiers | 1.2 | 7.8 | 3.3 | 2.8 | 75% / 20% | yes |
-| 900 m six, 2 tiers | 1.4 | 11 | 3.0 | 3.3 | 75% / 10% | yes |
+| 900 m six, 2 tiers | 1.2 | 7.8 | 3.5 | 2.8 | 100% / 20% | yes |
+| 900 m six, 2 tiers | 1.4 | 11 | 3.2 | 3.2 | 50% / 10% | yes |
 | 900 m six, 3 tiers | 0.60 | 1.2 | 1.0 | 1.4 | 10% / 100% | yes |
-| 900 m six, 3 tiers | 0.80 | 2.3 | 1.8 | 1.9 | 20% / 100% | yes |
+| 900 m six, 3 tiers | 0.80 | 2.3 | 1.7 | 1.9 | 20% / 100% | yes |
 | 900 m six, 3 tiers | 1.0 (default) | 3.7 | 2.5 | 2.4 | 75% / 75% | yes |
-| 900 m six, 3 tiers | 1.2 | 5.2 | 2.9 | 2.5 | 75% / 35% | yes |
-| 900 m six, 3 tiers | 1.4 | 7.0 | 3.1 | 2.7 | 75% / 20% | yes |
+| 900 m six, 3 tiers | 1.2 | 5.2 | 3.2 | 2.5 | 75% / 35% | yes |
+| 900 m six, 3 tiers | 1.4 | 7.0 | 3.5 | 2.8 | 75% / 20% | yes |

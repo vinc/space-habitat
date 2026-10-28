@@ -135,7 +135,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~2.4× margin in the drum and ~2.5× in the farm section at once (it was ~1.3× with the farm rings in the tori's planes). Heat limits the stack to ~17–18 tori of 900 m, just below stability (~22), and depends most on the farm radiators' reach, a guess: at 0.6 r three tiers lit leave no margin.
+**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~2.4× margin in the drum and ~2.5× in the farm section at once (it was ~1.3× with the farm rings in the tori's planes). Heat limits the stack to ~16–18 tori of 900 m, just below stability (~22), and depends most on the farm radiators' reach, a guess: at 0.6 r three tiers lit leave no margin.
 
 - [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
 - [ ] Farm section's radiators: reach (~1 r assumed; 0.6 r leaves no margin with three tiers lit), layout, and how much of the drum's farm end they may shade

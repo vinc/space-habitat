@@ -52,7 +52,8 @@ class Scene:
     ring_radius: Optional[float] = None   # insulated ring bands around the farm planes
     ring_half: float = 0.0
     open_radius: Optional[float] = None   # moving outward beyond this, a ray is gone
-    face: Optional[tuple] = None          # (z, r_in, r_out): the tori's outer side, facing +z (insulated)
+    face: Optional[tuple] = None          # (z, r_in, r_out): the last torus's side, facing +z (insulated)
+    body: Optional[tuple] = None          # (radius, z0, z1): the tori's outer surface, seen from outside (insulated)
 
     def annulus(self, group):
         """Panel annuli of one section, summed over its planes."""
@@ -84,20 +85,24 @@ def farm_scene(geo, n):
                  open_radius=band[1] + 1.0)
 
 
-def assembled_scene(geo, n):
+def assembled_scene(geo, n, open_margin=1.0):
     """The whole stack: the main section's drum, the gap, then the open farm section, traced together.
 
-    Beyond the drum's farm end, the tori's outer side (from the drum out to the open radius) is an
-    insulated face: radiation heading back past the drum meets the tori, not open space.
+    The tori bound the main section physically: at the drum's farm end, the last torus's side (from
+    the drum out to the envelopes' outer radius) is an insulated face looking at the farm section, and
+    the envelopes' outer surface an insulated cylinder along the main section. The open radius only
+    ends the rays: beyond every surface, a ray moving outward never comes back, so its margin
+    (open_margin) doesn't change the result.
     """
     main, farm = main_scene(geo, n), farm_scene(geo, n)
     start = geo["main_length"] + geo["farm_section_gap"]
-    open_radius = max(farm.bands[0][1], geo["radius"] + geo["envelope_radius"]) + 1.0
+    outer = geo["envelope_outer"]
+    open_radius = max(farm.bands[0][1], outer) + open_margin
     return Scene(planes=main.planes + tuple(start + z for z in farm.planes), bands=main.bands + farm.bands,
                  groups=main.groups + farm.groups, length=geo["stack_length"], hub=geo["hub_radius"],
                  drum=main.drum, drum_span=main.drum_span, envelope_half=main.envelope_half,
                  ring_radius=farm.ring_radius, ring_half=farm.ring_half, open_radius=open_radius,
-                 face=(geo["main_length"], main.drum, open_radius))
+                 face=(geo["main_length"], main.drum, outer), body=(outer, 0.0, geo["main_length"]))
 
 
 def _diffuse(normal, rng):
@@ -209,7 +214,15 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
         else:
             t_face = np.full(m, np.inf)
 
-        times = np.stack([t_end, t_plane, t_drum, t_open, t_hub, t_ring, t_face], axis=1)
+        if scene.body is not None:
+            b_r, b_lo, b_hi = scene.body
+            t_body, _ = _cylinder_roots(p, v, b_r)          # entry root: from outside only
+            z_hit = p[:, 2] + np.where(np.isfinite(t_body), t_body, 0.0) * dz
+            t_body = np.where((t_body > EPS) & (z_hit >= b_lo) & (z_hit <= b_hi), t_body, np.inf)
+        else:
+            t_body = np.full(m, np.inf)
+
+        times = np.stack([t_end, t_plane, t_drum, t_open, t_hub, t_ring, t_face, t_body], axis=1)
         event = np.argmin(times, axis=1)
         t = times[rows, event]
         hit = p + t[:, None] * v
@@ -259,6 +272,10 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
             normal = np.zeros((face.sum(), 3))
             normal[:, 2] = -np.sign(v[face, 2])
             new_d[face] = _diffuse(normal, rng)
+
+        body = event == 7
+        if body.any():
+            new_d[body] = _diffuse(radial[body], rng)
 
         idx = np.flatnonzero(alive)
         fate[idx] = new_fate

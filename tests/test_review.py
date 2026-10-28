@@ -177,6 +177,19 @@ class TestFarmSection(unittest.TestCase):
         self.assertAlmostEqual(bare, alone, delta=0.02)            # the bare farm section barely matters
         self.assertLess(shaded, 0.75 * alone)
 
+    def test_open_radius_only_ends_rays(self):
+        # The physical surfaces stay put: moving the ray-termination radius changes nothing, even with
+        # the farm radiators reaching beyond the tori.
+        for frac in (1.0, 1.4):
+            g = evaluate(params(load(), farm_radiator_outer_frac=frac), Design(radius_m=900, n_tori=6))["geometry"]
+            near, far = cavity.assembled_scene(g, 6), cavity.assembled_scene(g, 6, open_margin=2000.0)
+            self.assertEqual(near.face, far.face)
+            self.assertAlmostEqual(near.face[2], g["envelope_outer"])
+            for source in (0, 1):
+                e = [cavity.escape_probability(s, (0.75, 0.2), 0.9, n_rays=8000, source=source)["escape"]
+                     for s in (near, far)]
+                self.assertAlmostEqual(e[0], e[1], delta=0.01)
+
     def test_assembled_is_below_each_section_alone(self):
         d = Design(radius_m=900, n_tori=6, tiers_lit=3)
         r = evaluate(self.p, d)
