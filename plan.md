@@ -11,35 +11,35 @@ Check the design's load-bearing assumptions with models before going deeper. The
 **Goal:** one model replaces the hand calculations spread across the notes, reproduces their key tables, and shows which assumptions move the results.
 
 ### 1.1 Setup
-- [ ] Small package `habitat_model/`, plain Python + numpy, run from the command line, e.g. `python -m habitat_model --size 900 --stack six --tiers 2 --host L --site Eros`
-- [ ] One assumptions file (TOML or a dataclass), one entry per input: value, unit, low/high range, source (section of the notes or reference), status (sourced / estimate / guess)
-- [ ] Seed it from section 19 of the notes (assumptions to revisit) and the "Still unsourced" list
-- [ ] Modules: `geometry`, `mass`, `materials`, `power`, `food`, `heat`, `stability`, `replication`, `report`
+- [x] Small package `habitat_model/`, plain Python + numpy, run from the command line, e.g. `python -m habitat_model --size 900 --stack six --tiers 2 --host L --site Eros`
+- [x] One assumptions file (TOML or a dataclass), one entry per input: value, unit, low/high range, source (section of the notes or reference), status (sourced / estimate / guess)
+- [x] Seed it from section 19 of the notes (assumptions to revisit) and the "Still unsourced" list
+- [x] Modules: `geometry`, `mass`, `materials`, `power`, `food`, `heat`, `stability`, `replication`, `report`
 
 ### 1.2 Modules, each checked against the notes
-- [ ] **Geometry:** r = (T/2)², w = r/16, floor, tube surface, air volume, hub radius, gaps, pitch, stack length, farm ring area per tier (0.4 r, 0.9 w, 80% planted)
+- [x] **Geometry:** r = (T/2)², w = r/16, floor, tube surface, air volume, hub radius, gaps, pitch, stack length, farm ring area per tier (0.4 r, 0.9 w, 80% planted)
   - check: §0 key numbers (floor 32 / 100 / 245 ha), §2
-- [ ] **Mass:** rock shield (11 t/m², minus fill credit), double skin, hull and frames (r^2.3), cable spokes `M·ρv²/(σ − ρv²/2)`, fill, water, N₂, farm ring, array, radiators
+- [x] **Mass:** rock shield (11 t/m², minus fill credit), double skin, hull and frames (r^2.3), cable spokes `M·ρv²/(σ − ρv²/2)`, fill, water, N₂, farm ring, array, radiators
   - check: §5c table (~2.2 / 11.9 / 40 / 105 / 238 Mt; t per m² of floor)
-- [ ] **Materials and mining:** metal needed vs host class (H / L / LL free metal, optional iron from the silicates), shield rock from tailings, rock mined per torus; C-type sized by nitrogen (0.24 wt%, 70% recovery); trace-element budget (Cu, B, Sn…) per torus vs source bodies
+- [x] **Materials and mining:** metal needed vs host class (H / L / LL free metal, optional iron from the silicates), shield rock from tailings, rock mined per torus; C-type sized by nitrogen (0.24 wt%, 70% recovery); trace-element budget (Cu, B, Sn…) per torus vs source bodies
   - check: §8 mined per torus, §10 bill of materials and trace table, §15 "tori supported" per candidate host
-- [ ] **Power and light:** valley lighting (light per m² of floor per day, lamp efficacy, ceiling losses), farm per tier lit, other loads, despun array with the survival sizing (×1.57), seasonal sizing by orbit (aphelion, half sky for the valley, full farm), concentrator option
+- [x] **Power and light:** valley lighting (light per m² of floor per day, lamp efficacy, ceiling losses), farm per tier lit, other loads, despun array with the survival sizing (×1.57), seasonal sizing by orbit (aphelion, half sky for the valley, full farm), concentrator option
   - check: §0 and §13 power tables, §15 seasonal sizing table
-- [ ] **Food:** diet table → mol per person → crop area and kW → people per tier lit, floor per person and density
+- [x] **Food:** diet table → mol per person → crop area and kW → people per tier lit, floor per person and density
   - check: ~3,200 mol, ~89 m², ~31 kW per person; ~1,000 / 3,250 / 7,900 people per tier lit
-- [ ] **Heat:** total heat per torus and stack, radiator area at ~285 K, end-opening capacity, break-even number of tori
+- [x] **Heat:** total heat per torus and stack, radiator area at ~285 K, end-opening capacity, break-even number of tori
   - check: §13 heat table (~27 / 18 / 13 / 10–11 tori)
-- [ ] **Stability (rigid body):** spin-axis vs transverse inertia of the stack, maximum tori with a 20% margin, for given gaps
+- [x] **Stability (rigid body):** spin-axis vs transverse inertia of the stack, maximum tori with a 20% margin, for given gaps
   - check: ~26–28 tori in §0
-- [ ] **Processing and replication:** crushing and baking energy, shipping energy from Δv (`asteroid_transfers.py`), generation time at a given power
+- [x] **Processing and replication:** crushing and baking energy, shipping energy from Δv (`asteroid_transfers.py`), generation time at a given power
   - check: §13 processing energy, §15 shipping energy
 
 ### 1.3 Validation
-- [ ] Unit tests on the formulas (1 g family, spoke taper, radiator law, food chain)
-- [ ] Reproduce each key table of the notes within ~5%; list every mismatch and fix the model or the notes
+- [x] Unit tests on the formulas (1 g family, spoke taper, radiator law, food chain)
+- [x] Reproduce each key table of the notes within ~5%; list every mismatch and fix the model or the notes
 
 ### 1.4 Sensitivity
-- [ ] One-at-a-time sweep of each input over its range, giving a ranked (tornado) table for these outputs:
+- [x] One-at-a-time sweep of each input over its range, giving a ranked (tornado) table for these outputs:
   - mass per m² of floor
   - rock mined per torus
   - C-type per torus
@@ -47,12 +47,14 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - people per torus
   - heat margin
   - processing energy
-- [ ] Optional: Monte Carlo over all ranges for the spread of the key outputs
+- [x] Optional: Monte Carlo over all ranges for the spread of the key outputs
 - [ ] Rank the assumptions, then re-order sections 2–6 accordingly
 
 ### 1.5 Outputs
-- [ ] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
-- [ ] JSON export for the 3D model's stats panel
+- [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
+- [x] JSON export for the 3D model's stats panel
+
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 185 of 197 checked figures within 5%, the rest rounding in the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, re-ordering sections 2–6 still to decide.
 
 **Done when:** every key table in the notes is reproduced or corrected, and the assumptions are ranked by impact.
 

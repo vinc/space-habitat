@@ -1,0 +1,636 @@
+# Inputs of the parametric system model, one entry per input.
+#
+# Each entry has a value, a unit, a low/high range for the sensitivity sweep,
+# a source (section of notes.md or reference) and a status:
+#   sourced   backed by a reference listed in the notes
+#   estimate  a first-principles or literature-informed estimate
+#   guess     a placeholder to revisit
+#   design    a design choice, not an uncertainty (no range, not swept)
+#
+# Seeded from notes.md §19 (assumptions to revisit) and the "Still unsourced" list.
+# Names are unique across groups; the groups are only for reading.
+
+# --- Geometry ---------------------------------------------------------------
+
+[geometry.width_ratio]
+value = 16
+unit = "r/w"
+source = "§2b, adopted design rule"
+status = "design"
+
+[geometry.hub_radius_per_width]
+value = 1.08
+unit = "hub radius / tube width"
+low = 1.0
+high = 1.2
+source = "§12, large hub (~60 / 110 / 170 m)"
+status = "estimate"
+
+[geometry.farm_ring_radius_frac]
+value = 0.4
+unit = "r"
+source = "§13, farm rings at ~0.4 r"
+status = "design"
+
+[geometry.farm_ring_width_frac]
+value = 0.9
+unit = "w"
+source = "§13, farm ring width ~0.9 of the tube width"
+status = "design"
+
+[geometry.farm_planted_frac]
+value = 0.8
+unit = "fraction of each tier"
+low = 0.7
+high = 0.85
+source = "§13, ~80% of each tier planted"
+status = "estimate"
+
+[geometry.farm_ring_height_m]
+value = 8.5
+unit = "m"
+source = "§13, three tiers ~2.5 m apart, ~8.5 m in all"
+status = "design"
+
+[geometry.farm_tiers_built]
+value = 3
+unit = "tiers"
+source = "§13, all three tiers built with the torus"
+status = "design"
+
+# --- Atmosphere -------------------------------------------------------------
+
+[atmosphere.pressure_kpa]
+value = 70.0
+unit = "kPa"
+source = "§3c, design atmosphere"
+status = "design"
+
+[atmosphere.o2_partial_kpa]
+value = 20.265
+unit = "kPa"
+source = "§3c, sea-level O2 partial pressure (20% of 101.325 kPa)"
+status = "design"
+
+[atmosphere.air_temperature_k]
+value = 288.15
+unit = "K"
+source = "§3b"
+status = "design"
+
+# --- Shield and fill --------------------------------------------------------
+
+[shield.shield_areal_t_m2]
+value = 11.0
+unit = "t/m2"
+low = 9.0
+high = 13.0
+source = "§5b, Globus & Strout (2017): ~11 t/m2 of rock for 20 mSv/yr; plan §2 checks it"
+status = "sourced"
+
+[shield.rock_per_water_shield]
+value = 1.5714
+unit = "t rock / t water"
+low = 1.4
+high = 1.75
+source = "§6, Globus: 11 t/m2 of regolith ~ 7 t/m2 of water"
+status = "sourced"
+
+[shield.fill_water_equiv_t_m2]
+value = 1.17
+unit = "t/m2 water-equivalent"
+low = 1.05
+high = 1.25
+source = "§6, 1 m soil/regolith mix"
+status = "estimate"
+
+[shield.fill_depth_m]
+value = 1.0
+unit = "m"
+source = "§6"
+status = "design"
+
+[shield.fill_soil_frac]
+value = 0.5
+unit = "fraction of the fill depth"
+source = "§10, 0.5 m soil + 0.5 m regolith"
+status = "design"
+
+[shield.soil_density]
+value = 1.6
+unit = "t/m3"
+low = 1.3
+high = 1.8
+source = "§6, moist agricultural soil (unsourced)"
+status = "estimate"
+
+[shield.regolith_density]
+value = 1.8
+unit = "t/m3"
+low = 1.6
+high = 2.0
+source = "§6, regolith / mine tailings (unsourced)"
+status = "estimate"
+
+[shield.soil_water_vol_frac]
+value = 0.25
+unit = "m3 water / m3 soil"
+low = 0.15
+high = 0.35
+source = "§6, ~25% water by volume"
+status = "estimate"
+
+[shield.lake_water_t_m2]
+value = 0.25
+unit = "t per m2 of floor"
+low = 0.1
+high = 0.5
+source = "fitted so that water needed matches §7 (~0.15 / 0.4 / 0.9 Mt); the notes give no breakdown"
+status = "guess"
+
+# --- Structure --------------------------------------------------------------
+
+[structure.hull_frames_ref_mt]
+value = 0.30
+unit = "Mt at the reference radius"
+low = 0.2
+high = 0.45
+source = "§5c, hull and frames of a 900 m torus"
+status = "estimate"
+
+[structure.hull_frames_ref_radius_m]
+value = 900
+unit = "m"
+source = "§5c"
+status = "design"
+
+[structure.hull_frames_exponent]
+value = 2.3
+unit = "exponent of r"
+low = 2.1
+high = 2.5
+source = "§5c, fitted to the 900 m and 1.6 km estimates"
+status = "estimate"
+
+[structure.hull_min_gauge_frac]
+value = 0.3
+unit = "fraction of the 1 g hull"
+low = 0.2
+high = 0.5
+source = "§9, hull and frames floored at ~30% of their 1 g mass"
+status = "estimate"
+
+[structure.wire_stress_mpa]
+value = 1000
+unit = "MPa (working)"
+low = 700
+high = 1200
+source = "§5c, §12: drawn pearlitic wire ~1.8-2 GPa ultimate; plan §3 checks it for asteroid iron"
+status = "estimate"
+
+[structure.steel_density]
+value = 7900
+unit = "kg/m3"
+source = "§5a"
+status = "sourced"
+
+[structure.hub_factory_metal_frac]
+value = 0.25
+unit = "fraction of torus steel"
+low = 0.15
+high = 0.5
+source = "§10, hub, dock and factory (guess): 1.1 -> 1.4 Mt, 5.8 -> 7.3 Mt, 22 -> 27 Mt"
+status = "guess"
+
+[structure.spinup_exhaust_km_s]
+value = 3.0
+unit = "km/s"
+low = 2.0
+high = 4.0
+source = "§7, water thrusters"
+status = "estimate"
+
+[structure.farm_shell_m]
+value = 0.01
+unit = "m of steel"
+low = 0.005
+high = 0.02
+source = "§13, farm ring mass (rough)"
+status = "guess"
+
+[structure.farm_growing_kg_m2]
+value = 100
+unit = "kg per m2 planted"
+low = 50
+high = 200
+source = "§13, growing systems (rough)"
+status = "guess"
+
+[structure.array_kg_m2]
+value = 3.0
+unit = "kg/m2"
+low = 2.0
+high = 5.0
+source = "§13, thin-film panels plus structure"
+status = "estimate"
+
+[structure.radiator_kg_m2]
+value = 5.0
+unit = "kg per m2 of two-sided panel"
+low = 3.0
+high = 10.0
+source = "§13, heat rejection"
+status = "estimate"
+
+# --- Materials --------------------------------------------------------------
+
+[materials.metal_wt_H]
+value = 0.17
+unit = "free metal, wt fraction"
+low = 0.15
+high = 0.19
+source = "§10, ordinary-chondrite review: ~8.4 vol%"
+status = "sourced"
+
+[materials.metal_wt_L]
+value = 0.09
+unit = "free metal, wt fraction"
+low = 0.07
+high = 0.11
+source = "§10, ~4.1 vol%"
+status = "sourced"
+
+[materials.metal_wt_LL]
+value = 0.045
+unit = "free metal, wt fraction"
+low = 0.035
+high = 0.055
+source = "§10, ~2 vol%"
+status = "sourced"
+
+[materials.s_bulk_density]
+value = 2.0
+unit = "t/m3"
+low = 1.6
+high = 2.4
+source = "§10, S-type rubble pile"
+status = "estimate"
+
+[materials.c_bulk_density]
+value = 1.2
+unit = "t/m3"
+low = 1.1
+high = 1.3
+source = "§10, Bennu-like"
+status = "sourced"
+
+[materials.c_nitrogen_wt]
+value = 0.0024
+unit = "wt fraction"
+low = 0.0023
+high = 0.0025
+source = "§10, Bennu samples ~0.23-0.25 wt% N (Glavin et al. 2025)"
+status = "sourced"
+
+[materials.nitrogen_recovery]
+value = 0.7
+unit = "fraction"
+low = 0.5
+high = 0.9
+source = "§10, §19"
+status = "estimate"
+
+[materials.c_water_wt]
+value = 0.064
+unit = "wt fraction"
+low = 0.05
+high = 0.08
+source = "§10, 0.71 wt% H at Bennu's surface (Praet et al. 2021)"
+status = "sourced"
+
+[materials.c_carbon_wt]
+value = 0.045
+unit = "wt fraction"
+low = 0.04
+high = 0.05
+source = "§10, Bennu samples"
+status = "sourced"
+
+# --- Power and light --------------------------------------------------------
+
+[power.valley_light_mol]
+value = 15
+unit = "mol/m2/day on the floor"
+source = "§13, light-box ceiling sizing"
+status = "design"
+
+[power.ceiling_delivery]
+value = 0.75
+unit = "fraction"
+low = 0.65
+high = 0.80
+source = "§13, light box: ~20-30% ceiling losses (to verify, plan §6)"
+status = "estimate"
+
+[power.lamp_efficacy_umol_j]
+value = 1.4
+unit = "umol/J at the wall"
+low = 1.3
+high = 1.5
+source = "§13, sulfur lamps (Maclennan et al. 1994); 915 MHz sources would give ~1.75"
+status = "sourced"
+
+[power.farm_delivery]
+value = 0.85
+unit = "fraction"
+low = 0.75
+high = 0.90
+source = "§13, light pipes just above the canopy (estimate)"
+status = "estimate"
+
+[power.other_loads_w_m2]
+value = 15
+unit = "W per m2 of floor"
+low = 10
+high = 25
+source = "§19, ~5 MW per 900 m torus, ~15 MW per 1.6 km torus (guess)"
+status = "guess"
+
+[power.pv_efficiency]
+value = 0.25
+unit = "fraction"
+low = 0.18
+high = 0.28
+source = "§13, 25% assumed; ~18-22% in the concentrator comparison"
+status = "estimate"
+
+[power.solar_constant_w_m2]
+value = 1361
+unit = "W/m2 at 1 AU"
+source = "standard value"
+status = "sourced"
+
+[power.locked_output_frac]
+value = 0.63662
+unit = "fraction (2/pi)"
+source = "§13, a locked two-sided array averages 2/pi"
+status = "design"
+
+[power.seasonal_sky_frac]
+value = 0.5
+unit = "fraction of the normal sky at aphelion"
+source = "§15, seasonal sky"
+status = "design"
+
+# --- Food -------------------------------------------------------------------
+
+[food.diet_kcal]
+value = 2500
+unit = "kcal per person per day"
+low = 2200
+high = 2800
+source = "§13, working diet"
+status = "estimate"
+
+[food.valley_diet_share]
+value = 0.07
+unit = "fraction of calories"
+low = 0.0
+high = 0.15
+source = "§13, permaculture and food forest"
+status = "estimate"
+
+[food.crop_overhead]
+value = 0.10
+unit = "fraction"
+low = 0.05
+high = 0.20
+source = "§13, seedlings and turnaround"
+status = "estimate"
+
+[food.crop_light_mol]
+value = 36
+unit = "mol/m2/day on the crops"
+low = 30
+high = 45
+source = "§13, average over crops and day lengths"
+status = "estimate"
+
+# Diet shares, of the whole diet (the valley's 7% is valley_diet_share).
+[food.share_potato]
+value = 0.33
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_wheat]
+value = 0.28
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_soybean]
+value = 0.15
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_lentils]
+value = 0.07
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_berries]
+value = 0.05
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_flax]
+value = 0.03
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+[food.share_greens]
+value = 0.02
+unit = "fraction of calories"
+source = "§13, working diet"
+status = "design"
+
+# Edible dry mass per mol of light on the crops: conservative (sizing) value,
+# low below it, high at the best demonstrated.
+[food.yield_potato]
+value = 0.37
+unit = "g/mol"
+low = 0.30
+high = 0.60
+source = "§13, Tibbitts et al. (best ~0.60)"
+status = "sourced"
+
+[food.yield_wheat]
+value = 0.18
+unit = "g/mol"
+low = 0.15
+high = 0.40
+source = "§13, Bugbee & Salisbury (best ~0.40)"
+status = "sourced"
+
+[food.yield_soybean]
+value = 0.15
+unit = "g/mol"
+low = 0.12
+high = 0.22
+source = "§13 (unsourced estimate)"
+status = "estimate"
+
+[food.yield_lentils]
+value = 0.15
+unit = "g/mol"
+low = 0.10
+high = 0.22
+source = "§13 (unsourced estimate)"
+status = "estimate"
+
+[food.yield_berries]
+value = 0.25
+unit = "g/mol"
+low = 0.20
+high = 0.30
+source = "§13 (unsourced estimate)"
+status = "estimate"
+
+[food.yield_flax]
+value = 0.07
+unit = "g/mol"
+low = 0.05
+high = 0.12
+source = "§13 (unsourced estimate)"
+status = "estimate"
+
+[food.yield_greens]
+value = 0.43
+unit = "g/mol"
+low = 0.35
+high = 0.74
+source = "§13, Jin et al. 2023 (best ~0.74)"
+status = "sourced"
+
+# Food energy per gram of edible dry mass, backed out of the notes'
+# "light per person" column (food energy per gram is listed as unsourced).
+[food.kcal_potato]
+value = 3.7
+unit = "kcal/g dry"
+low = 3.5
+high = 3.9
+source = "§13, implied by ~600 mol per person"
+status = "estimate"
+
+[food.kcal_wheat]
+value = 3.6
+unit = "kcal/g dry"
+low = 3.4
+high = 3.8
+source = "§13, implied by ~1,080 mol per person"
+status = "estimate"
+
+[food.kcal_soybean]
+value = 4.45
+unit = "kcal/g dry"
+low = 4.2
+high = 4.7
+source = "§13, implied by ~560 mol per person"
+status = "estimate"
+
+[food.kcal_lentils]
+value = 3.65
+unit = "kcal/g dry"
+low = 3.4
+high = 3.9
+source = "§13, implied by ~320 mol per person"
+status = "estimate"
+
+[food.kcal_berries]
+value = 3.3
+unit = "kcal/g dry"
+low = 3.0
+high = 3.6
+source = "§13, implied by ~150 mol per person"
+status = "estimate"
+
+[food.kcal_flax]
+value = 5.6
+unit = "kcal/g dry"
+low = 5.2
+high = 5.9
+source = "§13, implied by ~190 mol per person"
+status = "estimate"
+
+[food.kcal_greens]
+value = 2.9
+unit = "kcal/g dry"
+low = 2.5
+high = 3.3
+source = "§13, implied by ~40 mol per person"
+status = "estimate"
+
+# --- Heat -------------------------------------------------------------------
+
+[heat.radiator_temp_k]
+value = 285
+unit = "K"
+low = 275
+high = 295
+source = "§13, passive loops colder than the habitat"
+status = "estimate"
+
+# --- Processing and replication ---------------------------------------------
+
+[processing.crush_mj_kg]
+value = 0.085
+unit = "MJ per kg of S-type rock"
+low = 0.05
+high = 0.15
+source = "§5e, §10: ~1e15 J for ~12 Mt, ~3e15 J for ~32 Mt"
+status = "estimate"
+
+[processing.bake_mj_kg]
+value = 1.5
+unit = "MJ per kg of C-type"
+low = 1.0
+high = 2.0
+source = "§19, C-type processing ~1-2 MJ/kg (unsourced)"
+status = "estimate"
+
+[processing.organics_shipped_t_m2]
+value = 0.1
+unit = "t per m2 of floor"
+low = 0.05
+high = 0.15
+source = "§15, carbon/organics ~15-50 kt per 900 m torus"
+status = "guess"
+
+[processing.ep_exhaust_km_s]
+value = 30
+unit = "km/s"
+low = 20
+high = 50
+source = "§15, electric propulsion"
+status = "estimate"
+
+[processing.ep_efficiency]
+value = 0.6
+unit = "fraction"
+low = 0.5
+high = 0.7
+source = "§15, electric propulsion"
+status = "estimate"
+
+# --- Stability --------------------------------------------------------------
+
+[stability.stability_margin]
+value = 0.2
+unit = "required I_axis / I_transverse - 1"
+source = "§11, 20% margin"
+status = "design"
