@@ -2,7 +2,7 @@
 
 Check the design's load-bearing assumptions with models before going deeper. The parametric system model comes first: it recomputes the design notes' numbers from one set of assumptions and ranks them by how much they matter. That ranking sets the priorities for the detailed models.
 
-**Order:** 1 → 2, 3 and 5 in parallel → 4 (needs the structural stiffness from 3) → 6. Section 7 lists what only Earth tests can settle.
+**Order** (set by the sensitivity ranking of model 1, `reports/sensitivity.md`): 1 → 2 and 3 in parallel → 4 (needs the structural stiffness from 2) → 5 → 6. Section 7 lists what only Earth tests can settle; the top two inputs of the ranking (C-type nitrogen recovery and baking energy) are among them.
 
 ---
 
@@ -48,19 +48,39 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - heat margin
   - processing energy
 - [x] Optional: Monte Carlo over all ranges for the spread of the key outputs
-- [ ] Rank the assumptions, then re-order sections 2–6 accordingly
+- [x] Rank the assumptions, then re-order sections 2–6 accordingly
 
 ### 1.5 Outputs
 - [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
 - [x] JSON export for the 3D model's stats panel
 
-**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 185 of 197 checked figures within 5%, the rest rounding in the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, re-ordering sections 2–6 still to decide.
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 185 of 197 checked figures within 5%, the rest rounding in the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, sections 2–6 re-ordered by it (structure, radiation, stack dynamics, second tier, heat).
 
 **Done when:** every key table in the notes is reproduced or corrected, and the assumptions are ranked by impact.
 
 ---
 
-## 2. Radiation transport (the shield is ~85% of the mass)
+## 2. Structure
+
+**Why second:** the wire's working stress is the largest structural input: 700–1,200 MPa moves the S-type rock mined per torus by −12% to +33% at 900 m (−16% to +43% at 2.5 km), because on L and LL hosts metal, not shield rock, sizes the mining. Hull and frames (r^2.3 fit) and the hub/factory metal (a guess) add up to +15% and +20%.
+
+- [ ] Finite-element model of one tube segment (CalculiX, FEniCS or sfepy):
+  - rock cells and double skin
+  - floor fill and hung ceiling cells
+  - loads: 1 g spin and 70 kPa of air
+- [ ] Cable net: chord geometry, tension distribution, taper, compliant joints
+- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
+- [ ] Hub held in the net by stabilising lines
+- [ ] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
+- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate; stiffness for model 4 (stack dynamics)
+
+**Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
+
+---
+
+## 3. Radiation transport (the shield is ~85% of the mass)
+
+**Why third:** 9–13 t/m² of shield moves the mass per m² of floor by ±18% and the S-type rock by ±13%, at every size.
 
 - [ ] Tool: Geant4 (via GRAS or MULASSIS) run locally, or NASA's OLTARIS / HZETRN
 - [ ] Shield composition: L and LL chondritic tailings after metal removal (~2 t/m³), CI-like clays for comparison, water or polyethylene inner layers
@@ -76,35 +96,36 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ---
 
-## 3. Structure
-
-- [ ] Finite-element model of one tube segment (CalculiX, FEniCS or sfepy):
-  - rock cells and double skin
-  - floor fill and hung ceiling cells
-  - loads: 1 g spin and 70 kPa of air
-- [ ] Cable net: chord geometry, tension distribution, taper, compliant joints
-- [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way
-- [ ] Hub held in the net by stabilising lines
-- [ ] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
-- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate; stiffness for model 4
-
-**Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
-
----
-
 ## 4. Stack dynamics
+
+**Why fourth:** not in the sweep (the system model treats the stack as rigid), but it decides whether the "nothing has to keep working" principle holds; it needs the stiffness from model 2.
 
 - [ ] Rigid stack with energy dissipation: margin vs number of tori and gaps
 - [ ] Flexible stack: hub as a beam, tori as rings on cable nets; lowest bending modes vs spin rate for a pair and a six-stack
 - [ ] Disturbances: docking, rim trains, ballast transfers, friction in the despun array's bearing, sunlight pressure on the array
-- [ ] Tools: Python (scipy) multibody model, or modal analysis using model 3's stiffness
+- [ ] Tools: Python (scipy) multibody model, or modal analysis using model 2's stiffness
 - [ ] Output: ratio of lowest mode to spin rate, damping needed, maximum tori
 
 **Changes the design if:** a six-stack needs active control to stay stable, which would break the "nothing has to keep working" principle.
 
 ---
 
-## 5. Heat rejection
+## 5. Second tier
+
+**Why fifth:** the farm inputs set the population: light on the crops moves people per torus by −17% to +25%, wheat yield by −7% to +25%, farm light delivery the array by −4% to +9%. Replication logistics matter too: with the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking.
+
+- [ ] **Light-box and farm optics:** ray trace of the magnesium-oxide cavity, diffuser and light pipes. Check the ~75% (valley) and ~85% (farm) delivery, and the light uniformity at 2.5 m tier spacing
+- [ ] **Closed atmosphere and ecology:** compartment model (ODEs) of O₂, CO₂, N₂, water and soil carbon across farm, valley, soil, people and algae
+  - validate by replaying Biosphere 2 (O₂ from ~21% to ~14% in ~16 months)
+  - failure scenarios: a farm tier dark, a soil respiration burst, a leak
+  - output: buffer and control needs
+- [ ] **Replication logistics:** stock-and-flow or discrete-event model of mining, factory throughput, shipping and imported vitamins per generation. Output: doubling time, and the share of each child habitat that is made locally
+
+---
+
+## 6. Heat rejection
+
+**Why last:** the radiator temperature (275–295 K) moves the heat margin by only −13% to +15%, and a 900 m six-stack has ~1.8× margin even with three tiers lit.
 
 - [ ] Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
 - [ ] Check that no direct sunlight reaches the radiators (Sun perpendicular to the axis, including through the gaps)
@@ -116,22 +137,13 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ---
 
-## 6. Second tier
-
-- [ ] **Light-box and farm optics:** ray trace of the magnesium-oxide cavity, diffuser and light pipes. Check the ~75% (valley) and ~85% (farm) delivery, and the light uniformity at 2.5 m tier spacing
-- [ ] **Closed atmosphere and ecology:** compartment model (ODEs) of O₂, CO₂, N₂, water and soil carbon across farm, valley, soil, people and algae
-  - validate by replaying Biosphere 2 (O₂ from ~21% to ~14% in ~16 months)
-  - failure scenarios: a farm tier dark, a soil respiration burst, a leak
-  - output: buffer and control needs
-- [ ] **Replication logistics:** stock-and-flow or discrete-event model of mining, factory throughput, shipping and imported vitamins per generation. Output: doubling time, and the share of each child habitat that is made locally
-
----
-
 ## 7. Earth tests (models can't settle these)
 
+- [ ] **C-type baking (top of the ranking):** nitrogen recovery and energy per kg from CI-like meteorite or simulant. Recovery (50–90%) moves the C-type per torus by −22% to +40%; baking energy (1–2 MJ/kg) moves the processing energy by ±28%. Lab data, not a model, settles both.
 - [ ] Growth-chamber trials of the working diet under sulfur lamps (CO₂ ~1,000 ppm, 2.5 m tiers), especially lentils and flax, whose yields are estimates
 - [ ] Non-rotating sulfur bulb at kW scale, fed by a 915 MHz source
-- [ ] Wire drawing from meteoritic iron-nickel or a simulant
+- [ ] Wire drawing from meteoritic iron-nickel or a simulant (the wire's strength is the top structural input, section 2)
 - [ ] Magnetic separation of free metal from L and LL chondrite material (meteorites or simulant)
 - [ ] Partial-gravity health data (spaceflight, centrifuge studies)
 - [ ] Growth chambers on 1.05–1.8-year cycles for candidate species
+
