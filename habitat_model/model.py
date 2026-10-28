@@ -34,9 +34,17 @@ METRICS = {
     "c_type": ("C-type per torus", "Mt", lambda r: r["materials"]["c_type"] / 1e9),
     "array_area": ("Despun array at the site", "km²", lambda r: r["power"]["array_site"] / 1e6),
     "people": ("People per torus", "", lambda r: r["food"]["people"]),
-    "heat_margin": ("Heat margin (capacity / stack heat)", "×", lambda r: r["heat"]["margin"]),
+    "heat_margin": ("Ideal heat margin (end-aperture limit / stack heat)", "×", lambda r: r["heat"]["margin"]),
     "processing_energy": ("Processing energy per torus", "PJ", lambda r: r["replication"]["processing"] / 1e15),
+    "shipping_energy": ("Shipping energy per torus", "PJ", lambda r: _scaled(r["replication"]["shipping"], 1e-15)),
+    "total_energy": ("Processing + shipping per torus", "PJ", lambda r: _scaled(r["replication"]["energy_per_torus"], 1e-15)),
+    "generation_time": ("Energy-limited generation time", "yr", lambda r: r["replication"]["generation_time_yr"]),
 }
+
+
+def _scaled(value, factor):
+    """Unknown (None) stays unknown."""
+    return None if value is None else value * factor
 
 
 def metrics(results):

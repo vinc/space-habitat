@@ -16,7 +16,7 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 
 | Item | Choice |
 |---|---|
-| Form | Co-rotating stack of an even number of tori on one shared hub: a pair, or 6 tori grouped A A B B C C (passively stable up to ~26–28 tori) |
+| Form | Co-rotating stack of an even number of tori on one shared hub: a pair, or 6 tori grouped A A B B C C (passively stable up to ~22–25 tori) |
 | Size | **900 m / 60 s** or **1.6 km / 80 s** tori, width ratio r/w = 16; **2.5 km / 100 s** as a candidate for mature clusters (section 8, to decide) |
 | Gravity | Structure rated for 1 g, run at whatever g proves healthy |
 | Location | Near Earth, ~1 AU from the Sun, mining near-Earth asteroids; each cluster built at (and sharing the orbit of) its S-type "mine island"; spreading by seeds, not by moving habitats |
@@ -38,14 +38,14 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 |---|---|---|---|
 | rpm / rim speed | 1.0 / 94 m/s | 0.75 / 126 m/s | 0.6 / 157 m/s |
 | Tube width / floor area | 56 m / 32 ha | 100 m / 100 ha | 156 m / 245 ha |
-| Rock shield (after fill credit) | ~10.1 Mt | ~31.9 Mt | ~78 Mt |
-| Steel (spokes + hull + frames, excl. hub and factory) | ~1.1 Mt | ~5.8 Mt | ~22 Mt |
+| Rock shield (after fill credit) | ~11.0 Mt | ~33.5 Mt | ~80 Mt |
+| Steel (spokes + hull + frames, excl. hub and factory) | ~1.2 Mt | ~6.0 Mt | ~22 Mt |
 | Fill (soil + regolith) | ~0.54 Mt | ~1.7 Mt | ~4.2 Mt |
 | Water (soil, O₂, lakes) | ~0.15 Mt | ~0.4 Mt | ~0.9 Mt |
 | N₂ | ~8 kt | ~45 kt | ~170 kt |
-| **Total** | **~11.9 Mt** | **~40 Mt** | **~105 Mt** |
-| Mass per m² of floor | ~37 t | ~40 t | ~43 t |
-| Mined per torus (S-type + C-type) | ~12 + ~5–8 Mt | ~40 + ~27 Mt | ~150–180 + ~100 Mt |
+| **Total** | **~12.8 Mt** | **~41.5 Mt** | **~108 Mt** |
+| Mass per m² of floor | ~40 t | ~41 t | ~44 t |
+| Mined per torus (S-type, H-like host + C-type) | ~14 + ~5–8 Mt | ~44 + ~27 Mt | ~165 + ~100 Mt |
 | Valley lighting, daily average (sulfur lamps; ~15 mol/m²/day on the floor with the light-box ceiling) | ~53 MW | ~166 MW | ~410 MW |
 | Farm ring at ~0.4 r: three tiers, crops per tier | ~9 ha | ~29 ha | ~70 ha |
 | People fed, 1 / 2 / 3 tiers lit (conservative yields) | ~1,000 / ~2,000 / ~3,050 | ~3,250 / ~6,500 / ~9,750 | ~7,900 / ~15,800 / ~23,700 |
@@ -59,15 +59,16 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Stack of 900 m tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
 | Floor area | 64 ha | 192 ha |
-| Mass (excl. shared hub and factory) | ~23 Mt | ~70 Mt |
-| Material mined | ~34 Mt | ~100 Mt |
-| Stack length (10–40 m gaps) | ~130–190 m | ~400–580 m |
+| Mass (excl. shared hub and factory) | ~26 Mt | ~77 Mt |
+| Material mined (H-like host) | ~37 Mt | ~110 Mt |
+| Stack length (10–40 m clear gaps between the envelopes) | ~160–220 m | ~480–660 m |
 | People fed, 1 / 2 / 3 tiers lit | ~2,000 / ~4,000 / ~6,100 | ~6,000 / ~12,000 / ~18,300 |
 | Constant valley lighting load (sulfur) | ~105 MW | ~315 MW |
 | Farm lighting, per tier lit | ~64 MW | ~190 MW |
 | Despun solar array at 1 AU: valley + per tier lit | ~0.53 + ~0.3 km² | ~1.6 + ~0.9 km² |
 | Heat to reject with three tiers lit | ~310 MW | ~930 MW |
-| Radiator capacity of the two open ends (~285 K) | ~1.6 GW | ~1.6 GW |
+| Ideal limit of the two open ends (black bodies at ~285 K) | ~1.6 GW | ~1.6 GW |
+| Drum maximum, preliminary radiative exchange (ends only; section 13) | ~1.2 GW | ~1.2 GW |
 
 ```
   sunlight ↓   (always perpendicular to the axis)
@@ -331,15 +332,17 @@ M_spokes ≈ M · ρv² / (σ − ρv²/2)        (v = rim speed, ρ = 7,900 kg/
 
 ~7% of the rim's mass at 900 m, ~13% at 1.6 km, ~22% at 2.5 km and ~32% at 3.6 km; it only diverges near ~26 km (v ≈ 500 m/s). Hull and frames are scaled as r^2.3, fitted to the 900 m and 1.6 km estimates.
 
+The jacket has a finite thickness t (~5.5 m) outside the tube of radius a = w/2, so its volume is `2π² R [(a + t)² − a²]`, larger than the thin-shell `4π² R a t` by `1 + t/2a`: ~22% at 400 m, ~10% at 900 m, ~5.5% at 1.6 km. Under the floor's footprint the jacket is thinned by the fill's rock-equivalent (~0.9 m for 1 m of fill: regolith counts 1:1, the soil's water at the rock/water equivalence), on its outer face. Figures from the parametric model (`habitat_model/`).
+
 | Radius | Rock shield (after fill credit) | Fill | Water + air | Hull and frames | Spokes | Total | Per m² of floor |
 |---|---|---|---|---|---|---|---|
-| 400 m | ~2.0 Mt | 0.11 Mt | 0.03 Mt | 0.05 Mt | 0.07 Mt | ~2.2 Mt | ~36 t |
-| 900 m | ~10.1 Mt | 0.54 Mt | 0.16 Mt | 0.30 Mt | 0.80 Mt | ~11.9 Mt | ~37 t |
-| 1.6 km | ~31.9 Mt | 1.7 Mt | 0.47 Mt | 1.1 Mt | 4.7 Mt | ~40 Mt | ~40 t |
-| 2.5 km | ~78 Mt | 4.2 Mt | 1.15 Mt | 3.1 Mt | 18.5 Mt | ~105 Mt | ~43 t |
-| 3.6 km | ~162 Mt | 8.6 Mt | 2.6 Mt | 7.0 Mt | 58 Mt | ~238 Mt | ~47 t |
+| 400 m | ~2.4 Mt | 0.11 Mt | 0.02 Mt | 0.05 Mt | 0.08 Mt | ~2.7 Mt | ~42 t |
+| 900 m | ~11.0 Mt | 0.54 Mt | 0.14 Mt | 0.30 Mt | 0.87 Mt | ~12.8 Mt | ~40 t |
+| 1.6 km | ~33.5 Mt | 1.7 Mt | 0.47 Mt | 1.1 Mt | 4.9 Mt | ~41.5 Mt | ~41 t |
+| 2.5 km | ~80 Mt | 4.2 Mt | 1.26 Mt | 3.1 Mt | 19.1 Mt | ~108 Mt | ~44 t |
+| 3.6 km | ~165 Mt | 8.6 Mt | 2.9 Mt | 7.3 Mt | 60 Mt | ~243 Mt | ~48 t |
 
-Thin-shell approximations: at 400 m the 5.5 m jacket is a large fraction of the 12.5 m tube radius, so the figures there are rough.
+(Water + air: water needed plus N₂ and O₂. The earlier thin-shell figures were ~2.2, 11.9, 40, 105 and 238 Mt, ~36–47 t per m².)
 
 ### 5d. First design: water jacket and self-supporting ring (reference)
 
@@ -371,26 +374,26 @@ CFRP (1,000 MPa), for comparison: 1.6 km ~22 Mt, 3.6 km ~115 Mt, 10 km ~1.0 Gt, 
 
 ### 5e. Rock shield instead of water (adopted)
 
-Using Globus's equivalence (~11 t/m² of regolith for the protection of 7 t/m² of water), compacted crushed rock at ~2 t/m³, cable spokes at 1 GPa, and the 1 m floor fill credited in both cases (1.84 t/m² of rock-equivalent under the floor):
+Using Globus's equivalence (~11 t/m² of regolith for the protection of 7 t/m² of water), compacted crushed rock at ~2 t/m³, cable spokes at 1 GPa, and the 1 m floor fill credited in both cases (~1.8 t/m² of rock-equivalent under the floor). The rock column uses the jacket's finite thickness (section 5c); the water column is the first design's thin-shell estimate:
 
 | | Rock jacket (11 t/m², adopted) | Water jacket (7 t/m², first design) |
 |---|---|---|
 | Thickness | ~5.5 m | 7 m |
-| Shield mass, 900 m torus | ~10.1 Mt | ~6.5 Mt |
-| Spoke steel, 900 m | ~0.8 Mt | ~0.5 Mt |
-| **Total, 900 m** | **~11.9 Mt** | **~7.8 Mt** |
-| **Total, 1.6 km** | **~40 Mt** | **~26 Mt** |
-| Mass per m² of floor | ~37–40 t | ~24–26 t |
+| Shield mass, 900 m torus | ~11.0 Mt | ~6.5 Mt |
+| Spoke steel, 900 m | ~0.87 Mt | ~0.5 Mt |
+| **Total, 900 m** | **~12.8 Mt** | **~7.8 Mt** |
+| **Total, 1.6 km** | **~41.5 Mt** | **~26 Mt** |
+| Mass per m² of floor | ~40–41 t | ~24–26 t |
 | Water needed per 900 m torus | ~0.15 Mt (soil, O₂, lakes) | ~6.5 Mt |
 | C-type rock baked for volatiles | ~2–5 Mt | ~100 Mt |
 | Baking energy | ~5 × 10¹⁵ J (~2 months at 1 GW) | ~1.5 × 10¹⁷ J (~5 years at 1 GW) |
-| **Total mass mined and moved per 900 m torus** | **~17 Mt** | **~100 Mt** |
+| **Total mass mined and moved per 900 m torus** | **~18–21 Mt** (H or L host) | **~100 Mt** |
 | Freezing | None | Risk on exposed surfaces |
 | Net load on the ceiling hull | ~30 kPa pressing the ceiling down | ~0 (water weight ≈ air pressure) |
 | Load on the outer hull under the floor | ~195 kPa | ~156 kPa |
 | Corrosion inside the jacket | Dry | Wet |
 
-**The habitat gets ~50% heavier, but ~6× less material is mined and moved per torus, and the energy for volatiles drops ~30×.** Building the jacket and spokes heavier is far cheaper than baking ~100 Mt of clay for its water.
+**The habitat gets ~50–60% heavier, but ~5× less material is mined and moved per torus, and the energy for volatiles drops ~30×.** Building the jacket and spokes heavier is far cheaper than baking ~100 Mt of clay for its water.
 
 Design consequences:
 
@@ -479,13 +482,13 @@ Rock jacket and cable spokes (section 5c):
 
 | Radius | Total per torus | Per m² of floor |
 |---|---|---|
-| 400 m | ~2.2 Mt | ~36 t |
-| 900 m | ~11.9 Mt | ~37 t |
-| 1.6 km | ~40 Mt | ~40 t |
-| 2.5 km | ~105 Mt | ~43 t |
-| 3.6 km | ~240 Mt | ~47 t |
+| 400 m | ~2.7 Mt | ~42 t |
+| 900 m | ~12.8 Mt | ~40 t |
+| 1.6 km | ~41.5 Mt | ~41 t |
+| 2.5 km | ~108 Mt | ~44 t |
+| 3.6 km | ~243 Mt | ~48 t |
 
-**Little economy of scale, and only a slow penalty.** The shield costs ~33 t per m² of floor at any size, and cable spokes keep the structure's share modest up to a few km. What grows with size, per m² of floor, is the air column (∝ r), and with it nitrogen and the C-type; then the steel share, until metal rather than shield rock sizes the S-type. Rotation comfort (< 2 rpm) and gravity gradient (~0.5% over body height at 400 m) are fine at every size here.
+**Little economy of scale, and only a slow penalty.** The shield costs ~35 t per m² of floor at most sizes (more at 400 m, where the jacket is thick compared with the tube), and cable spokes keep the structure's share modest up to a few km. What grows with size, per m² of floor, is the air column (∝ r), and with it nitrogen and the C-type; then the steel share, until metal rather than shield rock sizes the S-type. Rotation comfort (< 2 rpm) and gravity gradient (~0.5% over body height at 400 m) are fine at every size here.
 
 **Comparison of the candidate sizes:**
 
@@ -498,16 +501,16 @@ Rock jacket and cable spokes (section 5c):
 | Wilderness in a six-stack | ~96 ha | ~300 ha | ~735 ha |
 | People fed per torus, 1 / 2 / 3 farm tiers lit (conservative) | ~1,000 / ~2,000 / ~3,050 | ~3,250 / ~6,500 / ~9,750 | ~7,900 / ~15,800 / ~23,700 |
 | Farm ring at 0.4 r: ring area / crops per tier (three tiers) | ~11 ha / ~9 ha | ~36 ha / ~29 ha | ~88 ha / ~70 ha |
-| Mass per torus / per m² | ~11.9 Mt / ~37 t | ~40 Mt / ~40 t | ~105 Mt / ~43 t |
-| Steel per torus / per m² | ~1.1 Mt / ~3.5 t | ~5.8 Mt / ~5.8 t | ~22 Mt / ~9 t |
+| Mass per torus / per m² | ~12.8 Mt / ~40 t | ~41.5 Mt / ~41 t | ~108 Mt / ~44 t |
+| Steel per torus / per m² | ~1.2 Mt / ~3.7 t | ~6.0 Mt / ~6.0 t | ~22 Mt / ~9 t |
 | Air per m² of floor (buffer against drift) | ~37 kg | ~65 kg | ~100 kg |
 | Nitrogen per torus / per m² | 8 kt / 25 kg | 45 kt / 45 kg | 170 kt / 70 kg |
 | C-type per torus (sized by nitrogen) | ~5 Mt (~200 m) | ~27 Mt (~350 m) | ~100 Mt (~540 m) |
 | Tori per Ryugu-sized C-type (~450 Mt) | ~90 | ~17 | ~4.5, less than a six-stack |
-| S-type per torus | ~12 Mt, sized by the shield | ~40 Mt, shield and metal balanced | ~150–180 Mt, sized by the metal (~27 Mt) if H-like; ~2× for an L host, ~4× for LL, unless iron comes from the silicates |
+| S-type per torus | ~14 Mt, sized by the shield | ~44 Mt, shield and metal nearly balanced | ~165 Mt, sized by the metal (~28 Mt) if H-like; ~2× for an L host, ~4× for LL, unless iron comes from the silicates |
 | Lighting (sulfur, daily average): valley + per farm tier lit | ~53 + ~32 MW | ~166 + ~102 MW | ~410 + ~247 MW |
 | Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.27 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
-| Material mined per torus | ~17 Mt (1×) | ~67 Mt (~4×) | ~250–280 Mt (~15×) |
+| Material mined per torus (H-like host) | ~18 Mt (1×) | ~71 Mt (~4×) | ~265 Mt (~15×) |
 
 **2.5 km (candidate, to decide):**
 - **Structurally fine.** At 157 m/s the spoke cables' own spin stress is only ~10% of their working stress; spokes take ~22% of the rim's mass, and the mass per m² of floor is only ~8% above 1.6 km.
@@ -529,20 +532,20 @@ The radius is kept fixed and the spin slowed: `T(g) = T(1 g) / √g`. Structural
 
 | Radius | g | Period | rpm | Steel | Shield, fill, water, air | Total |
 |---|---|---|---|---|---|---|
-| 900 m | 1.0 | 60 s | 1.0 | 1.1 Mt | 10.8 Mt | 11.9 Mt |
-| | 0.9 | 63 s | 0.95 | 1.0 Mt | 10.8 Mt | 11.8 Mt |
-| | 0.3 | 110 s | 0.55 | 0.32 Mt | 10.8 Mt | 11.1 Mt |
-| | 0.15 | 155 s | 0.39 | 0.2 Mt | 10.8 Mt | 11.0 Mt |
-| 1.6 km | 1.0 | 80 s | 0.75 | 5.8 Mt | 34.1 Mt | 39.9 Mt |
-| | 0.9 | 84 s | 0.71 | 5.1 Mt | 34.1 Mt | 39.2 Mt |
-| | 0.3 | 146 s | 0.41 | 1.6 Mt | 34.1 Mt | 35.7 Mt |
-| | 0.15 | 207 s | 0.29 | 1.0 Mt | 34.1 Mt | 35.1 Mt |
-| 2.5 km | 1.0 | 100 s | 0.6 | 21.6 Mt | 83.2 Mt | 104.8 Mt |
-| | 0.9 | 105 s | 0.57 | 19.2 Mt | 83.2 Mt | 102.4 Mt |
-| | 0.3 | 183 s | 0.33 | 6.0 Mt | 83.2 Mt | 89.2 Mt |
-| | 0.15 | 258 s | 0.23 | 3.4 Mt | 83.2 Mt | 86.6 Mt |
+| 900 m | 1.0 | 60 s | 1.0 | 1.17 Mt | 11.6 Mt | 12.8 Mt |
+| | 0.9 | 63 s | 0.95 | 1.05 Mt | 11.6 Mt | 12.7 Mt |
+| | 0.3 | 110 s | 0.55 | 0.34 Mt | 11.6 Mt | 12.0 Mt |
+| | 0.15 | 155 s | 0.39 | 0.21 Mt | 11.6 Mt | 11.9 Mt |
+| 1.6 km | 1.0 | 80 s | 0.75 | 6.0 Mt | 35.5 Mt | 41.5 Mt |
+| | 0.9 | 84 s | 0.71 | 5.4 Mt | 35.5 Mt | 40.9 Mt |
+| | 0.3 | 146 s | 0.41 | 1.7 Mt | 35.5 Mt | 37.2 Mt |
+| | 0.15 | 207 s | 0.29 | 1.0 Mt | 35.5 Mt | 36.5 Mt |
+| 2.5 km | 1.0 | 100 s | 0.6 | 22.3 Mt | 85.4 Mt | 107.6 Mt |
+| | 0.9 | 105 s | 0.57 | 19.8 Mt | 85.4 Mt | 105.2 Mt |
+| | 0.3 | 183 s | 0.33 | 6.1 Mt | 85.4 Mt | 91.5 Mt |
+| | 0.15 | 258 s | 0.23 | 3.5 Mt | 85.4 Mt | 88.9 Mt |
 
-The shield dominates, so lower gravity saves little mass: ~7% at 900 m, ~11% at 1.6 km, ~15% at 2.5 km for 0.3 g. The spoke cables' own limit, `r_max ≈ 2σ/(ρg)`, is ~26 km at 1 g.
+The shield dominates, so lower gravity saves little mass: ~6% at 900 m, ~10% at 1.6 km, ~15% at 2.5 km for 0.3 g. The spoke cables' own limit, `r_max ≈ 2σ/(ρg)`, is ~26 km at 1 g.
 
 *(First design, water jacket and self-supporting ring: 1.43 / 1.37 Mt at 400 m for 1 / 0.3 g, 7.9 / 7.1 Mt at 900 m, 28.7 / 23.3 Mt at 1.6 km; its steel limit `σ/(ρg)` was 6.4 km at 1 g, 21 km at 0.3 g.)*
 
@@ -556,13 +559,13 @@ The shield dominates, so lower gravity saves little mass: ~7% at 900 m, ~11% at 
 
 | Need | 900 m | 1.6 km | 2.5 km (candidate) |
 |---|---|---|---|
-| Steel (spokes, hull, frames) | ~1.1 Mt | ~5.8 Mt | ~22 Mt |
-| + hub, dock, factory (guess) | ~1.4 Mt total metal | ~7.3 Mt total metal | ~27 Mt total metal |
-| Rock for the shield (after fill credit) | ~10.1 Mt | ~31.9 Mt | ~78 Mt |
+| Steel (spokes, hull, frames) | ~1.2 Mt | ~6.0 Mt | ~22 Mt |
+| + hub, dock, factory (guess) | ~1.5 Mt total metal | ~7.5 Mt total metal | ~28 Mt total metal |
+| Rock for the shield (after fill credit) | ~11.0 Mt | ~33.5 Mt | ~80 Mt |
 | Regolith (0.5 m of the fill) | 0.29 Mt | 0.9 Mt | 2.2 Mt |
 | Soil (0.5 m of the fill) | 0.25 Mt | 0.8 Mt | 2.0 Mt |
 | Water (soil, O₂, lakes) | ~0.15 Mt | ~0.4 Mt | ~0.9 Mt |
-| Spin-up propellant (if water thrusters, vₑ ≈ 3 km/s) | ~0.37 Mt | ~1.7 Mt | ~5.5 Mt |
+| Spin-up propellant (if water thrusters, vₑ ≈ 3 km/s) | ~0.40 Mt | ~1.7 Mt | ~5.6 Mt |
 | Nitrogen (as N₂) | 8 kt | 45 kt | 170 kt |
 | Carbon | ~15 kt | ~35 kt | ~85 kt |
 
@@ -572,9 +575,9 @@ Sphere diameter from mass: `d = (6 M / (π ρ_bulk))^(1/3)`
 
 Ordinary-chondrite material holds Fe-Ni metal grains, recovered by crushing and magnetic separation; the silicate tailings become the shield and the regolith fill. **How much metal depends on the class**, and the candidate hosts are not the metal-rich kind:
 
-| Ordinary-chondrite class | Total iron | Free metal | Rock per 900 m torus's ~1.4 Mt of metal | Candidate hosts |
+| Ordinary-chondrite class | Total iron | Free metal | Rock per 900 m torus's ~1.5 Mt of metal | Candidate hosts |
 |---|---|---|---|---|
-| H (high iron) | ~28 wt% | ~8.4 vol% (~17 wt%) | ~8 Mt (less than the ~11 Mt of shield rock) | none of the candidates |
+| H (high iron) | ~28 wt% | ~8.4 vol% (~17 wt%) | ~9 Mt (less than the ~11 Mt of shield rock) | none of the candidates |
 | L (low iron) | ~22 wt% | ~4.1 vol% (~9 wt%) | ~16 Mt | Didymos (L), Eros (L or LL) |
 | LL (low iron, low metal) | ~19 wt% | ~2 vol% (~4–5 wt%) | ~32 Mt | Itokawa, Apophis, Eros (L or LL) |
 
@@ -583,15 +586,15 @@ Ordinary-chondrite material holds Fe-Ni metal grains, recovered by crushing and 
 - **The design must work with L or LL hosts; H is better** (principle 3). With an L or LL host, metal rather than shield rock sizes the S-type mining, by ~1.5× (L) to ~3× (LL) at 900 m. Two ways to get the metal (iron from the silicates, below):
   - **On a large host (Eros, Didymos): mine more rock.** Crushing and magnetically separating ~32 Mt of LL rock instead of ~11 Mt takes only ~3 × 10¹⁵ J; the extra ~20 Mt of tailings becomes ballast or spare shield. By far the simplest.
   - **On a small host (Itokawa, Apophis): in the preliminary design, free metal only**, so the host supports fewer tori (Itokawa ~1, Apophis ~1–2) unless metal is brought in from a larger L/LL host or an M-type. Taking the iron out of the silicates (below) would restore them, but it is not factored in yet.
-- The sizing table below assumes H-like metal; with an LL host, free metal alone needs ~32 Mt per 900 m torus, ~165 Mt per 1.6 km torus and ~600 Mt per 2.5 km torus.
+- The sizing table below assumes H-like metal; with an LL host, free metal alone needs ~32 Mt per 900 m torus, ~165 Mt per 1.6 km torus and ~620 Mt per 2.5 km torus.
 
 | | 900 m | 1.6 km | 2.5 km (candidate) |
 |---|---|---|---|
-| Body mass (H-like metal) | ~12 Mt (~12% metal) | ~40 Mt (~18% metal) | ~150–180 Mt (~15–18% metal) |
-| Diameter | ~225 m | ~340 m | ~520–560 m |
-| Metal recovered | ~1.4 Mt | ~7 Mt | ~27 Mt |
-| Silicate tailings | ~10.6 Mt | ~33 Mt | ~125–150 Mt (the shield needs ~82 Mt) |
-| Sized by | the shield | shield and metal, balanced | the metal |
+| Body mass (H-like metal, ~17 wt%) | ~14 Mt | ~44 Mt | ~165 Mt |
+| Diameter | ~235 m | ~350 m | ~540 m |
+| Metal used | ~1.5 Mt (of ~2.3 Mt available) | ~7.5 Mt | ~28 Mt |
+| Silicate tailings | ~11.3 Mt | ~37 Mt (the shield and regolith need ~34 Mt) | ~136 Mt (the shield and regolith need ~83 Mt) |
+| Sized by | the shield | the metal, nearly balanced | the metal |
 
 S-types are the most common near-Earth asteroids, and one body covers both the steel and the shield.
 
@@ -747,7 +750,7 @@ The spin axis points **perpendicular to the orbital plane** (towards the eclipti
 A body is only passively stable when spinning about its axis of maximum moment of inertia. Internal dissipation (sloshing lakes, moving people, flexing structure) drains any other spin into a tumble. Explorer 1, spun about its long (minimum-inertia) axis, changed its rotation axis soon after launch because of energy dissipation in its flexible structural elements.
 
 - **Torus:** `I_axis = 2 × I_transverse`, so it is inherently stable.
-- **Co-rotating stack of N tori**, radius r, pitch p (tube width + gap), rigidly linked, with the spin-axis inertia exceeding the transverse one by a margin m:
+- **Co-rotating stack of N tori**, radius r, pitch p (the envelope's diameter, tube + rock jacket + crawl space, plus the clear gap between envelopes), rigidly linked, with the spin-axis inertia exceeding the transverse one by a margin m:
 
 ```
 N² − 1  <  12 (r/p)² · [ 1/(1+m) − 1/2 ]
@@ -757,16 +760,16 @@ m = 10%   →  N² − 1 < 4.9 (r/p)²
 m = 20%   →  N² − 1 < 4.0 (r/p)²
 ```
 
-With a 10 m gap, r/p ≈ 14 at both baseline sizes (the geometry is self-similar):
+With a 10 m clear gap, r/p ≈ 11 at 900 m and ≈ 13 at 1.6 km (the jacket doesn't scale with the tube, so the geometry is no longer exactly self-similar):
 
-| | 900 m tori (p ≈ 66 m) | 1.6 km tori (p ≈ 110 m) |
+| | 900 m tori (p ≈ 80 m) | 1.6 km tori (p ≈ 124 m) |
 |---|---|---|
-| Absolute limit (no margin) | 33 tori | 35 tori |
-| 10% margin | 30 tori (15 pairs) | 32 tori (16 pairs) |
-| **20% margin** | **27 tori (13 pairs)** | **29 tori (14 pairs)** |
-| Stack length at 20% margin | ~1.8 km (≈ 2 r) | ~3.2 km (≈ 2 r) |
+| Absolute limit (no margin) | 27 tori | 31 tori |
+| 10% margin | 24 tori (12 pairs) | 28 tori (14 pairs) |
+| **20% margin** | **22 tori (11 pairs)** | **25 tori (12 pairs)** |
+| Stack length at 20% margin | ~1.8 km (≈ 2 r) | ~3.1 km (≈ 2 r) |
 
-Wider gaps lower the count (at 40 m gaps, ~18 tori of 900 m with a 20% margin), still far above the 2 or 6 of the baseline.
+Wider gaps lower the count (at 40 m gaps, ~16 tori of 900 m with a 20% margin), still far above the 2 or 6 of the baseline. (An earlier pitch of tube width + gap left no room for the jacket and gave 27 and 29 tori.)
 
 - **Stiffness check (open).** The rule assumes the stack behaves as one rigid body. A long stack joined only by a slender hub has low-frequency bending modes; the hub axle or rim links must keep them well above the spin rate, a requirement that grows quickly with length.
 - **Linking neighbours.** Co-rotating neighbours have no relative motion, so they can be linked at the axis and at the rim (tunnels joining the valleys).
@@ -826,7 +829,7 @@ Straight rim-to-rim chords pass just outside the hub, tangent to a circle slight
 - **No hub flange needed.** Radial spokes anchored on the hub would load its rim with hoop tension `F_total / 2π`, the same force the self-supporting rim would carry: ~12 m² / 0.08 Mt of steel at 900 m, ~45 m² / 0.5 Mt at 1.6 km.
 - **No mass lost.** Each chord is ~4.3° off radial at the rim (`sin θ = c/r ≈ 0.074`, with the tangent circle c at 1.1 × the hub radius, the same angle at every size), so it pulls the rim at only cos θ; but its length per anchor is r cos θ instead of r, so the net weighs the same as radial spokes, within 0.1% (an earlier estimate counted a ~0.2% loss). Tapering the chords to uniform stress saves only ~1% at 900 m, ~2% at 1.6 km and ~4% at 2.5 km: uniform cables are fine.
 - **The chords bow outward.** Across a chord the spin load is ω²c, so each chord bows away from the axis by ρω²cL²/2σ: ~2.3 m at 900 m, ~7 m at 1.6 km, ~18 m at 2.5 km. The window grows by as much; the crossings are laid out at the bowed positions.
-- **Loads.** With an anchor every 10 m of rim, each chord end carries ~96 MN at 900 m (~960 cm² of wire, a cable ~35 cm across) and ~170 MN at 1.6 km.
+- **Loads.** With an anchor every 10 m of rim, each chord end carries ~105 MN at 900 m (~1,050 cm² of wire, a cable ~37 cm across) and ~180 MN at 1.6 km.
 - **Crossed lacing is built in**, carrying spin-up and docking torque.
 - **The hub floats in the net**, held centred by light stabilising lines, with compliant joints on the rigid elevator, pipe and power shafts.
 - **The window is the factory's space**: the hole left in the middle of the net is exactly where the factory and dock sit.
@@ -888,8 +891,8 @@ Ring segments (diameter = tube width < hub radius) leave through the parent's ax
 
 **A partial ring in the chord net (structural model, plan §2):**
 
-- **Arcs, not single segments.** A chord's far end lands 2θr off the point opposite (~134 m at 900 m, ~240 m at 1.6 km). So at each end of two opposite arcs, a zone 2θr long keeps only the chord whose far end lands on the other arc, and every anchor has a chord only if each arc spans at least ~4θr: **~270 m at 900 m** (about five 56 m segments, ~0.5 Mt with rock), ~480 m at 1.6 km, ~740 m at 2.5 km.
-- **The joints carry tension until the ring closes.** A single chord pulls its anchor along the rim with tan θ of its load; both end zones pull outward, so each arc carries ~2λω²c² along its length, **~1.1% of a self-supporting ring's hoop force** at every size: ~190 MN at 900 m (~0.4 m² of plate at 500 MPa), ~610 MN at 1.6 km, ~1.5 GN at 2.5 km at full spin, a quarter of that at half spin. Options: joints rated for it (a small steel cost), rock in the end zones only once the neighbouring arcs are hung, or building at partial spin.
+- **Arcs, not single segments.** A chord's far end lands 2θr off the point opposite (~134 m at 900 m, ~240 m at 1.6 km). So at each end of two opposite arcs, a zone 2θr long keeps only the chord whose far end lands on the other arc, and every anchor has a chord only if each arc spans at least ~4θr: **~270 m at 900 m** (about five 56 m segments, ~0.56 Mt with rock), ~480 m at 1.6 km, ~740 m at 2.5 km.
+- **The joints carry tension until the ring closes.** A single chord pulls its anchor along the rim with tan θ of its load; both end zones pull outward, so each arc carries ~2λω²c² along its length, **~1.1% of a self-supporting ring's hoop force** at every size: ~210 MN at 900 m (~0.4 m² of plate at 500 MPa), ~640 MN at 1.6 km, ~1.5 GN at 2.5 km at full spin, a quarter of that at half spin. Options: joints rated for it (a small steel cost), rock in the end zones only once the neighbouring arcs are hung, or building at partial spin.
 - **Imbalance moves the hub, not a bearing.** The partial ring spins freely about its centre of mass, so a mismatch between paired arcs shifts the hub off the spin axis: ~3.6 m for a 1% mismatch on the first pair of 900 m arcs, inside the ~6 m between the hub and the chords' tangent circle (~7.5 m of ~17 m at 2.5 km). Ballast corrects it as the ring grows.
 
 ---
@@ -1183,7 +1186,7 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 - **Everything that enters the habitat leaves through pumped coolant loops** to the radiators: sky lighting, farm lighting, algae lighting, people, machines.
 - **Radiators along the spokes (adopted).** The stack encloses a wide, short drum of empty space between the hub and the rims. Its main openings are the two ends, facing along the axis, and the Sun is always perpendicular to the axis, so no direct sunlight reaches the spokes: inside each torus plane the radiators are shaded by the rim tube, which spans the plane's thickness. Without a solar cylinder the 10–40 m gaps also open the drum sideways, adding vents (~0.2 km² per gap at 900 m, against ~2.2 km² per end); sunlight crossing a gap stays in the gap plane, outside the torus planes. The radiators sit on the stretch between the farm ring and the rim, shaded on both sides by the farm ring and the main ring; the inner stretch, between hub and farm ring, is free as a reserve.
   - A passive loop needs radiators colder than the habitat, say ~285 K (~375 W/m²); warmer radiators would need heat pumps.
-  - The drum acts as a blackbody cavity: heat leaves through the openings as if they were a radiator at the cavity's temperature.
+  - **Ideal limit:** if the drum were a black-body cavity at the radiators' temperature, heat would leave through the openings as if they were a radiator at that temperature. That is an upper bound, not a design figure: the panels are finite, not perfectly black, and see each other.
   - **Each end face of the stack**, from the axis outward (900 m torus); the dock and the vent sit at different radii, so they don't compete:
 
 | From the axis | What's there | Share of the end opening |
@@ -1192,18 +1195,28 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 | Out to ~840 m | Open vent into the drum; the radiators (at ~380–840 m) look straight out through it | ~99% (~2.2 km²) |
 | 840–900 m | The end torus's tube | |
 
-  - The despun array, seen along the axis, is edge-on and blocks almost none of its end's vent. At 1.6 km the opening is ~7 km², in the same proportions.
+  - The despun array, seen along the axis, is edge-on and blocks almost none of its end's vent. At 1.6 km the opening is ~7 km², in the same proportions. (The vent's outer edge is the tori's envelope, rock jacket and crawl space included: ~836 m at 900 m.)
 
-| Stack | Heat to reject (sulfur lamps) | Capacity of the two end openings (~285 K) |
+| Stack | Heat to reject (sulfur lamps) | Ideal limit of the two end openings (~285 K) |
 |---|---|---|
 | 2 × 900 m | ~115 MW, + ~64 MW per farm tier lit (~310 MW with three) | ~1.6 GW (openings ~4.4 km²) |
 | 6 × 900 m | ~345 MW, + ~190 MW per tier lit (~930 MW with three) | ~1.6 GW |
 | Break-even, 900 m tori | ~29 tori with no farm lit; ~18 / ~13 / ~10–11 with 1 / 2 / 3 tiers lit | ~1.6 GW |
 | 1.6 km tori | ~180 MW per torus, + ~102 MW per tier lit | ~5.3 GW (openings ~14 km²): break-even ~29 tori with no farm lit, ~11 with three tiers |
 
-  - The opening area is fixed while heat grows with the number of tori. Without the farm the break-even falls near the stability limit; with three tiers lit, heat limits a stack to ~10–11 tori (~13 with two), still well above six. The gaps' side vents (~0.06–0.2 km² each at 900 m) add ~5–20% to a six-stack's capacity, not counted here.
+  - The opening area is fixed while heat grows with the number of tori. These break-evens are upper bounds.
+  - **Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`).** Rays traced from the panels (emissivity ~0.9, as for AZ-93 white paint) through the drum, with the hub, farm rings and the tori's inner faces insulated (the rock jacket is a near-perfect insulator), so they re-radiate what they receive. Panels also catch each other's radiation, so the drum rejects at most **~75–80% of the ideal limit** (~1.2 GW at 900 m, ~3.9 GW at 1.6 km), and only with panels covering most of the radiator annuli:
+
+| Stack, tiers lit | Heat | Margin, ideal | Margin, ray-traced (ends only / with the side gaps) | Panels needed (one face) |
+|---|---|---|---|---|
+| 6 × 900 m, 1 tier | ~540 MW | 3.1× | 2.3× / 2.5× | ~100 ha (ideal ~80 ha) |
+| 6 × 900 m, 2 tiers | ~730 MW | 2.2× | 1.7× / 1.8× | ~165 ha (ideal ~110 ha) |
+| 6 × 900 m, 3 tiers | ~920 MW | 1.8× | 1.3× / 1.4× | ~250 ha (ideal ~140 ha) |
+| 6 × 1.6 km, 3 tiers | ~2.9 GW | 1.8× | 1.3× / 1.4× | ~740 ha (ideal ~430 ha) |
+
+  - **So heat limits a stack of 900 m or 1.6 km tori to ~8 with three tiers lit, ~11 with two and ~15 with one** (ends only), against ~10–11, ~13 and ~18 from the ideal limit: still above six, with a thinner margin. The side gaps add only ~5–10% (the 10 m gaps are narrow next to the ~70 m envelopes). Not yet modelled: sunlight through the gaps, the spokes and cables, the envelopes' rounded faces, and a real panel layout (plan §6).
   - **Natural circulation:** spin gravity points outward along the spokes, so warm coolant rises towards the hub and cooled coolant sinks back to the rim. A thermosiphon loop can run without pumps (the driving force weakens near the hub).
-  - **Light panels:** at ~285 K a 900 m torus needs ~16 ha of radiating surface for the valley and other loads, plus ~8.5 ha per farm tier lit: ~41 ha with three tiers, ~21 ha of two-sided panels, ~1 kt at ~5 kg/m². The stretch between farm ring and rim offers ~2.6 ha per spoke (~460 m × 56 m), so ~8 spokes carry it. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
+  - **Light panels:** at ~285 K a 900 m torus needs ~16 ha of radiating surface for the valley and other loads, plus ~8.5 ha per farm tier lit: ~41 ha with three tiers, ~21 ha of two-sided panels in the ideal case; the ray tracing above puts it nearer ~40 ha of panels per torus in a six-stack (~2 kt at ~5 kg/m²). The stretch between farm ring and rim offers ~2.6 ha per spoke (~460 m × 56 m), so ~16 spokes carry it. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
   - A shared coolant loop across co-rotating tori keeps the radiator load steady whichever tori are lit.
 - **Day and night cooling (adopted direction).** Each torus has its own heat exchangers on the shared radiator loops, so its cooling follows its own day and night. Colder nights cost almost no energy: over a full day the valley gains and loses the same heat either way; a colder night only moves more of it out at night, and in the morning the lamps' waste heat (~70–80% of their power, already in the coolant above the ceiling) can warm the valley instead of going straight to the radiators.
   - **Heat to move:** only the air and the top ~10 cm of soil follow the daily cycle, ~0.15–0.25 MJ per m² per °C. A ~5 °C swing (oceanic coast) means ~0.8–1.3 MJ/m² a night, ~6–9 MW over 12 h for a 900 m torus; a ~15 °C swing (arid canyon) ~2.3–3.8 MJ/m², ~17–28 MW, about the light the valley absorbs by day and well within the radiators' capacity.
@@ -1263,10 +1276,10 @@ Moving a finished habitat costs ~100–300× the energy of building one. Hohmann
 
 | Configuration | Mass | To Venus orbit: energy | Propellant | To the belt: energy | Propellant |
 |---|---|---|---|---|---|
-| 2 × 900 m | ~23 Mt | ~105 GW·yr | ~4.4 Mt | ~250 GW·yr | ~10 Mt |
-| 6 × 900 m | ~70 Mt | ~315 GW·yr | ~13 Mt | ~740 GW·yr | ~31 Mt |
-| 2 × 1.6 km | ~78 Mt | ~350 GW·yr | ~15 Mt | ~820 GW·yr | ~35 Mt |
-| 6 × 1.6 km | ~234 Mt | ~1,050 GW·yr | ~44 Mt | ~2,500 GW·yr | ~104 Mt |
+| 2 × 900 m | ~26 Mt | ~115 GW·yr | ~4.9 Mt | ~280 GW·yr | ~11 Mt |
+| 6 × 900 m | ~77 Mt | ~345 GW·yr | ~14 Mt | ~810 GW·yr | ~34 Mt |
+| 2 × 1.6 km | ~83 Mt | ~375 GW·yr | ~16 Mt | ~875 GW·yr | ~37 Mt |
+| 6 × 1.6 km | ~250 Mt | ~1,120 GW·yr | ~47 Mt | ~2,650 GW·yr | ~110 Mt |
 
 (1 GW·yr ≈ 3.2 × 10¹⁶ J. A rock-throwing mass driver at ~5 km/s uses less energy but ~1.8× the habitat's mass in reaction rock for Venus, ~8× for the belt. Building a 900 m torus takes ~0.3 GW·yr of processing energy.)
 
@@ -1318,7 +1331,7 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 | Didymos | S, L-like (spectra) | ~780 m | ~0.5 Gt | 1.64 AU, 0.38, 3.4° | 0.19× → 0.98× | ~2.1 yr | ~30 by free metal; ~45 with iron from the silicates |
 | Torifune (2001 CC21) | Sq, L-like (spectra; Hayabusa2 flyby 2026) | ~465 m (estimates ~340–490 m), contact binary | ~100 Mt (~2 t/m³ assumed; ~40 Mt at the smallest size) | 1.03 AU, 0.22, 4.8° | 0.63× → 1.54× | ~1.05 yr | ~6 by free metal (~2 at the smallest size); ~9 with iron from the silicates (not yet factored) |
 
-(Per 900 m torus: ~11 Mt of S-type rock for the shield and ~1.4 Mt of metal, which takes ~16 Mt of L-type or ~32 Mt of LL-type rock by free metal alone; ~5 Mt of C-type. Per 1.6 km torus: ~40 Mt of rock for the shield and ~7 Mt of metal; ~27 Mt of C-type. Ryugu supports ~17 tori of 1.6 km.)
+(Per 900 m torus: ~11 Mt of S-type rock for the shield and regolith and ~1.5 Mt of metal, which takes ~16 Mt of L-type or ~32 Mt of LL-type rock by free metal alone; ~5 Mt of C-type. Per 1.6 km torus: ~34 Mt of rock for the shield and regolith and ~7.5 Mt of metal (~83 Mt of L or ~165 Mt of LL rock); ~27 Mt of C-type. Ryugu supports ~17 tori of 1.6 km.)
 
 **Note on Itokawa and Apophis.** With free metal only, a 900 m pair is impossible at Itokawa and uncertain at Apophis (a pair only at the upper end of its mass estimate). They demonstrate the process with **one or two 400 m / 40 s pairs** instead. A 400 m pair needs only ~0.33–0.53 Mt of metal (~7–12 Mt of LL rock) and ~5 Mt of shield rock, so each host has room for about three. **Two pairs demonstrate self-replication:** the second built by the first pair's factory (its 25 m segments pass through a ~27 m hub dock). The 900 m and 1.6 km habitats go to larger L/LL hosts, where mining more rock supplies the metal.
 
@@ -1348,7 +1361,7 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 
 1. **Demonstration: one or two 400 m / 40 s pairs at Itokawa and Apophis** (note under the candidate table). Per torus: a 25 m valley, ~6.3 ha of floor (~3 ha of wilderness), ~200 people per farm tier lit (~600 with three), ~2.8 Mt, ~11 MW for the valley's sky plus ~6.3 MW per tier, ~0.7 kt of nitrogen. They prove the rock jacket and double skin, cable spokes, the pair rule and despun array, the light-box sky and the tiered farm ring, life support, the factory chain and the first population, and they start the long-term gravity experiment (1.5 rpm; Coriolis at a 5 m/s run ~±16% of weight). A second pair built by the first demonstrates self-replication. The valley is a planted hall rather than a landscape, and its tiny wilderness depends on exchange. Their factories also act as seed factories for the larger habitats, which are built on site (a 900 m torus's 56 m segments don't fit a 400 m pair's dock).
 2. **900 m pairs on a larger L/LL host** (Eros as the working case; Didymos possible, with a more eccentric orbit; Torifune possible for a first pair on the mildest orbit, proposed, if its mass is near the upper estimates), metal from mining more rock.
-3. **First real islands: 1.6 km six-stacks at Eros, with Ryugu as the C-type partner.** Per six-stack: ~234 Mt of habitat, ~240 Mt of Eros rock (negligible against Eros's mass), ~600 ha of floor, ~270 kt of nitrogen from ~160 Mt of Ryugu. **Nitrogen limits the Eros cluster** to ~3 six-stacks per Ryugu; growing beyond needs more C-type partners or a lower atmospheric pressure.
+3. **First real islands: 1.6 km six-stacks at Eros, with Ryugu as the C-type partner.** Per six-stack: ~250 Mt of habitat, ~0.5–1 Gt of Eros rock for an L or LL host by free metal (negligible against Eros's mass; an earlier ~240 Mt assumed H-like metal), ~600 ha of floor, ~270 kt of nitrogen from ~160 Mt of Ryugu. **Nitrogen limits the Eros cluster** to ~3 six-stacks per Ryugu; growing beyond needs more C-type partners or a lower atmospheric pressure.
 
 ### Supply and seed transfers: Δv check
 
@@ -1836,7 +1849,7 @@ Status of the gaps identified so far:
 | Iron for L and LL hosts | Preliminary design: free metal only (magnetic separation), mining more rock on large hosts. Molten-oxide electrolysis noted as a likely better option, not factored: anode life, energy and current efficiency at scale not yet public (industrial cell 2025, demonstration plant planned 2026). Itokawa and Apophis resolved by building 400 m demonstration pairs instead of 900 m pairs (section 15) |
 | Size | 900 m and 1.6 km shortlisted. **To decide:** 2.5 km / 100 s as a later candidate (section 8): structurally fine, limited by nitrogen (~100 Mt of C-type per torus) and slower replication |
 | Despun solar array | Adopted (section 13); ~2.6× larger with three farm tiers lit than for the valley alone. **Open:** bearing and drive redundancy, magnetic bearing design, a rotary transformer at 100 MW–GW scale, buffering the locked array's pulsing output, a second dock now that one hub end carries the array, concentrators for the outer system |
-| Heat rejection | Architecture chosen (coolant loops, radiators on the spokes between farm ring and rim, venting through the open ends and gaps, thermosiphon). With three farm tiers lit, heat limits a stack of 900 m tori to ~10–11 (~13 with two), still above six; sizing of loops open |
+| Heat rejection | Architecture chosen (coolant loops, radiators on the spokes between farm ring and rim, venting through the open ends and gaps, thermosiphon). Ideal limit treated as an upper bound; a preliminary radiative exchange model (section 13) gives ~75–80% of it, so with three farm tiers lit heat limits a stack of 900 m tori to ~8 (~11 with two), still above six. **Open:** sunlight through the gaps, spokes and cables, real panel layout, loop sizing (plan §6, brought forward) |
 | Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~2.5× that from Ryugu to Eros (~21 PJ against ~8 PJ per 900 m torus, parametric model); **open:** logistics and factory throughput, now the pacing items |
 | Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under sulfur lamps costs ~31 kW of electricity per person with conservative yields (~18 kW at the best demonstrated), so each tier lit (~1,000 people per 900 m torus) needs ~32 MW and ~0.15 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under sulfur light at ~0.4 g; 915 MHz sources (~20% less power); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
 | Nitrogen | C-type sized by nitrogen again (~5 Mt per 900 m torus, ~27 Mt per 1.6 km torus at ~70% recovery); **open:** recovery from organics and ammonium salts |
@@ -1871,7 +1884,7 @@ Status of the gaps identified so far:
 
 ## 19. Assumptions to revisit
 
-These are the inputs of the parametric model (`habitat_model/assumptions.toml`), each with a range, source and status. Ranked by impact (`reports/sensitivity.md`), the ones that move the results most are C-type nitrogen recovery, C-type baking energy, PV efficiency, free metal in the host rock, light on the crops and the shield's areal density.
+These are the inputs of the parametric model (`habitat_model/assumptions.toml`), each with a range, source and status. Ranked by impact over representative designs (`reports/sensitivity.md`), the ones that move the results most are the electric propulsion's exhaust speed and the water shipped (through the lake-water guess), C-type nitrogen recovery and baking energy, PV efficiency, free metal in the host rock, the shield's areal density and light on the crops.
 
 - 80/20 N₂/O₂ reference; 70 kPa / 29% O₂ design atmosphere.
 - Cometary NH₃ at ~1% of ice by mass (optimistic; ~0.5–0.8% by number is typical); Bennu-like C-type with ~6.4 wt% recoverable water and ~0.24 wt% N.
@@ -1898,7 +1911,14 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **28 October 2026**
-- **Parametric system model** (`habitat_model/`, `plan.md` §1): reproduced 185 of 197 checked figures within 5%, and the rest were rounding. Corrected here where the notes were more than ~5% off (now 191 of 197; the 6 left are explained in `reports/validation.md`), mainly the 900 m valley's sky and other loads (~53 + ~5 MW, ~57 MW in all, not ~60), so the 900 m arrays are ~4–6% smaller (~0.27 km² for the valley at 1 AU, ~0.71 km² with three tiers lit; section 15's 900 m columns) and the heat break-even with no farm lit is ~29 tori, not ~27. Also noted: the water need doesn't scale with the floor (section 7), and section 5c's "water + air" counts the soil's water and the water electrolysed for O₂ twice (~0.05 Mt at 900 m).
+- **Independent review of the system model** (GitHub issue #1), addressed:
+  - **The rock jacket and crawl space are now outside the tube in the geometry.** The earlier pitch (tube width + gap) left the neighbouring jackets overlapping. Pitch is now the envelope's diameter plus a clear gap: ~80 m at 900 m, ~124 m at 1.6 km. Passive stability allows ~22 tori of 900 m (~25 of 1.6 km) with a 20% margin, not ~27 (~29); a six-stack of 900 m tori is ~480–660 m long (sections 0, 11).
+  - **The jacket has a finite thickness:** ~10% more shield rock at 900 m than the thin-shell estimate, ~5.5% at 1.6 km, ~22% at 400 m. A 900 m torus is ~12.8 Mt (~40 t per m² of floor), a 1.6 km torus ~41.5 Mt, a 2.5 km torus ~108 Mt (sections 0, 5c, 5e, 8, 9, 10, 15). The fill's shielding credit now follows the actual fill.
+  - **Heat:** the end openings' capacity is an ideal limit. A preliminary radiative exchange model gives ~75–80% of it: ~1.3× margin for a 900 m six-stack with three tiers lit (not 1.8×), ~250 ha of panels (not ~125 ha), and a heat limit of ~8 tori with three tiers lit, ~11 with two (section 13). Thermal work moves ahead of the second tier in `plan.md`.
+  - **Model accounting:** unknown Δv no longer counts as zero shipping energy; shipping, total energy and generation time join the sensitivity ranking, over five representative designs, which puts the propulsion's exhaust speed and the (guessed) lake water first; the trace-element budget now compares demand with recoverable supply.
+  - **Validation headline corrected:** after the corrections, 189 of 197 checked figures are within 5% (192 within their configured tolerances). The earlier "191 of 197 within 5%" counted relaxed tolerances as 5%.
+  - **Eros mining corrected** (section 15): a 1.6 km six-stack takes ~0.5–1 Gt of L or LL rock by free metal, not ~240 Mt.
+- **Parametric system model** (`habitat_model/`, `plan.md` §1): reproduced 185 of 197 checked figures within 5%, and the rest were rounding. Corrected here where the notes were more than ~5% off, mainly the 900 m valley's sky and other loads (~53 + ~5 MW, ~57 MW in all, not ~60), so the 900 m arrays are ~4–6% smaller (~0.27 km² for the valley at 1 AU, ~0.71 km² with three tiers lit; section 15's 900 m columns) and the heat break-even with no farm lit is ~29 tori, not ~27. Also noted: the water need doesn't scale with the floor (section 7), and section 5c's "water + air" counts the soil's water and the water electrolysed for O₂ twice (~0.05 Mt at 900 m).
 - **Validation plan re-ordered** by the model's sensitivity ranking: structure, radiation transport, stack dynamics, second tier, heat rejection; C-type nitrogen recovery and baking energy, the top two inputs, become Earth tests.
 - **Wire and safety factor** (section 12; `structure_model/`): ~1 GPa working stress is a factor of ~2 on the strongest bridge wire, at the low end of bridge practice, or ~2.25 on ~1 mm wire; range 800–1,200 MPa. The factor of safety is to decide. Spokes creep ~0.5–1.3 m over their life.
 - **Wire needs carbonyl-refined iron** (section 10): wire steel tolerates almost no nickel, phosphorus or sulfur, and chondritic metal has ~9%+ nickel.

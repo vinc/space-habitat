@@ -20,6 +20,16 @@ def air(p, geo):
     }
 
 
+def outer_half_ring_volume(centre, r_in, r_out):
+    """Volume of the outer half (away from the spin axis) of a ring section between r_in and r_out
+    around a centre line of radius `centre` (Pappus, with the half-annulus centroid)."""
+    if r_out <= r_in:
+        return 0.0
+    area = math.pi / 2 * (r_out ** 2 - r_in ** 2)
+    centroid = centre + 4 * (r_out ** 3 - r_in ** 3) / (3 * math.pi * (r_out ** 2 - r_in ** 2))
+    return 2 * math.pi * centroid * area
+
+
 def spoke_factor(p, rim_speed):
     """Uniform cable spokes of length r holding a rim: M_spokes / M_rim = rho v^2 / (sigma - rho v^2 / 2)."""
     rho_v2 = p.steel_density * rim_speed ** 2
@@ -33,13 +43,23 @@ def compute(p, d, geo):
     floor = geo["floor_area"]
     gases = air(p, geo)
 
-    # Rock jacket, with the fill under the floor credited as shielding (§5e, §6).
-    shield_gross = p.shield_areal_t_m2 * 1e3 * geo["hull_area"]
-    fill_credit = p.fill_water_equiv_t_m2 * p.rock_per_water_shield * 1e3 * floor
-    shield = shield_gross - fill_credit
-
     soil_depth = p.fill_depth_m * p.fill_soil_frac
     regolith_depth = p.fill_depth_m - soil_depth
+
+    # Rock jacket of finite thickness around the tube (§5e). The fill under the floor shields
+    # like rock of the same rock-equivalent mass (regolith 1:1, the soil's water at the
+    # rock/water equivalence, §6), so the jacket is thinned by that much on its outer face
+    # under the floor's footprint.
+    rho = p.rock_density * 1e3
+    a, t, centre = geo["tube_radius"], geo["jacket"], geo["radius"] - geo["tube_radius"]
+    shield_gross = 2 * math.pi ** 2 * centre * ((a + t) ** 2 - a ** 2) * rho
+    soil_solids = p.soil_density - p.soil_water_vol_frac
+    fill_rock_eq = (regolith_depth * p.regolith_density
+                    + soil_depth * (soil_solids + p.soil_water_vol_frac * p.rock_per_water_shield))  # t/m2
+    thinning = min(t, fill_rock_eq / p.rock_density)
+    footprint = min(1.0, floor / (2 * math.pi ** 2 * centre * a))   # share of the tube's outer half under the floor
+    fill_credit = footprint * outer_half_ring_volume(centre, a + t - thinning, a + t) * rho
+    shield = shield_gross - fill_credit
     soil = soil_depth * p.soil_density * 1e3 * floor
     regolith = regolith_depth * p.regolith_density * 1e3 * floor
 
@@ -67,6 +87,7 @@ def compute(p, d, geo):
         "air": gases["n2"] + gases["o2"],
         "shield_gross": shield_gross,
         "fill_credit": fill_credit,
+        "fill_rock_eq": fill_rock_eq * 1e3,   # kg/m2
         "shield": shield,
         "soil": soil,
         "regolith": regolith,

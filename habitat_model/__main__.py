@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import report, sensitivity, validation
+from . import cavity, report, sensitivity, validation
 from .assumptions import DEFAULT_PATH, load, params
 from .design import SITES, Design
 from .geometry import radius_for_period
@@ -55,7 +55,10 @@ def build_parser():
     out.add_argument("--key-tables", action="store_true", help="regenerate the notes' §0 tables")
     out.add_argument("--validate", action="store_true", help="compare with the notes' figures")
     out.add_argument("--sensitivity", action="store_true", help="one-at-a-time sweep, ranked")
+    out.add_argument("--ranking", action="store_true", help="combined ranking over representative designs")
     out.add_argument("--monte-carlo", type=int, metavar="N", help="Monte Carlo with N samples")
+    out.add_argument("--thermal", action="store_true", help="ideal limit vs preliminary radiative exchange, by stack")
+    out.add_argument("--trace", action="store_true", help="trace-element budget of the design")
     out.add_argument("--assumptions-table", action="store_true", help="list the assumptions")
     out.add_argument("--json", type=Path, metavar="FILE", help="write the stats panel JSON ('-' for stdout)")
     out.add_argument("--write-reports", type=Path, metavar="DIR", help="write every report into DIR")
@@ -87,6 +90,12 @@ def main(argv=None):
     if args.sensitivity:
         base, rows = sensitivity.tornado(assumptions, d, overrides)
         print(report.tornado(base, rows, assumptions, d)); chosen = True
+    if args.ranking:
+        print(report.combined_ranking(sensitivity.combined_ranking(assumptions))); chosen = True
+    if args.thermal:
+        print(report.thermal_table(cavity.study(p))); chosen = True
+    if args.trace:
+        print(report.trace_table(results["materials"]["trace_budget"], d)); chosen = True
     if args.monte_carlo:
         print(report.monte_carlo(sensitivity.monte_carlo(assumptions, d, args.monte_carlo, overrides=overrides),
                                  args.monte_carlo)); chosen = True
@@ -100,8 +109,12 @@ def main(argv=None):
             args.json.write_text(text + "\n")
         chosen = True
     if not chosen:
-        print(report.summary(p, d, results))
+        print(report.summary(p, d, results, design_cavity(p, d, results)))
     return 0
+
+
+def design_cavity(p, d, results):
+    return cavity.check(p, d, results["geometry"], results["heat"]["stack"], side_gaps=False)
 
 
 def write_reports(folder, assumptions, overrides, p, d, results):
@@ -110,9 +123,12 @@ def write_reports(folder, assumptions, overrides, p, d, results):
     n_mc = 2000
     files = {
         "key_tables.md": report.key_tables(p),
-        "design.md": report.summary(p, d, results),
+        "design.md": report.summary(p, d, results, design_cavity(p, d, results)),
+        "thermal.md": report.thermal_table(cavity.study(p)),
+        "trace.md": report.trace_table(results["materials"]["trace_budget"], d),
         "validation.md": report.validation(validation.run(p)),
         "sensitivity.md": report.tornado(base, rows, assumptions, d) + "\n"
+                          + report.combined_ranking(sensitivity.combined_ranking(assumptions)) + "\n"
                           + report.monte_carlo(sensitivity.monte_carlo(assumptions, d, n_mc, overrides=overrides), n_mc),
         "assumptions.md": report.assumptions_table(assumptions),
         "stats.json": json.dumps(report.stats_json(p, d, results), indent=2) + "\n",

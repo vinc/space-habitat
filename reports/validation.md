@@ -1,6 +1,8 @@
 # Validation against the notes
 
-197 figures from notes.md checked; 191 within tolerance (5% unless noted), 6 known mismatches, 0 unexplained.
+197 figures from notes.md checked: **189 within 5%**; 192 within their configured tolerance (5%, or 10–15% for 12 checks of counts and energies quoted as ranges); 5 known mismatches, 0 unexplained.
+
+This checks that the model reproduces the notes' own figures from the same assumptions; it does not validate the physical design.
 
 ## Mismatches
 
@@ -11,7 +13,6 @@
 | §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.1% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
 | §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 4.71 Mt | -5.8% | the notes round 4.7 Mt up to ~5 |
 | §10 | C-type water contained, 900 m | 0.320 Mt | 0.302 Mt | -5.8% | follows the rounded ~5 Mt of C-type |
-| §10 | S-type, H host, 1.6 km | 40.0 Mt | 42.5 Mt | +6.2% | metal-bound at 17 wt% free metal (the notes use ~18% there) |
 
 ## All checks
 
@@ -40,11 +41,11 @@
 | §4 | O₂, 900 m | 3.70 kt | 3.68 kt | -0.4% | ✓ |
 | §4 | O₂, 1.6 km | 20.7 kt | 20.7 kt | +0.0% | ✓ |
 | §4 | O₂, 2.5 km | 80.0 kt | 79.0 kt | -1.3% | ✓ |
-| §5c | Rock shield after fill credit, 400 m | 2.00 Mt | 1.99 Mt | -0.6% | ✓ |
-| §5c | Rock shield after fill credit, 900 m | 10.1 Mt | 10.1 Mt | -0.4% | ✓ |
-| §5c | Rock shield after fill credit, 1.6 km | 31.9 Mt | 31.8 Mt | -0.3% | ✓ |
-| §5c | Rock shield after fill credit, 2.5 km | 78.0 Mt | 77.7 Mt | -0.4% | ✓ |
-| §5c | Rock shield after fill credit, 3.6 km | 162 Mt | 161 Mt | -0.6% | ✓ |
+| §5c | Rock shield after fill credit, 400 m | 2.40 Mt | 2.41 Mt | +0.2% | ✓ |
+| §5c | Rock shield after fill credit, 900 m | 11.0 Mt | 11.0 Mt | +0.1% | ✓ |
+| §5c | Rock shield after fill credit, 1.6 km | 33.5 Mt | 33.5 Mt | +0.0% | ✓ |
+| §5c | Rock shield after fill credit, 2.5 km | 80.0 Mt | 80.3 Mt | +0.4% | ✓ |
+| §5c | Rock shield after fill credit, 3.6 km | 165 Mt | 165 Mt | -0.0% | ✓ |
 | §5c | Fill, 400 m | 0.110 Mt | 0.107 Mt | -2.9% | ✓ |
 | §5c | Fill, 900 m | 0.540 Mt | 0.541 Mt | +0.1% | ✓ |
 | §5c | Fill, 1.6 km | 1.70 Mt | 1.71 Mt | +0.5% | ✓ |
@@ -55,66 +56,66 @@
 | §5c | Hull and frames, 1.6 km | 1.10 Mt | 1.13 Mt | +2.4% | ✓ |
 | §5c | Hull and frames, 2.5 km | 3.10 Mt | 3.15 Mt | +1.5% | ✓ |
 | §5c | Hull and frames, 3.6 km | 7.00 Mt | 7.28 Mt | +3.9% | ✓ |
-| §5c | Spokes, 400 m | 0.0700 Mt | 0.0684 Mt | -2.3% | ✓ |
-| §5c | Spokes, 900 m | 0.800 Mt | 0.800 Mt | -0.0% | ✓ |
-| §5c | Spokes, 1.6 km | 4.70 Mt | 4.65 Mt | -1.0% | ✓ |
-| §5c | Spokes, 2.5 km | 18.5 Mt | 18.5 Mt | +0.2% | ✓ |
-| §5c | Spokes, 3.6 km | 58.0 Mt | 58.4 Mt | +0.8% | ✓ |
-| §5c | Total per torus, 400 m | 2.20 Mt | 2.23 Mt | +1.2% | ✓ |
-| §5c | Total per torus, 900 m | 11.9 Mt | 11.8 Mt | -0.9% | ✓ |
-| §5c | Total per torus, 1.6 km | 40.0 Mt | 39.6 Mt | -1.0% | ✓ |
-| §5c | Total per torus, 2.5 km | 105 Mt | 104 Mt | -0.6% | ✓ |
-| §5c | Total per torus, 3.6 km | 238 Mt | 237 Mt | -0.3% | ✓ |
-| §5c | Mass per m² of floor, 400 m | 36.0 t | 35.4 t | -1.6% | ✓ |
-| §5c | Mass per m² of floor, 900 m | 37.0 t | 37.1 t | +0.2% | ✓ |
-| §5c | Mass per m² of floor, 1.6 km | 40.0 t | 39.4 t | -1.5% | ✓ |
-| §5c | Mass per m² of floor, 2.5 km | 43.0 t | 42.5 t | -1.1% | ✓ |
-| §5c | Mass per m² of floor, 3.6 km | 47.0 t | 46.6 t | -0.8% | ✓ |
-| §8 | Steel per torus, 900 m | 1.10 Mt | 1.10 Mt | -0.0% | ✓ |
-| §8 | Steel per torus, 1.6 km | 5.80 Mt | 5.78 Mt | -0.4% | ✓ |
-| §8 | Steel per torus, 2.5 km | 22.0 Mt | 21.7 Mt | -1.4% | ✓ |
-| §9 | Steel at 0.3 g, 900 m | 0.320 Mt | 0.319 Mt | -0.2% | ✓ |
-| §9 | Steel at 0.3 g, 1.6 km | 1.60 Mt | 1.64 Mt | +2.6% | ✓ |
-| §9 | Steel at 0.3 g, 2.5 km | 6.00 Mt | 5.98 Mt | -0.3% | ✓ |
-| §9 | Total at 0.3 g, 900 m | 11.1 Mt | 11.0 Mt | -0.8% | ✓ |
-| §9 | Total at 0.3 g, 1.6 km | 35.7 Mt | 35.5 Mt | -0.6% | ✓ |
-| §9 | Total at 0.3 g, 2.5 km | 89.2 Mt | 88.7 Mt | -0.6% | ✓ |
+| §5c | Spokes, 400 m | 0.0800 Mt | 0.0816 Mt | +2.0% | ✓ |
+| §5c | Spokes, 900 m | 0.870 Mt | 0.868 Mt | -0.2% | ✓ |
+| §5c | Spokes, 1.6 km | 4.90 Mt | 4.88 Mt | -0.5% | ✓ |
+| §5c | Spokes, 2.5 km | 19.1 Mt | 19.1 Mt | +0.1% | ✓ |
+| §5c | Spokes, 3.6 km | 60.0 Mt | 59.7 Mt | -0.5% | ✓ |
+| §5c | Total per torus, 400 m | 2.70 Mt | 2.66 Mt | -1.6% | ✓ |
+| §5c | Total per torus, 900 m | 12.8 Mt | 12.8 Mt | +0.1% | ✓ |
+| §5c | Total per torus, 1.6 km | 41.5 Mt | 41.5 Mt | +0.1% | ✓ |
+| §5c | Total per torus, 2.5 km | 108 Mt | 108 Mt | -0.3% | ✓ |
+| §5c | Total per torus, 3.6 km | 243 Mt | 243 Mt | -0.2% | ✓ |
+| §5c | Mass per m² of floor, 400 m | 42.0 t | 42.3 t | +0.7% | ✓ |
+| §5c | Mass per m² of floor, 900 m | 40.0 t | 40.3 t | +0.7% | ✓ |
+| §5c | Mass per m² of floor, 1.6 km | 41.0 t | 41.3 t | +0.8% | ✓ |
+| §5c | Mass per m² of floor, 2.5 km | 44.0 t | 43.8 t | -0.3% | ✓ |
+| §5c | Mass per m² of floor, 3.6 km | 48.0 t | 47.7 t | -0.7% | ✓ |
+| §8 | Steel per torus, 900 m | 1.20 Mt | 1.17 Mt | -2.6% | ✓ |
+| §8 | Steel per torus, 1.6 km | 6.00 Mt | 6.00 Mt | +0.1% | ✓ |
+| §8 | Steel per torus, 2.5 km | 22.0 Mt | 22.3 Mt | +1.2% | ✓ |
+| §9 | Steel at 0.3 g, 900 m | 0.340 Mt | 0.340 Mt | -0.1% | ✓ |
+| §9 | Steel at 0.3 g, 1.6 km | 1.70 Mt | 1.71 Mt | +0.3% | ✓ |
+| §9 | Steel at 0.3 g, 2.5 km | 6.10 Mt | 6.14 Mt | +0.7% | ✓ |
+| §9 | Total at 0.3 g, 900 m | 12.0 Mt | 12.0 Mt | -0.2% | ✓ |
+| §9 | Total at 0.3 g, 1.6 km | 37.2 Mt | 37.2 Mt | +0.1% | ✓ |
+| §9 | Total at 0.3 g, 2.5 km | 91.5 Mt | 91.5 Mt | +0.0% | ✓ |
 | §9 | Period at 0.3 g, 900 m | 110 s | 110 s | -0.4% | ✓ |
 | §9 | Period at 0.3 g, 1.6 km | 146 s | 146 s | +0.0% | ✓ |
 | §9 | Period at 0.3 g, 2.5 km | 183 s | 183 s | -0.2% | ✓ |
 | §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.123 Mt | -17.7% | ✗ |
 | §7 | Water needed (soil, O₂, lakes), 1.6 km | 0.400 Mt | 0.400 Mt | +0.1% | ✓ |
 | §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.1% | ✗ |
-| §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.370 Mt | 0.371 Mt | +0.2% | ✓ |
-| §7 | Spin-up propellant (water, 3 km/s), 1.6 km | 1.70 Mt | 1.66 Mt | -2.4% | ✓ |
-| §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.50 Mt | 5.46 Mt | -0.6% | ✓ |
+| §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.400 Mt | 0.402 Mt | +0.6% | ✓ |
+| §7 | Spin-up propellant (water, 3 km/s), 1.6 km | 1.70 Mt | 1.74 Mt | +2.3% | ✓ |
+| §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.60 Mt | 5.64 Mt | +0.6% | ✓ |
 | §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 4.71 Mt | -5.8% | ✗ |
 | §7 | C-type sized by nitrogen, 1.6 km | 27.0 Mt | 26.5 Mt | -1.9% | ✓ |
 | §7 | C-type sized by nitrogen, 2.5 km | 100 Mt | 101 Mt | +1.0% | ✓ |
-| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 7.72 Mt | -3.5% | ✓ |
+| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 8.22 Mt | +2.7% | ✓ |
 | §10 | C-type water contained, 900 m | 0.320 Mt | 0.302 Mt | -5.8% | ✗ |
 | §10 | C-type water contained, 1.6 km | 1.70 Mt | 1.69 Mt | -0.3% | ✓ |
 | §10 | C-type water contained, 2.5 km | 6.50 Mt | 6.46 Mt | -0.6% | ✓ |
 | §10 | C-type diameter, 900 m | 200 m | 196 m | -2.1% | ✓ |
 | §10 | C-type diameter, 1.6 km | 350 m | 348 m | -0.6% | ✓ |
 | §10 | C-type diameter, 2.5 km | 540 m | 544 m | +0.7% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 900 m | 1.40 Mt | 1.37 Mt | -1.8% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 1.6 km | 7.30 Mt | 7.22 Mt | -1.1% | ✓ |
-| §10 | Total metal (with hub, dock, factory), 2.5 km | 27.0 Mt | 27.1 Mt | +0.4% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 900 m | 1.50 Mt | 1.46 Mt | -2.6% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 1.6 km | 7.50 Mt | 7.50 Mt | +0.1% | ✓ |
+| §10 | Total metal (with hub, dock, factory), 2.5 km | 28.0 Mt | 27.8 Mt | -0.6% | ✓ |
 | §10 | Regolith (0.5 m), 900 m | 0.290 Mt | 0.286 Mt | -1.3% | ✓ |
 | §10 | Regolith (0.5 m), 1.6 km | 0.900 Mt | 0.905 Mt | +0.5% | ✓ |
 | §10 | Regolith (0.5 m), 2.5 km | 2.20 Mt | 2.21 Mt | +0.4% | ✓ |
 | §10 | Soil (0.5 m), 900 m | 0.250 Mt | 0.254 Mt | +1.8% | ✓ |
 | §10 | Soil (0.5 m), 1.6 km | 0.800 Mt | 0.804 Mt | +0.5% | ✓ |
 | §10 | Soil (0.5 m), 2.5 km | 2.00 Mt | 1.96 Mt | -1.8% | ✓ |
-| §10 | S-type, H host, 900 m | 12.0 Mt | 12.5 Mt | +3.9% | ✓ |
-| §10 | S-type, H host, 1.6 km | 40.0 Mt | 42.5 Mt | +6.2% | ✗ |
-| §10 | S-type, H host, 2.5 km | 165 Mt | 159 Mt | -3.4% | ✓ |
-| §10 | S-type, LL host, 900 m | 32.0 Mt | 30.5 Mt | -4.5% | ✓ |
-| §10 | S-type, LL host, 1.6 km | 165 Mt | 161 Mt | -2.7% | ✓ |
-| §10 | S-type, LL host, 2.5 km | 600 Mt | 602 Mt | +0.4% | ✓ |
-| §10 | S-type, L host, 900 m | 16.0 Mt | 15.3 Mt | -4.5% | ✓ |
-| §10 | S-type diameter, H host, 900 m | 225 m | 228 m | +1.5% | ✓ |
+| §10 | S-type, H host, 900 m | 14.0 Mt | 13.6 Mt | -2.8% | ✓ |
+| §10 | S-type, H host, 1.6 km | 44.0 Mt | 44.1 Mt | +0.3% | ✓ |
+| §10 | S-type, H host, 2.5 km | 165 Mt | 164 Mt | -0.8% | ✓ |
+| §10 | S-type, LL host, 900 m | 32.0 Mt | 32.5 Mt | +1.4% | ✓ |
+| §10 | S-type, LL host, 1.6 km | 165 Mt | 167 Mt | +1.1% | ✓ |
+| §10 | S-type, LL host, 2.5 km | 620 Mt | 618 Mt | -0.3% | ✓ |
+| §10 | S-type, L host, 900 m | 16.0 Mt | 16.2 Mt | +1.4% | ✓ |
+| §10 | S-type diameter, H host, 900 m | 235 m | 235 m | +0.0% | ✓ |
 | §13 | Valley lighting, 900 m | 53.0 MW | 52.6 MW | -0.8% | ✓ |
 | §13 | Valley lighting, 1.6 km | 166 MW | 166 MW | +0.1% | ✓ |
 | §13 | Valley lighting, 2.5 km | 410 MW | 406 MW | -1.0% | ✓ |
@@ -166,30 +167,30 @@
 | §13 | Radiating surface per tier, 900 m | 8.50 ha | 8.57 ha | +0.9% | ✓ |
 | §13 | Radiating surface per tier, 1.6 km | 27.0 ha | 27.1 ha | +0.4% | ✓ |
 | §13 | Radiating surface per tier, 2.5 km | 66.0 ha | 66.2 ha | +0.2% | ✓ |
-| §13 | End openings (both), 900 m | 4.40 km² | 4.45 km² | +1.1% | ✓ |
-| §13 | End openings (both), 1.6 km | 14.0 km² | 14.1 km² | +0.5% | ✓ |
-| §13 | Capacity of the end openings, 900 m | 1.60 GW | 1.66 GW | +4.0% | ✓ |
-| §13 | Capacity of the end openings, 1.6 km | 5.30 GW | 5.26 GW | -0.7% | ✓ |
-| §13 | Break-even, 900 m, no farm lit | 29.0 tori | 29.0 tori | +0.1% | ✓ |
-| §13 | Break-even, 900 m, 1 tiers lit | 18.0 tori | 18.6 tori | +3.4% | ✓ |
-| §13 | Break-even, 900 m, 2 tiers lit | 13.0 tori | 13.7 tori | +5.4% | ✓ |
-| §13 | Break-even, 900 m, 3 tiers lit | 10.5 tori | 10.8 tori | +3.2% | ✓ |
-| §13 | Break-even, 1.6 km, no farm lit | 29.0 tori | 29.0 tori | +0.1% | ✓ |
-| §13 | Break-even, 1.6 km, three tiers lit | 11.0 tori | 10.8 tori | -1.5% | ✓ |
+| §13 | End openings (both), 900 m | 4.40 km² | 4.38 km² | -0.5% | ✓ |
+| §13 | End openings (both), 1.6 km | 14.0 km² | 13.9 km² | -0.5% | ✓ |
+| §13 | Capacity of the end openings, 900 m | 1.60 GW | 1.64 GW | +2.3% | ✓ |
+| §13 | Capacity of the end openings, 1.6 km | 5.30 GW | 5.21 GW | -1.7% | ✓ |
+| §13 | Break-even, 900 m, no farm lit | 29.0 tori | 28.5 tori | -1.6% | ✓ |
+| §13 | Break-even, 900 m, 1 tiers lit | 18.0 tori | 18.3 tori | +1.7% | ✓ |
+| §13 | Break-even, 900 m, 2 tiers lit | 13.0 tori | 13.5 tori | +3.6% | ✓ |
+| §13 | Break-even, 900 m, 3 tiers lit | 10.5 tori | 10.7 tori | +1.5% | ✓ |
+| §13 | Break-even, 1.6 km, no farm lit | 29.0 tori | 28.7 tori | -0.9% | ✓ |
+| §13 | Break-even, 1.6 km, three tiers lit | 11.0 tori | 10.7 tori | -2.4% | ✓ |
 | §13 | Heat, 900 m pair, three tiers lit | 310 MW | 307 MW | -0.9% | ✓ |
 | §13 | Heat, 900 m six-stack, three tiers lit | 930 MW | 922 MW | -0.9% | ✓ |
 | §13 | Array mass, 900 m, valley | 0.800 kt | 0.794 kt | -0.7% | ✓ |
 | §13 | Radiator panel mass, 900 m, three tiers | 1.00 kt | 1.03 kt | +2.6% | ✓ |
-| §11 | Max tori, 0.9 km, 10 m gaps, 0% margin | 33.0 tori | 33.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 0.9 km, 10 m gaps, 10% margin | 30.0 tori | 30.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 0.9 km, 10 m gaps, 20% margin | 27.0 tori | 27.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 1.6 km, 10 m gaps, 0% margin | 35.0 tori | 35.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 1.6 km, 10 m gaps, 10% margin | 32.0 tori | 32.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 1.6 km, 10 m gaps, 20% margin | 29.0 tori | 29.0 tori | +0.0% | ✓ |
-| §11 | Max tori, 0.9 km, 40 m gaps, 20% margin | 18.0 tori | 18.0 tori | +0.0% | ✓ |
-| §11 | Stack length at the limit, 900 m | 1,800 m | 1,790 m | -0.6% | ✓ |
-| §0 | Six-stack length, 10 m gaps | 400 m | 398 m | -0.6% | ✓ |
-| §0 | Six-stack length, 40 m gaps | 580 m | 578 m | -0.4% | ✓ |
+| §11 | Max tori, 0.9 km, 10 m gaps, 0% margin | 27.0 tori | 27.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 0.9 km, 10 m gaps, 10% margin | 24.0 tori | 24.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 0.9 km, 10 m gaps, 20% margin | 22.0 tori | 22.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 1.6 km, 10 m gaps, 0% margin | 31.0 tori | 31.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 1.6 km, 10 m gaps, 10% margin | 28.0 tori | 28.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 1.6 km, 10 m gaps, 20% margin | 25.0 tori | 25.0 tori | +0.0% | ✓ |
+| §11 | Max tori, 0.9 km, 40 m gaps, 20% margin | 16.0 tori | 16.0 tori | +0.0% | ✓ |
+| §11 | Stack length at the limit, 900 m | 1,800 m | 1,770 m | -1.9% | ✓ |
+| §0 | Six-stack length, 10 m gaps | 480 m | 482 m | +0.3% | ✓ |
+| §0 | Six-stack length, 40 m gaps | 660 m | 662 m | +0.2% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Itokawa | 0.760 km² | 0.756 km² | -0.5% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Eros | 0.840 km² | 0.840 km² | +0.0% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Torifune | 0.420 km² | 0.418 km² | -0.4% | ✓ |
@@ -204,13 +205,13 @@
 | §15 | Array, 900 m, per tier, Apophis 2029 | 0.260 km² | 0.255 km² | -2.0% | ✓ |
 | §15 | Array, 1.6 km valley, seasonal sky, Eros | 1.45 km² | 1.44 km² | -0.8% | ✓ |
 | §15 | Array, 1.6 km, per tier, Eros | 1.51 km² | 1.48 km² | -1.7% | ✓ |
-| §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.15 tori | +14.6% | ✓ |
-| §15 | 900 m tori supported by Didymos | 30.0 tori | 32.7 tori | +9.1% | ✓ |
-| §15 | 900 m tori supported by Torifune | 6.00 tori | 6.55 tori | +9.1% | ✓ |
-| §15 | 900 m tori supported by Ryugu | 90.0 tori | 95.5 tori | +6.1% | ✓ |
+| §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.08 tori | +7.8% | ✓ (tolerance 15%) |
+| §15 | 900 m tori supported by Didymos | 30.0 tori | 30.8 tori | +2.7% | ✓ |
+| §15 | 900 m tori supported by Torifune | 6.00 tori | 6.16 tori | +2.7% | ✓ |
+| §15 | 900 m tori supported by Ryugu | 90.0 tori | 95.5 tori | +6.1% | ✓ (tolerance 15%) |
 | §15 | 900 m tori supported by Bennu | 15.0 tori | 15.5 tori | +3.3% | ✓ |
 | §15 | 1.6 km tori supported by Ryugu | 17.0 tori | 17.0 tori | -0.0% | ✓ |
-| §15 | Processing energy, 900 m | 0.300 GW·yr | 0.258 GW·yr | -14.1% | ✓ |
+| §15 | Processing energy, 900 m | 0.300 GW·yr | 0.261 GW·yr | -13.1% | ✓ (tolerance 15%) |
 | §15 | Shipping energy at 4.5 km/s | 120,000,000 J/kg | 121,000,000 J/kg | +1.1% | ✓ |
 | §15 | Shipping energy at 6.3 km/s | 175,000,000 J/kg | 175,000,000 J/kg | +0.1% | ✓ |
 | §15 | Shipping energy at 8.5 km/s | 250,000,000 J/kg | 246,000,000 J/kg | -1.7% | ✓ |
