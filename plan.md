@@ -4,6 +4,8 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Order** (set by the combined sensitivity ranking of model 1 over representative designs, `reports/sensitivity.md`, revised after the review in issue #1): 1 → 2 and 3 in parallel, with a preliminary thermal check done alongside → 4 (needs the structural stiffness from 2) → 5 → 6 → 7. Section 8 lists what only Earth tests can settle; C-type nitrogen recovery and baking energy, near the top of the ranking, are among them.
 
+**Simplicity rule:** where parts of the design can be separated, model them separately and check how each affects the whole as a final step. So the stack has two sections (proposed, 28 Oct 2026): the main section (the tori) and a farm section (one farm ring per torus, on its own spokes) on the same hub, each modelled on its own, then put together.
+
 ---
 
 ## 1. Parametric system model (Python, first)
@@ -107,7 +109,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 4. Stack dynamics
 
-**Why fourth:** not in the sweep (the system model treats the stack as rigid), but it decides whether the "nothing has to keep working" principle holds; it needs the stiffness from model 2.
+**Why fourth:** not in the sweep (the system model treats the stack as rigid), but it decides whether the "nothing has to keep working" principle holds; it needs the stiffness from model 2. The farm section nearly doubles the hub's length (~480 → ~900 m for a 900 m six-stack), which lowers its bending modes.
 
 - [ ] Rigid stack with energy dissipation: margin vs number of tori and gaps
 - [ ] Flexible stack: hub as a beam, tori as rings on cable nets; lowest bending modes vs spin rate for a pair and a six-stack
@@ -133,9 +135,10 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Why sixth:** a preliminary radiative exchange model now exists (below): the drum rejects ~75–80% of the ideal end-aperture limit, so a 900 m six-stack with three tiers lit has ~1.3× margin (not 1.8×) and heat limits a stack to ~8 tori. Still above six, so the rest can follow the dynamics and logistics, but no longer last.
+**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: a 900 m six-stack with three tiers lit keeps ~3.3× margin in the drum and ~2.6× in the farm section, counting the sections' facing ends as lost (it was ~1.3× with the farm rings in the tori's planes), and heat no longer limits the stack (~28 tori against ~22 for stability).
 
-- [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps
+- [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section) and their coupling across the gap
+- [ ] Farm section's radiators: reach (~1 r assumed), layout, and the coupling with the drum's farm end
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
 - [ ] Check that no direct sunlight reaches the radiators (Sun perpendicular to the axis, including through the gaps)
 - [ ] Coolant loops: thermosiphon sizing along the spokes, fluids (ammonia, water), pressure drops
