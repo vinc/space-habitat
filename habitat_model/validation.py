@@ -59,9 +59,6 @@ def _sizes(section, label, unit, fn, refs, **kw):
 WATER_NOTE = ("the notes give no breakdown of the water; their per-m² figure falls with size "
               "(0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake "
               "water scale with the floor; the lake term is fitted at 1.6 km")
-VALLEY_900_NOTE = ("the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); "
-                   "the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller")
-
 CHECKS = [
     # §1, §2: rotation and floor
     *_sizes("§1", "Rotation", "rpm", lambda r: r["geometry"]["rpm"], {900: 1.0, 1600: 0.75, 2500: 0.6}),
@@ -119,17 +116,17 @@ CHECKS = [
     Check("§10", "S-type diameter, H host, 900 m", _d(900, host_class="H"),
           lambda r: r["materials"]["s_diameter"], 225, "m"),
     # §13 power, food
-    *_sizes("§13", "Valley lighting", "MW", lambda r: r["power"]["valley_sky"] / MW, {900: 55, 1600: 166, 2500: 410}),
-    *_sizes("§13", "Valley + other loads", "MW", lambda r: r["power"]["valley"] / MW, {900: 60, 1600: 180, 2500: 440}),
+    *_sizes("§13", "Valley lighting", "MW", lambda r: r["power"]["valley_sky"] / MW, {900: 53, 1600: 166, 2500: 410}),
+    *_sizes("§13", "Valley + other loads", "MW", lambda r: r["power"]["valley"] / MW, {900: 57, 1600: 180, 2500: 440}),
     *_sizes("§13", "Farm lighting per tier", "MW", lambda r: r["power"]["farm_per_tier"] / MW,
             {400: 6.3, 900: 32, 1600: 102, 2500: 247}),
     *_sizes("§13", "Plain rim solar", "MW", lambda r: r["power"]["plain_rim_pv"] / MW, {900: 34, 1600: 110, 2500: 270}),
     *_sizes("§13", "Array at 1 AU, valley", "km²", lambda r: r["power"]["array_1au_valley"] / KM2,
-            {900: 0.28, 1600: 0.85, 2500: 2.1}, known={900: VALLEY_900_NOTE}),
+            {900: 0.27, 1600: 0.85, 2500: 2.1}),
     *_sizes("§13", "Array at 1 AU, per tier", "km²", lambda r: r["power"]["array_1au_per_tier"] / KM2,
             {900: 0.15, 1600: 0.48, 2500: 1.16}),
     *_sizes("§13", "Array at 1 AU, three tiers", "km²", lambda r: r["power"]["array_1au"] / KM2,
-            {900: 0.73, 1600: 2.3, 2500: 5.6}, tiers_lit=3),
+            {900: 0.71, 1600: 2.3, 2500: 5.6}, tiers_lit=3),
     *_sizes("§8", "Farm ring area per tier", "ha", lambda r: r["geometry"]["farm_ring_area"] / HA,
             {900: 11, 1600: 36, 2500: 88}),
     *_sizes("§13", "Crops per tier", "ha", lambda r: r["geometry"]["crop_area_per_tier"] / HA,
@@ -153,7 +150,7 @@ CHECKS = [
     *_sizes("§13", "End openings (both)", "km²", lambda r: r["heat"]["openings"] / KM2, {900: 4.4, 1600: 14}),
     *_sizes("§13", "Capacity of the end openings", "GW", lambda r: r["heat"]["capacity"] / GW, {900: 1.6, 1600: 5.3}),
     Check("§13", "Break-even, 900 m, no farm lit", _d(900, tiers_lit=0),
-          lambda r: r["heat"]["break_even_tori"], 27, "tori", tol=0.1, known=VALLEY_900_NOTE),
+          lambda r: r["heat"]["break_even_tori"], 29, "tori", tol=0.1),
     *[Check("§13", f"Break-even, 900 m, {t} tiers lit", _d(900, tiers_lit=t),
             lambda r: r["heat"]["break_even_tori"], ref, "tori", tol=0.1)
       for t, ref in ((1, 18), (2, 13), (3, 10.5))],
@@ -182,14 +179,14 @@ CHECKS = [
           lambda r: r["geometry"]["stack_length"], 580, "m"),
     # §15 seasonal sizing at the sites
     *[Check("§15", f"Array, 900 m valley, constant sky, {site}", _d(900, site=site, seasonal_sky=False, tiers_lit=0),
-            lambda r: r["power"]["array_site"] / KM2, ref, "km²", known=VALLEY_900_NOTE)
-      for site, ref in (("Itokawa", 0.8), ("Eros", 0.9), ("Torifune", 0.44), ("Apophis", 0.34))],
+            lambda r: r["power"]["array_site"] / KM2, ref, "km²")
+      for site, ref in (("Itokawa", 0.76), ("Eros", 0.84), ("Torifune", 0.42), ("Apophis", 0.32))],
     *[Check("§15", f"Array, 900 m valley, seasonal sky, {site}", _d(900, site=site, tiers_lit=0),
-            lambda r: r["power"]["array_site"] / KM2, ref, "km²", known=VALLEY_900_NOTE)
-      for site, ref in (("1 AU", 0.15), ("Itokawa", 0.43), ("Eros", 0.48), ("Torifune", 0.24))],
+            lambda r: r["power"]["array_site"] / KM2, ref, "km²")
+      for site, ref in (("1 AU", 0.14), ("Itokawa", 0.41), ("Eros", 0.46), ("Torifune", 0.23))],
     *[Check("§15", f"Array, 900 m, per tier, {site}", _d(900, site=site),
             lambda r: r["power"]["array_site_per_tier"] / KM2, ref, "km²")
-      for site, ref in (("Itokawa", 0.43), ("Eros", 0.47), ("Torifune", 0.24), ("Apophis 2029", 0.26))],
+      for site, ref in (("Itokawa", 0.42), ("Eros", 0.47), ("Torifune", 0.23), ("Apophis 2029", 0.26))],
     Check("§15", "Array, 1.6 km valley, seasonal sky, Eros", _d(1600, site="Eros", tiers_lit=0),
           lambda r: r["power"]["array_site"] / KM2, 1.45, "km²"),
     Check("§15", "Array, 1.6 km, per tier, Eros", _d(1600, site="Eros"),

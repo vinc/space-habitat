@@ -1,6 +1,6 @@
 # Validation against the notes
 
-197 figures from notes.md checked; 185 within tolerance (5% unless noted), 12 known mismatches, 0 unexplained.
+197 figures from notes.md checked; 191 within tolerance (5% unless noted), 6 known mismatches, 0 unexplained.
 
 ## Mismatches
 
@@ -12,16 +12,6 @@
 | §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 4.71 Mt | -5.8% | the notes round 4.7 Mt up to ~5 |
 | §10 | C-type water contained, 900 m | 0.320 Mt | 0.302 Mt | -5.8% | follows the rounded ~5 Mt of C-type |
 | §10 | S-type, H host, 1.6 km | 40.0 Mt | 42.5 Mt | +6.2% | metal-bound at 17 wt% free metal (the notes use ~18% there) |
-| §13 | Array at 1 AU, valley, 900 m | 0.280 km² | 0.265 km² | -5.4% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, constant sky, Itokawa | 0.800 km² | 0.756 km² | -5.5% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, constant sky, Eros | 0.900 km² | 0.840 km² | -6.6% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, constant sky, Apophis | 0.340 km² | 0.317 km² | -6.6% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, seasonal sky, Eros | 0.480 km² | 0.455 km² | -5.2% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, seasonal sky, Torifune | 0.240 km² | 0.226 km² | -5.6% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §13 | Break-even, 900 m, no farm lit | 27.0 tori | 29.0 tori | +7.5% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, constant sky, Torifune | 0.440 km² | 0.418 km² | -5.0% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, seasonal sky, 1 AU | 0.150 km² | 0.143 km² | -4.4% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
-| §15 | Array, 900 m valley, seasonal sky, Itokawa | 0.430 km² | 0.409 km² | -4.8% | the notes round the 900 m valley + other loads up to ~60 MW (~55 MW of sky + ~5 MW); the same formulas give ~57 MW (52.6 + 4.8), so the arrays sized from it are ~4-5% smaller |
 
 ## All checks
 
@@ -125,10 +115,10 @@
 | §10 | S-type, LL host, 2.5 km | 600 Mt | 602 Mt | +0.4% | ✓ |
 | §10 | S-type, L host, 900 m | 16.0 Mt | 15.3 Mt | -4.5% | ✓ |
 | §10 | S-type diameter, H host, 900 m | 225 m | 228 m | +1.5% | ✓ |
-| §13 | Valley lighting, 900 m | 55.0 MW | 52.6 MW | -4.4% | ✓ |
+| §13 | Valley lighting, 900 m | 53.0 MW | 52.6 MW | -0.8% | ✓ |
 | §13 | Valley lighting, 1.6 km | 166 MW | 166 MW | +0.1% | ✓ |
 | §13 | Valley lighting, 2.5 km | 410 MW | 406 MW | -1.0% | ✓ |
-| §13 | Valley + other loads, 900 m | 60.0 MW | 57.4 MW | -4.4% | ✓ |
+| §13 | Valley + other loads, 900 m | 57.0 MW | 57.4 MW | +0.6% | ✓ |
 | §13 | Valley + other loads, 1.6 km | 180 MW | 181 MW | +0.7% | ✓ |
 | §13 | Valley + other loads, 2.5 km | 440 MW | 443 MW | +0.6% | ✓ |
 | §13 | Farm lighting per tier, 400 m | 6.30 MW | 6.34 MW | +0.6% | ✓ |
@@ -138,13 +128,13 @@
 | §13 | Plain rim solar, 900 m | 34.0 MW | 34.5 MW | +1.3% | ✓ |
 | §13 | Plain rim solar, 1.6 km | 110 MW | 109 MW | -1.0% | ✓ |
 | §13 | Plain rim solar, 2.5 km | 270 MW | 266 MW | -1.5% | ✓ |
-| §13 | Array at 1 AU, valley, 900 m | 0.280 km² | 0.265 km² | -5.4% | ✗ |
+| §13 | Array at 1 AU, valley, 900 m | 0.270 km² | 0.265 km² | -1.9% | ✓ |
 | §13 | Array at 1 AU, valley, 1.6 km | 0.850 km² | 0.837 km² | -1.5% | ✓ |
 | §13 | Array at 1 AU, valley, 2.5 km | 2.10 km² | 2.04 km² | -2.7% | ✓ |
 | §13 | Array at 1 AU, per tier, 900 m | 0.150 km² | 0.148 km² | -1.3% | ✓ |
 | §13 | Array at 1 AU, per tier, 1.6 km | 0.480 km² | 0.468 km² | -2.5% | ✓ |
 | §13 | Array at 1 AU, per tier, 2.5 km | 1.16 km² | 1.14 km² | -1.5% | ✓ |
-| §13 | Array at 1 AU, three tiers, 900 m | 0.730 km² | 0.709 km² | -2.9% | ✓ |
+| §13 | Array at 1 AU, three tiers, 900 m | 0.710 km² | 0.709 km² | -0.1% | ✓ |
 | §13 | Array at 1 AU, three tiers, 1.6 km | 2.30 km² | 2.24 km² | -2.6% | ✓ |
 | §13 | Array at 1 AU, three tiers, 2.5 km | 5.60 km² | 5.47 km² | -2.3% | ✓ |
 | §8 | Farm ring area per tier, 900 m | 11.0 ha | 11.5 ha | +4.1% | ✓ |
@@ -180,7 +170,7 @@
 | §13 | End openings (both), 1.6 km | 14.0 km² | 14.1 km² | +0.5% | ✓ |
 | §13 | Capacity of the end openings, 900 m | 1.60 GW | 1.66 GW | +4.0% | ✓ |
 | §13 | Capacity of the end openings, 1.6 km | 5.30 GW | 5.26 GW | -0.7% | ✓ |
-| §13 | Break-even, 900 m, no farm lit | 27.0 tori | 29.0 tori | +7.5% | ✓ |
+| §13 | Break-even, 900 m, no farm lit | 29.0 tori | 29.0 tori | +0.1% | ✓ |
 | §13 | Break-even, 900 m, 1 tiers lit | 18.0 tori | 18.6 tori | +3.4% | ✓ |
 | §13 | Break-even, 900 m, 2 tiers lit | 13.0 tori | 13.7 tori | +5.4% | ✓ |
 | §13 | Break-even, 900 m, 3 tiers lit | 10.5 tori | 10.8 tori | +3.2% | ✓ |
@@ -200,17 +190,17 @@
 | §11 | Stack length at the limit, 900 m | 1,800 m | 1,790 m | -0.6% | ✓ |
 | §0 | Six-stack length, 10 m gaps | 400 m | 398 m | -0.6% | ✓ |
 | §0 | Six-stack length, 40 m gaps | 580 m | 578 m | -0.4% | ✓ |
-| §15 | Array, 900 m valley, constant sky, Itokawa | 0.800 km² | 0.756 km² | -5.5% | ✗ |
-| §15 | Array, 900 m valley, constant sky, Eros | 0.900 km² | 0.840 km² | -6.6% | ✗ |
-| §15 | Array, 900 m valley, constant sky, Torifune | 0.440 km² | 0.418 km² | -5.0% | ✓ |
-| §15 | Array, 900 m valley, constant sky, Apophis | 0.340 km² | 0.317 km² | -6.6% | ✗ |
-| §15 | Array, 900 m valley, seasonal sky, 1 AU | 0.150 km² | 0.143 km² | -4.4% | ✓ |
-| §15 | Array, 900 m valley, seasonal sky, Itokawa | 0.430 km² | 0.409 km² | -4.8% | ✓ |
-| §15 | Array, 900 m valley, seasonal sky, Eros | 0.480 km² | 0.455 km² | -5.2% | ✗ |
-| §15 | Array, 900 m valley, seasonal sky, Torifune | 0.240 km² | 0.226 km² | -5.6% | ✗ |
-| §15 | Array, 900 m, per tier, Itokawa | 0.430 km² | 0.423 km² | -1.7% | ✓ |
+| §15 | Array, 900 m valley, constant sky, Itokawa | 0.760 km² | 0.756 km² | -0.5% | ✓ |
+| §15 | Array, 900 m valley, constant sky, Eros | 0.840 km² | 0.840 km² | +0.0% | ✓ |
+| §15 | Array, 900 m valley, constant sky, Torifune | 0.420 km² | 0.418 km² | -0.4% | ✓ |
+| §15 | Array, 900 m valley, constant sky, Apophis | 0.320 km² | 0.317 km² | -0.8% | ✓ |
+| §15 | Array, 900 m valley, seasonal sky, 1 AU | 0.140 km² | 0.143 km² | +2.4% | ✓ |
+| §15 | Array, 900 m valley, seasonal sky, Itokawa | 0.410 km² | 0.409 km² | -0.1% | ✓ |
+| §15 | Array, 900 m valley, seasonal sky, Eros | 0.460 km² | 0.455 km² | -1.1% | ✓ |
+| §15 | Array, 900 m valley, seasonal sky, Torifune | 0.230 km² | 0.226 km² | -1.5% | ✓ |
+| §15 | Array, 900 m, per tier, Itokawa | 0.420 km² | 0.423 km² | +0.7% | ✓ |
 | §15 | Array, 900 m, per tier, Eros | 0.470 km² | 0.470 km² | -0.0% | ✓ |
-| §15 | Array, 900 m, per tier, Torifune | 0.240 km² | 0.234 km² | -2.6% | ✓ |
+| §15 | Array, 900 m, per tier, Torifune | 0.230 km² | 0.234 km² | +1.7% | ✓ |
 | §15 | Array, 900 m, per tier, Apophis 2029 | 0.260 km² | 0.255 km² | -2.0% | ✓ |
 | §15 | Array, 1.6 km valley, seasonal sky, Eros | 1.45 km² | 1.44 km² | -0.8% | ✓ |
 | §15 | Array, 1.6 km, per tier, Eros | 1.51 km² | 1.48 km² | -1.7% | ✓ |

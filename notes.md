@@ -2,7 +2,7 @@
 
 Back-of-the-envelope design study for a family of self-replicating space habitats: steel tori spun for artificial gravity, built from asteroid materials by a factory in the central hub, inhabited by humans, plants and animals.
 
-All numbers are first-order estimates. Assumptions are listed in each section and collected at the end for later revision. The changelog (section 20) tracks how the design evolved.
+All numbers are first-order estimates. Assumptions are listed in each section and collected at the end for later revision. The changelog (section 20) tracks how the design evolved. The parametric model in `habitat_model/` (`plan.md` §1) recomputes the main tables from one assumptions file and ranks the assumptions by impact; `reports/validation.md` lists where it and these notes differ, and `structure_model/` holds the first structural results (`plan.md` §2).
 
 **Guiding principles (adopted):**
 
@@ -46,15 +46,15 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | **Total** | **~11.9 Mt** | **~40 Mt** | **~105 Mt** |
 | Mass per m² of floor | ~37 t | ~40 t | ~43 t |
 | Mined per torus (S-type + C-type) | ~12 + ~5–8 Mt | ~40 + ~27 Mt | ~150–180 + ~100 Mt |
-| Valley lighting, daily average (sulfur lamps; ~15 mol/m²/day on the floor with the light-box ceiling) | ~55 MW | ~166 MW | ~410 MW |
+| Valley lighting, daily average (sulfur lamps; ~15 mol/m²/day on the floor with the light-box ceiling) | ~53 MW | ~166 MW | ~410 MW |
 | Farm ring at ~0.4 r: three tiers, crops per tier | ~9 ha | ~29 ha | ~70 ha |
 | People fed, 1 / 2 / 3 tiers lit (conservative yields) | ~1,000 / ~2,000 / ~3,050 | ~3,250 / ~6,500 / ~9,750 | ~7,900 / ~15,800 / ~23,700 |
 | Floor per person, 1 / 2 / 3 tiers lit | ~310 / ~155 / ~103 m² | ~310 / ~155 / ~103 m² | ~310 / ~155 / ~103 m² |
 | Farm lighting, per tier lit | ~32 MW | ~102 MW | ~247 MW |
-| Solar needed: valley + other loads, + per tier lit | ~60 + ~32 MW | ~180 + ~102 MW | ~440 + ~247 MW |
+| Solar needed: valley + other loads, + per tier lit | ~57 + ~32 MW | ~180 + ~102 MW | ~440 + ~247 MW |
 | Plain rim solar, for comparison | ~34 MW | ~110 MW | ~270 MW |
-| Despun solar array at 1 AU (sized to keep the habitat alive and fed when locked): valley + per tier lit | ~0.28 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
-| Despun array with three tiers lit | ~0.73 km² | ~2.3 km² | ~5.6 km² |
+| Despun solar array at 1 AU (sized to keep the habitat alive and fed when locked): valley + per tier lit | ~0.27 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
+| Despun array with three tiers lit | ~0.71 km² | ~2.3 km² | ~5.6 km² |
 
 | Stack of 900 m tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
@@ -63,9 +63,9 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Material mined | ~34 Mt | ~100 Mt |
 | Stack length (10–40 m gaps) | ~130–190 m | ~400–580 m |
 | People fed, 1 / 2 / 3 tiers lit | ~2,000 / ~4,000 / ~6,100 | ~6,000 / ~12,000 / ~18,300 |
-| Constant valley lighting load (sulfur) | ~110 MW | ~330 MW |
+| Constant valley lighting load (sulfur) | ~105 MW | ~315 MW |
 | Farm lighting, per tier lit | ~64 MW | ~190 MW |
-| Despun solar array at 1 AU: valley + per tier lit | ~0.55 + ~0.3 km² | ~1.7 + ~0.9 km² |
+| Despun solar array at 1 AU: valley + per tier lit | ~0.53 + ~0.3 km² | ~1.6 + ~0.9 km² |
 | Heat to reject with three tiers lit | ~310 MW | ~930 MW |
 | Radiator capacity of the two open ends (~285 K) | ~1.6 GW | ~1.6 GW |
 
@@ -323,7 +323,7 @@ Hydrogen by-product is useful as propellant or for reducing oxides.
 
 ### 5c. Mass model (adopted: rock jacket, cable spokes)
 
-Cable spokes of drawn steel wire (~1 GPa working stress) carry the rim's load to the hub (section 12). A uniform cable of length r holding a rim of mass M needs
+Cable spokes of drawn steel wire (~1 GPa working stress, a safety factor of ~2 on the strongest bridge wire; section 12) carry the rim's load to the hub (section 12). The tangent-chord net weighs the same as these radial spokes (section 12). A uniform cable of length r holding a rim of mass M needs
 
 ```
 M_spokes ≈ M · ρv² / (σ − ρv²/2)        (v = rim speed, ρ = 7,900 kg/m³, σ = 1 GPa)
@@ -505,8 +505,8 @@ Rock jacket and cable spokes (section 5c):
 | C-type per torus (sized by nitrogen) | ~5 Mt (~200 m) | ~27 Mt (~350 m) | ~100 Mt (~540 m) |
 | Tori per Ryugu-sized C-type (~450 Mt) | ~90 | ~17 | ~4.5, less than a six-stack |
 | S-type per torus | ~12 Mt, sized by the shield | ~40 Mt, shield and metal balanced | ~150–180 Mt, sized by the metal (~27 Mt) if H-like; ~2× for an L host, ~4× for LL, unless iron comes from the silicates |
-| Lighting (sulfur, daily average): valley + per farm tier lit | ~55 + ~32 MW | ~166 + ~102 MW | ~410 + ~247 MW |
-| Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.28 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
+| Lighting (sulfur, daily average): valley + per farm tier lit | ~53 + ~32 MW | ~166 + ~102 MW | ~410 + ~247 MW |
+| Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.27 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
 | Material mined per torus | ~17 Mt (1×) | ~67 Mt (~4×) | ~250–280 Mt (~15×) |
 
 **2.5 km (candidate, to decide):**
@@ -680,7 +680,8 @@ Every bulk material against what one 900 m torus's source bodies contain (~12 Mt
 
 Consequences:
 
-- **Spokes use high-carbon drawn (pearlitic) steel wire**, the steel of bridge cables and piano wire: ~1.8–2 GPa ultimate from iron and ~0.8% carbon. Carbonyl iron is naturally sulfur-free, so little manganese is needed. Maraging steel (~18% Ni, ~9% Co, ~5% Mo) fails the rule because molybdenum is ~1–2 ppm in chondritic material (~30 t per torus's source bodies against ~40 kt needed).
+- **Spokes use high-carbon drawn (pearlitic) steel wire**, the steel of bridge cables and piano wire: ~1.8–2 GPa ultimate from iron and ~0.8% carbon. Carbonyl iron is naturally sulfur-free, so little manganese is needed.
+- **The wire needs refined iron, not the metal grains as mined.** Wire steel tolerates almost no phosphorus (≤ ~0.02%), sulfur (≤ ~0.015%) or nickel (≤ ~0.05% in tire cord; more suppresses the pearlite), while chondritic metal holds ~9% nickel or more, with phosphides and troilite alongside. The carbonyl process (section 14) removes all three: nickel leaves at low pressure, and carbonyl iron is > 99.5% pure. Drawing wire from the separated metal directly is not an option. Maraging steel (~18% Ni, ~9% Co, ~5% Mo) fails the rule because molybdenum is ~1–2 ppm in chondritic material (~30 t per torus's source bodies against ~40 kt needed).
 - **Copper is used sparingly:** high-voltage power distribution, aluminium where practical (~0.85% of the C-type, but hard to reduce), iron or steel conductors for low-current runs, copper reserved for motors and magnetrons, careful recycling, and a leaching line for the dispersed copper (the same line that strips nickel and chromium from the soil clays).
 - Everything else passes comfortably; the remaining imports are true vitamins (semiconductors, LED materials if chosen).
 
@@ -788,8 +789,10 @@ spoke taper factor:       exp(ρv² / 2σ)   (1 GPa wire: 1.04 at 900 m, 1.07 at
 Spokes win in practice:
 
 1. **Wire is stronger than plate.** Drawn high-carbon (pearlitic) steel wire reaches ~1.8–2 GPa from iron and carbon alone, so ~1 GPa working stress halves the load-carrying mass.
-2. **Segment joints only seal and carry shear**, instead of carrying full hoop tension (~94 m² of steel at 1.6 km).
-3. **Incremental growth.** Hang segments in opposite pairs, each with its own pressure bulkheads, and spin up step by step. No closure support is needed.
+   - **Safety factor.** Bridge wire (~5 mm) comes in guaranteed classes of 1,570, 1,770 and 1,960 MPa; Akashi Kaikyō used ~1,770 MPa. 1 GPa is a factor of ~1.96 on the strongest class, at the low end of bridge practice (US guidelines call for action on existing cables below ~2.15; ~2.2–2.5 are the commonly quoted design values for new cables). Thinner wire is stronger (~2.25 GPa at ~1 mm, ~3.2–3.5 GPa for tire cord), so ~1 GPa is a factor of ~2.25 on ~1 mm wire. The spin load is steady and well known, and the spokes are in vacuum (no corrosion, no hydrogen embrittlement), which argue for a lower factor than bridges, which carry traffic and weather. **Adopted range: 800–1,200 MPa working stress; ~1 GPa means a factor of ~2 on bridge wire or thinner wire (proposed, to discuss).**
+   - **Creep.** Cold-drawn wire at half its strength relaxes ~5% in 1,000 h and about twice that in the long term; read as creep under constant load, a spoke stretches ~0.2 m (400 m torus), ~0.5 m (900 m), ~0.85 m (1.6 km) and ~1.3 m (2.5 km) over its life. The compliant joints need adjustable lengths of about a metre, or the chords are pre-stretched.
+2. **Segment joints only seal and carry shear** once the ring is closed, instead of carrying full hoop tension (~94 m² of steel at 1.6 km). During construction they carry ~1% of it (construction sequence, below).
+3. **Incremental growth.** Hang arcs of segments in opposite pairs, each with its own pressure bulkheads, and spin up step by step. No closure support is needed.
 4. **Strain compatibility.** A 500 MPa steel ring stretches ~0.25% (~2 m at 900 m, ~4 m at 1.6 km). Spokes pick up load anyway unless made compliant.
 
 | | 900 m | 1.6 km |
@@ -821,7 +824,9 @@ Spokes win in practice:
 Straight rim-to-rim chords pass just outside the hub, tangent to a circle slightly larger than its radius, so the chords outline a circular window (string-art pattern):
 
 - **No hub flange needed.** Radial spokes anchored on the hub would load its rim with hoop tension `F_total / 2π`, the same force the self-supporting rim would carry: ~12 m² / 0.08 Mt of steel at 900 m, ~45 m² / 0.5 Mt at 1.6 km.
-- **Almost no efficiency lost.** Each chord is only ~4° off radial at the rim (`sin θ ≈ r_hub/r_rim ≈ 0.07`), a ~0.2% loss.
+- **No mass lost.** Each chord is ~4.3° off radial at the rim (`sin θ = c/r ≈ 0.074`, with the tangent circle c at 1.1 × the hub radius, the same angle at every size), so it pulls the rim at only cos θ; but its length per anchor is r cos θ instead of r, so the net weighs the same as radial spokes, within 0.1% (an earlier estimate counted a ~0.2% loss). Tapering the chords to uniform stress saves only ~1% at 900 m, ~2% at 1.6 km and ~4% at 2.5 km: uniform cables are fine.
+- **The chords bow outward.** Across a chord the spin load is ω²c, so each chord bows away from the axis by ρω²cL²/2σ: ~2.3 m at 900 m, ~7 m at 1.6 km, ~18 m at 2.5 km. The window grows by as much; the crossings are laid out at the bowed positions.
+- **Loads.** With an anchor every 10 m of rim, each chord end carries ~96 MN at 900 m (~960 cm² of wire, a cable ~35 cm across) and ~170 MN at 1.6 km.
 - **Crossed lacing is built in**, carrying spin-up and docking torque.
 - **The hub floats in the net**, held centred by light stabilising lines, with compliant joints on the rigid elevator, pipe and power shafts.
 - **The window is the factory's space**: the hole left in the middle of the net is exactly where the factory and dock sit.
@@ -877,9 +882,15 @@ Ring segments (diameter = tube width < hub radius) leave through the parent's ax
 
 1. Build the child hub outside from panels.
 2. String the chord cable net.
-3. Hang segments in opposite pairs, each sealed behind its own bulkheads.
+3. Hang arcs of segments (at least ~4θr long, below) in opposite pairs, each sealed behind its own bulkheads.
 4. Spin up step by step as mass is added (water thrusters, ~3–4% of the habitat's mass).
 5. Close the ring and bring the child's factory online. Factory modules are sized to pass the dock, so the factory is the truly copied core.
+
+**A partial ring in the chord net (structural model, plan §2):**
+
+- **Arcs, not single segments.** A chord's far end lands 2θr off the point opposite (~134 m at 900 m, ~240 m at 1.6 km). So at each end of two opposite arcs, a zone 2θr long keeps only the chord whose far end lands on the other arc, and every anchor has a chord only if each arc spans at least ~4θr: **~270 m at 900 m** (about five 56 m segments, ~0.5 Mt with rock), ~480 m at 1.6 km, ~740 m at 2.5 km.
+- **The joints carry tension until the ring closes.** A single chord pulls its anchor along the rim with tan θ of its load; both end zones pull outward, so each arc carries ~2λω²c² along its length, **~1.1% of a self-supporting ring's hoop force** at every size: ~190 MN at 900 m (~0.4 m² of plate at 500 MPa), ~610 MN at 1.6 km, ~1.5 GN at 2.5 km at full spin, a quarter of that at half spin. Options: joints rated for it (a small steel cost), rock in the end zones only once the neighbouring arcs are hung, or building at partial spin.
+- **Imbalance moves the hub, not a bearing.** The partial ring spins freely about its centre of mass, so a mismatch between paired arcs shifts the hub off the spin axis: ~3.6 m for a 1% mismatch on the first pair of 900 m arcs, inside the ~6 m between the hub and the chords' tangent circle (~7.5 m of ~17 m at 2.5 km). Ballast corrects it as the ring grows.
 
 ---
 
@@ -901,7 +912,7 @@ Electric power for the sky, as a 24 h average, depends strongly on the lamp effi
 | Shade-tolerant forest (a dull overcast summer day) | ~10 mol/m²/day | ~83 W/m² | ~39 W/m² | ~27 / ~12 MW | ~83 / ~39 MW |
 | Meadows, gardens, most fruiting plants (a bright overcast day) | ~20 mol/m²/day | ~165 W/m² | ~77 W/m² | ~53 / ~25 MW | ~166 / ~77 MW |
 
-**Ceiling losses and the power sizing.** The habitat is sized at ~55 MW of sulfur lighting per 900 m torus on daily average (~25 MW with LEDs), ~166 MW (~77 MW) at 1.6 km. With the ~50% ceiling losses first assumed, that gave ~10 mol/m²/day; with the light-box ceiling (~25% losses) the same power gives **~15 mol/m²/day**, a level suited to a mixed landscape rather than only shade-tolerant forest.
+**Ceiling losses and the power sizing.** The habitat is sized at ~53 MW of sulfur lighting per 900 m torus on daily average (~25 MW with LEDs), ~166 MW (~77 MW) at 1.6 km. With the ~50% ceiling losses first assumed, that gave ~10 mol/m²/day; with the light-box ceiling (~25% losses) the same power gives **~15 mol/m²/day**, a level suited to a mixed landscape rather than only shade-tolerant forest.
 
 Dawn, dusk and seasonal day length are schedule settings.
 
@@ -948,13 +959,13 @@ Dawn, dusk and seasonal day length are schedule settings.
 
 ### Power
 
-- **Plain rims are not enough.** Panels on the rim, lit half of every rotation and averaging ~1/π of full sunlight, give ~34 MW (900 m) or ~110 MW (1.6 km) per torus, against ~60 MW / ~180 MW needed with sulfur lamps for the sky, ceiling losses and other loads, plus ~32 MW / ~102 MW per farm tier lit.
+- **Plain rims are not enough.** Panels on the rim, lit half of every rotation and averaging ~1/π of full sunlight, give ~34 MW (900 m) or ~110 MW (1.6 km) per torus, against ~57 MW / ~180 MW needed with sulfur lamps for the sky, ceiling losses and other loads, plus ~32 MW / ~102 MW per farm tier lit.
 - **Despun solar array on the hub (adopted; replaces the capless solar cylinder, section 17.28).** A flat array on a mast on the spin axis, beyond one end of the stack, its plane containing the axis. Sunlight always arrives perpendicular to the axis, so one rotation about the axis keeps it facing the Sun: relative to the habitat it turns at the spin rate (1 rpm at 900 m, 0.75 rpm at 1.6 km), relative to the stars once a year.
   - **About three times the power per m² of PV:** a sun-facing panel makes ~340 W/m² at 1 AU (25% PV), the spinning cylinder ~108 W/m². Silicon PV is a vitamin, so this also cuts the vitamin by about two thirds.
   - **One light rotating interface:** a slow, almost unloaded bearing. On the axis the array adds no centrifugal load, and sunlight pushes on it with only ~4.6 N per km². A magnetic bearing (iron and copper) avoids lubricants (the usual space lubricant, MoS₂, needs molybdenum, a vitamin). Two bearings, either able to carry the array, and a replaceable drive. Unlike the rejected counter-rotating designs (sections 17.4–17.6), there is no pressurized seal, no traffic and no heavy load.
   - **Power crosses the joint without contact:** a rotary transformer (AC across the gap, ~98–99%, iron and copper), the principle that carries megawatts in brushless generator exciters. Slip rings and roll rings wear; the ISS's solar rotary joint suffered bearing-race damage in 2007.
   - **Survival if it fails.** With cells on both faces, a locked array turns with the stack and still averages 2/π ≈ 64% of its output (1/π with one-sided cells). **It is sized so that, locked, it still delivers the habitat's whole need**, enough to keep it alive and fed through winter: ~1.57× the bare need (for the valley alone, **half the former cylinder's PV area**), with ~1.57× the need while tracking (spare for the factory, brighter gardens or food exports). The farm tiers lit are part of that need (section 13, farm rings). A locked array's output pulses with each turn, so it needs ~30 s of buffering (capacitors, or a small flywheel).
-  - **Sizes at 1 AU** (constant sky; section 15 gives the seasonal sizing by orbit): for the valley and other loads ~0.28 km² per 900 m torus (against ~0.55 km² of cylinder) and ~0.85 km² per 1.6 km torus, plus ~0.15 km² / ~0.48 km² per farm tier lit, so ~0.73 km² / ~2.3 km² with three tiers lit. A 900 m pair needs ~0.55 km² for its valleys (for example ~300 m along the axis × ~1.8 km across) and ~1.45 km² with three tiers lit (~800 m × ~1.8 km); a 900 m six-stack ~1.7 km² (~4.4 km² with three tiers); a 1.6 km six-stack ~5 km² (~14 km²). Thin-film panels plus structure at ~3 kg/m² come to ~0.8 kt per 900 m torus for the valley (against ~1.6 kt for the cylinder), ~2.2 kt with three tiers lit.
+  - **Sizes at 1 AU** (constant sky; section 15 gives the seasonal sizing by orbit): for the valley and other loads ~0.27 km² per 900 m torus (against ~0.55 km² of cylinder) and ~0.85 km² per 1.6 km torus, plus ~0.15 km² / ~0.48 km² per farm tier lit, so ~0.71 km² / ~2.3 km² with three tiers lit. A 900 m pair needs ~0.53 km² for its valleys (for example ~300 m along the axis × ~1.8 km across) and ~1.4 km² with three tiers lit (~800 m × ~1.8 km); a 900 m six-stack ~1.6 km² (~4.3 km² with three tiers); a 1.6 km six-stack ~5 km² (~14 km²). Thin-film panels plus structure at ~3 kg/m² come to ~0.8 kt per 900 m torus for the valley (against ~1.6 kt for the cylinder), ~2.1 kt with three tiers lit.
   - **It scales.** Its size is not tied to the stack's radius and pitch, so it simply grows further from the Sun (per 900 m torus at the survival sizing: ~0.65 km² at Mars and ~2 km² in the belt for the valley, plus ~0.35 / ~1.1 km² per farm tier lit). Only a sun-facing surface can concentrate: local thin-film mirrors can cut the PV area by the concentration ratio, and solar-thermal generators (Stirling or Brayton, ~25–35%) need no PV at all. This is what opens the outer system without nuclear (below).
   - **Placement.** The dock stays at the other end of the hub: ships can't dock at the despun mast without a rotating pressurized joint. The mast extends along the axis beyond the stack's end, so the stack doesn't shade the array. Seen along the axis the array is edge-on, blocking almost none of the radiator vent. Sunlight's push on a single array turns the spin axis by only ~0.002° a year, and since the push rotates with the Sun, it averages out to a tiny yearly wobble; the array's few kilotonnes add almost nothing to the transverse inertia.
   - **Maintenance** happens in microgravity on the array, reachable from the hub. Always facing the Sun, it has no thermal cycling (the cylinder had ~500,000 small swings a year). For major work the bearing is locked and the array keeps producing.
@@ -993,7 +1004,7 @@ Sunlight falls with the square of the distance:
 
 - **Near Earth first (adopted starting point).** Near-Earth asteroids include all the needed types: S-types (the most common), C-types such as Bennu and Ryugu, and some M-types. Staying near 1 AU avoids the belt's ~7× loss of sunlight.
 - **Spreading outward needs more collecting area or another power source.** A belt habitat needs ~7× the solar area per torus; the despun array simply grows (its size isn't tied to the stack). Nuclear options were investigated and rejected for now under the sourcing rule (section 17.22).
-- **Concentrators on the despun array (now possible, to discuss).** A 900 m torus needs ~240 MW of sunlight for its valley's ~60 MW at 25%, ~620 MW with three farm tiers lit (×1.57 with the survival sizing). Mirror areas below are for the valley; with three tiers lit they are ~2.6× larger. Collecting it further out with sun-tracking thin-film mirrors (~10–20 g/m², aluminium and carbon) on the despun array's mast, focused onto a smaller PV area or a solar-thermal generator:
+- **Concentrators on the despun array (now possible, to discuss).** A 900 m torus needs ~230 MW of sunlight for its valley's ~57 MW at 25%, ~620 MW with three farm tiers lit (×1.57 with the survival sizing). Mirror areas below are for the valley; with three tiers lit they are ~2.6× larger. Collecting it further out with sun-tracking thin-film mirrors (~10–20 g/m², aluminium and carbon) on the despun array's mast, focused onto a smaller PV area or a solar-thermal generator:
 
 | Location | Sunlight | Mirror area per torus | Film mass |
 |---|---|---|---|
@@ -1112,11 +1123,11 @@ NASA's Biomass Production Chamber found edible yields "slightly lower than expec
 
 | Per torus, at 1 AU | 900 m | 1.6 km | 2.5 km |
 |---|---|---|---|
-| Valley sky + other loads | ~60 MW | ~180 MW | ~440 MW |
+| Valley sky + other loads | ~57 MW | ~180 MW | ~440 MW |
 | + per farm tier lit | ~32 MW | ~102 MW | ~247 MW |
-| Total with 1 / 2 / 3 tiers lit | ~92 / ~124 / ~155 MW | ~282 / ~384 / ~486 MW | ~690 / ~935 / ~1,180 MW |
+| Total with 1 / 2 / 3 tiers lit | ~90 / ~122 / ~154 MW | ~282 / ~384 / ~486 MW | ~690 / ~935 / ~1,180 MW |
 | Despun array (survival sizing): valley + per tier | ~0.28 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
-| Despun array with 1 / 2 / 3 tiers lit | ~0.43 / ~0.58 / ~0.73 km² | ~1.3 / ~1.8 / ~2.3 km² | ~3.3 / ~4.4 / ~5.6 km² |
+| Despun array with 1 / 2 / 3 tiers lit | ~0.41 / ~0.56 / ~0.71 km² | ~1.3 / ~1.8 / ~2.3 km² | ~3.3 / ~4.4 / ~5.6 km² |
 | Radiating surface at ~285 K (two-sided panels: half) | ~16 ha + ~8.5 ha per tier | ~48 + ~27 ha | ~117 + ~66 ha |
 
 - **The survival rule covers the farm:** the array is sized so that, locked to the stack, it still lights the tiers that feed the population, and tracking it gives ~1.57× that, spare for the factory or for exporting food.
@@ -1185,9 +1196,9 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 
 | Stack | Heat to reject (sulfur lamps) | Capacity of the two end openings (~285 K) |
 |---|---|---|
-| 2 × 900 m | ~120 MW, + ~64 MW per farm tier lit (~310 MW with three) | ~1.6 GW (openings ~4.4 km²) |
-| 6 × 900 m | ~360 MW, + ~190 MW per tier lit (~930 MW with three) | ~1.6 GW |
-| Break-even, 900 m tori | ~27 tori with no farm lit; ~18 / ~13 / ~10–11 with 1 / 2 / 3 tiers lit | ~1.6 GW |
+| 2 × 900 m | ~115 MW, + ~64 MW per farm tier lit (~310 MW with three) | ~1.6 GW (openings ~4.4 km²) |
+| 6 × 900 m | ~345 MW, + ~190 MW per tier lit (~930 MW with three) | ~1.6 GW |
+| Break-even, 900 m tori | ~29 tori with no farm lit; ~18 / ~13 / ~10–11 with 1 / 2 / 3 tiers lit | ~1.6 GW |
 | 1.6 km tori | ~180 MW per torus, + ~102 MW per tier lit | ~5.3 GW (openings ~14 km²): break-even ~29 tori with no farm lit, ~11 with three tiers |
 
   - The opening area is fixed while heat grows with the number of tori. Without the farm the break-even falls near the stability limit; with three tiers lit, heat limits a stack to ~10–11 tori (~13 with two), still well above six. The gaps' side vents (~0.06–0.2 km² each at 900 m) add ~5–20% to a six-stack's capacity, not counted here.
@@ -1371,12 +1382,12 @@ The habitat adapts to its environment: the sky follows the host asteroid's seaso
 
 | Site | Sunlight at aphelion | 900 m valley, constant / seasonal sky | 900 m, + per farm tier lit | 1.6 km valley, constant / seasonal sky | 1.6 km, + per farm tier lit |
 |---|---|---|---|---|---|
-| 1 AU (reference) | 1× | 0.28 / 0.15 km² | 0.15 km² | 0.85 / 0.45 km² | 0.48 km² |
-| Apophis today | 0.83× | 0.34 / 0.18 km² | 0.18 km² | 1.0 / 0.55 km² | 0.57 km² |
-| Apophis after 2029 (approx.) | 0.58× | 0.5 / 0.27 km² | 0.26 km² | 1.5 / 0.8 km² | 0.82 km² |
-| Itokawa | 0.35× | 0.8 / 0.43 km² | 0.43 km² | 2.4 / 1.3 km² | 1.37 km² |
-| Eros | 0.32× | 0.9 / 0.48 km² | 0.47 km² | 2.65 / 1.45 km² | 1.51 km² |
-| Torifune | 0.63× | 0.44 / 0.24 km² | 0.24 km² | 1.35 / 0.71 km² | 0.76 km² |
+| 1 AU (reference) | 1× | 0.27 / 0.14 km² | 0.15 km² | 0.85 / 0.45 km² | 0.48 km² |
+| Apophis today | 0.83× | 0.32 / 0.17 km² | 0.18 km² | 1.0 / 0.55 km² | 0.57 km² |
+| Apophis after 2029 (approx.) | 0.58× | 0.46 / 0.25 km² | 0.26 km² | 1.5 / 0.8 km² | 0.82 km² |
+| Itokawa | 0.35× | 0.76 / 0.41 km² | 0.42 km² | 2.4 / 1.3 km² | 1.37 km² |
+| Eros | 0.32× | 0.84 / 0.46 km² | 0.47 km² | 2.65 / 1.45 km² | 1.51 km² |
+| Torifune | 0.63× | 0.42 / 0.23 km² | 0.23 km² | 1.35 / 0.71 km² | 0.76 km² |
 
 For example, a 900 m pair at Eros needs ~1.9 km² with one tier lit per torus and ~3.8 km² with three; a 1.6 km six-stack at Eros with two tiers lit needs ~27 km². With the seasonal sky halving the valley's share, food becomes the largest part of the array.
 
@@ -1826,7 +1837,7 @@ Status of the gaps identified so far:
 | Size | 900 m and 1.6 km shortlisted. **To decide:** 2.5 km / 100 s as a later candidate (section 8): structurally fine, limited by nitrogen (~100 Mt of C-type per torus) and slower replication |
 | Despun solar array | Adopted (section 13); ~2.6× larger with three farm tiers lit than for the valley alone. **Open:** bearing and drive redundancy, magnetic bearing design, a rotary transformer at 100 MW–GW scale, buffering the locked array's pulsing output, a second dock now that one hub end carries the array, concentrators for the outer system |
 | Heat rejection | Architecture chosen (coolant loops, radiators on the spokes between farm ring and rim, venting through the open ends and gaps, thermosiphon). With three farm tiers lit, heat limits a stack of 900 m tori to ~10–11 (~13 with two), still above six; sizing of loops open |
-| Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; **open:** logistics and factory throughput, now the pacing items |
+| Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~2.5× that from Ryugu to Eros (~21 PJ against ~8 PJ per 900 m torus, parametric model); **open:** logistics and factory throughput, now the pacing items |
 | Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under sulfur lamps costs ~31 kW of electricity per person with conservative yields (~18 kW at the best demonstrated), so each tier lit (~1,000 people per 900 m torus) needs ~32 MW and ~0.15 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under sulfur light at ~0.4 g; 915 MHz sources (~20% less power); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
 | Nitrogen | C-type sized by nitrogen again (~5 Mt per 900 m torus, ~27 Mt per 1.6 km torus at ~70% recovery); **open:** recovery from organics and ammonium salts |
 | Soil from C-type clays | **Open:** leaching nickel, chromium and salts (recovering the metals), microbial start-up |
@@ -1835,6 +1846,7 @@ Status of the gaps identified so far:
 | Habitat power balance | Architecture chosen (staggered tori, despun solar array at one hub end, sized so a locked array keeps the habitat alive; tracking it gives ~1.57× that, spare for the factory, brighter gardens or food exports; the farm tiers lit are part of the need, their share sized at aphelion, with a seasonal harvest and stored staples noted as an option); beamed power kept as a way to feed the hub factory from the industrial array (section 13) |
 | Lamps | Direction chosen (non-rotating sulfur bulbs, light pipes, central 915 MHz sources); **open:** bulbs at kW scale and 915 MHz, source lifetime, waveguide losses and plant spacing, cathode materials |
 | Jacket thermal control | Resolved by the rock jacket; only water-filled parts must stay inside the warm envelope |
+| Spokes and cable net | Wire, net and spin-up checked (section 12): ~1 GPa is a safety factor of ~2 on 1,960 MPa bridge wire or more on thinner wire, from carbonyl-refined iron; the chord net weighs the same as radial spokes; a partial ring is hung in arcs of ≥ ~4θr whose joints carry ~1% of the hoop force until closure. **To decide:** the safety factor. **Open:** finite-element model of a tube segment (checking the r^2.3 hull and frames), the hub's stabilising lines, wire drawn from refined asteroid iron (Earth test) |
 | Stack stiffness | **Open:** bending modes of the shared hub and rim links must stay well above the spin rate |
 | Farm rings | Chosen (section 13): electric, three tiers ~2.5 m apart in each torus's plane at ~0.4 r, the same sulfur lamps and light pipes as the valley, built for the highest density, tiers lit as the array allows; radiators between farm ring and rim. The sun-fed ring with hub mirrors is superseded (17.29). **Open:** crop trials (yields, dwarf varieties, ~0.4 g), the farm's atmosphere (pressure, CO₂, gas exchange with the valleys), shielding against workers' dose, light-pipe layout and heat at 2.5 m tier spacing, automation |
 | Diet | Working diet proposed (section 13): ~93% from the farm, ~7% from the valley, ~100 g of protein a day. **Open:** fat only ~11% of calories (more soybeans, flax or nuts), vitamin B12 by fermentation, variety and acceptance, crop trials for lentils and flax under lamps |
@@ -1859,13 +1871,15 @@ Status of the gaps identified so far:
 
 ## 19. Assumptions to revisit
 
+These are the inputs of the parametric model (`habitat_model/assumptions.toml`), each with a range, source and status. Ranked by impact (`reports/sensitivity.md`), the ones that move the results most are C-type nitrogen recovery, C-type baking energy, PV efficiency, free metal in the host rock, light on the crops and the shield's areal density.
+
 - 80/20 N₂/O₂ reference; 70 kPa / 29% O₂ design atmosphere.
 - Cometary NH₃ at ~1% of ice by mass (optimistic; ~0.5–0.8% by number is typical); Bennu-like C-type with ~6.4 wt% recoverable water and ~0.24 wt% N.
 - Shielding at ~11 t/m² of compacted crushed rock (~2 t/m³), equivalent to 7 t/m² of water, for 20 mSv/yr (deep space, no magnetosphere).
 - Mass model (section 5c): uniform cable spokes at ~1 GPa working stress carrying the rim; hull and frames scaled as r^2.3 from the 900 m and 1.6 km estimates; S-type metal ~12–18%; 2.5 km figures extrapolated.
 - S-type body: ordinary-chondrite-like, rubble pile ~2 t/m³; ~12–18% recoverable metal assumed in the sizing tables (H-like), ~9 wt% for L and ~4–5 wt% for LL hosts (section 10); C-type nitrogen recovery ~70%.
 - Near-Earth location (~1 AU), as a conservative starting point like 1 g.
-- Steel plate at 500 MPa working stress (SF 2), ρ = 7,900 kg/m³; wire at ~1 GPa working stress; CFRP at 1,000 MPa, ρ = 1,600 kg/m³.
+- Steel plate at 500 MPa working stress (SF 2), ρ = 7,900 kg/m³; wire at ~1 GPa working stress (range 800–1,200 MPa: a safety factor of ~2 on 1,960 MPa bridge wire, more on thinner wire; section 12); CFRP at 1,000 MPa, ρ = 1,600 kg/m³.
 - Circular tube cross-section with diameter = floor width; thin-shell approximations (poor for 400–900 m with a 5.5–7 m jacket).
 - Hub, dock and factory mass as rough guesses.
 - Soil 1.6 t/m³, regolith 1.8 t/m³, fill 1 m.
@@ -1882,6 +1896,14 @@ Status of the gaps identified so far:
 ## 20. Changelog
 
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
+
+**28 October 2026**
+- **Parametric system model** (`habitat_model/`, `plan.md` §1): reproduced 185 of 197 checked figures within 5%, and the rest were rounding. Corrected here where the notes were more than ~5% off (now 191 of 197; the 6 left are explained in `reports/validation.md`), mainly the 900 m valley's sky and other loads (~53 + ~5 MW, ~57 MW in all, not ~60), so the 900 m arrays are ~4–6% smaller (~0.27 km² for the valley at 1 AU, ~0.71 km² with three tiers lit; section 15's 900 m columns) and the heat break-even with no farm lit is ~29 tori, not ~27. Also noted: the water need doesn't scale with the floor (section 7), and section 5c's "water + air" counts the soil's water and the water electrolysed for O₂ twice (~0.05 Mt at 900 m).
+- **Validation plan re-ordered** by the model's sensitivity ranking: structure, radiation transport, stack dynamics, second tier, heat rejection; C-type nitrogen recovery and baking energy, the top two inputs, become Earth tests.
+- **Wire and safety factor** (section 12; `structure_model/`): ~1 GPa working stress is a factor of ~2 on the strongest bridge wire, at the low end of bridge practice, or ~2.25 on ~1 mm wire; range 800–1,200 MPa. The factor of safety is to decide. Spokes creep ~0.5–1.3 m over their life.
+- **Wire needs carbonyl-refined iron** (section 10): wire steel tolerates almost no nickel, phosphorus or sulfur, and chondritic metal has ~9%+ nickel.
+- **Tangent-chord net corrected** (section 12): no ~0.2% loss, it weighs the same as radial spokes; tapering saves only 1–4%; chords bow 2–18 m outward.
+- **Construction sequence corrected** (section 12): arcs of at least ~4θr (~270 m at 900 m) hung in opposite pairs, not single segments; their joints carry ~1% of a full ring's hoop force until the ring closes.
 
 **27 October 2026**
 - **Torifune (2001 CC21) added as a candidate host** (section 15): Sq-type, L-chondrite-like, ~465 m (~100 Mt if the larger size estimates hold), visited by Hayabusa2 on 5 July 2026. It has the mildest orbit of the candidates (0.63–1.54× sunlight, a ~1.05-year year), room for ~6 tori of 900 m by free metal, and is cheap to reach from Earth and Itokawa, but poorly aligned with Ryugu and Bennu. Added to the candidate, transfer and seasonal-sizing tables; possible site for a first 900 m pair (proposed).
@@ -2008,6 +2030,15 @@ How the design evolved, newest first. Entries before 22 October 2026 come from e
 
 - Mond process — Ni(CO)₄ formation at 50–60 °C, decomposition at 220–250 °C (§5a, §14): https://en.wikipedia.org/wiki/Mond_process
 - Iron pentacarbonyl — industrial formation at 5–30 MPa and 150–200 °C, carbonyl iron, toxicity (§5a, §14): https://en.wikipedia.org/wiki/Iron_pentacarbonyl
+- Carbonyl iron powder patent — reduced grades > 99.5% Fe, < 0.1% C, < 0.01% N (§10): https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/6309620
+- The full list for the wire (strength classes, safety factors, impurity limits, relaxation) is in `structure_model/README.md`; the main ones:
+  - Tokyo Rope, suspension-bridge wire catalogue — 1,570 / 1,770 / 1,960 MPa classes (§12): https://www.tokyorope.co.jp/english/product/catalog/pdf/scs.pdf
+  - JSCE (1995) — Akashi Kaikyō wire at 180 kgf/mm² (§12): https://www.jstage.jst.go.jp/article/jscej1984/1995/528/1995_528_57/_article/-char/en
+  - Ohio DOT (2013), cable strength evaluation — NCHRP 534 action level of 2.15 (§12): https://ftp.dot.state.oh.us/PUB/Districts/D02/Programmatic/September%202025/LUC-116431%20%20LUC-2-18.62%20NSTM%20Inspection%20and%20Load%20Rating/2013%20Cable%20Strength%20Evaluation%20Report.pdf
+  - Kobelco Technology Review No. 30 — tire cord and saw wire up to ~4 GPa (§12): https://www.kobelco.co.jp/english/ktr/pdf/ktr_30/062-065.pdf
+  - US 4,854,032 (Bekaert) — strength rising as wire gets thinner (§12): https://patents.google.com/patent/US4854032
+  - The influence of phosphorus and sulphur on the deformability of high-carbon wire (§10): https://wirenet.org/product/the-influence-of-phosphorus-and-sulphur-contents-on-the-plastic-deformability-of-high-carbon-steel-wire/
+  - Periodica Polytechnica (BME) — relaxation of cold-drawn wire (§12): https://pp.bme.hu/ci/article/download/4056/3161/7814
 
 ### Micrometeoroids
 
@@ -2082,4 +2113,4 @@ How the design evolved, newest first. Entries before 22 October 2026 come from e
 
 ### Still unsourced (first-principles estimates or general knowledge)
 
-Rotation, floor area, gas laws, stoichiometry, hoop-stress and spoke models, spin stability condition, radiator and conduction estimates, Coriolis effect: derived here from standard physics. Not yet backed by a specific source: steel plate and drawn-wire strengths, maraging steel composition, LED die and phosphor quantities, LED lifetime, ceiling light losses, nickel-iron battery performance, M-type metal fraction and density, soil and regolith densities, rim speed comfort limit (< 2 rpm), light requirements of shade and meadow plants, overcast-sky brightness and its overhead-to-horizon ratio, magnesium oxide reflectance, light-box efficiency, C-type processing energy (~1–2 MJ/kg), solar particle event arrival direction, Bennu's size and mass, taro and loʻi practice, mirror delivery efficiency and facet mass (17.29), protected-aluminium reflectance, city population densities, edible yields per mol for soybean, lentils, berries and flax (estimates), food energy per gram of the crops, the working diet's protein and fat, the farm's light delivery (~85%), tier spacing and ring mass.
+Rotation, floor area, gas laws, stoichiometry, hoop-stress and spoke models, tangent-chord net and partial-ring loads, spin stability condition, radiator and conduction estimates, Coriolis effect: derived here from standard physics. Not yet backed by a specific source: steel plate strength, the design safety factors of new bridge cables (~2.2–2.5, commonly quoted), maraging steel composition, LED die and phosphor quantities, LED lifetime, ceiling light losses, nickel-iron battery performance, M-type metal fraction and density, soil and regolith densities, rim speed comfort limit (< 2 rpm), light requirements of shade and meadow plants, overcast-sky brightness and its overhead-to-horizon ratio, magnesium oxide reflectance, light-box efficiency, C-type processing energy (~1–2 MJ/kg), solar particle event arrival direction, Bennu's size and mass, taro and loʻi practice, mirror delivery efficiency and facet mass (17.29), protected-aluminium reflectance, city population densities, edible yields per mol for soybean, lentils, berries and flax (estimates), food energy per gram of the crops, the working diet's protein and fat, the farm's light delivery (~85%), tier spacing and ring mass.

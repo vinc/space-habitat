@@ -54,7 +54,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
 - [x] JSON export for the 3D model's stats panel
 
-**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 185 of 197 checked figures within 5%, the rest rounding in the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, sections 2–6 re-ordered by it (structure, radiation, stack dynamics, second tier, heat).
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 191 of 197 checked figures within 5% after correcting the notes (`reports/validation.md`); ranking in `reports/sensitivity.md`, sections 2–6 re-ordered by it (structure, radiation, stack dynamics, second tier, heat).
 
 **Done when:** every key table in the notes is reproduced or corrected, and the assumptions are ranked by impact.
 
