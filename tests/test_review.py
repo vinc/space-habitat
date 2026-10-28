@@ -106,24 +106,72 @@ class TestCavity(unittest.TestCase):
         self.p = params(load())
         self.d = Design(radius_m=900, n_tori=6, tiers_lit=3)
         self.r = evaluate(self.p, self.d)
+        self.g, self.h = self.r["geometry"], self.r["heat"]
 
     def test_sparse_panels_nearly_all_escape(self):
-        e = cavity.escape_probability(self.r["geometry"], 6, 1e-4, 0.9, side_gaps=False, n_rays=4000)
-        self.assertGreater(e["escape"], 0.99)
-        self.assertEqual(e["unresolved"], 0)
+        for scene in (cavity.main_scene(self.g, 6), cavity.farm_scene(self.g, 6)):
+            e = cavity.escape_probability(scene, 1e-4, 0.9, n_rays=4000)
+            self.assertGreater(e["escape"], 0.99)
+            self.assertEqual(e["unresolved"], 0)
 
     def test_never_beats_the_ideal_limit(self):
         # A black body at the panels' temperature can't push more through the openings than they pass.
-        c = cavity.check(params(load(), radiator_emissivity=1.0), self.d, self.r["geometry"], self.r["heat"]["stack"],
-                         side_gaps=False, n_rays=6000)
+        c = cavity.check_main(params(load(), radiator_emissivity=1.0), self.d, self.g, self.h, n_rays=6000)
         for point in c["curve"]:
             self.assertLessEqual(point["output"], 1.03 * c["ideal_limit"])
 
     def test_six_stack_three_tiers(self):
-        c = cavity.check(self.p, self.d, self.r["geometry"], self.r["heat"]["stack"], side_gaps=False)
-        self.assertGreater(c["margin"], 1)                 # still feasible
-        self.assertLess(c["margin"], self.r["heat"]["margin"])  # but less than the ideal margin
-        self.assertGreater(c["needed"]["panel_area"], c["ideal_panel_area"])
+        main = cavity.check_main(self.p, self.d, self.g, self.h)
+        farm = cavity.check_farm(self.p, self.d, self.g, self.h)
+        self.assertGreater(main["margin"], 1)
+        self.assertLess(main["margin"], self.h["margin"])            # below the ideal margin
+        self.assertGreater(main["needed"]["panel_area"], main["ideal_panel_area"])
+        self.assertGreater(farm["margin"], 1)
+        self.assertGreater(farm["needed"]["panel_area"], farm["ideal_panel_area"])
+
+
+class TestFarmSection(unittest.TestCase):
+    """The farm rings form their own section on the shared hub (farm-section layout)."""
+
+    def setUp(self):
+        self.p = params(load())
+
+    def test_sections_add_up(self):
+        r = evaluate(self.p, Design(radius_m=900, n_tori=6, tiers_lit=3))
+        g, h, pw = r["geometry"], r["heat"], r["power"]
+        self.assertAlmostEqual(g["stack_length"], g["main_length"] + g["farm_section_gap"] + g["farm_length"])
+        self.assertAlmostEqual(h["main_stack"] / (6 * pw["valley"]), 1)
+        self.assertAlmostEqual(h["farm_stack"] / (6 * 3 * pw["farm_per_tier"]), 1)
+        self.assertAlmostEqual(h["stack"] / (h["main_stack"] + h["farm_stack"]), 1)
+
+    def test_farm_heat_leaves_the_main_drum(self):
+        for tiers in (0, 3):
+            h = evaluate(self.p, Design(radius_m=900, n_tori=6, tiers_lit=tiers))["heat"]
+            self.assertAlmostEqual(h["break_even_tori"], h["capacity"] / h["main_per_torus"])
+        one = evaluate(self.p, Design(radius_m=900, n_tori=6, tiers_lit=1))["heat"]["margin"]
+        three = evaluate(self.p, Design(radius_m=900, n_tori=6, tiers_lit=3))["heat"]["margin"]
+        self.assertAlmostEqual(one, three)
+
+    def test_light_farm_section_keeps_stability(self):
+        st = evaluate(self.p, Design(radius_m=900, n_tori=6))["stability"]
+        self.assertAlmostEqual(st["whole_inertia_ratio"], st["inertia_ratio"], delta=0.02)
+        self.assertEqual(st["whole_max_tori"], st["max_tori"])
+
+    def test_farm_spokes_air_and_nitrogen(self):
+        base = evaluate(self.p, Design(radius_m=900, n_tori=1))
+        m, mat = base["mass"], base["materials"]
+        self.assertLess(m["farm_spokes"], 0.02 * m["farm_ring"])        # light spokes at ~38 m/s
+        self.assertGreater(m["farm_n2"], 0)
+        low = evaluate(params(load(), farm_pressure_kpa=30), Design(radius_m=900, n_tori=1))
+        self.assertLess(low["mass"]["farm_n2"], m["farm_n2"])
+        self.assertLess(low["materials"]["c_type"], mat["c_type"])
+        self.assertGreater(mat["metal_needed"], m["steel"] * (1 + self.p.hub_factory_metal_frac))
+
+    def test_coupling_is_partial(self):
+        g = evaluate(self.p, Design(radius_m=900, n_tori=6))["geometry"]
+        c = cavity.coupling(g, 6, n_rays=50000)
+        self.assertGreater(c["main_to_farm"], 0.1)
+        self.assertLess(c["main_to_farm"], 0.5)
 
 
 class TestTraceBudget(unittest.TestCase):

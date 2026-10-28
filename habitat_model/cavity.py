@@ -1,35 +1,74 @@
-"""Preliminary radiative exchange in the drum between hub and tori (plan §6, brought forward).
+"""Preliminary radiative exchange, per section, by Monte Carlo ray tracing (plan §6).
 
-The ideal limit (heat.py) treats the two end openings as black bodies at the radiator
-temperature. Here the radiators are finite panels, and their radiation has to find its way
-out of the drum, by Monte Carlo ray tracing:
+Each section is a "scene" along the spin axis, from z = 0 to its length:
 
-- the drum: the space from the hub (radius r_hub) out to the inner edge of the tori's
-  envelopes (radius R_d), from z = 0 to the stack length L along the spin axis;
-- escape paths: the two end openings (z = 0, z = L), and optionally the side gaps between
-  neighbouring envelopes (rays reaching R_d between two envelopes leave the drum);
-- radiator panels: two-sided, in each torus plane, on the spokes between the farm ring and
-  R_d, facing along the axis, covering a fraction f of that annulus (each crossing of the
-  plane meets a panel with probability f); emissivity eps, diffuse;
-- the farm rings (cylinder bands at ~0.4 r, 0.9 w wide), the hub and the envelopes' inner
-  faces: insulated (the rock jacket is a near-perfect insulator), so they absorb and
-  re-emit diffusely all they receive;
-- all panels at one temperature, so radiation one panel sends to another is no net gain:
-  the net output is eps sigma T^4 A_panels times the probability that an emitted ray
-  escapes before it is absorbed by a panel.
+- main section: the drum between the hub and the tori's envelopes (radius R_d), with the
+  valleys' radiator panels in each torus plane, on the spokes from radiator_inner out to R_d.
+  Escape through the two end openings and, optionally, the side gaps between envelopes (rays
+  reaching R_d between two envelopes leave); the envelopes' inner faces are walls;
+- farm section: an open stack of farm rings (cylinder bands at the farm radius, the farm
+  width wide), with the farm's radiator panels in each farm-ring plane, on the farm spokes
+  from just outside the farm rings out to farm_radiator_outer. Nothing encloses it: rays
+  escape through its ends or once they head outward beyond everything.
 
-Not included: sunlight entering through the gaps, spokes and cables, the despun array
-and dock, the envelopes' rounded shape (taken as a cylinder at R_d), and the actual
-radiator layout; the sink is taken at ~0 K.
+In both: panels are two-sided, face along the axis and cover a fraction f of their annulus
+(each crossing of a plane meets a panel with probability f), with emissivity eps, diffuse;
+the hub and the rings are insulated (absorb and re-emit diffusely all they receive); all
+panels are at one temperature, so the net output is eps sigma T^4 A_panels times the
+probability that an emitted ray escapes before it is absorbed by a panel.
+
+Each section is modelled on its own, with its ends open. Their interaction (each section's
+end facing the other across the gap) is estimated separately by `coupling`, as the final
+step that puts the sections together.
+
+Not included: sunlight entering through the gaps, spokes and cables, the despun array and
+dock, the envelopes' rounded shape (taken as a cylinder at R_d), and the actual radiator
+layout; the sink is taken at ~0 K.
 """
 
 import math
+from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 
 from .heat import radiator_flux
 
 EPS = 1e-6
+
+
+@dataclass(frozen=True)
+class Scene:
+    planes: tuple              # z of each panel plane
+    length: float              # the section spans 0..length
+    hub: float                 # hub radius (insulated cylinder)
+    band: tuple                # (r_in, r_out) of the panel annuli
+    drum: Optional[float] = None          # outer wall radius (main section), None: open
+    envelope_half: float = 0.0            # half-length of each envelope band on the wall
+    side_gaps: bool = False               # wall gaps let rays out
+    ring_radius: Optional[float] = None   # insulated ring bands around each plane (farm rings)
+    ring_half: float = 0.0
+    open_radius: Optional[float] = None   # open scenes: beyond this, moving outward, a ray is gone
+
+    @property
+    def panel_annulus(self):
+        return math.pi * (self.band[1] ** 2 - self.band[0] ** 2)
+
+
+def main_scene(geo, n, side_gaps=False):
+    pitch = geo["pitch"]
+    return Scene(planes=tuple((k + 0.5) * pitch for k in range(n)), length=n * pitch, hub=geo["hub_radius"],
+                 band=(geo["radiator_inner"], geo["drum_radius"]), drum=geo["drum_radius"],
+                 envelope_half=geo["envelope_radius"], side_gaps=side_gaps)
+
+
+def farm_scene(geo, n):
+    fp = geo["farm_pitch"]
+    ring_outer = geo["farm_radius"] + geo["farm_height"]
+    outer = max(geo["farm_radiator_outer"], ring_outer + 1.0)
+    return Scene(planes=tuple((k + 0.5) * fp for k in range(n)), length=n * fp, hub=geo["hub_radius"],
+                 band=(ring_outer, outer), ring_radius=geo["farm_radius"] + geo["farm_height"] / 2,
+                 ring_half=geo["farm_width"] / 2, open_radius=outer + 1.0)
 
 
 def _diffuse(normal, rng):
@@ -58,38 +97,34 @@ def _cylinder_roots(pos, d, radius):
     return t1, t2
 
 
-def _first_in_band(pos, d, t1, t2, pitch, n_bands, half_width):
-    """Smallest positive root whose z falls within a band centred on a torus plane ((k + 1/2) pitch)."""
+def _first_in_band(pos, d, t1, t2, planes, half_width):
+    """Smallest positive root whose z falls within half_width of one of the planes."""
     best = np.full(len(pos), np.inf)
     for t in (t2, t1):  # t1 <= t2: checked last, so it wins when both qualify
         z = pos[:, 2] + np.where(np.isfinite(t), t, 0.0) * d[:, 2]
-        k = np.clip(np.floor(z / pitch), 0, n_bands - 1)
-        in_band = (t > EPS) & np.isfinite(t) & (np.abs(z - (k + 0.5) * pitch) <= half_width)
+        near = np.min(np.abs(z[:, None] - planes[None, :]), axis=1)
+        in_band = (t > EPS) & np.isfinite(t) & (near <= half_width)
         best = np.where(in_band, t, best)
     return best
 
 
-def escape_probability(geo, n_tori, coverage, emissivity, side_gaps=True, n_rays=20000, seed=0, max_steps=5000):
+def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_steps=5000):
     rng = np.random.default_rng(seed)
-    pitch, r_hub, r_drum = geo["pitch"], geo["hub_radius"], geo["drum_radius"]
-    length = n_tori * pitch
-    planes = (np.arange(n_tori) + 0.5) * pitch
-    env = geo["envelope_radius"]
-    farm_r = geo["farm_radius"]
-    farm_half = geo["farm_width"] / 2
-    r_in = geo["farm_radius"] + geo["farm_height"]
+    planes = np.array(scene.planes)
+    n_planes = len(planes)
+    r_in, r_out = scene.band
 
     # Emission: uniform over the panel annuli, either face, cosine-weighted.
     n = n_rays
-    k = rng.integers(0, n_tori, n)
-    rr = np.sqrt(rng.uniform(r_in ** 2, r_drum ** 2, n))
+    k = rng.integers(0, n_planes, n)
+    rr = np.sqrt(rng.uniform(r_in ** 2, r_out ** 2, n))
     ph = rng.uniform(0, 2 * math.pi, n)
     pos = np.stack([rr * np.cos(ph), rr * np.sin(ph), planes[k]], axis=1)
     side = np.where(rng.random(n) < 0.5, 1.0, -1.0)
     d = _diffuse(np.stack([np.zeros(n), np.zeros(n), side], axis=1), rng)
     pos = pos + EPS * 10 * d
 
-    fate = np.zeros(n, dtype=int)   # 0 alive, 1 escaped by an end, 2 escaped by a gap, 3 absorbed
+    fate = np.zeros(n, dtype=int)   # 0 alive, 1 escaped by an end, 2 escaped sideways, 3 absorbed
     for _ in range(max_steps):
         alive = fate == 0
         if not alive.any():
@@ -98,20 +133,23 @@ def escape_probability(geo, n_tori, coverage, emissivity, side_gaps=True, n_rays
         m = len(p)
         dz = v[:, 2]
         safe_dz = np.where(np.abs(dz) > 1e-12, dz, 1e-12)
-        t_end = np.where(dz > 0, (length - p[:, 2]) / safe_dz, -p[:, 2] / safe_dz)
+        t_end = np.where(dz > 0, (scene.length - p[:, 2]) / safe_dz, -p[:, 2] / safe_dz)
         t_end = np.where(np.abs(dz) > 1e-12, t_end, np.inf)
         tp = (planes[None, :] - p[:, 2:3]) / safe_dz[:, None]
         tp = np.where((tp > EPS) & (np.abs(dz)[:, None] > 1e-12), tp, np.inf)
-        plane_idx = np.argmin(tp, axis=1)
-        t_plane = tp[np.arange(m), plane_idx]
-        _, t_out = _cylinder_roots(p, v, r_drum)
-        t_out = np.where(t_out > EPS, t_out, np.inf)
-        t_hub, _ = _cylinder_roots(p, v, r_hub)
+        t_plane = tp[np.arange(m), np.argmin(tp, axis=1)]
+        t_hub, _ = _cylinder_roots(p, v, scene.hub)
         t_hub = np.where(t_hub > EPS, t_hub, np.inf)
-        f1, f2 = _cylinder_roots(p, v, farm_r)
-        t_farm = _first_in_band(p, v, f1, f2, pitch, n_tori, farm_half)
+        outer_radius = scene.drum if scene.drum is not None else scene.open_radius
+        _, t_out = _cylinder_roots(p, v, outer_radius)
+        t_out = np.where(t_out > EPS, t_out, np.inf)
+        if scene.ring_radius is not None:
+            f1, f2 = _cylinder_roots(p, v, scene.ring_radius)
+            t_ring = _first_in_band(p, v, f1, f2, planes, scene.ring_half)
+        else:
+            t_ring = np.full(m, np.inf)
 
-        times = np.stack([t_end, t_plane, t_out, t_hub, t_farm], axis=1)
+        times = np.stack([t_end, t_plane, t_out, t_hub, t_ring], axis=1)
         event = np.argmin(times, axis=1)
         t = times[np.arange(m), event]
         hit = p + t[:, None] * v
@@ -125,7 +163,7 @@ def escape_probability(geo, n_tori, coverage, emissivity, side_gaps=True, n_rays
         # Panel planes: semi-transparent within the radiator band.
         on_plane = event == 1
         r_hit = np.hypot(hit[:, 0], hit[:, 1])
-        meets = on_plane & (r_hit >= r_in) & (r_hit <= r_drum) & (rng.random(m) < coverage)
+        meets = on_plane & (r_hit >= r_in) & (r_hit <= r_out) & (rng.random(m) < coverage)
         absorbed = meets & (rng.random(m) < emissivity)
         new_fate[absorbed] = 3
         reflect = meets & ~absorbed
@@ -134,79 +172,129 @@ def escape_probability(geo, n_tori, coverage, emissivity, side_gaps=True, n_rays
             normal[:, 2] = -np.sign(v[reflect, 2])
             new_d[reflect] = _diffuse(normal, rng)
 
-        # Outer boundary: envelope (insulated) or side gap.
+        # Outer boundary: the drum's wall (envelopes, gaps), or open space.
         outer = event == 2
-        kz = np.clip(np.floor(hit[:, 2] / pitch), 0, n_tori - 1).astype(int)
-        in_env = np.abs(hit[:, 2] - planes[kz]) <= env
-        gap = outer & ~in_env
-        if side_gaps:
-            new_fate[gap] = 2
-            wall = outer & in_env
+        if scene.drum is None:
+            new_fate[outer] = 2
         else:
-            wall = outer
-        if wall.any():
-            new_d[wall] = _diffuse(-radial[wall], rng)
+            near = np.min(np.abs(hit[:, 2][:, None] - planes[None, :]), axis=1)
+            in_env = near <= scene.envelope_half
+            if scene.side_gaps:
+                new_fate[outer & ~in_env] = 2
+                wall = outer & in_env
+            else:
+                wall = outer
+            if wall.any():
+                new_d[wall] = _diffuse(-radial[wall], rng)
 
         hub = event == 3
         if hub.any():
             new_d[hub] = _diffuse(radial[hub], rng)
 
-        farm = event == 4
-        if farm.any():
-            back = -np.sign(np.einsum("ij,ij->i", v[farm], radial[farm]))[:, None] * radial[farm]
-            new_d[farm] = _diffuse(back, rng)
+        ring = event == 4
+        if ring.any():
+            back = -np.sign(np.einsum("ij,ij->i", v[ring], radial[ring]))[:, None] * radial[ring]
+            new_d[ring] = _diffuse(back, rng)
 
         idx = np.flatnonzero(alive)
         fate[idx] = new_fate
         pos[idx] = hit + EPS * 10 * new_d
         d[idx] = new_d
-    unresolved = int((fate == 0).sum())
     return {
         "escape": float(((fate == 1) | (fate == 2)).mean()),
         "escape_ends": float((fate == 1).mean()),
-        "escape_gaps": float((fate == 2).mean()),
-        "unresolved": unresolved / n,
+        "escape_sides": float((fate == 2).mean()),
+        "unresolved": float((fate == 0).mean()),
     }
 
 
-def check(p, d, geo, heat_load_w, side_gaps=True, n_rays=20000, seed=0, coverages=None):
-    """Panel coverage needed to reject heat_load_w from the whole stack, and the most the drum can reject."""
+def check(p, scene, heat_load_w, n_rays=20000, seed=0, coverages=None, ideal_limit=None):
+    """Panel coverage needed to reject heat_load_w from a section, and the most it can reject."""
     flux = radiator_flux(p.radiator_temp_k)
     eps = p.radiator_emissivity
-    r_in = geo["farm_radius"] + geo["farm_height"]
-    annulus = math.pi * (geo["drum_radius"] ** 2 - r_in ** 2)
     coverages = coverages or (0.02, 0.05, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0)
     curve = []
     for f in coverages:
-        e = escape_probability(geo, d.n_tori, f, eps, side_gaps, n_rays, seed)
-        area = 2 * f * annulus * d.n_tori          # emitting area, both faces
+        e = escape_probability(scene, f, eps, n_rays, seed)
+        area = 2 * f * scene.panel_annulus * len(scene.planes)   # emitting area, both faces
         curve.append({"coverage": f, "panel_area": area / 2, "escape": e["escape"],
-                      "escape_gaps": e["escape_gaps"], "output": eps * flux * area * e["escape"]})
-    ideal = 2 * geo["end_opening"] * flux
+                      "escape_ends": e["escape_ends"], "escape_sides": e["escape_sides"],
+                      "output": eps * flux * area * e["escape"]})
     best = max(curve, key=lambda c: c["output"])
+    # Share of the escaping radiation that leaves through the ends (half of it through each).
+    ends_share = best["escape_ends"] / best["escape"] if best["escape"] else 0.0
     needed = None
-    for lo, hi in zip(curve, curve[1:]):
-        if lo["output"] < heat_load_w <= hi["output"]:
-            s = (heat_load_w - lo["output"]) / (hi["output"] - lo["output"])
-            needed = {k: lo[k] + s * (hi[k] - lo[k]) for k in ("coverage", "panel_area", "escape")}
-            break
-    if needed is None and curve[0]["output"] >= heat_load_w:
-        needed = {k: curve[0][k] for k in ("coverage", "panel_area", "escape")}
+    if heat_load_w <= curve[0]["output"]:
+        needed = {k: curve[0][k] * heat_load_w / curve[0]["output"] if k == "panel_area" else curve[0][k]
+                  for k in ("coverage", "panel_area", "escape")}
+        needed["coverage"] = curve[0]["coverage"] * heat_load_w / curve[0]["output"]
+    else:
+        for lo, hi in zip(curve, curve[1:]):
+            if lo["output"] < heat_load_w <= hi["output"]:
+                s = (heat_load_w - lo["output"]) / (hi["output"] - lo["output"])
+                needed = {k: lo[k] + s * (hi[k] - lo[k]) for k in ("coverage", "panel_area", "escape")}
+                break
     return {
         "heat_load": heat_load_w,
-        "ideal_limit": ideal,
+        "ideal_limit": ideal_limit,
         "curve": curve,
         "max_output": best["output"],
-        "max_vs_ideal": best["output"] / ideal,
-        "margin": best["output"] / heat_load_w,
-        "needed": needed,                     # None: the drum can't reject the load
+        "max_vs_ideal": best["output"] / ideal_limit if ideal_limit else None,
+        "margin": best["output"] / heat_load_w if heat_load_w else math.inf,
+        "needed": needed,                     # None: the section can't reject the load
+        "ends_share": ends_share,
         "ideal_panel_area": heat_load_w / (eps * flux) / 2,
-        "side_gaps": side_gaps,
     }
 
 
-def stack_limit(p, design, side_gaps=False, n_rays=4000, max_tori=40):
-    """Most tori whose heat the drum can still reject (same size, tiers lit and gaps)."""
+def check_main(p, d, geo, heat, side_gaps=False, n_rays=20000):
+    return check(p, main_scene(geo, d.n_tori, side_gaps), heat["main_stack"], n_rays,
+                 ideal_limit=heat["capacity"])
+
+
+def check_farm(p, d, geo, heat, n_rays=20000):
+    return check(p, farm_scene(geo, d.n_tori), heat["farm_stack"], n_rays)
+
+
+def coupling(geo, n, n_rays=200000, seed=0):
+    """The whole stack: how much each section's facing end sees of the other across the gap.
+
+    Main -> farm: of the radiation leaving the main drum's farm-end opening, the share that meets
+    the farm section (its rings, or enters within their radius along its length) instead of
+    open space. Farm -> main: of the radiation leaving the farm section's near end, the share that
+    enters the main drum's opening. Both sections run at the same radiator temperature, so what
+    one sends into the other is not lost, but it is not rejected either.
+    """
+    rng = np.random.default_rng(seed)
+    hub, drum = geo["hub_radius"], geo["drum_radius"]
+    rf_in, rf_out = geo["farm_radius"], geo["farm_radius"] + geo["farm_height"]
+    gap, farm_len = geo["farm_section_gap"], n * geo["farm_pitch"]
+
+    def lambertian(r_lo, r_hi, size):
+        rho = np.sqrt(rng.uniform(r_lo ** 2, r_hi ** 2, size))
+        ph = rng.uniform(0, 2 * math.pi, size)
+        x = np.stack([rho * np.cos(ph), rho * np.sin(ph)], 1)
+        u1, u2 = rng.random(size), rng.random(size)
+        s, c, a = np.sqrt(u1), np.sqrt(1 - u1), 2 * math.pi * u2
+        return x, np.stack([s * np.cos(a), s * np.sin(a)], 1), c
+
+    # Main -> farm.
+    x, dxy, dz = lambertian(hub, drum, n_rays)
+    meets = np.zeros(n_rays, bool)
+    for z in np.linspace(gap, gap + farm_len, 80):
+        q = x + dxy * (z / dz)[:, None]
+        meets |= np.hypot(q[:, 0], q[:, 1]) <= rf_out
+    # Farm -> main: from the farm section's near end (its whole cross-section out to its radiators).
+    outer = max(geo["farm_radiator_outer"], rf_out)
+    x, dxy, dz = lambertian(hub, outer, n_rays)
+    q = x + dxy * (gap / dz)[:, None]
+    rho = np.hypot(q[:, 0], q[:, 1])
+    enters = (rho >= hub) & (rho <= drum)
+    return {"main_to_farm": float(meets.mean()), "farm_to_main": float(enters.mean())}
+
+
+def stack_limit(p, design, section, n_rays=4000, max_tori=40):
+    """Most tori (and farm rings) whose heat the section can still reject, ends only for the main drum."""
     from dataclasses import replace
 
     from .model import evaluate
@@ -215,7 +303,11 @@ def stack_limit(p, design, side_gaps=False, n_rays=4000, max_tori=40):
     for n in range(1, max_tori + 1):
         d = replace(design, n_tori=n)
         r = evaluate(p, d)
-        if check(p, d, r["geometry"], r["heat"]["stack"], side_gaps, n_rays)["margin"] < 1:
+        if section == "main":
+            c = check_main(p, d, r["geometry"], r["heat"], side_gaps=False, n_rays=n_rays)
+        else:
+            c = check_farm(p, d, r["geometry"], r["heat"], n_rays=n_rays)
+        if c["margin"] < 1:
             break
         best = n
     return best
@@ -233,12 +325,21 @@ def study(p, n_rays=8000):
     for label, radius, n, tiers in STUDY:
         d = Design(radius_m=radius, n_tori=n, tiers_lit=tiers)
         r = evaluate(p, d)
-        load = r["heat"]["stack"]
+        g, h = r["geometry"], r["heat"]
+        main = check_main(p, d, g, h, side_gaps=False, n_rays=n_rays)
+        farm = check_farm(p, d, g, h, n_rays=n_rays)
+        c = coupling(g, n)
         rows.append({
-            "label": label, "load": load, "ideal": r["heat"]["capacity"],
-            "ideal_panels": load / (p.radiator_emissivity * radiator_flux(p.radiator_temp_k)) / 2,
-            "ends": check(p, d, r["geometry"], load, side_gaps=False, n_rays=n_rays),
-            "gaps": check(p, d, r["geometry"], load, side_gaps=True, n_rays=n_rays),
-            "limit": stack_limit(p, d),
+            "label": label, "main_load": h["main_stack"], "farm_load": h["farm_stack"], "ideal": h["capacity"],
+            "main_ends": main,
+            "main_gaps": check_main(p, d, g, h, side_gaps=True, n_rays=n_rays),
+            "farm": farm,
+            "coupling": c,
+            # The whole stack, conservatively: what each section sends into the other counts as not
+            # rejected (one of the main drum's two ends faces the farm section).
+            "main_whole_margin": main["margin"] * (1 - main["ends_share"] / 2 * c["main_to_farm"]),
+            "farm_whole_margin": farm["margin"] * (1 - farm["ends_share"] / 2 * c["farm_to_main"]),
+            "main_limit": stack_limit(p, d, "main"),
+            "farm_limit": stack_limit(p, d, "farm"),
         })
     return rows

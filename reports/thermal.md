@@ -1,12 +1,12 @@
-# Heat rejection: ideal limit and preliminary radiative exchange
+# Heat rejection, per section: ideal limit and preliminary radiative exchange
 
-The ideal limit treats both end openings as black bodies at the radiator temperature. The radiative exchange model (`habitat_model/cavity.py`) traces rays from finite panels (emissivity and temperature from the assumptions) through the drum between hub and tori, with the hub, farm rings and the tori's inner faces insulated, and escape through the ends only or also through the side gaps. Panel areas are one face of two-sided panels.
+The **main section** (the tori) rejects the valleys' heat from radiators on the tori's spokes, in the drum between hub and tori; its ideal limit treats both end openings as black bodies at the radiator temperature. The **farm section** (one farm ring per torus, on its own spokes) rejects the farm tiers' heat from radiators on the farm spokes, in an open stack with nothing around it. Each is ray traced on its own (`habitat_model/cavity.py`: finite two-sided panels, emissivity and temperature from the assumptions, insulated hub and rings), then put together: the **coupling** is the share of each section's facing-end radiation that reaches the other across the gap, and the **whole-stack** margins count it as not rejected (conservative). Panel areas are one face of two-sided panels; the limits are the most tori (with their farm rings) each section can cool on its own, the main section through its ends only.
 
-| Stack, tiers lit | Heat (MW) | Ideal limit (GW) | Ideal margin | Drum maximum, ends only (GW) | Margin, ends only | Margin, ends + gaps | Panels, ideal (ha) | Panels needed, ends only (ha) | Max tori by heat, ends only |
-|---|---|---|---|---|---|---|---|---|---|
-| 900 m pair, 3 tiers | 307 | 1.6 | 5.3 | 1.2 | 3.8 | 3.9 | 45.6 | 49.5 | 8 |
-| 900 m six, 1 tier | 537 | 1.6 | 3.1 | 1.2 | 2.3 | 2.5 | 79.7 | 101 | 15 |
-| 900 m six, 2 tiers | 729 | 1.6 | 2.2 | 1.2 | 1.7 | 1.8 | 108 | 165 | 11 |
-| 900 m six, 3 tiers | 922 | 1.6 | 1.8 | 1.2 | 1.3 | 1.4 | 137 | 248 | 8 |
-| 1.6 km six, 2 tiers | 2,300 | 5.2 | 2.3 | 3.9 | 1.7 | 1.7 | 342 | 511 | 11 |
-| 1.6 km six, 3 tiers | 2,910 | 5.2 | 1.8 | 3.9 | 1.3 | 1.4 | 433 | 743 | 8 |
+| Stack, tiers lit | Main heat (MW) | Main, ideal margin | Main margin, ends only | Main margin, ends + gaps | Main panels needed (ha) | Main limit (tori) | Farm heat (MW) | Farm margin | Farm panels needed (ha) | Farm limit (rings) | Coupling main→farm / farm→main | Whole-stack margins main / farm |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 900 m pair, 3 tiers | 115 | 14 | 11 | 11 | 17.4 | 28 | 192 | 8.0 | 29.6 | ≥ 40 | 24% / 84% | 9.4 / 5.0 |
+| 900 m six, 1 tier | 344 | 4.8 | 3.9 | 4.2 | 58.6 | 28 | 192 | 11 | 30.0 | ≥ 40 | 29% / 84% | 3.3 / 7.7 |
+| 900 m six, 2 tiers | 344 | 4.8 | 3.9 | 4.2 | 58.6 | 28 | 385 | 5.3 | 62.7 | ≥ 40 | 29% / 84% | 3.3 / 3.8 |
+| 900 m six, 3 tiers | 344 | 4.8 | 3.9 | 4.2 | 58.6 | 28 | 577 | 3.6 | 100 | ≥ 40 | 29% / 84% | 3.3 / 2.6 |
+| 1.6 km six, 2 tiers | 1,090 | 4.8 | 3.9 | 4.0 | 184 | 28 | 1,220 | 5.1 | 198 | ≥ 40 | 29% / 86% | 3.3 / 3.6 |
+| 1.6 km six, 3 tiers | 1,090 | 4.8 | 3.9 | 4.0 | 184 | 28 | 1,820 | 3.4 | 318 | ≥ 40 | 29% / 86% | 3.3 / 2.4 |

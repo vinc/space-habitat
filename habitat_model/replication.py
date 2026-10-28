@@ -20,7 +20,7 @@ def compute(p, d, geo, mass, materials):
     processing = crushing + baking
 
     # The C-type is refined at its source; only the products are shipped (§15).
-    shipped = mass["n2"] + materials["water_to_source"] + p.organics_shipped_t_m2 * 1e3 * geo["floor_area"]
+    shipped = mass["n2"] + mass["farm_n2"] + materials["water_to_source"] + p.organics_shipped_t_m2 * 1e3 * geo["floor_area"]
     # An unknown delta-v (no value in the notes, none given) leaves shipping and the totals
     # unknown (None), not zero; the processing-only figures are then lower bounds.
     dv = d.delta_v_km_s if d.delta_v_km_s is not None else DELTA_V_KM_S.get((d.c_partner, d.site))

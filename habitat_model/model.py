@@ -17,7 +17,7 @@ def evaluate(p, d):
         "food": f,
         "power": pw,
         "heat": heat.compute(p, d, geo, pw),
-        "stability": stability.compute(p, d, geo),
+        "stability": stability.compute(p, d, geo, m["total"], m["farm_total"]),
         "replication": replication.compute(p, d, geo, m, mat),
     }
 

@@ -114,7 +114,8 @@ def main(argv=None):
 
 
 def design_cavity(p, d, results):
-    return cavity.check(p, d, results["geometry"], results["heat"]["stack"], side_gaps=False)
+    g, h = results["geometry"], results["heat"]
+    return (cavity.check_main(p, d, g, h, side_gaps=False), cavity.check_farm(p, d, g, h), cavity.coupling(g, d.n_tori))
 
 
 def write_reports(folder, assumptions, overrides, p, d, results):
