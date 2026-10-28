@@ -167,11 +167,50 @@ class TestFarmSection(unittest.TestCase):
         self.assertLess(low["materials"]["c_type"], mat["c_type"])
         self.assertGreater(mat["metal_needed"], m["steel"] * (1 + self.p.hub_factory_metal_frac))
 
-    def test_coupling_is_partial(self):
+    def test_farm_radiators_shade_the_drum(self):
+        # The farm radiators span most of the drum's farm end: with them, far fewer main rays escape.
         g = evaluate(self.p, Design(radius_m=900, n_tori=6))["geometry"]
-        c = cavity.coupling(g, 6, n_rays=50000)
-        self.assertGreater(c["main_to_farm"], 0.1)
-        self.assertLess(c["main_to_farm"], 0.5)
+        scene = cavity.assembled_scene(g, 6)
+        alone = cavity.escape_probability(cavity.main_scene(g, 6), 1.0, 0.9, n_rays=8000)["escape"]
+        bare = cavity.escape_probability(scene, (1.0, 0.0), 0.9, n_rays=8000, source=0)["escape"]
+        shaded = cavity.escape_probability(scene, (1.0, 1.0), 0.9, n_rays=8000, source=0)["escape"]
+        self.assertAlmostEqual(bare, alone, delta=0.02)            # the bare farm section barely matters
+        self.assertLess(shaded, 0.75 * alone)
+
+    def test_assembled_is_below_each_section_alone(self):
+        d = Design(radius_m=900, n_tori=6, tiers_lit=3)
+        r = evaluate(self.p, d)
+        g, h = r["geometry"], r["heat"]
+        a = cavity.check_assembled(self.p, d, g, h, n_rays=4000)
+        self.assertTrue(a["feasible"])
+        self.assertLess(a["main_margin"], cavity.check_main(self.p, d, g, h, n_rays=4000)["margin"])
+        self.assertLess(a["farm_margin"], cavity.check_farm(self.p, d, g, h, n_rays=4000)["margin"])
+
+    def test_short_farm_radiators_leave_no_margin(self):
+        # Within the declared range, the farm radiators' reach decides whether the stack can be cooled:
+        # at 0.6 r the six-stack with three tiers is at the edge.
+        d = Design(radius_m=900, n_tori=6, tiers_lit=3)
+        out = {}
+        for frac in (0.6, 1.4):
+            p = params(load(), farm_radiator_outer_frac=frac)
+            r = evaluate(p, d)
+            out[frac] = cavity.check_assembled(p, d, r["geometry"], r["heat"], n_rays=4000)
+        self.assertLess(out[0.6]["margin"], 1.2)
+        self.assertGreater(out[1.4]["margin"], 2 * out[0.6]["margin"])
+
+
+class TestStatsJson(unittest.TestCase):
+    def test_stack_stability_is_the_whole_stack(self):
+        # A light farm shell: the tori alone pass the 20% margin at 22 tori, the whole stack doesn't.
+        p, d = params(load(), farm_shell_m=0.02), Design(radius_m=900, n_tori=22)
+        r = evaluate(p, d)
+        st = r["stability"]
+        self.assertNotEqual(st["max_tori"], st["whole_max_tori"])
+        stack = report.stats_json(p, d, r)["stack"]
+        self.assertEqual(stack["inertia_ratio"], st["whole_inertia_ratio"])
+        self.assertEqual(stack["max_tori"], st["whole_max_tori"])
+        self.assertFalse(stack["inertia_stable"])
+        self.assertEqual(stack["main_max_tori"], st["max_tori"])
 
 
 class TestTraceBudget(unittest.TestCase):

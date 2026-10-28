@@ -135,10 +135,10 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: a 900 m six-stack with three tiers lit keeps ~3.3× margin in the drum and ~2.6× in the farm section, counting the sections' facing ends as lost (it was ~1.3× with the farm rings in the tori's planes), and heat no longer limits the stack (~28 tori against ~22 for stability).
+**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~2.4× margin in the drum and ~2.5× in the farm section at once (it was ~1.3× with the farm rings in the tori's planes). Heat limits the stack to ~17–18 tori of 900 m, just below stability (~22), and depends most on the farm radiators' reach, a guess: at 0.6 r three tiers lit leave no margin.
 
-- [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section) and their coupling across the gap
-- [ ] Farm section's radiators: reach (~1 r assumed), layout, and the coupling with the drum's farm end
+- [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
+- [ ] Farm section's radiators: reach (~1 r assumed; 0.6 r leaves no margin with three tiers lit), layout, and how much of the drum's farm end they may shade
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
 - [ ] Check that no direct sunlight reaches the radiators (Sun perpendicular to the axis, including through the gaps)
 - [ ] Coolant loops: thermosiphon sizing along the spokes, fluids (ammonia, water), pressure drops

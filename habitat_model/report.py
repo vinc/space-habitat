@@ -204,7 +204,7 @@ def summary(p, d, r, cavity_result=None):
         ["Ideal radiating surface, black body, lower bound (two-sided panels: half)", f"{num(h['radiating_surface'] / HA)} ha", f"{num(h['stack'] / h['flux'] / HA)} ha"],
     ])
     if cavity_result:
-        main, farm, c = cavity_result
+        main, farm, a = cavity_result
         out.append(f"\nPreliminary radiative exchange (ray tracing, emissivity {p.radiator_emissivity:g}), each section on its own:")
         for name, res in (("main section (drum, ends only)", main),
                           (f"farm section (open, radiators to {num(g['farm_radiator_outer'])} m)", farm)):
@@ -214,8 +214,9 @@ def summary(p, d, r, cavity_result=None):
                        + (f"needs {num(res['needed']['panel_area'] / HA)} ha of panels ({res['needed']['coverage']:.0%} of "
                           f"its radiator annuli), against {num(res['ideal_panel_area'] / HA)} ha ideally."
                           if res["needed"] else "**it can't reject its load.**"))
-        out.append(f"- together: {c['main_to_farm']:.0%} of what leaves the main drum's farm end meets the farm "
-                   f"section, and {c['farm_to_main']:.0%} of what leaves the farm section's near end enters the main drum.")
+        out.append(f"- the whole stack, traced together: margins of {num(a['main_margin'], 2)}× (main) and "
+                   f"{num(a['farm_margin'], 2)}× (farm) at {_coverage(a)} panel coverage, "
+                   + ("so both sections can be cooled." if a["feasible"] else "**so the stack can't be cooled.**"))
     section("Stability (rigid stack)", [
         ["I_axis / I_transverse, tori alone / whole stack", "",
          f"{num(st['inertia_ratio'])} / {num(st['whole_inertia_ratio'])} "
@@ -319,7 +320,11 @@ def trace_table(budget, design):
                              "Status", "Basis"], rows)]) + "\n"
 
 
-STACK_LIMIT_CAP = 40   # cavity.stack_limit stops searching here
+STACK_LIMIT_CAP = 40   # cavity.assembled_limit stops searching here
+
+
+def _coverage(a):
+    return f"{a['coverage'][0]:.0%} / {a['coverage'][1]:.0%}"
 
 
 def thermal_table(rows):
@@ -328,27 +333,55 @@ def thermal_table(rows):
 
     def limit(n):
         return f"≥ {n}" if n >= STACK_LIMIT_CAP else str(n)
+
+    def margin(x):
+        return num(x, 2) if x >= 1 else f"**{num(x, 2)}**"
     body = [[r["label"],
              num(r["main_load"] / MW), num(r["ideal"] / r["main_load"], 2), num(r["main_ends"]["margin"], 2),
-             num(r["main_gaps"]["margin"], 2), needed(r["main_ends"]), limit(r["main_limit"]),
-             num(r["farm_load"] / MW), num(r["farm"]["margin"], 2), needed(r["farm"]), limit(r["farm_limit"]),
-             f"{r['coupling']['main_to_farm']:.0%} / {r['coupling']['farm_to_main']:.0%}",
-             f"{num(r['main_whole_margin'], 2)} / {num(r['farm_whole_margin'], 2)}"] for r in rows]
+             num(r["main_gaps"]["margin"], 2), needed(r["main_ends"]),
+             num(r["farm_load"] / MW), num(r["farm"]["margin"], 2), needed(r["farm"]),
+             f"{margin(r['assembled']['main_margin'])} / {margin(r['assembled']['farm_margin'])}",
+             _coverage(r["assembled"]), limit(r["limit"])] for r in rows]
     return "\n".join([
-        "# Heat rejection, per section: ideal limit and preliminary radiative exchange", "",
+        "# Heat rejection, per section and assembled: ideal limit and preliminary radiative exchange", "",
         "The **main section** (the tori) rejects the valleys' heat from radiators on the tori's spokes, in the drum "
         "between hub and tori; its ideal limit treats both end openings as black bodies at the radiator temperature. "
         "The **farm section** (one farm ring per torus, on its own spokes) rejects the farm tiers' heat from "
-        "radiators on the farm spokes, in an open stack with nothing around it. Each is ray traced on its own "
+        "radiators on the farm spokes, in an open stack with nothing around it. Each is first ray traced on its own "
         "(`habitat_model/cavity.py`: finite two-sided panels, emissivity and temperature from the assumptions, "
-        "insulated hub and rings), then put together: the **coupling** is the share of each section's facing-end "
-        "radiation that reaches the other across the gap, and the **whole-stack** margins count it as not "
-        "rejected (conservative). Panel areas are one face of two-sided panels; the limits are the most tori "
-        "(with their farm rings) each section can cool on its own, the main section through its ends only.", "",
-        table(["Stack, tiers lit", "Main heat (MW)", "Main, ideal margin", "Main margin, ends only",
-               "Main margin, ends + gaps", "Main panels needed (ha)", "Main limit (tori)",
-               "Farm heat (MW)", "Farm margin", "Farm panels needed (ha)", "Farm limit (rings)",
-               "Coupling main→farm / farm→main", "Whole-stack margins main / farm"], body)]) + "\n"
+        "insulated hub and rings). Then the **whole stack** is traced as one scene: the drum, the gap and the farm "
+        "section with its radiators, with the tori's outer side facing the farm section as an insulated face. The "
+        "farm radiators shade the drum's farm end and the main radiators the farm section's near end, so the two "
+        "panel coverages are swept together and the assembled margins are those of the best pair (the one with "
+        "the best worse-of-the-two margin). Only the assembled check says whether a stack can be cooled; the "
+        "**limit** is the most tori (with their farm rings) the assembled stack can cool, the drum through its "
+        "ends only. Panel areas are one face of two-sided panels.", "",
+        table(["Stack, tiers lit", "Main heat (MW)", "Main, ideal margin", "Main alone, ends only",
+               "Main alone, ends + gaps", "Main alone, panels needed (ha)",
+               "Farm heat (MW)", "Farm alone", "Farm alone, panels needed (ha)",
+               "Assembled margins main / farm", "Assembled coverage main / farm", "Assembled limit (tori)"],
+              body)]) + "\n"
+
+
+def farm_sweep_table(result, assumptions):
+    name, rows = result
+    a = assumptions[name]
+    body = [[r["label"], f"{num(r['value'], 2)}{' (default)' if r['default'] else ''}",
+             num(r["farm"]["margin"], 2),
+             (num(r["assembled"]["farm_margin"], 2) if r["assembled"]["feasible"]
+              else f"**{num(r['assembled']['farm_margin'], 2)}**"),
+             (num(r["assembled"]["main_margin"], 2) if r["assembled"]["feasible"]
+              else f"**{num(r['assembled']['main_margin'], 2)}**"),
+             _coverage(r["assembled"]), "yes" if r["assembled"]["feasible"] else "**no**"] for r in rows]
+    return "\n".join([
+        f"# Farm radiators' reach: `{name}` across its range", "",
+        f"The farm radiators' outer radius ({a.status}, {num(a.low, 2)}–{num(a.high, 2)} of the floor radius) sets "
+        "the farm section's panel area and how much of the drum's farm end it shades. The one-at-a-time sweep "
+        "and the Monte Carlo can't see it (they use `evaluate`, which ray traces nothing, and their heat metric "
+        "is the main drum's ideal margin, which leaves the farm section out), so it is swept here with the "
+        "farm section alone and the assembled stack.", "",
+        table(["Stack, tiers lit", "Reach (× floor radius)", "Farm alone", "Assembled farm margin",
+               "Assembled main margin", "Assembled coverage main / farm", "Cools both?"], body)]) + "\n"
 
 
 def assumptions_table(assumptions):
@@ -380,8 +413,11 @@ def stats_json(p, d, r):
             "floor_ha": n * g["floor_area"] / HA, "mass_mt": n * m["total"] / MT, "mined_mt": n * mat["mined"] / MT,
             "length_m": g["stack_length"], "people": n * f["people"], "power_mw": n * pw["total"] / MW,
             "array_site_km2": n * pw["array_site"] / KM2, "heat_mw": h["stack"] / MW,
-            "heat_ideal_limit_mw": h["capacity"] / MW, "heat_ideal_margin": h["margin"],
-            "inertia_ratio": r["stability"]["inertia_ratio"], "max_tori": r["stability"]["max_tori"],
+            "heat_main_ideal_limit_mw": h["capacity"] / MW, "heat_main_ideal_margin": h["margin"],
+            # Stability of the whole stack (tori and farm section); the tori alone under main_*.
+            "inertia_ratio": r["stability"]["whole_inertia_ratio"], "max_tori": r["stability"]["whole_max_tori"],
+            "inertia_stable": r["stability"]["whole_stable"],
+            "main_inertia_ratio": r["stability"]["inertia_ratio"], "main_max_tori": r["stability"]["max_tori"],
             "energy_pj": None if r["replication"]["energy_stack"] is None else r["replication"]["energy_stack"] / PJ,
             "processing_energy_pj": n * r["replication"]["processing"] / PJ,
             "generation_time_yr": r["replication"]["generation_time_yr"],          # null when the delta-v is unknown

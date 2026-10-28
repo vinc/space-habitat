@@ -77,9 +77,9 @@ Eros (LL-like, ~6,700,000 Mt) supplies ~200,000 tori of this size by free metal;
 | Ideal radiating surface, black body, lower bound (two-sided panels: half) | 32.5 ha | 195 ha |
 
 Preliminary radiative exchange (ray tracing, emissivity 0.9), each section on its own:
-- main section (drum, ends only): rejects at most 1.37 GW (84% of its ideal limit), a margin of 4.0×; needs 58.3 ha of panels (5% of its radiator annuli), against 51.1 ha ideally.
-- farm section (open, radiators to 900 m): rejects at most 2.05 GW, a margin of 5.3×; needs 62.6 ha of panels (5% of its radiator annuli), against 57.2 ha ideally.
-- together: 29% of what leaves the main drum's farm end meets the farm section, and 84% of what leaves the farm section's near end enters the main drum.
+- main section (drum, ends only): rejects at most 1.36 GW (83% of its ideal limit), a margin of 4.0×; needs 58.4 ha of panels (5% of its radiator annuli), against 51.1 ha ideally.
+- farm section (open, radiators to 900 m): rejects at most 1.99 GW, a margin of 5.2×; needs 62.8 ha of panels (5% of its radiator annuli), against 57.2 ha ideally.
+- the whole stack, traced together: margins of 2.6× (main) and 2.9× (farm) at 100% / 35% panel coverage, so both sections can be cooled.
 
 ## Stability (rigid stack)
 

@@ -17,9 +17,10 @@ the hub and the rings are insulated (absorb and re-emit diffusely all they recei
 panels are at one temperature, so the net output is eps sigma T^4 A_panels times the
 probability that an emitted ray escapes before it is absorbed by a panel.
 
-Each section is modelled on its own, with its ends open. Their interaction (each section's
-end facing the other across the gap) is estimated separately by `coupling`, as the final
-step that puts the sections together.
+Each section is modelled on its own, with its ends open; then the whole stack is traced as one
+scene (`assembled_scene`: the drum, the gap, the farm section with its radiators, and the tori's
+outer side facing it), as the final step that puts the sections together. Only the assembled
+check says whether the stack can reject its heat.
 
 Not included: sunlight entering through the gaps, spokes and cables, the despun array and
 dock, the envelopes' rounded shape (taken as a cylinder at R_d), and the actual radiator
@@ -40,35 +41,63 @@ EPS = 1e-6
 @dataclass(frozen=True)
 class Scene:
     planes: tuple              # z of each panel plane
-    length: float              # the section spans 0..length
-    hub: float                 # hub radius (insulated cylinder)
-    band: tuple                # (r_in, r_out) of the panel annuli
-    drum: Optional[float] = None          # outer wall radius (main section), None: open
+    bands: tuple               # (r_in, r_out) of each plane's panel annulus
+    groups: tuple              # section of each plane: 0 main, 1 farm
+    length: float              # the scene spans 0..length; rays leaving it along the axis escape
+    hub: float                 # hub radius (insulated cylinder, the whole length)
+    drum: Optional[float] = None          # wall radius of the main section's drum, None: no drum
+    drum_span: tuple = (0.0, 0.0)         # z range of the drum wall
     envelope_half: float = 0.0            # half-length of each envelope band on the wall
     side_gaps: bool = False               # wall gaps let rays out
-    ring_radius: Optional[float] = None   # insulated ring bands around each plane (farm rings)
+    ring_radius: Optional[float] = None   # insulated ring bands around the farm planes
     ring_half: float = 0.0
-    open_radius: Optional[float] = None   # open scenes: beyond this, moving outward, a ray is gone
+    open_radius: Optional[float] = None   # moving outward beyond this, a ray is gone
+    face: Optional[tuple] = None          # (z, r_in, r_out): the tori's outer side, facing +z (insulated)
 
-    @property
-    def panel_annulus(self):
-        return math.pi * (self.band[1] ** 2 - self.band[0] ** 2)
+    def annulus(self, group):
+        """Panel annuli of one section, summed over its planes."""
+        return sum(math.pi * (b[1] ** 2 - b[0] ** 2) for b, g in zip(self.bands, self.groups) if g == group)
+
+
+def _section(planes, band, group):
+    planes = tuple(planes)
+    return dict(planes=planes, bands=(band,) * len(planes), groups=(group,) * len(planes))
 
 
 def main_scene(geo, n, side_gaps=False):
-    pitch = geo["pitch"]
-    return Scene(planes=tuple((k + 0.5) * pitch for k in range(n)), length=n * pitch, hub=geo["hub_radius"],
-                 band=(geo["radiator_inner"], geo["drum_radius"]), drum=geo["drum_radius"],
+    pitch, length = geo["pitch"], n * geo["pitch"]
+    return Scene(**_section(((k + 0.5) * pitch for k in range(n)), (geo["radiator_inner"], geo["drum_radius"]), 0),
+                 length=length, hub=geo["hub_radius"], drum=geo["drum_radius"], drum_span=(0.0, length),
                  envelope_half=geo["envelope_radius"], side_gaps=side_gaps)
+
+
+def _farm_band(geo):
+    ring_outer = geo["farm_radius"] + geo["farm_height"]
+    return ring_outer, max(geo["farm_radiator_outer"], ring_outer + 1.0)
 
 
 def farm_scene(geo, n):
     fp = geo["farm_pitch"]
-    ring_outer = geo["farm_radius"] + geo["farm_height"]
-    outer = max(geo["farm_radiator_outer"], ring_outer + 1.0)
-    return Scene(planes=tuple((k + 0.5) * fp for k in range(n)), length=n * fp, hub=geo["hub_radius"],
-                 band=(ring_outer, outer), ring_radius=geo["farm_radius"] + geo["farm_height"] / 2,
-                 ring_half=geo["farm_width"] / 2, open_radius=outer + 1.0)
+    band = _farm_band(geo)
+    return Scene(**_section(((k + 0.5) * fp for k in range(n)), band, 1), length=n * fp, hub=geo["hub_radius"],
+                 ring_radius=geo["farm_radius"] + geo["farm_height"] / 2, ring_half=geo["farm_width"] / 2,
+                 open_radius=band[1] + 1.0)
+
+
+def assembled_scene(geo, n):
+    """The whole stack: the main section's drum, the gap, then the open farm section, traced together.
+
+    Beyond the drum's farm end, the tori's outer side (from the drum out to the open radius) is an
+    insulated face: radiation heading back past the drum meets the tori, not open space.
+    """
+    main, farm = main_scene(geo, n), farm_scene(geo, n)
+    start = geo["main_length"] + geo["farm_section_gap"]
+    open_radius = max(farm.bands[0][1], geo["radius"] + geo["envelope_radius"]) + 1.0
+    return Scene(planes=main.planes + tuple(start + z for z in farm.planes), bands=main.bands + farm.bands,
+                 groups=main.groups + farm.groups, length=geo["stack_length"], hub=geo["hub_radius"],
+                 drum=main.drum, drum_span=main.drum_span, envelope_half=main.envelope_half,
+                 ring_radius=farm.ring_radius, ring_half=farm.ring_half, open_radius=open_radius,
+                 face=(geo["main_length"], main.drum, open_radius))
 
 
 def _diffuse(normal, rng):
@@ -108,16 +137,28 @@ def _first_in_band(pos, d, t1, t2, planes, half_width):
     return best
 
 
-def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_steps=5000):
+def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_steps=5000, source=None):
+    """Share of the rays emitted by the panels (of section `source`, or all) that escape.
+
+    coverage: one fraction for every plane, or one per section (indexed by group).
+    """
     rng = np.random.default_rng(seed)
     planes = np.array(scene.planes)
-    n_planes = len(planes)
-    r_in, r_out = scene.band
+    groups = np.array(scene.groups)
+    band_in = np.array([b[0] for b in scene.bands])
+    band_out = np.array([b[1] for b in scene.bands])
+    cover = np.atleast_1d(np.asarray(coverage, dtype=float))
+    cover = (np.full(groups.max() + 1, cover[0]) if cover.size == 1 else cover)[groups]
+    wall_planes = planes[groups == 0] if (groups == 0).any() else planes
+    ring_planes = planes[groups == 1] if (groups == 1).any() else planes
+    z_lo, z_hi = scene.drum_span
 
-    # Emission: uniform over the panel annuli, either face, cosine-weighted.
+    # Emission: uniform over the source's panel annuli, either face, cosine-weighted.
     n = n_rays
-    k = rng.integers(0, n_planes, n)
-    rr = np.sqrt(rng.uniform(r_in ** 2, r_out ** 2, n))
+    emitting = np.flatnonzero(groups == source) if source is not None else np.arange(len(planes))
+    weight = band_out[emitting] ** 2 - band_in[emitting] ** 2
+    k = emitting[rng.choice(len(emitting), n, p=weight / weight.sum())]
+    rr = np.sqrt(rng.uniform(band_in[k] ** 2, band_out[k] ** 2))
     ph = rng.uniform(0, 2 * math.pi, n)
     pos = np.stack([rr * np.cos(ph), rr * np.sin(ph), planes[k]], axis=1)
     side = np.where(rng.random(n) < 0.5, 1.0, -1.0)
@@ -131,27 +172,46 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
             break
         p, v = pos[alive], d[alive]
         m = len(p)
+        rows = np.arange(m)
         dz = v[:, 2]
-        safe_dz = np.where(np.abs(dz) > 1e-12, dz, 1e-12)
+        moving = np.abs(dz) > 1e-12
+        safe_dz = np.where(moving, dz, 1e-12)
         t_end = np.where(dz > 0, (scene.length - p[:, 2]) / safe_dz, -p[:, 2] / safe_dz)
-        t_end = np.where(np.abs(dz) > 1e-12, t_end, np.inf)
+        t_end = np.where(moving, t_end, np.inf)
         tp = (planes[None, :] - p[:, 2:3]) / safe_dz[:, None]
-        tp = np.where((tp > EPS) & (np.abs(dz)[:, None] > 1e-12), tp, np.inf)
-        t_plane = tp[np.arange(m), np.argmin(tp, axis=1)]
+        tp = np.where((tp > EPS) & moving[:, None], tp, np.inf)
+        plane_k = np.argmin(tp, axis=1)
+        t_plane = tp[rows, plane_k]
         t_hub, _ = _cylinder_roots(p, v, scene.hub)
         t_hub = np.where(t_hub > EPS, t_hub, np.inf)
-        outer_radius = scene.drum if scene.drum is not None else scene.open_radius
-        _, t_out = _cylinder_roots(p, v, outer_radius)
-        t_out = np.where(t_out > EPS, t_out, np.inf)
+        if scene.drum is not None:
+            _, t_drum = _cylinder_roots(p, v, scene.drum)
+            z_hit = p[:, 2] + np.where(np.isfinite(t_drum), t_drum, 0.0) * dz
+            t_drum = np.where((t_drum > EPS) & (z_hit >= z_lo - EPS) & (z_hit <= z_hi + EPS), t_drum, np.inf)
+        else:
+            t_drum = np.full(m, np.inf)
+        if scene.open_radius is not None:
+            _, t_open = _cylinder_roots(p, v, scene.open_radius)
+            t_open = np.where(t_open > EPS, t_open, np.inf)
+        else:
+            t_open = np.full(m, np.inf)
         if scene.ring_radius is not None:
             f1, f2 = _cylinder_roots(p, v, scene.ring_radius)
-            t_ring = _first_in_band(p, v, f1, f2, planes, scene.ring_half)
+            t_ring = _first_in_band(p, v, f1, f2, ring_planes, scene.ring_half)
         else:
             t_ring = np.full(m, np.inf)
+        if scene.face is not None:
+            fz, f_in, f_out = scene.face
+            t_face = np.where(moving, (fz - p[:, 2]) / safe_dz, np.inf)
+            q = p + np.where(np.isfinite(t_face), t_face, 0.0)[:, None] * v
+            r_face = np.hypot(q[:, 0], q[:, 1])
+            t_face = np.where((t_face > EPS) & (r_face >= f_in) & (r_face <= f_out), t_face, np.inf)
+        else:
+            t_face = np.full(m, np.inf)
 
-        times = np.stack([t_end, t_plane, t_out, t_hub, t_ring], axis=1)
+        times = np.stack([t_end, t_plane, t_drum, t_open, t_hub, t_ring, t_face], axis=1)
         event = np.argmin(times, axis=1)
-        t = times[np.arange(m), event]
+        t = times[rows, event]
         hit = p + t[:, None] * v
         new_fate = np.zeros(m, dtype=int)
         new_d = v.copy()
@@ -160,10 +220,11 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
 
         new_fate[event == 0] = 1
 
-        # Panel planes: semi-transparent within the radiator band.
+        # Panel planes: semi-transparent within their radiator band.
         on_plane = event == 1
         r_hit = np.hypot(hit[:, 0], hit[:, 1])
-        meets = on_plane & (r_hit >= r_in) & (r_hit <= r_out) & (rng.random(m) < coverage)
+        meets = (on_plane & (r_hit >= band_in[plane_k]) & (r_hit <= band_out[plane_k])
+                 & (rng.random(m) < cover[plane_k]))
         absorbed = meets & (rng.random(m) < emissivity)
         new_fate[absorbed] = 3
         reflect = meets & ~absorbed
@@ -172,29 +233,32 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
             normal[:, 2] = -np.sign(v[reflect, 2])
             new_d[reflect] = _diffuse(normal, rng)
 
-        # Outer boundary: the drum's wall (envelopes, gaps), or open space.
-        outer = event == 2
-        if scene.drum is None:
-            new_fate[outer] = 2
-        else:
-            near = np.min(np.abs(hit[:, 2][:, None] - planes[None, :]), axis=1)
+        # The drum's wall: envelopes, and gaps if they let rays out.
+        drum = event == 2
+        if drum.any():
+            near = np.min(np.abs(hit[:, 2][:, None] - wall_planes[None, :]), axis=1)
             in_env = near <= scene.envelope_half
             if scene.side_gaps:
-                new_fate[outer & ~in_env] = 2
-                wall = outer & in_env
-            else:
-                wall = outer
-            if wall.any():
-                new_d[wall] = _diffuse(-radial[wall], rng)
+                new_fate[drum & ~in_env] = 2
+                drum = drum & in_env
+            new_d[drum] = _diffuse(-radial[drum], rng)
 
-        hub = event == 3
+        new_fate[event == 3] = 2
+
+        hub = event == 4
         if hub.any():
             new_d[hub] = _diffuse(radial[hub], rng)
 
-        ring = event == 4
+        ring = event == 5
         if ring.any():
             back = -np.sign(np.einsum("ij,ij->i", v[ring], radial[ring]))[:, None] * radial[ring]
             new_d[ring] = _diffuse(back, rng)
+
+        face = event == 6
+        if face.any():
+            normal = np.zeros((face.sum(), 3))
+            normal[:, 2] = -np.sign(v[face, 2])
+            new_d[face] = _diffuse(normal, rng)
 
         idx = np.flatnonzero(alive)
         fate[idx] = new_fate
@@ -216,7 +280,7 @@ def check(p, scene, heat_load_w, n_rays=20000, seed=0, coverages=None, ideal_lim
     curve = []
     for f in coverages:
         e = escape_probability(scene, f, eps, n_rays, seed)
-        area = 2 * f * scene.panel_annulus * len(scene.planes)   # emitting area, both faces
+        area = 2 * f * sum(scene.annulus(g) for g in set(scene.groups))   # emitting area, both faces
         curve.append({"coverage": f, "panel_area": area / 2, "escape": e["escape"],
                       "escape_ends": e["escape_ends"], "escape_sides": e["escape_sides"],
                       "output": eps * flux * area * e["escape"]})
@@ -256,61 +320,67 @@ def check_farm(p, d, geo, heat, n_rays=20000):
     return check(p, farm_scene(geo, d.n_tori), heat["farm_stack"], n_rays)
 
 
-def coupling(geo, n, n_rays=200000, seed=0):
-    """The whole stack: how much each section's facing end sees of the other across the gap.
+GRID = (0.0, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0)
 
-    Main -> farm: of the radiation leaving the main drum's farm-end opening, the share that meets
-    the farm section (its rings, or enters within their radius along its length) instead of
-    open space. Farm -> main: of the radiation leaving the farm section's near end, the share that
-    enters the main drum's opening. Both sections run at the same radiator temperature, so what
-    one sends into the other is not lost, but it is not rejected either.
+
+def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_feasible=False):
+    """The whole stack, traced as one scene: can both sections reject their heat at once?
+
+    Each section's panels run at the same temperature, so what one absorbs from the other it sends back
+    (reciprocity): each section's net output is its own emission times the share of its rays that escape
+    the whole stack. The panel coverages of the two sections are swept on a grid (more farm panels
+    shade the main drum's farm end, more main panels shade the farm section's near end); the result
+    is the grid point with the best worse-of-the-two margin.
     """
-    rng = np.random.default_rng(seed)
-    hub, drum = geo["hub_radius"], geo["drum_radius"]
-    rf_in, rf_out = geo["farm_radius"], geo["farm_radius"] + geo["farm_height"]
-    gap, farm_len = geo["farm_section_gap"], n * geo["farm_pitch"]
-
-    def lambertian(r_lo, r_hi, size):
-        rho = np.sqrt(rng.uniform(r_lo ** 2, r_hi ** 2, size))
-        ph = rng.uniform(0, 2 * math.pi, size)
-        x = np.stack([rho * np.cos(ph), rho * np.sin(ph)], 1)
-        u1, u2 = rng.random(size), rng.random(size)
-        s, c, a = np.sqrt(u1), np.sqrt(1 - u1), 2 * math.pi * u2
-        return x, np.stack([s * np.cos(a), s * np.sin(a)], 1), c
-
-    # Main -> farm.
-    x, dxy, dz = lambertian(hub, drum, n_rays)
-    meets = np.zeros(n_rays, bool)
-    for z in np.linspace(gap, gap + farm_len, 80):
-        q = x + dxy * (z / dz)[:, None]
-        meets |= np.hypot(q[:, 0], q[:, 1]) <= rf_out
-    # Farm -> main: from the farm section's near end (its whole cross-section out to its radiators).
-    outer = max(geo["farm_radiator_outer"], rf_out)
-    x, dxy, dz = lambertian(hub, outer, n_rays)
-    q = x + dxy * (gap / dz)[:, None]
-    rho = np.hypot(q[:, 0], q[:, 1])
-    enters = (rho >= hub) & (rho <= drum)
-    return {"main_to_farm": float(meets.mean()), "farm_to_main": float(enters.mean())}
+    scene = assembled_scene(geo, d.n_tori)
+    flux, eps = radiator_flux(p.radiator_temp_k), p.radiator_emissivity
+    loads = (heat["main_stack"], heat["farm_stack"])
+    annuli = (scene.annulus(0), scene.annulus(1))
+    points = []
+    for fm in grid:
+        for ff in grid:
+            escape, output = [], []
+            for group, f in ((0, fm), (1, ff)):
+                e = escape_probability(scene, (fm, ff), eps, n_rays, seed, source=group)["escape"] if f else 0.0
+                escape.append(e)
+                output.append(eps * flux * 2 * f * annuli[group] * e)
+            margins = [o / load if load else math.inf for o, load in zip(output, loads)]
+            points.append({"coverage": (fm, ff), "panel_area": (fm * annuli[0], ff * annuli[1]),
+                           "escape": tuple(escape), "output": tuple(output),
+                           "margins": tuple(margins), "margin": min(margins)})
+            if stop_when_feasible and points[-1]["margin"] >= 1:
+                return _assembled(points, loads)
+    return _assembled(points, loads)
 
 
-def stack_limit(p, design, section, n_rays=4000, max_tori=40):
-    """Most tori (and farm rings) whose heat the section can still reject, ends only for the main drum."""
+def _assembled(points, loads):
+    best = max(points, key=lambda q: q["margin"])
+    return {"loads": loads, "points": points, "best": best, "margin": best["margin"],
+            "main_margin": best["margins"][0], "farm_margin": best["margins"][1], "coverage": best["coverage"],
+            "panel_area": best["panel_area"],     # one face, per section
+            "feasible": best["margin"] >= 1}
+
+
+def assembled_limit(p, design, n_rays=3000, max_tori=40):
+    """Most tori (with their farm rings) the whole stack can cool, both sections traced together."""
     from dataclasses import replace
 
     from .model import evaluate
 
-    best = 0
-    for n in range(1, max_tori + 1):
+    def ok(n):
         d = replace(design, n_tori=n)
         r = evaluate(p, d)
-        if section == "main":
-            c = check_main(p, d, r["geometry"], r["heat"], side_gaps=False, n_rays=n_rays)
-        else:
-            c = check_farm(p, d, r["geometry"], r["heat"], n_rays=n_rays)
-        if c["margin"] < 1:
-            break
-        best = n
-    return best
+        return check_assembled(p, d, r["geometry"], r["heat"], n_rays=n_rays, stop_when_feasible=True)["feasible"]
+
+    if not ok(1):
+        return 0
+    lo, hi = 1, max_tori                      # ok(lo); the margin falls as the stack grows
+    if ok(hi):
+        return hi
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        lo, hi = (mid, hi) if ok(mid) else (lo, mid)
+    return lo
 
 
 STUDY = (("900 m pair, 3 tiers", 900, 2, 3), ("900 m six, 1 tier", 900, 6, 1), ("900 m six, 2 tiers", 900, 6, 2),
@@ -326,20 +396,38 @@ def study(p, n_rays=8000):
         d = Design(radius_m=radius, n_tori=n, tiers_lit=tiers)
         r = evaluate(p, d)
         g, h = r["geometry"], r["heat"]
-        main = check_main(p, d, g, h, side_gaps=False, n_rays=n_rays)
-        farm = check_farm(p, d, g, h, n_rays=n_rays)
-        c = coupling(g, n)
         rows.append({
             "label": label, "main_load": h["main_stack"], "farm_load": h["farm_stack"], "ideal": h["capacity"],
-            "main_ends": main,
+            "main_ends": check_main(p, d, g, h, side_gaps=False, n_rays=n_rays),
             "main_gaps": check_main(p, d, g, h, side_gaps=True, n_rays=n_rays),
-            "farm": farm,
-            "coupling": c,
-            # The whole stack, conservatively: what each section sends into the other counts as not
-            # rejected (one of the main drum's two ends faces the farm section).
-            "main_whole_margin": main["margin"] * (1 - main["ends_share"] / 2 * c["main_to_farm"]),
-            "farm_whole_margin": farm["margin"] * (1 - farm["ends_share"] / 2 * c["farm_to_main"]),
-            "main_limit": stack_limit(p, d, "main"),
-            "farm_limit": stack_limit(p, d, "farm"),
+            "farm": check_farm(p, d, g, h, n_rays=n_rays),
+            "assembled": check_assembled(p, d, g, h, n_rays=n_rays),
+            "limit": assembled_limit(p, d),
         })
     return rows
+
+
+# The farm radiators' reach is a guess (assumptions.toml: farm_radiator_outer_frac), and it is the
+# farm section's dominant thermal uncertainty; the sensitivity sweep can't see it (no ray tracing in
+# `evaluate`), so it gets a sweep of its own.
+FARM_SWEEP = (("900 m six, 2 tiers", 900, 6, 2), ("900 m six, 3 tiers", 900, 6, 3))
+
+
+def farm_sweep(assumptions, overrides=None, n_rays=6000, name="farm_radiator_outer_frac", steps=5):
+    from .assumptions import params
+    from .design import Design
+    from .model import evaluate
+
+    a = assumptions[name]
+    values = [a.low + (a.high - a.low) * i / (steps - 1) for i in range(steps)]
+    rows = []
+    for label, radius, n, tiers in FARM_SWEEP:
+        d = Design(radius_m=radius, n_tori=n, tiers_lit=tiers)
+        for v in values:
+            p = params(assumptions, **{**(overrides or {}), name: v})
+            r = evaluate(p, d)
+            g, h = r["geometry"], r["heat"]
+            rows.append({"label": label, "value": v, "default": abs(v - a.value) < 1e-9,
+                         "farm": check_farm(p, d, g, h, n_rays=n_rays),
+                         "assembled": check_assembled(p, d, g, h, n_rays=n_rays)})
+    return name, rows
