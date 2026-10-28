@@ -8,11 +8,22 @@ segments of an arc are linked at their joints by springs along the rim (axial), 
 notes intend once the ring is closed ("joints only seal and carry shear"), so the hull
 doesn't take the load in hoop tension. The rim's centrifugal load, and each chord's own,
 are the external loads. Solving the displacement method (small displacements, in the
-rotating frame) gives every chord's tension and every joint's forces; chords can't push, so
-slack ones are removed and the system solved again. The residuals of each segment's force and
-moment balance are reported as a check.
+rotating frame) gives every chord's tension and every joint's forces. Chords can't push: the
+set of taut chords is iterated, in both directions, until it is exactly the set of stretched
+chords (T = k max(stretch, 0) for every chord, slack or not).
 
-Left out: the change of centrifugal load as parts move (second order), the chords' sag
+Three checks decide whether a stage is reported as resolved:
+- convergence of that taut set (no cycling);
+- each segment's force and moment balance, from the reconstructed chord and joint forces
+  (a large residual means the joints leave a mechanism);
+- kinematic validity: after removing the assembly's rigid motion, segment rotations must stay
+  below ROTATION_LIMIT and displacements below DISPLACEMENT_LIMIT x the radius, at the spin
+  rate reported. Beyond that the linear geometry (end positions, chord directions, the
+  centrifugal load, which changes to first order with the displacement) is no longer valid,
+  and the stage needs a geometrically nonlinear, prestressed analysis: it is left unresolved.
+
+Left out: the change of centrifugal load as parts move (first order in the displacement,
+bounded by the kinematic check to ~1%), the chords' sag
 geometry (the across-chord self-load is applied at the ends), the hub and its stabilising
 lines (the net floats free), and pre-tension.
 """
@@ -22,6 +33,8 @@ import math
 import numpy as np
 
 E_STEEL = 200e9
+ROTATION_LIMIT = 0.05        # rad, relative segment rotation
+DISPLACEMENT_LIMIT = 0.01    # of the ring radius, relative segment displacement
 
 
 def _perp(v):
@@ -157,28 +170,36 @@ def solve(radius, tangent_radius, line_mass, omega, chord_area, density, arc_len
     for k in range(n):
         K_ground[3 * k + 2, 3 * k + 2] *= r * r
 
-    # Tension-only chords: drop the slack ones and solve again until none is in compression.
-    active = np.ones(len(chords), dtype=bool)
+    # Tension-only chords: iterate the taut set until it is exactly the set of stretched chords.
     K_chords = [k_chord * np.outer(B, B) for B in chord_dofs]
-    K_base = K.copy()
-    for B, Kc in zip(chord_dofs, K_chords):
-        K_base -= Kc
+    K_joints = K.copy()
+    for Kc in K_chords:
+        K_joints -= Kc
+    active = np.ones(len(chords), dtype=bool)
+    seen = set()
+    converged = False
     for _ in range(max_iter):
-        K = K_base + K_ground + sum(Kc for Kc, on in zip(K_chords, active) if on)
+        K = K_joints + K_ground + sum((Kc for Kc, on in zip(K_chords, active) if on), np.zeros_like(K_joints))
         u = np.linalg.solve(K, F)
         stretch = np.array([B @ u for B in chord_dofs])
-        slack = active & (stretch < 0)
-        if not slack.any():
+        taut = stretch > 0
+        if (taut == active).all():
+            converged = True
             break
-        active &= ~slack
-    tensions = np.where(active, k_chord * stretch, 0.0)
+        key = taut.tobytes()
+        if key in seen:       # cycling between taut sets
+            break
+        seen.add(key)
+        active = taut
+    tensions = k_chord * np.maximum(stretch, 0.0)
     joint_forces = []
     for (a, b), phi, rows in joint_rows:
         # Positive axial: the joint pulled open (tension).
         joint_forces.append({name: k * (B @ u) for name, (B, k) in rows.items()} | {"phi": phi})
 
     # Residual check: each segment's balance of loads, chord pulls and joint forces.
-    residual = F - (K - K_ground) @ u
+    internal = K_joints @ u + sum((T * B for T, B in zip(tensions, chord_dofs)), np.zeros(3 * n))
+    residual = F - internal
     load_scale = line_mass * omega ** 2 * r * seg_span * r
     worst = 0.0
     for k in range(n):
@@ -188,15 +209,52 @@ def solve(radius, tangent_radius, line_mass, omega, chord_area, density, arc_len
 
     stress = tensions / chord_area + density * omega ** 2 * half_length ** 2 / 2   # peak, at mid-chord
     peak = float(stress.max()) if len(stress) else 0.0
+
+    # Kinematics: remove the best-fit rigid motion of the whole assembly (translation and rotation
+    # about the axis), then measure what is left.
+    G = np.zeros((3 * n, 3))
+    for k in range(n):
+        x, y = refs[k]
+        G[3 * k] = [1.0, 0.0, -y]
+        G[3 * k + 1] = [0.0, 1.0, x]
+        G[3 * k + 2] = [0.0, 0.0, 1.0]
+    w = np.ones(3 * n)
+    w[2::3] = segment_length          # weigh rotations by the segment length
+    coeffs, *_ = np.linalg.lstsq(G * w[:, None], u * w, rcond=None)
+    rel = u - G @ coeffs
+    max_rotation = float(np.abs(rel[2::3]).max())
+    max_displacement = float(np.hypot(rel[0::3], rel[1::3]).max())
+
+    def valid_at(fraction):
+        scale = fraction ** 2       # loads and displacements scale with spin^2
+        return (max_rotation * scale <= ROTATION_LIMIT and max_displacement * scale <= DISPLACEMENT_LIMIT * r)
+
+    spin_limit = min(1.0, math.sqrt(stress_pa / peak)) if peak > 0 else 1.0
+    if not converged:
+        status = "taut set not converged"
+    elif worst >= 1e-3:
+        status = "no equilibrium (mechanism)"
+    elif not valid_at(spin_limit):
+        status = "outside the small-displacement range"
+    else:
+        status = "resolved"
+    resolved = status == "resolved"
     axial = np.array([j["axial"] for j in joint_forces]) if joint_forces else np.zeros(0)
     return {
         "tangent_radius": c,
         "theta": theta,
-        "equilibrium": worst < 1e-3,
+        "status": status,
+        "equilibrium": resolved,
+        "converged": converged,
+        "max_rotation": max_rotation,
+        "max_displacement": max_displacement,
+        "valid_at_full_spin": valid_at(1.0),
         "n_segments": n,
         "n_chords": len(chords),
         "tensions": tensions,
-        "slack_chords": int((~active).sum()),
+        "slack_chords": int((~(stretch > 0)).sum()),
+        "stretch": stretch,
+        "chord_stiffness": k_chord,
         "tension_min": float(tensions.min()) if len(tensions) else 0.0,
         "tension_max": float(tensions.max()) if len(tensions) else 0.0,
         "joint_forces": joint_forces,
@@ -208,6 +266,7 @@ def solve(radius, tangent_radius, line_mass, omega, chord_area, density, arc_len
         "peak_stress": peak,
         # Stresses scale with spin^2 (rim and chord loads alike), so the stage stays within the
         # allowable up to this fraction of the final spin rate.
-        "max_spin_fraction": math.sqrt(stress_pa / peak) if peak > 0 else math.inf,
+        # Within the allowable up to this fraction of the final spin; None when the stage is unresolved.
+        "max_spin_fraction": (math.sqrt(stress_pa / peak) if peak > 0 else math.inf) if resolved else None,
         "residual": worst,
     }

@@ -75,17 +75,18 @@ def _stage(p, r, arc_factor, joints):
 
 def construction_section(p):
     rows = []
-    cases = [(r, None, "sliding") for r in (900, 1600)]
-    cases += [(r, None, "locked") for r in (900, 1600)]
+    cases = [(r, None, j) for r in (900, 1600) for j in ("sliding", "locked")]
     cases += [(r, f, j) for r in (400, 900, 1600, 2500) for f, j in ((1, "locked"), (1, "pinned"))]
     cases += [(900, f, j) for f in (1.5, 3) for j in ("locked", "pinned")]
     for r, f, j in cases:
         n, s, arc = _stage(p, r, f, j)
         stage = "finished ring" if arc is None else f"two arcs of {num(arc)} m" + (" (shortest)" if f == 1 else "")
+        kin = f"{s['max_rotation']:.2g} rad / {num(s['max_displacement'], 2)} m"
         if not s["equilibrium"]:
-            rows.append([size_label(r), stage, j, "**none**", "", "", "", "", "", f"{s['residual']:.0e}"])
+            rows.append([size_label(r), stage, j, f"**unresolved:** {s['status']}", "", "", "", "", "", "",
+                         kin if s["converged"] and s["residual"] < 1e-3 else "—", f"{s['residual']:.0e}"])
             continue
-        rows.append([size_label(r), stage, j,
+        rows.append([size_label(r), stage, j, "resolved",
                      f"{num(s['tension_min'] / 1e6)}–{num(s['tension_max'] / 1e6)}"
                      + (f" ({s['slack_chords']} slack)" if s["slack_chords"] else ""),
                      num(s["tension_max"] / n["tension_end"], 2),
@@ -93,20 +94,27 @@ def construction_section(p):
                      "—" if j == "sliding" else
                      f"{num(s['joint_axial_max'] / 1e6)} ({s['joint_axial_max'] / s['hoop_full_ring']:.1%})",
                      num(s["joint_moment_max"] / 1e9, 2) if j == "locked" else "—",
-                     f"{s['residual']:.0e}"])
+                     kin, f"{s['residual']:.0e}"])
     return "\n\n".join([
         "## Building the ring: assembled statics (provisional)",
         "Each chord is one elastic member with a single tension; the rim is cut into rigid segments one tube "
         "width long, linked by joints that are *sliding* (shear only: free along the rim, as intended once the "
-        "ring is closed), *pinned* (tension and shear) or *locked* (also bending); slack chords are dropped. "
-        "Loads at full spin; cable stresses and joint forces scale with spin². 'None': no equilibrium, the "
-        "partial ring is a mechanism with those joints. Residual: the worst force or moment imbalance of a "
-        "segment, relative to its load. The chords are sized for the finished ring (uniform area).",
-        table(["Torus", "Stage", "Joints", "Chord tensions (MN)", "Max chord vs finished",
+        "ring is closed), *pinned* (tension and shear) or *locked* (also bending). Chords are tension-only: the "
+        "taut set is iterated both ways until it is exactly the set of stretched chords. Loads at full spin; "
+        "cable stresses scale with spin². The chords are sized for the finished ring (uniform area).",
+        "A stage is **resolved** only if the taut set converges, every segment balances (residual: the worst "
+        "force or moment imbalance relative to the segment's load) and, after removing the assembly's rigid "
+        f"motion, segment rotations stay below {net_statics.ROTATION_LIMIT} rad and displacements below "
+        f"{net_statics.DISPLACEMENT_LIMIT:.0%} of the radius at the spin rate reported. Otherwise it is left "
+        "unresolved for a geometrically nonlinear analysis: a mechanism, or displacements too large for the "
+        "linear geometry. Rotation / displacement are at full spin.",
+        table(["Torus", "Stage", "Joints", "Status", "Chord tensions (MN)", "Max chord vs finished",
                "Peak cable stress (MPa)", "Max spin fraction within 1 GPa",
-               "Max joint tension (MN, share of full hoop)", "Max joint moment (GN·m)", "Residual"], rows),
-        "Rigid segments make this a crude model: the joint moments of the longer locked arcs, in particular, "
-        "depend on the segments' real flexibility. It settles the force balance, not the construction sequence.",
+               "Max joint tension (MN, share of full hoop)", "Max joint moment (GN·m)", "Rotation / displacement",
+               "Residual"], rows),
+        "Rigid segments make this a crude model: even resolved stages settle the force balance, not the "
+        "construction sequence, and the joint moments of the longer locked arcs depend on the segments' real "
+        "flexibility.",
     ])
 
 

@@ -43,28 +43,30 @@ Uniform chords keep one area all along, sized at mid-chord where their own spin 
 
 ## Building the ring: assembled statics (provisional)
 
-Each chord is one elastic member with a single tension; the rim is cut into rigid segments one tube width long, linked by joints that are *sliding* (shear only: free along the rim, as intended once the ring is closed), *pinned* (tension and shear) or *locked* (also bending); slack chords are dropped. Loads at full spin; cable stresses and joint forces scale with spin². 'None': no equilibrium, the partial ring is a mechanism with those joints. Residual: the worst force or moment imbalance of a segment, relative to its load. The chords are sized for the finished ring (uniform area).
+Each chord is one elastic member with a single tension; the rim is cut into rigid segments one tube width long, linked by joints that are *sliding* (shear only: free along the rim, as intended once the ring is closed), *pinned* (tension and shear) or *locked* (also bending). Chords are tension-only: the taut set is iterated both ways until it is exactly the set of stretched chords. Loads at full spin; cable stresses scale with spin². The chords are sized for the finished ring (uniform area).
 
-| Torus | Stage | Joints | Chord tensions (MN) | Max chord vs finished | Peak cable stress (MPa) | Max spin fraction within 1 GPa | Max joint tension (MN, share of full hoop) | Max joint moment (GN·m) | Residual |
-|---|---|---|---|---|---|---|---|---|---|
-| 900 m | finished ring | sliding | 99.7–109 | 1.0 | 1,040 | 0.98 | — | — | 3e-09 |
-| 1.6 km | finished ring | sliding | 179–181 | 1.0 | 1,000 | 1.00 | — | — | 1e-10 |
-| 900 m | finished ring | locked | 37.9–38.0 | 0.36 | 386 | 1.0 | 12,000 (63.8%) | 0.072 | 2e-11 |
-| 1.6 km | finished ring | locked | 90.7–91.0 | 0.50 | 535 | 1.0 | 28,600 (49.7%) | 0.11 | 1e-11 |
-| 400 m | two arcs of 119 m (shortest) | locked | 99.8–100 | 2.0 | 1,960 | 0.72 | 34.6 (0.9%) | 2.2 | 7e-06 |
-| 400 m | two arcs of 119 m (shortest) | pinned | **none** |  |  |  |  |  | 7e-02 |
-| 900 m | two arcs of 268 m (shortest) | locked | 213–214 | 2.0 | 2,010 | 0.71 | 176 (0.9%) | 6.0 | 8e-06 |
-| 900 m | two arcs of 268 m (shortest) | pinned | 157–256 | 2.5 | 2,400 | 0.65 | 178 (1.0%) | — | 8e-06 |
-| 1.6 km | two arcs of 476 m (shortest) | locked | 355–356 | 2.0 | 1,910 | 0.72 | 546 (0.9%) | 26 | 8e-06 |
-| 1.6 km | two arcs of 476 m (shortest) | pinned | 186–569 | 3.2 | 3,020 | 0.58 | 530 (0.9%) | — | 8e-06 |
-| 2.5 km | two arcs of 743 m (shortest) | locked | 556–557 | 2.0 | 1,900 | 0.72 | 1,400 (1.0%) | 59 | 1e-05 |
-| 2.5 km | two arcs of 743 m (shortest) | pinned | 372–682 | 2.4 | 2,310 | 0.66 | 1,410 (1.0%) | — | 8e-06 |
-| 900 m | two arcs of 401 m | locked | 153–155 | 1.5 | 1,460 | 0.83 | 234 (1.2%) | 68 | 1e-05 |
-| 900 m | two arcs of 401 m | pinned | **none** |  |  |  |  |  | 5e-01 |
-| 900 m | two arcs of 803 m | locked | 122–125 | 1.2 | 1,190 | 0.92 | 373 (2.0%) | 220 | 1e-05 |
-| 900 m | two arcs of 803 m | pinned | 0–316 (46 slack) | 3.0 | 2,950 | 0.58 | 200 (1.1%) | — | 1e-05 |
+A stage is **resolved** only if the taut set converges, every segment balances (residual: the worst force or moment imbalance relative to the segment's load) and, after removing the assembly's rigid motion, segment rotations stay below 0.05 rad and displacements below 1% of the radius at the spin rate reported. Otherwise it is left unresolved for a geometrically nonlinear analysis: a mechanism, or displacements too large for the linear geometry. Rotation / displacement are at full spin.
 
-Rigid segments make this a crude model: the joint moments of the longer locked arcs, in particular, depend on the segments' real flexibility. It settles the force balance, not the construction sequence.
+| Torus | Stage | Joints | Status | Chord tensions (MN) | Max chord vs finished | Peak cable stress (MPa) | Max spin fraction within 1 GPa | Max joint tension (MN, share of full hoop) | Max joint moment (GN·m) | Rotation / displacement | Residual |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 900 m | finished ring | sliding | resolved | 99.7–109 | 1.0 | 1,040 | 0.98 | — | — | 0.021 rad / 6.4 m | 3e-09 |
+| 900 m | finished ring | locked | resolved | 37.9–38.0 | 0.36 | 386 | 1.0 | 12,000 (63.8%) | 0.072 | 4.7e-07 rad / 1.6 m | 2e-11 |
+| 1.6 km | finished ring | sliding | resolved | 179–181 | 1.0 | 1,000 | 1.00 | — | — | 0.0014 rad / 9.0 m | 1e-10 |
+| 1.6 km | finished ring | locked | resolved | 90.7–91.0 | 0.50 | 535 | 1.0 | 28,600 (49.7%) | 0.11 | 6.1e-07 rad / 3.8 m | 1e-11 |
+| 400 m | two arcs of 119 m (shortest) | locked | resolved | 99.8–100 | 2.0 | 1,960 | 0.72 | 34.6 (0.9%) | 2.2 | 3.9e-05 rad / 3.9 m | 7e-06 |
+| 400 m | two arcs of 119 m (shortest) | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 7e-02 |
+| 900 m | two arcs of 268 m (shortest) | locked | resolved | 213–214 | 2.0 | 2,010 | 0.71 | 176 (0.9%) | 6.0 | 2.3e-05 rad / 8.9 m | 8e-06 |
+| 900 m | two arcs of 268 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.52 rad / 27 m | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | locked | resolved | 355–356 | 2.0 | 1,910 | 0.72 | 546 (0.9%) | 26 | 3.1e-05 rad / 15 m | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.2 rad / 78 m | 8e-06 |
+| 2.5 km | two arcs of 743 m (shortest) | locked | resolved | 556–557 | 2.0 | 1,900 | 0.72 | 1,400 (1.0%) | 59 | 2.9e-05 rad / 23 m | 1e-05 |
+| 2.5 km | two arcs of 743 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.53 rad / 80 m | 8e-06 |
+| 900 m | two arcs of 401 m | locked | resolved | 153–155 | 1.5 | 1,460 | 0.83 | 234 (1.2%) | 68 | 0.0003 rad / 6.4 m | 1e-05 |
+| 900 m | two arcs of 401 m | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 2e-01 |
+| 900 m | two arcs of 803 m | locked | resolved | 122–125 | 1.2 | 1,190 | 0.92 | 373 (2.0%) | 220 | 0.0023 rad / 5.6 m | 1e-05 |
+| 900 m | two arcs of 803 m | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.9 rad / 74 m | 1e-05 |
+
+Rigid segments make this a crude model: even resolved stages settle the force balance, not the construction sequence, and the joint moments of the longer locked arcs depend on the segments' real flexibility.
 
 ## Imbalance: one arc 1% heavier than its partner
 

@@ -90,6 +90,32 @@ class TestSpinUp(unittest.TestCase):
         self.assertAlmostEqual(s["joint_axial_max"] / estimate["joint_tension"], 1, delta=0.25)
         self.assertGreater(s["joint_axial_min"], 0)  # tension, not compression
 
+    def test_tension_only_law_holds_for_every_chord(self):
+        # Review on PR #2: removed chords that stretch again must carry tension (T = k max(stretch, 0)).
+        for factor, joints in ((3.9, "pinned"), (3.9, "locked"), (1, "locked"), (None, "sliding")):
+            arc = None if factor is None else factor * 4 * self.net["theta"] * self.r
+            s = self.solve(arc, joints)
+            expected = s["chord_stiffness"] * np.maximum(s["stretch"], 0)
+            np.testing.assert_allclose(s["tensions"], expected, rtol=0, atol=1e-6 * self.net["tension_end"])
+            if s["equilibrium"]:
+                self.assertTrue(s["converged"])
+                self.assertLess(s["residual"], 1e-3)
+
+    def test_large_displacement_stages_stay_unresolved(self):
+        # Review on PR #2: the 803 m pinned arcs rotate segments by ~107 degrees; no spin limit may be claimed.
+        s = self.solve(3 * 4 * self.net["theta"] * self.r, "pinned")
+        self.assertFalse(s["equilibrium"])
+        self.assertGreater(s["max_rotation"], net_statics.ROTATION_LIMIT)
+        self.assertIsNone(s["max_spin_fraction"])
+        self.assertEqual(s["status"], "outside the small-displacement range")
+
+    def test_resolved_stages_are_kinematically_small(self):
+        s = self.solve(4 * self.net["theta"] * self.r, "locked")
+        self.assertTrue(s["equilibrium"])
+        f2 = min(1.0, s["max_spin_fraction"]) ** 2
+        self.assertLessEqual(s["max_rotation"] * f2, net_statics.ROTATION_LIMIT)
+        self.assertLessEqual(s["max_displacement"] * f2, net_statics.DISPLACEMENT_LIMIT * self.r)
+
     def test_sliding_joints_cannot_hold_a_partial_ring(self):
         s = self.solve(4 * self.net["theta"] * self.r, "sliding")
         self.assertFalse(s["equilibrium"])
