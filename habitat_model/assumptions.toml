@@ -203,7 +203,7 @@ value = 0.0005
 unit = "share of the rim's mass"
 low = 0.0001
 high = 0.002
-source = "operational imbalance trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock"
+source = "unbalanced mass at the rim, as a share of the rim's mass, trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock"
 status = "guess"
 
 [shield.biomass_water_kg_m2]
@@ -781,6 +781,14 @@ unit = "MJ of electricity per kg of iron"
 low = 7
 high = 14
 source = "§10, molten-oxide electrolysis: ~5 MJ/kg minimum, ~7-14 with losses"
+status = "estimate"
+
+[processing.moe_heat_mj_kg_fe]
+value = 17
+unit = "MJ of furnace heat per kg of iron"
+low = 8
+high = 20
+source = "§10, melting ~8-9 kg of rock per kg of iron at ~2 MJ/kg, partly recovered from the hot slag"
 status = "estimate"
 
 [processing.electrolysis_mj_kg_water]

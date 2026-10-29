@@ -89,7 +89,7 @@ CHECKS = [
     *_sizes("§9", "Period at 0.3 g", "s", lambda r: r["geometry"]["period"], {900: 110, 1600: 146, 2500: 183}, g=0.3),
     # §7, §10 water, volatiles, metal
     *_sizes("§7", "Water needed (soil, ponds, O₂, ballast, vegetation)", "Mt",
-            lambda r: r["mass"]["water_needed"] / MT, {900: 0.06, 1600: 0.20, 2500: 0.52}),
+            lambda r: r["mass"]["water_needed"] / MT, {900: 0.066, 1600: 0.22, 2500: 0.56}),
     *_sizes("§7", "Spin-up propellant (water, 3 km/s)", "Mt", lambda r: r["mass"]["spinup_propellant"] / MT,
             {900: 0.40, 1600: 1.7, 2500: 5.6}),
     *_sizes("§7", "C-type sized by nitrogen", "Mt", lambda r: r["materials"]["c_type"] / MT,

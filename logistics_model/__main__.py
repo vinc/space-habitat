@@ -45,47 +45,55 @@ def water_section(p):
     rows.append(["Spin-up with water thrusters, if chosen"] + [f"{num(budgets[r]['spinup'] / MT, 2)} Mt" for r in SIZES])
     rows.append(["Water in the nitrogen-sized C-type"] + [f"{num(budgets[r]['c_type_contains'] / MT, 2)} Mt" for r in SIZES])
 
-    route_rows, iron_rows = [], []
+    route_rows, oxygen_rows = [], []
     for r, n, name in CASES:
         d = design(r, n)
         res_d = evaluate(p, d)
         w = water.routes(p, d, res_d)
-        for route, v in w["routes"].items():
-            route_rows.append([name, route, f"{num(v['shipped'] / KT)} kt", f"{num(v['shipping'] / PJ)} PJ",
-                               f"{num(v['other_energy'] / PJ, 2)} PJ", f"{num(v['total'] / PJ)} PJ"])
-        iron_rows.append([name, f"{num(w['iron_for_oxygen'] / MT, 2)} Mt", f"{num(w['iron_shortfall'] / MT, 2)} Mt",
-                          f"{num(w['iron_for_oxygen'] * p.moe_mj_kg_fe * 1e6 / PJ, 2)} PJ",
-                          f"{num(w['hydrogen'] / KT)} kt", f"{num(w['carbon_in_methane'] / KT)} kt",
-                          f"{num(w['organics'] / KT)} kt"])
+        combos = water.supply(p, d, res_d)
+        for route in w["routes"]:
+            ep, md = combos[(route, "Electric thrusters")], combos[(route, "Mass driver")]
+            route_rows.append([name, route, f"{num(ep['shipped'] / KT)} kt", f"{num(ep['other_energy'] / PJ, 2)} PJ",
+                               f"{num(ep['shipping'] / PJ)} PJ", f"**{num(ep['total'] / PJ)} PJ**",
+                               f"{num(md['shipping'] / PJ, 2)} PJ", f"**{num(md['total'] / PJ)} PJ**"])
+        o = w["local_oxygen"]
+        oxygen_rows.append([name, f"{num(w['iron_for_oxygen'] / MT, 2)} Mt", f"{num(o['split'] / PJ, 2)} PJ",
+                            f"{num(o['moe_electric'] / PJ, 2)} PJ", f"{num(o['moe_heat'] / PJ, 2)} PJ",
+                            f"−{num(o['crushing_saved'] / PJ, 2)} PJ", f"{num(w['hydrogen'] / KT)} kt",
+                            f"{num(w['carbon_in_methane'] / KT)} kt", f"{num(w['organics'] / KT)} kt"])
     return [
         "## Water per torus",
         "Built up from its uses instead of fitted to the notes' totals: soil moisture (25% of 0.5 m of soil), "
         f"ponds and streams on {p.lake_floor_frac:.0%} of the floor at {num(p.lake_depth_m)} m mean depth (kept "
-        "small: water access for the biosphere, not a main feature; within the fill), the water electrolysed for the O₂, ballast to trim "
-        f"an operational imbalance of {p.ballast_frac:.2%} of the rim's mass (water spread as 1 − cos around the "
-        f"rim, e M in all), and the vegetation's water (~{num(p.biomass_water_kg_m2)} kg/m² of floor). Not "
-        "counted: coolant loops (plan §6), people, stores and pipes (hundreds of tonnes), the algae trays "
-        "(~200 m³).",
+        "small: water access for the biosphere, not a main feature; within the fill), the water electrolysed "
+        f"for the O₂, ballast to trim an unbalanced mass of {p.ballast_frac:.2%} of the rim's at the rim (water "
+        "spread as A (1 − cos) around it: its first moment is only half its mass times the radius, so 2 e M of "
+        f"water), and the vegetation's water (~{num(p.biomass_water_kg_m2)} kg/m² of floor). Not counted: coolant "
+        "loops (plan §6), people, stores and pipes (hundreds of tonnes), the algae trays (~200 m³).",
         table(["Use", *[label(r) for r in SIZES]], rows),
-        "Soil moisture is about two thirds of it, the ponds about a tenth. The C-type sized by nitrogen holds "
-        "~5–13× the water needed, so water never sizes the C-type unless spin-up uses water thrusters (900 m).",
+        "Soil moisture is about 60% of it, the ballast about a fifth, the ponds about a tenth. The C-type sized "
+        "by nitrogen holds ~5–12× the water needed, so water never sizes the C-type unless spin-up uses water "
+        "thrusters (900 m).",
         "## Where the water comes from",
-        "Water is 89% oxygen, which the S-type has in its silicates. Ship only the hydrogen (split from the "
-        "C-type's water) and take the oxygen as the by-product of molten-oxide electrolysis (notes §10, "
-        "proposed; ~0.29 kg of oxygen per kg of iron): on an LL host the iron the free metal lacks already "
-        "frees more oxygen than the water needs, so the oxygen costs nothing extra. Hydrogen is hard to store "
-        "(20 K); methane (111 K) carries it with carbon, which replaces the organics shipped for the soil, and "
-        "burnt with the same oxygen it is a storable rocket propellant (methalox, ~3.6 km/s) for tugs and docking. "
-        "Shipping by electric thrusters at the notes' Ryugu → Eros Δv; the other energy is splitting the water "
-        "at the C-type (and any iron reduced only for its oxygen). Hydrogen and methane ship the same mass while "
-        "the methane's carbon stays below the organics needed: its carbon replaces as much organics.",
-        table(["Stack (per torus)", "Route", "Shipped", "Shipping", "Other energy", "Total"], route_rows),
-        table(["Stack", "Iron reduced to free the water's oxygen", "Iron the free metal lacks (LL host)",
-               "Electrolysis if the host mines more rock instead", "Hydrogen", "Carbon in the methane",
-               "Organics needed"], iron_rows),
-        "On a host that mines more rock for its metal instead of electrolysing its silicates (the baseline on "
-        "large hosts such as Eros), the iron reduced only for its oxygen costs the electrolysis in the third "
-        "column, still below the shipping it saves.",
+        "Water is 89% oxygen, which the S-type has in its silicates. The alternative to shipping water: split "
+        "it at the C-type, ship only the hydrogen and take the oxygen from the silicates by molten-oxide "
+        "electrolysis (notes §10, proposed; ~0.29 kg of oxygen per kg of iron, so ~3.1 kg of iron per kg of "
+        "water). Hydrogen is hard to store (20 K); methane (111 K) carries it with carbon, which replaces the "
+        "organics shipped for the soil (the same mass as bare hydrogen while its carbon stays below the organics "
+        "needed), and burnt with the same oxygen it is a storable rocket propellant (methalox, ~3.6 km/s) for "
+        "tugs and docking. The baseline host gets all its metal as free metal and electrolyses nothing, so the "
+        "oxygen is charged in full: the electrolysis's electricity and the furnace heat to melt the rock, less "
+        "the crushing of the free-metal rock its iron replaces. Each route with each freighter (next section): "
+        "electric thrusters at the notes' Ryugu → Eros Δv, or the energy-optimal mass driver.",
+        table(["Stack (per torus)", "Route", "Shipped", "Local oxygen and splitting",
+               "Electric thrusters: shipping", "Total", "Mass driver: shipping", "Total"], route_rows),
+        table(["Stack", "Iron electrolysed for the oxygen", "Splitting the water", "Electrolysis (electricity)",
+               "Melting the rock (furnace heat)", "Crushing saved", "Hydrogen", "Carbon in the methane",
+               "Organics needed"], oxygen_rows),
+        "With electric thrusters, shipping the hydrogen saves a little; with mass drivers, shipping costs less "
+        "than making the oxygen, so water is the cheaper cargo. Only a host that electrolyses its silicates for "
+        "its iron anyway (a small LL host, notes §10) gets the oxygen without the electrolysis and the furnace "
+        "heat: then only the splitting is left.",
     ]
 
 
@@ -103,8 +111,10 @@ def transfer_section():
         "arrival points and the flight time all free: the \"best phase\", a lower bound whatever the bodies' "
         "positions (`logistics_model/transfers.py`). Elements rounded from JPL's Small-Body Database as "
         "recalled: current ephemerides (JPL Horizons) are blocked from this environment, so the notes' dated "
-        "values stay as quoted. The synodic period is how often the same phasing recurs, so how far apart the "
-        "good windows are.",
+        "values stay as quoted. The synodic period is the cycle of the two bodies' mean longitudes, a timescale "
+        "for windows, not a result: the best-phase geometry does not recur with it (both orbits are eccentric "
+        "and inclined, so after one synodic period the bodies sit elsewhere on them), and when good windows "
+        "recur needs a dated search.",
         table(["Transfer", "Best phase (model)", "Best phase (notes)", "Dated, 2030–2060 (notes)", "Flight (days)",
                "Synodic period (yr)", "Perihelion longitudes"], rows),
         "The model reproduces the notes' best-phase values within ~0.1 km/s, except to Torifune (0.1–0.4 km/s "
@@ -145,7 +155,7 @@ def propulsion_section(p):
 
 
 def generation_section(p):
-    comp_rows, time_rows, rate_rows, growth_rows = [], [], [], []
+    comp_rows, time_rows, rate_rows, growth_rows, best_names = [], [], [], [], []
     window = transfers.synodic_period("Ryugu", "Eros")
     for r, n, name in CASES:
         d = design(r, n)
@@ -155,12 +165,10 @@ def generation_section(p):
                           f"{num(c['shipped'] / KT)} kt ({c['shipped'] / c['built']:.2%})",
                           f"{num(c['vitamins'] / 1e3)} t ({c['vitamins'] / c['built']:.3%})"])
         rep = res["replication"]
-        # The best combination: methane route, mass driver.
-        w = water.routes(p, d, res)["routes"]["Methane, oxygen from the silicates"]
-        mat = res["materials"]
-        residue = mat["c_type"] * (1 - p.c_water_wt - p.c_carbon_wt)
-        md = propulsion.options(p, rep["delta_v_km_s"] * 1e3, w["shipped"], residue, 0.0)[2]
-        best = rep["processing"] + md["energy"] + w["other_energy"]
+        # The cheapest consistent combination of route and freighter.
+        (route, engine), v = min(water.supply(p, d, res).items(), key=lambda kv: kv[1]["total"])
+        best = rep["processing"] + v["total"]
+        best_names.append(f"{name}: {route.split(',')[0].lower()} by {engine.lower()}")
         power = d.factory_power_gw * GW / n      # a stack's factory, per torus
         time_rows.append([name, f"{num(rep['processing'] / PJ)} PJ", f"{num(rep['shipping'] / PJ)} PJ",
                           num(rep["energy_per_torus"] / power / flows.YEAR, 2),
@@ -184,16 +192,16 @@ def generation_section(p):
         table(["Stack (per torus)", "Built", "From the host", "Shipped from the C-type", "Vitamins"], comp_rows),
         f"**Energy floor on the generation**, with the factory at {num(Design().factory_power_gw)} GW per stack: "
         "processing and shipping as in the system model (water route, electric thrusters), then the cheapest "
-        "combination found here (methane route, mass driver).",
+        f"combination of route and freighter above ({'; '.join(best_names)}).",
         table(["Stack (per torus)", "Processing", "Shipping", "Generation (yr)", "Best combination",
                "Generation (yr)"], time_rows),
         "**Rates for a given generation**, per torus of the parent (a stack's lines handle n times these), against "
         "Earth benchmarks (orders of magnitude, unsourced): the largest open-pit mines move ~0.5 Mt of material a "
-        "day, a large steelworks makes ~10 Mt of steel a year. Cargo per window: one Ryugu → Eros window every "
-        f"~{num(window, 2)} years (synodic period).",
+        "day, a large steelworks makes ~10 Mt of steel a year. Cargo per window: **assuming** one Ryugu → Eros "
+        f"window per synodic period (~{num(window, 2)} years), not a result of the transfer search.",
         table(["Stack", "Generation", "S-type mined a day (share of a large mine)",
                "Metal a day (share of a large steelworks)", "Rock placed a day", "C-type baked a day",
-               "Cargo per window", "Mean power"], rate_rows),
+               "Cargo per window (assumed cadence)", "Mean power"], rate_rows),
         "**Growth.** A cluster started by one stack, doubling every generation, until Ryugu's nitrogen runs out:",
         table(["Stack", "Generation", "Tori after 50 years", "After 100 years", "Tori Ryugu supports",
                "Years to reach it"], growth_rows),

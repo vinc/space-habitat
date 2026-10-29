@@ -9,7 +9,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | Rock shield (after fill credit) | 11.0 Mt | 33.5 Mt | 80.3 Mt |
 | Steel (spokes + hull + frames, excl. hub and factory) | 1.16 Mt | 5.98 Mt | 22.2 Mt |
 | Fill (soil + regolith) | 0.54 Mt | 1.7 Mt | 4.2 Mt |
-| Water (soil, ponds, O₂, ballast, vegetation) | 0.060 Mt | 0.20 Mt | 0.52 Mt |
+| Water (soil, ponds, O₂, ballast, vegetation) | 0.066 Mt | 0.22 Mt | 0.56 Mt |
 | N₂ | 7.9 kt | 44 kt | 170 kt |
 | **Total** | **12.7 Mt** | **41.3 Mt** | **107 Mt** |
 | Mass per m² of floor | 40.1 t | 41.1 t | 43.6 t |
@@ -28,7 +28,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | Stack of 900 m tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
 | Floor area | 63.6 ha | 191 ha |
-| Mass (excl. shared hub and factory) | 25.5 Mt | 76.4 Mt |
+| Mass (excl. shared hub and factory) | 25.5 Mt | 76.5 Mt |
 | Material mined (H-like host) | 37.3 Mt | 112 Mt |
 | Main section length (10–40 m gaps between tori) | 160–220 m | 482–662 m |
 | Whole stack with its farm section (10 m gaps) | 332 m | 895 m |

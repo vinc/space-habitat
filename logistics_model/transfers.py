@@ -36,7 +36,8 @@ def period(a_au):
 
 
 def synodic_period(a, b):
-    """Years between repeats of the same relative position (same phasing)."""
+    """Years per cycle of the two bodies' mean longitudes: a timescale for windows. The best-phase geometry
+    doesn't recur with it on eccentric, inclined orbits; when good windows recur needs a dated search."""
     pa, pb = period(ELEMENTS[a][0]), period(ELEMENTS[b][0])
     return 1 / abs(1 / pa - 1 / pb) / YEAR
 

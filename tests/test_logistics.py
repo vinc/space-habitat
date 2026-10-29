@@ -80,18 +80,46 @@ class TestWater(unittest.TestCase):
     def test_lakes_and_ballast(self):
         m, floor = self.r["mass"], self.r["geometry"]["floor_area"]
         self.assertAlmostEqual(m["water_lakes"], P.lake_floor_frac * P.lake_depth_m * 1e3 * floor)
-        self.assertAlmostEqual(m["water_ballast"], P.ballast_frac * (m["rim"] - m["water_ballast"]), delta=1.0)
+        self.assertAlmostEqual(m["water_ballast"], 2 * P.ballast_frac * (m["rim"] - m["water_ballast"]), delta=1.0)
 
-    def test_routes(self):
+    def test_ballast_cancels_the_imbalance(self):
+        # Water spread as A (1 - cos) around the rim, of the model's total, must cancel the first moment of an
+        # unbalanced mass e M at the rim radius.
+        m = self.r["mass"]
+        r = 900.0
+        theta = np.linspace(0, 2 * math.pi, 20001)[:-1]
+        dtheta = theta[1] - theta[0]
+        shape = 1 - np.cos(theta)
+        density = m["water_ballast"] * shape / (np.sum(shape) * dtheta * r)     # kg per m of rim
+        moment = np.sum(density * r * np.cos(theta) * r) * dtheta                  # x first moment, kg m
+        imbalance = P.ballast_frac * (m["rim"] - m["water_ballast"]) * r
+        self.assertAlmostEqual(-moment / imbalance, 1.0, places=6)
+
+    def test_routes_charge_the_oxygen(self):
         w = water.routes(P, self.d, self.r)
         routes = list(w["routes"].values())
         self.assertLess(routes[1]["shipped"], routes[0]["shipped"])
-        self.assertLess(routes[2]["shipped"], routes[0]["shipped"])
-        self.assertAlmostEqual(w["hydrogen"] / self.r["materials"]["water_to_source"], 0.1119, places=3)
-        oxygen = self.r["materials"]["water_to_source"] - w["hydrogen"]
-        self.assertAlmostEqual(w["iron_for_oxygen"] / (oxygen / water.O_PER_FE), 1.0, places=3)
-        # An LL host's iron shortfall frees more oxygen than the water needs: no extra electrolysis.
-        self.assertEqual(w["extra_iron"], 0.0)
+        self.assertAlmostEqual(routes[1]["shipped"], routes[2]["shipped"], delta=1.0)   # methane's carbon offsets organics
+        water_kg = self.r["materials"]["water_to_source"]
+        self.assertAlmostEqual(w["hydrogen"] / water_kg, 0.1119, places=3)
+        self.assertAlmostEqual(w["iron_for_oxygen"] / ((water_kg - w["hydrogen"]) / water.O_PER_FE), 1.0, places=3)
+        o = w["local_oxygen"]
+        iron = w["iron_for_oxygen"]
+        self.assertAlmostEqual(o["moe_electric"], iron * P.moe_mj_kg_fe * 1e6)
+        self.assertAlmostEqual(o["moe_heat"], iron * P.moe_heat_mj_kg_fe * 1e6)
+        self.assertAlmostEqual(o["split"], water_kg * P.electrolysis_mj_kg_water * 1e6)
+        # The iron replaces free metal, so less rock is mined (an LL host is sized by its metal).
+        self.assertAlmostEqual(w["rock_saved"], iron / P.metal_wt_LL)
+        self.assertAlmostEqual(routes[1]["other_energy"],
+                               o["split"] + o["moe_electric"] + o["moe_heat"] - o["crushing_saved"])
+
+    def test_supply_combinations(self):
+        combos = water.supply(P, self.d, self.r)
+        self.assertEqual(len(combos), 6)
+        for (route, engine), v in combos.items():
+            self.assertAlmostEqual(v["total"], v["shipping"] + v["other_energy"])
+            if engine == "Mass driver":
+                self.assertLess(v["shipping"], combos[(route, "Electric thrusters")]["shipping"])
 
 
 class TestFlows(unittest.TestCase):

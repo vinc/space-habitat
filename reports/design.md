@@ -23,7 +23,7 @@
 | Fill (soil + regolith) | 0.541 Mt | 1.08 Mt |
 | Hull and frames | 0.300 Mt | 0.600 Mt |
 | Cable spokes | 0.864 Mt | 1.73 Mt |
-| Water needed / N₂ / O₂ | 0.0597 Mt / 7.92 kt / 3.68 kt |  |
+| Water needed / N₂ / O₂ | 0.0656 Mt / 7.92 kt / 3.68 kt |  |
 | **Total** (excl. hub and factory) | **12.7 Mt** | **25.5 Mt** |
 | Per m² of floor | 40.1 t |  |
 | Farm ring: shell and growing systems / its spokes / its N₂ (at the farm's pressure) | 48.6 / 0.56 / 0.57 kt |  |
@@ -36,7 +36,7 @@
 |---|---|---|
 | Metal needed (with hub, dock, factory) | 1.48 Mt | 2.95 Mt |
 | S-type (L host), sized by metal | 16.4 Mt (~250 m) | 32.8 Mt |
-| Spare tailings | 3.63 Mt |  |
+| Spare tailings | 3.64 Mt |  |
 | C-type, sized by nitrogen | 5.05 Mt (~200 m) | 10.1 Mt |
 | Water / carbon in the C-type | 0.323 / 0.227 Mt |  |
 | **Mined** | **21.5 Mt** | **42.9 Mt** |
@@ -91,6 +91,6 @@ Preliminary radiative exchange (ray tracing, emissivity 0.9), each section on it
 |  | Per torus | Stack of 2 |
 |---|---|---|
 | Crushing S-type / baking C-type | 1.39 / 7.57 PJ |  |
-| Shipping 0.1000 Mt of volatiles (Ryugu → 1 AU, no Δv known: pass --dv) | unknown |  |
+| Shipping 0.106 Mt of volatiles (Ryugu → 1 AU, no Δv known: pass --dv) | unknown |  |
 | Energy, processing + shipping | unknown | unknown |
 | Generation time at 1 GW (energy only) |  | unknown (≥ 0.57 years for processing alone) |

@@ -78,9 +78,10 @@ def compute(p, d, geo):
     hull = hull_1g * max(p.hull_min_gauge_frac, d.g)
 
     dry_rim = shield + soil + regolith + water_lakes + water_biomass + gases["n2"] + gases["o2"] + hull
-    # Ballast: a first-harmonic imbalance e of the rim's mass is trimmed by water distributed as
-    # 1 - cos around the rim, e M in all, in tanks holding up to twice the mean.
-    water_ballast = p.ballast_frac * dry_rim
+    # Ballast: an unbalanced mass e M at the rim is trimmed by water distributed as A (1 - cos) around it.
+    # Its total is 2 pi A r but its first moment only pi A r^2, so the water is 2 e M, in tanks holding up to
+    # twice the mean.
+    water_ballast = 2 * p.ballast_frac * dry_rim
     water_needed = water_soil + water_lakes + water_o2 + water_ballast + water_biomass
     rim = dry_rim + water_ballast
     spokes = rim * spoke_factor(p, geo["rim_speed"])

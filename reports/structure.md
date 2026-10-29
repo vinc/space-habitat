@@ -36,9 +36,9 @@ Uniform chords keep one area all along, sized at mid-chord where their own spin 
 
 | Torus | Chord angle at the rim | Net, uniform chords (Mt) | System model spokes (Mt) | Chords vs radial spokes | Saved by tapering | Taper (mid / end area) | Tension per chord end (MN) | Uniform chord area (cm²) | Tapered chord, end area (cm²) | Bow at mid-chord (m) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 4.3° | 0.0812 | 0.0812 | -0.01% | 0.5% | 1.02 | 50.5 | 513 | 505 | 0.46 |
+| 400 m | 4.3° | 0.0812 | 0.0812 | -0.01% | 0.5% | 1.02 | 50.6 | 513 | 506 | 0.46 |
 | 900 m | 4.3° | 0.864 | 0.864 | -0.02% | 1.2% | 1.04 | 104 | 1,080 | 1,040 | 2.3 |
-| 1.6 km | 4.3° | 4.85 | 4.85 | -0.04% | 2.2% | 1.06 | 179 | 1,910 | 1,790 | 7.4 |
+| 1.6 km | 4.3° | 4.85 | 4.85 | -0.04% | 2.2% | 1.06 | 180 | 1,910 | 1,800 | 7.4 |
 | 2.5 km | 4.3° | 19.0 | 19.0 | -0.06% | 3.6% | 1.10 | 277 | 3,070 | 2,770 | 18 |
 
 ## Building the ring: assembled statics (provisional)
@@ -49,17 +49,17 @@ A stage is **resolved** only if the taut set converges, every segment balances (
 
 | Torus | Stage | Joints | Status | Chord tensions (MN) | Max chord vs finished | Peak cable stress (MPa) | Max spin fraction within 1 GPa | Max joint tension (MN, share of full hoop) | Max joint moment (GN·m) | Rotation / displacement | Residual |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m | finished ring | sliding | resolved | 99.1–108 | 1.0 | 1,040 | 0.98 | — | — | 0.021 rad / 6.4 m | 3e-09 |
+| 900 m | finished ring | sliding | resolved | 99.2–108 | 1.0 | 1,040 | 0.98 | — | — | 0.021 rad / 6.4 m | 3e-09 |
 | 900 m | finished ring | locked | resolved | 37.7–37.8 | 0.36 | 386 | 1.0 | 11,900 (63.8%) | 0.072 | 4.7e-07 rad / 1.6 m | 2e-11 |
-| 1.6 km | finished ring | sliding | resolved | 178–180 | 1.0 | 1,000 | 1.00 | — | — | 0.0014 rad / 9.0 m | 1e-10 |
+| 1.6 km | finished ring | sliding | resolved | 179–180 | 1.0 | 1,000 | 1.00 | — | — | 0.0014 rad / 9.0 m | 1e-10 |
 | 1.6 km | finished ring | locked | resolved | 90.2–90.5 | 0.50 | 535 | 1.0 | 28,500 (49.7%) | 0.11 | 6.1e-07 rad / 3.8 m | 1e-11 |
-| 400 m | two arcs of 119 m (shortest) | locked | resolved | 99.3–99.5 | 2.0 | 1,960 | 0.72 | 34.4 (0.9%) | 2.2 | 3.9e-05 rad / 3.9 m | 7e-06 |
+| 400 m | two arcs of 119 m (shortest) | locked | resolved | 99.4–99.6 | 2.0 | 1,960 | 0.72 | 34.4 (0.9%) | 2.2 | 3.9e-05 rad / 3.9 m | 7e-06 |
 | 400 m | two arcs of 119 m (shortest) | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 7e-02 |
-| 900 m | two arcs of 268 m (shortest) | locked | resolved | 212–213 | 2.0 | 2,010 | 0.71 | 175 (0.9%) | 6.0 | 2.3e-05 rad / 8.9 m | 7e-06 |
+| 900 m | two arcs of 268 m (shortest) | locked | resolved | 212–213 | 2.0 | 2,010 | 0.71 | 175 (0.9%) | 6.0 | 2.3e-05 rad / 8.9 m | 8e-06 |
 | 900 m | two arcs of 268 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.52 rad / 27 m | 7e-06 |
-| 1.6 km | two arcs of 476 m (shortest) | locked | resolved | 353–354 | 2.0 | 1,910 | 0.72 | 543 (0.9%) | 26 | 3.1e-05 rad / 15 m | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | locked | resolved | 353–354 | 2.0 | 1,910 | 0.72 | 543 (0.9%) | 26 | 3.2e-05 rad / 15 m | 8e-06 |
 | 1.6 km | two arcs of 476 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.2 rad / 78 m | 8e-06 |
-| 2.5 km | two arcs of 743 m (shortest) | locked | resolved | 553–554 | 2.0 | 1,900 | 0.72 | 1,390 (1.0%) | 59 | 2.9e-05 rad / 23 m | 9e-06 |
+| 2.5 km | two arcs of 743 m (shortest) | locked | resolved | 553–555 | 2.0 | 1,900 | 0.72 | 1,390 (1.0%) | 59 | 2.9e-05 rad / 23 m | 9e-06 |
 | 2.5 km | two arcs of 743 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.53 rad / 80 m | 8e-06 |
 | 900 m | two arcs of 401 m | locked | resolved | 153–154 | 1.5 | 1,460 | 0.83 | 233 (1.2%) | 68 | 0.0003 rad / 6.4 m | 1e-05 |
 | 900 m | two arcs of 401 m | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 2e-01 |
@@ -87,9 +87,9 @@ Each torus has two chord nets, one in each side plane of its tube. In each, the 
 
 | Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin K / μω² | Natural frequency / spin: inertial; rotating modes | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t), + inclined option |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 0.032 | 3.2 | 502 | 127 (-1%) | 30.5 | 39 | 6.3; 5.3 and 7.3 | 9.87 | 0.20 / 4.84 | 0.51 / 2.5 | 0.17 | 41.4 | 1.3 | 0.52 (+0.25) |
+| 400 m | 0.032 | 3.2 | 502 | 127 (-1%) | 30.5 | 39 | 6.3; 5.3 and 7.3 | 9.88 | 0.20 / 4.84 | 0.51 / 2.5 | 0.17 | 41.4 | 1.3 | 0.52 (+0.25) |
 | 900 m | 0.29 | 8.4 | 1,130 | 117 (-2%) | 64.4 | 21 | 4.5; 3.5 and 5.5 | 72.8 | 0.71 / 11.1 | 0.48 / 1.9 | 3.0 | 169 | 5.3 | 13 (+4.0) |
-| 1.6 km | 1.5 | 18 | 2,010 | 115 (-4%) | 113 | 13 | 3.6; 2.6 and 4.6 | 348 | 1.7 / 19.5 | 0.44 / 1.5 | 23 | 498 | 16 | 140 (+32) |
+| 1.6 km | 1.5 | 18 | 2,010 | 115 (-4%) | 113 | 13 | 3.6; 2.6 and 4.6 | 349 | 1.7 / 19.6 | 0.44 / 1.5 | 23 | 498 | 16 | 140 (+32) |
 | 2.5 km | 5.5 | 35 | 3,142 | 115 (-7%) | 178 | 8.6 | 2.9; 1.9 and 3.9 | 1,240 | 3.4 / 29.6 | 0.41 / 1.3 | 120 | 1,240 | 38 | 1,100 (+170) |
 
 Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown. Torsion is likewise held by preload only.
@@ -102,7 +102,7 @@ Hub imbalance: 1% of the hub's mass at its rim. Torus imbalance: a 1% mismatch b
 |---|---|---|---|
 | 400 m | 0.71 cm / 0.22 MN | 0.48 cm / 0.15 MN | 0.089 cm / 0.027 MN |
 | 900 m | 3.1 cm / 2.0 MN | 2.0 cm / 1.3 MN | 0.21 cm / 0.13 MN |
-| 1.6 km | 9.2 cm / 10 MN | 5.7 cm / 6.4 MN | 0.40 cm / 0.45 MN |
+| 1.6 km | 9.2 cm / 10 MN | 5.7 cm / 6.5 MN | 0.40 cm / 0.45 MN |
 | 2.5 km | 22 cm / 40 MN | 13 cm / 23 MN | 0.68 cm / 1.2 MN |
 
 ### Building: the first arcs
@@ -114,11 +114,11 @@ At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of 
 | 400 m | one opposite pair | 12 | 0.062 | grows ×e every 0.20 turns | 109 | 72.9 | 0.85 | 4.0 (**more than the gap**) | 2.1 |
 | 400 m | two pairs at right angles | 24 | 7.9 | stable | 24.8 | 16.6 | 0.19 | 0.13 | 0.42 |
 | 900 m | one opposite pair | 27 | 0.036 | grows ×e every 0.22 turns | 291 | 155 | 2.4 | 9.0 (**more than the gap**) | 17 |
-| 900 m | two pairs at right angles | 54 | 4.4 | stable | 101 | 67.7 | 0.85 | 0.58 | 4.0 |
+| 900 m | two pairs at right angles | 54 | 4.4 | stable | 102 | 67.7 | 0.85 | 0.58 | 4.0 |
 | 1.6 km | one opposite pair | 48 | 0.025 | grows ×e every 0.25 turns | 905 | 275 | 7.6 | 16 | 78 |
 | 1.6 km | two pairs at right angles | 96 | 2.9 | stable | 299 | 199 | 2.5 | 1.7 | 22 |
 | 2.5 km | one opposite pair | 74 | 0.019 | grows ×e every 0.28 turns | 2,310 | 437 | 19 | 25 | 250 |
-| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 741 | 494 | 6.2 | 4.2 | 86 |
+| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 742 | 494 | 6.2 | 4.2 | 86 |
 
 Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through the lines.
 

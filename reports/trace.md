@@ -4,7 +4,7 @@ Contained in the torus's S-type and C-type rock, recoverable at the assumed reco
 
 | Element | Contained (t) | Recoverable (t) | Demand (t) | Surplus at high demand (t) | Status | Basis |
 |---|---|---|---|---|---|---|
-| Cu | 2,100 | 1,100 | 100–1,000 | 64 | ok | guess (§10): wiring, motors, magnetrons, rotary transformer; recovery 'about half' |
+| Cu | 2,100 | 1,100 | 100–1,000 | 65 | ok | guess (§10): wiring, motors, magnetrons, rotary transformer; recovery 'about half' |
 | Ni | 320,000 | 260,000 | 10,000–50,000 | 210,000 | ok | guess (§10, §14): cladding, Invar, nickel-iron batteries; carbonyl recovery |
 | Co | 16,000 | 13,000 | 0–0 | 13,000 | ok | notes §10: maraging wire rejected; by-product |
 | Cr | 14,000 | 6,800 | — | — | unbudgeted | heat-resisting steels for receivers and furnaces: not estimated |

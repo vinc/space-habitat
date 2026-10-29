@@ -28,7 +28,7 @@
 | `soil_water_vol_frac` | 0.2500 | m3 water / m3 soil | 0.1500–0.3500 | estimate | §6, ~25% water by volume |
 | `lake_floor_frac` | 0.02000 | share of the floor under ponds and streams | 0.01000–0.05000 | guess | small ponds and streams giving the biosphere access to water, not a main feature (design intent, 29 Oct 2026); replaces the fitted lake water (plan §5) |
 | `lake_depth_m` | 1.000 | m, mean depth | 0.5000–1.500 | guess | within the 1 m fill, so the jacket is left as it is (§6) |
-| `ballast_frac` | 0.0005000 | share of the rim's mass | 0.0001000–0.002000 | guess | operational imbalance trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock |
+| `ballast_frac` | 0.0005000 | share of the rim's mass | 0.0001000–0.002000 | guess | unbalanced mass at the rim, as a share of the rim's mass, trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock |
 | `biomass_water_kg_m2` | 10.00 | kg per m2 of floor | 3.000–30.00 | estimate | standing vegetation: temperate woodland ~15-30 kg/m2 of dry biomass, about as much water fresh, on part of the floor (unsourced) |
 | `hull_frames_ref_mt` | 0.3000 | Mt at the reference radius | 0.2000–0.4500 | estimate | §5c, hull and frames of a 900 m torus |
 | `hull_frames_ref_radius_m` | 900.0 | m | fixed | design | §5c |
@@ -102,6 +102,7 @@
 | `electrothermal_efficiency` | 0.3500 | fraction | 0.2500–0.4500 | estimate | arcjets and microwave electrothermal thrusters (unsourced) |
 | `mass_driver_efficiency` | 0.5000 | fraction | 0.3000–0.8000 | guess | mass driver as a reaction engine (O'Neill), electricity to jet power (guess) |
 | `moe_mj_kg_fe` | 10.00 | MJ of electricity per kg of iron | 7.000–14.00 | estimate | §10, molten-oxide electrolysis: ~5 MJ/kg minimum, ~7-14 with losses |
+| `moe_heat_mj_kg_fe` | 17.00 | MJ of furnace heat per kg of iron | 8.000–20.00 | estimate | §10, melting ~8-9 kg of rock per kg of iron at ~2 MJ/kg, partly recovered from the hot slag |
 | `electrolysis_mj_kg_water` | 20.00 | MJ of electricity per kg of water split | 16.00–25.00 | estimate | ~15.9 MJ/kg (higher heating value) at 65-100% efficiency (unsourced) |
 | `pv_silicon_kg_m2` | 0.4000 | kg of silicon per m2 of array | 0.1000–0.8000 | estimate | wafer cells ~150-200 um thick, with kerf losses; thin cells at the low end (unsourced) |
 | `other_vitamins_t` | 50.00 | t per 900 m torus, scaled with the floor | 10.00–200.0 | guess | electronics, dopants, catalysts, cesium, microbes and seeds (§10, §13): kilograms to tonnes each (guess) |
