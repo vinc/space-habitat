@@ -1,4 +1,4 @@
-"""Structure (plan §2), first part: wire strength, the tangent-chord net and the spin-up of a partial ring.
+"""Structure (plan §2): wire strength, the tangent-chord net, the spin-up of a partial ring and the tube's cross-section.
 
 python -m structure_model [--anchor-spacing 10] [--mismatch 0.01] [--set name=value ...]
 """
@@ -11,7 +11,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import cable_net, net_statics, spinup, wire
+from . import cable_net, net_statics, spinup, tube_section, wire
 
 SIZES = (400, 900, 1600, 2500)
 
@@ -141,6 +141,87 @@ def imbalance_section(p, mismatch):
     ])
 
 
+MT = 1e9
+
+
+def sizing_status(out):
+    if out["converged"]:
+        return "fully stressed"
+    if out["sized"]:
+        return f"safe, up to {out['slack']:.0%} spare"
+    return f"**over by {out['utilisation'] - 1:.0%}**"
+
+
+def tube_section_report(p):
+    ts = tube_section
+    rows = []
+    for r in SIZES:
+        res = evaluate(p, Design(radius_m=r, n_tori=1))
+        m = res["mass"]
+        out = ts.run(p, r, "sides", "vaulted")
+        t = out["per_torus"]
+        steel_model = m["steel"]
+        steel_fe = m["spokes"] + t["total"]
+        rows.append([size_label(r), num(out["load"] / 1e6), num(t["hull"] / MT, 2), num(t["outer_wall"] / MT, 2),
+                     num(t["bulkheads"] / MT, 2), num((t["panels"] + t["cell_walls"] + t["bumper"]) / MT, 2),
+                     f"**{num(t['total'] / MT, 2)}**", num(out["model_hull_frames"] / MT, 2),
+                     f"{t['total'] / out['model_hull_frames'] - 1:+.0%}", f"{steel_fe / steel_model - 1:+.0%}",
+                     sizing_status(out)])
+    layout = []
+    for r in (900, 1600, 2500):
+        for anchors in ts.ANCHORS:
+            for ceiling in ts.CEILINGS:
+                if r == 2500 and ceiling == "hung":
+                    continue
+                out = ts.run(p, r, anchors, ceiling)
+                forces = ", ".join(f"{a}°: {num(f / 1e6)}" for a, f in sorted(out["anchor_force"].items()) if f > 0)
+                layout.append([size_label(r), anchors, ceiling, num(out["per_metre"]["total"] / 1e3),
+                               num(out["per_torus"]["total"] / MT, 2), forces,
+                               num(-out["max_compression"] / 1e6, 2), num(out["max_displacement"], 2),
+                               sizing_status(out)])
+    sens = []
+    base = ts.run(p, 900, "sides", "vaulted")["per_torus"]["total"]
+    for name, value in (("plate_stress_mpa", 200), ("plate_stress_mpa", 500), ("skin_min_gauge_m", 0.005),
+                        ("skin_min_gauge_m", 0.02), ("cell_wall_min_gauge_m", 0.01), ("bumper_m", 0.003)):
+        q = params(load(), **{**vars(p), name: value})
+        t = ts.run(q, 900, "sides", "vaulted")["per_torus"]["total"]
+        sens.append([f"`{name}` = {value:g}", num(t / MT, 3), f"{t / base - 1:+.0%}"])
+    return "\n\n".join([
+        "## Tube cross-section: hull and frames by finite elements",
+        "One metre of tube in the plane of its cross-section (`structure_model/tube_section.py`): the pressure "
+        "hull and the outer cell wall as membrane skins, the jacket's transverse bulkheads (one every "
+        f"{p.cell_size_m:g} m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, "
+        "bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall "
+        "holding the section along the radius. Every part is sized fully stressed at "
+        f"{p.plate_stress_mpa:g} MPa (von Mises at every integration point; half that in compression, blended "
+        "with tension by the compression's share of the stress state, an allowance for stiffeners), or held "
+        f"at its minimum gauge ({p.skin_min_gauge_m * 100:g} cm for the skins, {p.cell_wall_min_gauge_m * 1000:g} mm "
+        "for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing "
+        "of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners "
+        "(vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are "
+        "together in one column. Each anchor is a fitting through the jacket's depth, spreading the chord's pull over "
+        "the radial line of nodes at its angle and pinned at the chord's attachment on the outer wall (a force, no "
+        "couple). **Sizing:** *fully stressed* when every part is within 2% of its allowable or at "
+        "its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds "
+        "(heavier than needed); *over* when some part still exceeds it (not a design).",
+        "### Chords anchored at the tube's two sides (one net in each side plane), vaulted ceiling",
+        table(["Torus", "Load (MN per m of tube)", "Hull (Mt)", "Outer wall (Mt)", "Bulkheads (Mt)",
+               "Panels, cell walls, bumper (Mt)", "Hull and frames (Mt)", "System model, r^2.3 (Mt)",
+               "Difference", "Steel per torus (with spokes) vs model", "Sizing"], rows),
+        "### Where the chords anchor",
+        "Anchors on the hub-facing crest (one net in the torus's mid-plane), at the two sides, or spread over the "
+        "hub-facing half (anchors that would push are released; the rest share the load). Anchor loads per metre "
+        "of tube; compression is the largest compressive force in a skin; displacement includes the section's "
+        "ovalisation.",
+        table(["Torus", "Anchors", "Ceiling", "Steel (t per m of tube)", "Per torus (Mt)",
+               "Anchor loads (MN/m)", "Max skin compression (MN/m)", "Max displacement (m)", "Sizing"], layout),
+        "### Sensitivity at 900 m (sides, vaulted)",
+        table(["Change", "Hull and frames (Mt)", "vs base"], sens),
+        "Not modelled: buckling of the parts in compression (sized with an allowance only), segment joints and "
+        "seals, the anchors' local details, and the valley's buildings, light box and ceiling.",
+    ])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m structure_model", description=__doc__)
     ap.add_argument("--anchor-spacing", type=float, default=10.0, help="m of rim per anchor (default 10)")
@@ -148,9 +229,9 @@ def main(argv=None):
     ap.add_argument("--set", type=parse_override, action="append", default=[], metavar="NAME=VALUE")
     args = ap.parse_args(argv)
     p = params(load(), **dict(args.set))
-    print("\n\n".join(["# Structure: wire, cable net and spin-up", wire_section(p),
+    print("\n\n".join(["# Structure: wire, cable net, spin-up and the tube's cross-section", wire_section(p),
                        net_section(p, args.anchor_spacing), construction_section(p),
-                       imbalance_section(p, args.mismatch)]) + "\n")
+                       imbalance_section(p, args.mismatch), tube_section_report(p)]) + "\n")
     return 0
 
 

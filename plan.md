@@ -69,12 +69,12 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Why second:** under way. The steel inputs move the S-type rock mined per torus by up to ~+20% (wire stress, hull and frames, hub and factory metal), the jacket's geometry sets the pitch, mass and stack limits, and the stack dynamics need its stiffness.
 
-**Status:** the wire, the cable net and the spin-up are done in `structure_model/` (findings and sources in its README, report in `reports/structure.md`). ~1 GPa is reachable at a safety factor of ~2 on bridge wire, or with thinner wire; the range is narrowed to 800–1,200 MPa (10th in the combined ranking). The rim loads were updated for the jacket's finite thickness (review, issue #1). The finite-element segment model and the hub's stabilising lines are next.
+**Status:** the wire, the cable net and the spin-up are done in `structure_model/` (findings and sources in its README, report in `reports/structure.md`). ~1 GPa is reachable at a safety factor of ~2 on bridge wire, or with thinner wire; the range is narrowed to 800–1,200 MPa (10th in the combined ranking). The rim loads were updated for the jacket's finite thickness (review, issue #1). The tube's cross-section is now modelled by finite elements (`structure_model/tube_section.py`): with the chords anchored at the tube's two sides, the hull and frames are within −8% / +1% of the r^2.3 estimate at 900 m / 1.6 km, +46% at 2.5 km, so the steel per torus moves by under 10%. The hub's stabilising lines are next.
 
-- [ ] Finite-element model of one tube segment (CalculiX, FEniCS or sfepy):
-  - rock cells and double skin
-  - floor fill and hung ceiling cells
-  - loads: 1 g spin and 70 kPa of air
+- [x] Finite-element model of the tube's cross-section (numpy: plane-stress bulkheads between membrane skins, fully stressed sizing; `structure_model/tube_section.py`):
+  - rock cells and double skin, floor fill, vaulted or hung ceiling cells; loads: 1 g spin and 70 kPa of air
+  - found: anchor the chords at the tube's sides (two nets per torus); on the crest the section bends, 3–12× the steel; vaulted and hung ceilings within ~7%
+  - open: buckling of the hub-facing half (in compression; sized with an allowance only), the anchors' local details, a 3D shell model of a segment with its joints
 - [x] Cable net: chord geometry, tension distribution, taper, compliant joints
 - [ ] Spin-up sequence: a partial ring with segments hung in opposite pairs, and the asymmetric loads on the way (provisional)
   - done: assembled statics with one tension per chord, rigid segments and joint springs (`structure_model/net_statics.py`): arcs must span ≥ ~4θr (~270 m at 900 m); their chords carry 2× the finished load, so spin ≤ ~0.71 of the final rate; joints locked while building (~1% of the hoop force, plus bending), released after closure
@@ -83,7 +83,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] Hub held in the net by stabilising lines
 - [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
   - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)
-- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate; stiffness for model 4 (stack dynamics)
+- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate (done for hull and frames: +19% / −8% / +1% / +46%; −2% to +7% with the spokes); stiffness for model 4 (stack dynamics)
 
 **Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
 

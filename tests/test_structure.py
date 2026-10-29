@@ -7,7 +7,7 @@ import numpy as np
 
 from habitat_model import Design, evaluate, load, params
 from habitat_model.mass import spoke_factor
-from structure_model import cable_net, net_statics, spinup, wire
+from structure_model import cable_net, net_statics, spinup, tube_section, wire
 from structure_model.__main__ import main
 
 
@@ -138,6 +138,7 @@ class TestWire(unittest.TestCase):
         with redirect_stdout(out):
             self.assertEqual(main([]), 0)
         self.assertIn("Tangent-chord net", out.getvalue())
+        self.assertIn("Tube cross-section", out.getvalue())
 
 
 if __name__ == "__main__":
@@ -157,3 +158,129 @@ class TestUniformChordArea(unittest.TestCase):
             peak = n["tension_end"] / n["wire_area_uniform"] + n["self_load_stress"]
             self.assertAlmostEqual(peak / sigma, 1, places=9)
             self.assertAlmostEqual(n["tension_mid_uniform"] / n["wire_area_uniform"], sigma, delta=1)
+
+
+class TestTubeSection(unittest.TestCase):
+    """The tube's cross-section by finite elements (plan §2.1)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.p = params(load())
+        cls.runs = {a: tube_section.run(cls.p, 900, a, "vaulted") for a in tube_section.ANCHORS}
+
+    def test_quad_patch(self):
+        # A uniform strain gives a uniform stress and balanced nodal forces.
+        square = np.array([[[0.0, 0.0], [2.0, 0.0], [2.0, 1.0], [0.0, 1.0]]])
+        k = tube_section.quad_unit_stiffness(square)[0]
+        u = np.zeros(8)
+        u[0::2] = 1e-3 * square[0, :, 0]
+        np.testing.assert_allclose(k @ u @ np.tile([0.0, 1.0], 4), 0, atol=1e-3)
+        np.testing.assert_allclose((k @ u)[0::2].sum(), 0, atol=1e-3)
+        b, _ = tube_section._b_matrix(square, 0.0, 0.0)
+        stress = tube_section._plane_stress() @ b[0] @ u
+        e = tube_section.E / (1 - tube_section.NU ** 2) * 1e-3
+        np.testing.assert_allclose(stress, [e, tube_section.NU * e, 0], rtol=1e-9)
+
+    def test_pressure_alone_gives_the_hoop_force(self):
+        inp = self.runs["sides"]["inputs"]
+        from dataclasses import replace
+        bare = replace(inp, rock_density=0.0, floor_mass=0.0, omega=0.0, bumper=0.0)
+        model = tube_section.Model(bare, "sides")
+        nt, ne = model.mesh.nt, len(model.mesh.quads)
+        s = model.solve(np.full(nt, 0.01), np.full(nt, 0.01), np.full(ne, 1e-9))
+        np.testing.assert_allclose(s["n_hull"], inp.pressure * inp.a, rtol=0.01)
+
+    def test_equilibrium_and_rim_load(self):
+        res = evaluate(self.p, Design(radius_m=900, n_tori=1))
+        g, m = res["geometry"], res["mass"]
+        for r in self.runs.values():
+            self.assertAlmostEqual(r["reaction_sum"] / r["load"], 1, places=6)
+        # The load per metre is about the rim's (with the system model's hull) at the centre line.
+        centre = g["radius"] - g["tube_radius"]
+        rim_load = m["rim"] / (2 * math.pi * centre) * g["omega"] ** 2 * centre
+        self.assertAlmostEqual(self.runs["sides"]["load"] / rim_load, 1, delta=0.03)
+
+    def test_anchors_at_the_sides(self):
+        crest, sides, fan = (self.runs[a]["per_torus"]["total"] for a in ("crest", "sides", "fan"))
+        self.assertGreater(crest, 2 * sides)
+        self.assertAlmostEqual(fan / sides, 1, delta=0.05)
+        # In the fan, the side anchors take most of the load.
+        forces = self.runs["fan"]["anchor_force"]
+        self.assertGreater((forces[90] + forces[270]) / self.runs["fan"]["load"], 0.8)
+
+    def test_fully_stressed_at_every_integration_point(self):
+        for name in ("sides", "fan"):
+            r = self.runs[name]
+            inp = r["inputs"]
+            self.assertTrue(r["converged"], name)
+            self.assertLessEqual(r["utilisation"], 1.02)
+            self.assertLessEqual(r["solution"]["utilisation"].max(), 1.02)
+            self.assertTrue((r["t_hull"] >= inp.skin_min).all() and (r["t_outer"] >= inp.skin_min).all())
+            self.assertTrue((r["tau"] >= inp.wall_min / inp.cell - 1e-12).all())
+
+    def test_sizing_converges_at_every_size(self):
+        # Review on PR #4: local stresses, not just the total mass, must settle.
+        for r in (400, 1600, 2500):
+            out = tube_section.run(self.p, r, "sides", "vaulted")
+            self.assertTrue(out["converged"], r)
+            self.assertLessEqual(out["utilisation"], 1.02)
+
+    def test_unfinished_sizing_is_flagged(self):
+        inp = self.runs["sides"]["inputs"]
+        out = tube_section.Model(inp, "sides").size(max_iter=2)
+        self.assertFalse(out["converged"])
+        self.assertFalse(out["sized"])
+        self.assertGreater(out["utilisation"], 1.02)
+
+    def test_allowance_is_continuous(self):
+        k = tube_section.COMPRESSION_KNOCKDOWN
+        a = tube_section.allowance
+        self.assertEqual(float(a(np.array(1.0), np.array(0.5))), 1.0)
+        self.assertAlmostEqual(float(a(np.array(-1.0), np.array(-0.2))), k)
+        self.assertAlmostEqual(float(a(np.array(1.0), np.array(-1.0))), (1 + k) / 2)
+        self.assertAlmostEqual(float(a(np.array(1.0), np.array(-1e-9))), 1.0, places=6)
+
+    def test_rock_rests_on_the_walls(self):
+        # Review on PR #4: the rock's weight enters at the hull or the outer wall, never inside the jacket.
+        inp = self.runs["sides"]["inputs"]
+        for ceiling in tube_section.CEILINGS:
+            m = tube_section.Model(inp, "sides", ceiling)
+            f = m.f_fixed.reshape(-1, 2)
+            interior = m.mesh.columns[:, 1:-1].ravel()
+            np.testing.assert_allclose(f[interior], 0, atol=1e-9)
+            # The rock goes on the outer wall (floor side; and hub side when hung) or on the hull (hub side,
+            # vaulted), in full: rock + bumper on the outer wall, rock + fill + pressure on the hull.
+            hub_side = np.cos(m.mesh.phi) < 0
+            outer_x = f[m.mesh.outer_nodes, 0]
+            hull_x = f[m.mesh.hull_nodes, 0]
+            if ceiling == "hung":
+                self.assertGreater(outer_x[hub_side].sum(), 0)
+            else:
+                self.assertLess(abs(outer_x[hub_side].sum()), 0.01 * m.rock_load)
+            total = f[:, 0].sum()
+            fill = inp.floor_mass * inp.omega ** 2 * inp.centre
+            self.assertAlmostEqual((total - m.rock_load) / (fill + m.bumper_mass * inp.omega ** 2 * inp.centre), 1,
+                                   delta=0.05)
+            self.assertGreater(hull_x.sum() + outer_x.sum(), 0.99 * total)
+
+    def test_fittings_pass_on_no_couple(self):
+        # Review on PR #4: a tension-only chord passes on a force at its attachment, not a moment.
+        for name, r in self.runs.items():
+            s = r["solution"]
+            for j in s["anchors"]:
+                self.assertLess(abs(s["moment"][j]), 1e-6 * r["load"], name)
+        # The fitting does turn about the attachment (the line's x displacements aren't all equal).
+        s = self.runs["sides"]["solution"]
+        column = tube_section.Mesh(self.runs["sides"]["inputs"]).columns[s["anchors"][0]]
+        ux = s["u"][2 * column]
+        self.assertGreater(np.ptp(ux), 1e-6)
+        self.assertAlmostEqual(float(ux[-1]), 0.0, places=12)
+
+    def test_close_to_the_system_model_at_900_m(self):
+        r = self.runs["sides"]
+        self.assertAlmostEqual(r["per_torus"]["total"] / r["model_hull_frames"], 1, delta=0.3)
+
+    def test_mesh_converged(self):
+        coarse = self.runs["sides"]["per_metre"]["total"]
+        fine = tube_section.run(self.p, 900, "sides", "vaulted", n_radial=6, n_around=216)["per_metre"]["total"]
+        self.assertAlmostEqual(fine / coarse, 1, delta=0.01)

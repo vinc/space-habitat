@@ -1,6 +1,6 @@
-# Structural model (plan §2), first part
+# Structural model (plan §2)
 
-The parts of plan §2 that need no finite-element model: the wire, the tangent-chord net and the spin-up of a partial ring. It uses the system model (`habitat_model`) for the rim mass and geometry.
+The wire, the tangent-chord net, the spin-up of a partial ring, and the tube's cross-section by finite elements. It uses the system model (`habitat_model`) for the rim mass and geometry.
 
 ```bash
 python -m structure_model                       # full report
@@ -13,6 +13,7 @@ python -m structure_model --anchor-spacing 20 --mismatch 0.02 --set wire_stress_
 | `cable_net.py` | chord geometry, tension along a chord, uniform vs tapered mass, comparison with radial spokes, bowing |
 | `spinup.py` | single-laced end zones of a partial ring, a local estimate of its joint tension, axis offset from a mass mismatch |
 | `net_statics.py` | assembled statics of a ring or of two opposite arcs: one tension per chord, rigid segments, sliding / pinned / locked joints, tension-only chords, residual check |
+| `tube_section.py` | the tube's cross-section by finite elements: membrane skins (hull, outer cell wall), the jacket's bulkheads as a plane-stress annulus, spin and pressure loads, chord anchors, fully stressed sizing |
 
 ## Findings
 
@@ -51,9 +52,19 @@ Cold-drawn wire relaxes ~5% in 1,000 h at half its strength (r = 30 f/f_u − 10
 - **And released once the ring is closed:** with locked joints the closed ring behaves as a hoop and the hull takes ~64% of the load at 900 m (~50% at 1.6 km) in this model, as the notes warn (strain compatibility). The joints must slide along the rim after closure, or the spokes be made stiffer.
 - **Imbalance:** the stack spins freely about its centre of mass, so a mismatch between paired arcs shifts the spin axis away from the assembly's geometric centre rather than loading a bearing: ~3.6 m for a 1% mismatch on the first pair of 900 m arcs, ~7.5 m at 2.5 km. The hub and the net move together, so this is not a loss of clearance between them; their relative motion needs the stabilising lines' stiffness, still open.
 
+### Tube cross-section: anchor the chords at the tube's sides
+
+- **Model** (`tube_section.py`): one metre of tube in the plane of its cross-section. The pressure hull and the outer cell wall are membrane skins (bars); the jacket's transverse bulkheads, one every `cell_size_m` (10 m), are smeared into a plane-stress annulus of Q4 elements between them. Loads: spin gravity w²x on the rock (resting on the outer wall on the floor side, on the hull on the hub-facing side), on the fill, lakes and air (on the floor half of the hull, by projected width), on the bumper and on the steel; 70 kPa on the hull. Each anchor is a fitting through the jacket's depth, spreading the chord's pull over the radial line of nodes at its angle (a single node would be a point load, whose stresses grow without bound as the plate around it thickens). It is pinned at the chord's attachment on the outer wall: the line's x displacements follow a free rotation about that point (Lagrange multipliers), so the fitting passes on a force but no couple. A chord sized at the working stress stretches by σL/E whatever its load, so all anchors move together and fixed supports are exact; anchors that would push are released. Every part is sized fully stressed at `plate_stress_mpa` (300 MPa, a guess) in von Mises at every integration point, or held at its minimum gauge (`skin_min_gauge_m` 1 cm, `cell_wall_min_gauge_m` 5 mm). Compression is allowed half the working stress, blended with tension by the compression's share of the stress state (pure shear: three quarters), an allowance for stiffeners, not a buckling check; a step at the tension/compression switch kept the sizing from settling. The sizing runs until every part is within 2% of its allowable or at its minimum gauge; a result that doesn't get there is flagged (`converged`, `sized`). The skins also carry the hull's lengthwise pressure load (pa/2) and the pillowing of their panels between bulkheads; hub-facing hull panels pressed in by the rock get stiffeners (vaulted), or the rock rests on hung membrane cell floors (hung). Checks: a Q4 patch test, no support moment about each chord's attachment, the hoop force pa under pressure alone, the rock's weight entering only at the walls, reactions equal to the loads, the load equal to the system model's rim load (within 3%), convergence of the sizing at every size, and mesh convergence (0.4% from 4 × 144 to 8 × 288 elements).
+- **Anchors at the sides.** At the tube's two sides (φ = 90° and 270°), the floor half hangs between them and the hub-facing half stands as an arch: hull and frames ~0.055 / 0.28 / 1.1 / 4.6 Mt at 400 m / 900 m / 1.6 km / 2.5 km, against the r^2.3 estimate's 0.046 / 0.30 / 1.1 / 3.1 Mt (+19% / −8% / +1% / +46%). With the spokes, the steel per torus moves by −2% to +7%, well inside the plan's ~30% threshold.
+- **On the crest** (one net in the mid-plane) the section bends like a ring hung from one point: ~0.92 Mt at 900 m, ~8 Mt at 1.6 km, ~55 Mt at 2.5 km. Anchors spread over the hub-facing half settle on the two sides (~85–97% of the load) and save only ~2–6%.
+- **So each torus has two nets, one in each side plane of its tube** (~34 m from the mid-plane at 900 m), and the mid-plane is clear of chords between them.
+- **Vaulted vs hung ceiling cells:** within ~7% in mass (hung heavier).
+- **Sensitivity at 900 m:** the skins' minimum gauge dominates (2 cm: +56%; 5 mm: −19%); working stress 200 / 500 MPa: +20% / −10%; 1 cm bulkheads and cell walls: +13%.
+- **Not modelled:** buckling of the hub-facing half (up to ~1.3 MN/m of compression in the skins at 900 m, ~10 MN/m at 2.5 km), the segment joints and seals, the anchors' local details, and the valley's buildings, light box and ceiling.
+
 ## Still open in plan §2
 
-- Finite-element model of one tube segment (rock cells, double skin, floor fill, hung ceiling cells; 1 g and 70 kPa) to check the r^2.3 hull-and-frames estimate. sfepy is available from PyPI here as a source package (it needs compiling); a small purpose-built shell model in numpy is the alternative.
+- Buckling of the hub-facing half of the section, and a 3D shell model of a segment with its joints and anchors.
 - The hub held in the net by stabilising lines (its motion relative to the net under imbalance), and the net's stiffness for the stack dynamics (plan §4).
 - Fatigue: the spin load is static; the cyclic loads (rim trains, ballast transfers, day/night temperatures) are small and belong with the stack dynamics.
 
