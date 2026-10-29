@@ -182,13 +182,37 @@ high = 0.35
 source = "§6, ~25% water by volume"
 status = "estimate"
 
-[shield.lake_water_t_m2]
-value = 0.25
-unit = "t per m2 of floor"
-low = 0.1
-high = 0.5
-source = "fitted so that water needed matches §7 (~0.15 / 0.4 / 0.9 Mt); the notes give no breakdown"
+[shield.lake_floor_frac]
+value = 0.1
+unit = "share of the floor under lakes and streams"
+low = 0.03
+high = 0.2
+source = "a climate dial (§16: arid canyon to fern gully); replaces the fitted lake water (plan §5)"
 status = "guess"
+
+[shield.lake_depth_m]
+value = 2.0
+unit = "m, mean depth"
+low = 1.0
+high = 3.0
+source = "ponds and shallow lakes in the fill and the jacket below it (§6: water shields too)"
+status = "guess"
+
+[shield.ballast_frac]
+value = 0.0005
+unit = "share of the rim's mass"
+low = 0.0001
+high = 0.002
+source = "operational imbalance trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock"
+status = "guess"
+
+[shield.biomass_water_kg_m2]
+value = 10
+unit = "kg per m2 of floor"
+low = 3
+high = 30
+source = "standing vegetation: temperate woodland ~15-30 kg/m2 of dry biomass, about as much water fresh, on part of the floor (unsourced)"
+status = "estimate"
 
 # --- Structure --------------------------------------------------------------
 
@@ -724,6 +748,64 @@ low = 0.5
 high = 0.7
 source = "§15, electric propulsion"
 status = "estimate"
+
+# Logistics only (logistics_model/, plan §5); the system model doesn't use these.
+
+[processing.electrothermal_exhaust_km_s]
+value = 6
+unit = "km/s"
+low = 4
+high = 8
+source = "arcjets and microwave electrothermal thrusters on water (unsourced)"
+status = "estimate"
+
+[processing.electrothermal_efficiency]
+value = 0.35
+unit = "fraction"
+low = 0.25
+high = 0.45
+source = "arcjets and microwave electrothermal thrusters (unsourced)"
+status = "estimate"
+
+[processing.mass_driver_efficiency]
+value = 0.5
+unit = "fraction"
+low = 0.3
+high = 0.8
+source = "mass driver as a reaction engine (O'Neill), electricity to jet power (guess)"
+status = "guess"
+
+[processing.moe_mj_kg_fe]
+value = 10
+unit = "MJ of electricity per kg of iron"
+low = 7
+high = 14
+source = "§10, molten-oxide electrolysis: ~5 MJ/kg minimum, ~7-14 with losses"
+status = "estimate"
+
+[processing.electrolysis_mj_kg_water]
+value = 20
+unit = "MJ of electricity per kg of water split"
+low = 16
+high = 25
+source = "~15.9 MJ/kg (higher heating value) at 65-100% efficiency (unsourced)"
+status = "estimate"
+
+[processing.pv_silicon_kg_m2]
+value = 0.4
+unit = "kg of silicon per m2 of array"
+low = 0.1
+high = 0.8
+source = "wafer cells ~150-200 um thick, with kerf losses; thin cells at the low end (unsourced)"
+status = "estimate"
+
+[processing.other_vitamins_t]
+value = 50
+unit = "t per 900 m torus, scaled with the floor"
+low = 10
+high = 200
+source = "electronics, dopants, catalysts, cesium, microbes and seeds (§10, §13): kilograms to tonnes each (guess)"
+status = "guess"
 
 # --- Stability --------------------------------------------------------------
 

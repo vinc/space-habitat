@@ -65,19 +65,24 @@ def compute(p, d, geo):
     soil = soil_depth * p.soil_density * 1e3 * floor
     regolith = regolith_depth * p.regolith_density * 1e3 * floor
 
-    # Water to source: soil moisture, lakes, and the water electrolysed for the O2.
-    # The soil's water is already in its moist density, and the electrolysed water
-    # is in the air as O2, so only the lakes add mass on the rim.
+    # Water to source: soil moisture, lakes, the water electrolysed for the O2, ballast and the
+    # vegetation's water. The soil's water is already in its moist density, and the electrolysed
+    # water is in the air as O2, so lakes, ballast and vegetation add mass on the rim.
     water_soil = soil_depth * p.soil_water_vol_frac * 1e3 * floor
-    water_lakes = p.lake_water_t_m2 * 1e3 * floor
+    water_lakes = p.lake_floor_frac * p.lake_depth_m * 1e3 * floor
+    water_biomass = p.biomass_water_kg_m2 * floor
     farm_air = air(p, geo["farm_volume"], p.farm_pressure_kpa)
     water_o2 = (gases["o2"] + farm_air["o2"]) * WATER_PER_O2       # the valley's O2 and the farm ring's
-    water_needed = water_soil + water_lakes + water_o2
 
     hull_1g = p.hull_frames_ref_mt * 1e9 * (geo["radius"] / p.hull_frames_ref_radius_m) ** p.hull_frames_exponent
     hull = hull_1g * max(p.hull_min_gauge_frac, d.g)
 
-    rim = shield + soil + regolith + water_lakes + gases["n2"] + gases["o2"] + hull
+    dry_rim = shield + soil + regolith + water_lakes + water_biomass + gases["n2"] + gases["o2"] + hull
+    # Ballast: a first-harmonic imbalance e of the rim's mass is trimmed by water distributed as
+    # 1 - cos around the rim, e M in all, in tanks holding up to twice the mean.
+    water_ballast = p.ballast_frac * dry_rim
+    water_needed = water_soil + water_lakes + water_o2 + water_ballast + water_biomass
+    rim = dry_rim + water_ballast
     spokes = rim * spoke_factor(p, geo["rim_speed"])
     total = rim + spokes
 
@@ -101,6 +106,8 @@ def compute(p, d, geo):
         "water_soil": water_soil,
         "water_lakes": water_lakes,
         "water_o2": water_o2,
+        "water_ballast": water_ballast,
+        "water_biomass": water_biomass,
         "water_needed": water_needed,
         "hull_frames": hull,
         "rim": rim,
