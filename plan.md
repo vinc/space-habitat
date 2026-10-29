@@ -155,13 +155,13 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 - [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
 - [x] Farm section's radiators: reach, layout, and how much of the drum's farm end they may shade (`thermal_model/layout.py`, `reports/heat_rejection.md`)
-  - found: outboard of the farm rings (the baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: a pair's farm cools, a six-stack's only ~0.5–0.7× (about one tier). Proposed: outboard pumped, with an inboard passive fallback
-  - found: reach ~0.6 r for 1×, ~0.75 r for 1.5× (six-stack, three tiers lit); ~36 + 42 ha of panels per 900 m torus at 1.5×
+  - found: outboard of the farm rings (the baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: a pair's farm cools, a six-stack's only ~0.5–0.75× (about one tier). Proposed: outboard pumped, with an inboard passive fallback
+  - found: reach ~0.6 r for 1×, ~0.75 r for 1.5× (six-stack, three tiers lit); ~27 + 42 ha of panels per 900 m torus at 1.5×
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
   - done: end openings, gap vents, farm rings and their radiators, the whole stack as one scene (`habitat_model/cavity.py`); open: the spokes and cables, the envelopes' rounded inner faces
 - [x] Check that no direct sunlight reaches the radiators (`thermal_model/sunlight.py`): none on the drum's panels below ~1.5° of axis tilt (the tori shade them, ends and gaps alike); the open farm section takes ~1.3% of its heat per degree at 1 AU, so the axis needs holding to a degree or two
 - [x] Coolant loops (`thermal_model/coolant.py`): single-phase water, passive in the main section (~0.45 m pipes, ~0.7 m/s, ~1 kt per 900 m torus), pumped in the farm section (~0.2% of its heat); two-phase ammonia can't boil at the rim under its own liquid column (~1.9 MPa at 900 m) without throttling
-- [x] Valley thermal model (`thermal_model/valley.py`): left to itself the valley swings ~2–4 K (baseline, wet) to ~4–10 K (dry canyon) over a 12 h day; wider swings need scheduled cooling
+- [x] Valley thermal model (`thermal_model/valley.py`): left to itself the valley swings ~2–4 K (baseline, wet) to ~4–11 K (dry canyon) over a 12 h day; wider swings need scheduled cooling
 - [x] Output: capacity vs stack length with 0–3 farm tiers lit (~24 / 18 / 18 / 16 tori, 900 m and 1.6 km alike), radiator area per torus
 
 **Changes the design if:** the end openings carry much less than ~1.6 GW for a 900 m stack, or six-stacks with two or three tiers lit don't fit.

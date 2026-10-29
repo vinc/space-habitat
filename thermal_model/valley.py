@@ -16,7 +16,7 @@ HOURS = 3600.0
 # Soils, per m² of floor (general handbook ranges, unsourced): conductivity W/mK, volumetric heat J/m³K.
 SOILS = {"moist": (1.5, 2.5e6), "dry": (0.3, 1.3e6)}
 WATER_C = 4.18e6       # J/m³K
-AIR_C = 1.2 * 1005     # J/m³K
+AIR_CP = 1005.0        # J/kgK
 
 # Two looks of the same valley (notes §16): an arid canyon and a fern gully.
 CASES = {
@@ -26,9 +26,17 @@ CASES = {
 }
 
 
-def capacity(case, air_height):
+def air_heat_capacity(p):
+    """Volumetric heat capacity of the habitat's air (J/m³K), from its configured pressure and temperature."""
+    from habitat_model.mass import air
+
+    gases = air(p, 1.0, p.pressure_kpa)
+    return (gases["n2"] + gases["o2"]) * AIR_CP
+
+
+def capacity(case, air_height, air_c):
     """Heat capacity per m² of floor following the day (J/m²K), soil apart."""
-    return (AIR_C * air_height + WATER_C * case["biomass_water"] / 1000
+    return (air_c * air_height + WATER_C * case["biomass_water"] / 1000
             + WATER_C * case["pond_frac"] * case["pond_depth"])
 
 
@@ -37,9 +45,10 @@ def effusivity(case):
     return math.sqrt(k * c)
 
 
-def swing(case, light_w_m2, day_hours, u, air_height, harmonics=200, samples=480):
-    """Peak-to-peak temperature swing (K) and the hour of the maximum, for light_w_m2 on during day_hours."""
-    c, e = capacity(case, air_height), effusivity(case)
+def swing(case, light_w_m2, day_hours, u, air_height, air_c, harmonics=200, samples=480):
+    """Peak-to-peak temperature swing (K) and the hour of the maximum, for light_w_m2 on during day_hours;
+    air_c: the air's volumetric heat capacity (J/m³K)."""
+    c, e = capacity(case, air_height, air_c), effusivity(case)
     duty = day_hours / 24
     temps = []
     for j in range(samples):

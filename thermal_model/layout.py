@@ -38,15 +38,23 @@ def compare(p, cases, target=1.5, n_rays=4000, grid=cavity.GRID):
     return rows
 
 
+def sizing_coverage(row):
+    """The coverages to size against: the least panels meeting the target, or, when no grid point meets it,
+    the best achievable (flagged). Returns (coverage, met)."""
+    return (row["least"]["coverage"], True) if row["least"] else (row["coverage"], False)
+
+
 def passive_tiers(row, per_tier):
     """Farm tiers the inboard (passive) radiators alone can carry: their best output over one tier's heat."""
     return row["farm"] * row["loads"][1] / per_tier
 
 
-def reach_needed(assumptions, d, target, low=0.45, high=1.4, n_rays=4000, steps=8, name="farm_radiator_outer_frac"):
-    """Least outboard reach (× floor radius) at which the assembled stack meets target in both sections."""
+def reach_needed(assumptions, d, target, overrides=None, low=0.45, high=1.4, n_rays=4000, steps=8,
+                 name="farm_radiator_outer_frac"):
+    """Least outboard reach (× floor radius) at which the assembled stack meets target in both sections, with
+    every other input as configured (overrides) and only the reach searched."""
     def margin(v):
-        return _check(params(assumptions, **{name: v}), d, "outboard", n_rays)["margin"]
+        return _check(params(assumptions, **{**(overrides or {}), name: v}), d, "outboard", n_rays)["margin"]
 
     if margin(high) < target:
         return None

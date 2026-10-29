@@ -27,7 +27,7 @@ def label(r):
     return f"{r / 1000:g} km" if r >= 1000 else f"{r:g} m"
 
 
-def layout_section(a, p):
+def layout_section(a, p, overrides):
     rows = layout.compare(p, LAYOUT_CASES, target=TARGET, grid=GRID)
     out, per_torus, coverages = [], {}, {}
     for row in rows:
@@ -37,9 +37,10 @@ def layout_section(a, p):
         least = row["least"]
         area = (f"{num(least['panel_area'][0] / HA)} / {num(least['panel_area'][1] / HA)}" if least
                 else "**not reached**")
-        if least and row["layout"] == "outboard":
-            per_torus[row["label"]] = [x / case[2] / HA for x in least["panel_area"]]
-            coverages[row["label"]] = least["coverage"]
+        if row["layout"] == "outboard":
+            coverages[row["label"]] = layout.sizing_coverage(row)
+            if least:
+                per_torus[row["label"]] = [x / case[2] / HA for x in least["panel_area"]]
         passive = num(layout.passive_tiers(row, per_tier), 2) if row["layout"] == "inboard" else "—"
         out.append([row["label"], row["layout"], f"{num(row['main'], 2)} / {num(row['farm'], 2)}",
                     f"{row['coverage'][0]:.0%} / {row['coverage'][1]:.0%}", area, passive])
@@ -47,7 +48,8 @@ def layout_section(a, p):
     for lab, radius, n, tiers in (("900 m six, 3 tiers", 900, 6, 3), ("1.6 km six, 3 tiers", 1600, 6, 3),
                                   ("900 m six, 2 tiers", 900, 6, 2)):
         d = Design(radius_m=radius, n_tori=n, tiers_lit=tiers)
-        reach.append([lab, *[num(x, 2) if (x := layout.reach_needed(a, d, t)) else "beyond 1.4" for t in (1.0, TARGET)]])
+        reach.append([lab, *[num(x, 2) if (x := layout.reach_needed(a, d, t, overrides)) else "beyond 1.4"
+                             for t in (1.0, TARGET)]])
     return per_torus, coverages, [
         "## The farm radiators: where, and how far out",
         "Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the baseline, from the rings "
@@ -59,7 +61,7 @@ def layout_section(a, p):
         "areas move in steps of ~25%).",
         table(["Stack, tiers lit", "Farm radiators", "Best margins, main / farm", "At coverage, main / farm",
                f"Least panels for {TARGET:g}× (ha), main / farm", "Tiers the passive set alone carries"], out),
-        "**Inboard radiators can't cool a six-stack's farm** (~0.5–0.7× at best): the farm rings enclose "
+        "**Inboard radiators can't cool a six-stack's farm** (~0.5–0.75× at best): the farm rings enclose "
         "them. Outboard, with pumps, is needed for two or three tiers lit; the inboard set is a passive "
         "fallback that keeps about one tier lit if the pumps stop. A pair's farm cools passively.",
         "**How far out the outboard radiators must reach** (× floor radius) for each margin, both sections:",
@@ -84,7 +86,7 @@ def capacity_section(p, per_torus):
     ]
 
 
-def sunlight_section(p, coverage):
+def sunlight_section(p, coverage, met):
     d = Design(radius_m=900, n_tori=6, tiers_lit=3)
     r = evaluate(p, d)
     g, h = r["geometry"], r["heat"]
@@ -102,7 +104,9 @@ def sunlight_section(p, coverage):
         "The axis points at the orbit's pole (notes §11), so sunlight arrives edge-on to the panels. A tilt "
         "lets it fall on one face of each, unless the tori (as true tori), the hub or the farm rings shade "
         "them. Sun rays marched through a 900 m six-stack (`thermal_model/sunlight.py`), panels at "
-        f"{coverage[0]:.0%} / {coverage[1]:.0%} coverage (main / farm, the least panels for {TARGET:g}×), solar absorptivity "
+        f"{coverage[0]:.0%} / {coverage[1]:.0%} coverage (main / farm, "
+        + (f"the least panels for {TARGET:g}×" if met else
+           f"**{TARGET:g}× is out of reach here: the best achievable coverage**") + "), solar absorptivity "
         f"{p.solar_absorptivity:g} (white paint), at 1 AU; as a share of each section's heat (three tiers lit). "
         "0.27° is the Sun's own radius, the least tilt any panel sees.",
         table(["Axis tilt from the pole", "Main section (drum)", "Farm section (open)"], rows),
@@ -167,9 +171,10 @@ def valley_section(p):
     g = evaluate(p, d)["geometry"]
     height = g["volume"] / g["floor_area"]
     light = valley.light_on_floor(p, DAY_HOURS)
+    air_c = valley.air_heat_capacity(p)
     rows = []
     for name, case in valley.CASES.items():
-        s = [valley.swing(case, light, DAY_HOURS, u, height) for u in (3, p.valley_cooling_u, 15)]
+        s = [valley.swing(case, light, DAY_HOURS, u, height, air_c) for u in (3, p.valley_cooling_u, 15)]
         rows.append([name, f"{num(s[0]['capacity'] / 1e3)} kJ/m²K", f"{num(s[0]['effusivity'])}",
                      *[f"{num(x['swing'], 2)} K" for x in s]])
     return [
@@ -177,28 +182,29 @@ def valley_section(p):
         f"Steady-periodic swing of a 900 m valley under a {DAY_HOURS} h day "
         f"(`thermal_model/valley.py`): the sky's {num(p.valley_light_mol)} mol/m² of light, ~{num(light)} W/m² "
         "while lit, all ending as heat in the valley; the air "
-        f"(~{num(height)} m of it per m² of floor), the vegetation's water and the ponds as heat capacity; the soil "
+        f"(~{num(height)} m of it per m² of floor, {num(air_c)} J/m³K at {num(p.pressure_kpa)} kPa), the vegetation's water and the ponds as heat capacity; the soil "
         "as a semi-infinite conductor (its daily swing reaches ~10–13 cm); the cooling taking heat out at U "
         "towards a coolant at a fixed temperature (the cold ceiling's radiation and the air handling). "
         "Peak-to-peak, at three couplings:",
         table(["Valley", "Capacity (air, plants, ponds)", "Soil effusivity (W s½/m²K)", "U = 3 W/m²K",
                f"U = {p.valley_cooling_u:g} (baseline)", "U = 15"], rows),
         "Left to itself the valley swings a few kelvin: the soil's admittance (~5–17 W/m²K at a daily "
-        "period) and the ponds hold it, so a wet valley stays within ~2–4 K and a dry canyon ~4–10 K. Wider "
+        "period) and the ponds hold it, so a wet valley stays within ~2–4 K and a dry canyon ~4–11 K. Wider "
         "swings (the notes' ~15 °C canyon) need the cooling scheduled: more at night through the cold "
         "ceiling, less by day.",
     ]
 
 
-def report(a, p):
-    per_torus, coverages, lay = layout_section(a, p)
+def report(a, overrides=None):
+    p = params(a, **(overrides or {}))
+    per_torus, coverages, lay = layout_section(a, p, overrides)
     parts = [
         "# Heat rejection: radiator layout, sunlight, coolant loops and the valley's swing",
         "Plan §6 (`thermal_model/`), building on the assembled radiative exchange of `habitat_model/cavity.py` "
         "(`reports/thermal.md`): radiators at ~285 K, emissivity ~0.9.",
         *lay,
         *capacity_section(p, per_torus),
-        *sunlight_section(p, coverages["900 m six, 3 tiers"]),
+        *sunlight_section(p, *coverages["900 m six, 3 tiers"]),
         *coolant_section(p),
         *valley_section(p),
         "Not modelled: the spokes and cables in the ray tracing, the envelopes' rounded inner faces, the "
@@ -212,8 +218,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m thermal_model", description=__doc__)
     ap.add_argument("--set", type=parse_override, action="append", default=[], metavar="NAME=VALUE")
     args = ap.parse_args(argv)
-    a = load()
-    print(report(a, params(a, **dict(args.set))), end="")
+    print(report(load(), dict(args.set)), end="")
     return 0
 
 
