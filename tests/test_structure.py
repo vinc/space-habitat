@@ -263,6 +263,19 @@ class TestTubeSection(unittest.TestCase):
                                    delta=0.05)
             self.assertGreater(hull_x.sum() + outer_x.sum(), 0.99 * total)
 
+    def test_fittings_pass_on_no_couple(self):
+        # Review on PR #4: a tension-only chord passes on a force at its attachment, not a moment.
+        for name, r in self.runs.items():
+            s = r["solution"]
+            for j in s["anchors"]:
+                self.assertLess(abs(s["moment"][j]), 1e-6 * r["load"], name)
+        # The fitting does turn about the attachment (the line's x displacements aren't all equal).
+        s = self.runs["sides"]["solution"]
+        column = tube_section.Mesh(self.runs["sides"]["inputs"]).columns[s["anchors"][0]]
+        ux = s["u"][2 * column]
+        self.assertGreater(np.ptp(ux), 1e-6)
+        self.assertAlmostEqual(float(ux[-1]), 0.0, places=12)
+
     def test_close_to_the_system_model_at_900_m(self):
         r = self.runs["sides"]
         self.assertAlmostEqual(r["per_torus"]["total"] / r["model_hull_frames"], 1, delta=0.3)

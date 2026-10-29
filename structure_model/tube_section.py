@@ -13,7 +13,8 @@ floor side (away from the axis) and 180° on the hub-facing side.
   hub-facing side), on the valley's fill, lakes and air (on the floor half of the hull), on the
   bumper and on the steel itself; the air pressure on the hull.
 - Supports: the chords' anchors at chosen angles, each a fitting through the jacket's depth that
-  holds the radial line of nodes at its angle, along x only. A chord sized at the working stress stretches by sigma L / E whatever its load, so all the
+  holds the radial line of nodes at its angle along x, pinned at the chord's attachment on the
+  outer wall: it may turn about that point, so it passes on a force but no couple. A chord sized at the working stress stretches by sigma L / E whatever its load, so all the
   anchors move together and fixed supports are exact. Anchors that would push are released.
 
 The sizing is fully stressed: each skin element and each bulkhead element is resized until its
@@ -260,18 +261,43 @@ class Model:
         m = self.mesh
         k = self._stiffness(t_hull, t_outer, tau)
         f = self.f_fixed + self._steel_loads(t_hull, t_outer, tau, extra_hull)
-        # Each anchor is a fitting through the jacket's depth: it holds the whole radial line of nodes
-        # at its angle along x (a single node would be a point load, with stresses growing without
-        # bound as the plate around it is thickened). A fitting that would push is released.
+        # Each anchor is a fitting through the jacket's depth, spreading the chord's pull over the
+        # radial line of nodes at its angle (a single node would be a point load, with stresses
+        # growing without bound as the plate around it is thickened). The chord can only pull along
+        # its line, at its attachment on the outer wall: the fitting is pinned there, so it holds the
+        # line's x displacements to a rotation about that point (u_x = -theta (y - y_attach)), with
+        # theta free. Lagrange multipliers carry the constraints; a fitting that would push is released.
         anchors = [m.column_at(a) for a in self.angles]
+        free = np.setdiff1d(np.arange(self.n_dofs), 2 * m.symmetry_nodes + 1)
+        index = np.full(self.n_dofs, -1)
+        index[free] = np.arange(len(free))
+        kff = k[np.ix_(free, free)]
         while True:
-            held = np.concatenate([m.columns[j] for j in anchors])
-            fixed = np.unique(np.concatenate([2 * held, 2 * m.symmetry_nodes + 1]))
-            free = np.setdiff1d(np.arange(self.n_dofs), fixed)
+            rows, n_theta = [], 0
+            for j in anchors:
+                column = m.columns[j]
+                arm = m.xy[column, 1] - m.xy[column[-1], 1]
+                theta = n_theta if np.abs(arm).max() > 1e-9 else None   # a line along x can't turn the pull
+                n_theta += theta is not None
+                rows += [(index[2 * node], theta, a) for node, a in zip(column, arm)]
+            n, size = len(free), len(free) + n_theta + len(rows)
+            a_mat = np.zeros((size, size))
+            a_mat[:n, :n] = kff
+            rhs = np.zeros(size)
+            rhs[:n] = f[free]
+            for r, (dof, theta, arm) in enumerate(rows):
+                i = n + n_theta + r
+                a_mat[i, dof] = a_mat[dof, i] = 1.0
+                if theta is not None:
+                    a_mat[i, n + theta] = a_mat[n + theta, i] = arm
+            x = np.linalg.solve(a_mat, rhs)
             u = np.zeros(self.n_dofs)
-            u[free] = np.linalg.solve(k[np.ix_(free, free)], f[free])
+            u[free] = x[:n]
             reaction = k @ u - f
             pull = {j: -float(reaction[2 * m.columns[j]].sum()) for j in anchors}
+            # Moment of the support's reactions about the chord's attachment: zero for a pinned fitting.
+            moment = {j: float(((m.xy[m.columns[j], 1] - m.xy[m.columns[j][-1], 1])
+                                * reaction[2 * m.columns[j]]).sum()) for j in anchors}
             pushing = [j for j in anchors if pull[j] < -1e-6 * abs(f).max()]
             if not pushing or len(pushing) == len(anchors):
                 break
@@ -287,7 +313,8 @@ class Model:
         vm = vm.max(axis=0)
         n_hull = E * t_hull * np.einsum("na,na->n", (u[self.hdofs[:, 2:]] - u[self.hdofs[:, :2]]), self.eh) / self.lh
         n_outer = E * t_outer * np.einsum("na,na->n", (u[self.odofs[:, 2:]] - u[self.odofs[:, :2]]), self.eo) / self.lo
-        return {"u": u, "f": f, "reaction": reaction, "anchors": anchors, "pull": pull, "vm": vm, "stress": stress,
+        return {"u": u, "f": f, "reaction": reaction, "anchors": anchors, "pull": pull, "moment": moment,
+                "vm": vm, "stress": stress,
                 "utilisation": utilisation,
                 "n_hull": n_hull, "n_outer": n_outer, "pushing": len(pushing) == len(anchors) and bool(pushing)}
 

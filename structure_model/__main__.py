@@ -199,8 +199,9 @@ def tube_section_report(p):
         "for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing "
         "of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners "
         "(vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are "
-        "together in one column. Each anchor is a fitting through the jacket's depth, holding the radial line of "
-        "nodes at its angle. **Sizing:** *fully stressed* when every part is within 2% of its allowable or at "
+        "together in one column. Each anchor is a fitting through the jacket's depth, spreading the chord's pull over "
+        "the radial line of nodes at its angle and pinned at the chord's attachment on the outer wall (a force, no "
+        "couple). **Sizing:** *fully stressed* when every part is within 2% of its allowable or at "
         "its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds "
         "(heavier than needed); *over* when some part still exceeds it (not a design).",
         "### Chords anchored at the tube's two sides (one net in each side plane), vaulted ceiling",
