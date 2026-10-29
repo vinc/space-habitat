@@ -57,7 +57,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
 - [x] JSON export for the 3D model's stats panel
 
-**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 189 of 197 checked figures within 5% (192 within their configured tolerance) after correcting the notes (`reports/validation.md`); this shows the model reproduces the notes, not that the design is physically validated. Ranking in `reports/sensitivity.md`; sections 2–7 re-ordered by it.
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 190 of 193 checked figures within 5% (192 within their configured tolerance) after correcting the notes (`reports/validation.md`); this shows the model reproduces the notes, not that the design is physically validated. Ranking in `reports/sensitivity.md`; sections 2–7 re-ordered by it.
 
 **Review (issue #1), addressed:** the tube's rock jacket and crawl space are now in the geometry (pitch, gaps, end openings, stability) and the jacket has a finite thickness; the fill credit follows the actual fill; the heat capacity is labelled an ideal limit, with a preliminary radiative exchange model alongside; an unknown Δv stays unknown; shipping, total energy and generation time are in the sensitivity outputs, ranked over several designs; the trace budget compares demand with recoverable supply; the validation headline separates the literal 5% from the configured tolerances.
 
@@ -131,7 +131,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 5. Replication logistics
 
-**Why fifth:** once shipping is counted, its inputs top the combined ranking (`reports/sensitivity.md`): the electric propulsion's exhaust speed (−31% / +61% on shipping energy) and the water shipped, set by the lake water per m² of floor, a guess (−30% / +51%). With the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking. C-type nitrogen recovery and baking energy, also near the top, are Earth tests (section 8).
+**Why fifth:** once shipping is counted, its inputs top the combined ranking (`reports/sensitivity.md`): the electric propulsion's exhaust speed (−31% / +61% on shipping energy) and the water shipped, set mostly by the lakes' share of the floor, a guess (−29% / +42%; their depth −21% / +21%). With the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking. C-type nitrogen recovery and baking energy, also near the top, are Earth tests (section 8).
 
 - [x] Stock-and-flow model of a generation (`logistics_model/flows.py`): the rates a parent's lines must sustain for a given generation (rock mined, metal, rock placed, C-type baked, cargo per window, power), what a child is made of by source, and the cluster's growth until its C-type runs out
   - found: at 10-year generations a 900 m torus's child takes ~9 kt of S-type and ~400 t of metal a day, ~2% of Earth's largest mines and steelworks; ~98.8% of it comes from the host, ~1.2% from the C-type, ~0.003% are vitamins; Ryugu's nitrogen caps a 900 m cluster after ~55 years of doubling (1.6 km six-stacks after ~14)

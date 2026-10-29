@@ -75,7 +75,8 @@ def water_section(p):
         "C-type's water) and take the oxygen as the by-product of molten-oxide electrolysis (notes §10, "
         "proposed; ~0.29 kg of oxygen per kg of iron): on an LL host the iron the free metal lacks already "
         "frees more oxygen than the water needs, so the oxygen costs nothing extra. Hydrogen is hard to store "
-        "(20 K); methane (111 K) carries it with carbon, which replaces the organics shipped for the soil. "
+        "(20 K); methane (111 K) carries it with carbon, which replaces the organics shipped for the soil, and "
+        "burnt with the same oxygen it is a storable rocket propellant (methalox, ~3.6 km/s) for tugs and docking. "
         "Shipping by electric thrusters at the notes' Ryugu → Eros Δv; the other energy is splitting the water "
         "at the C-type (and any iron reduced only for its oxygen).",
         table(["Stack (per torus)", "Route", "Shipped", "Shipping", "Other energy", "Total"], route_rows),

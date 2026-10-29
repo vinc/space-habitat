@@ -1,6 +1,6 @@
 # Validation against the notes
 
-193 figures from notes.md checked: **188 within 5%**; 190 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 3 known mismatches, 0 unexplained.
+193 figures from notes.md checked: **190 within 5%**; 192 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 1 known mismatches, 0 unexplained.
 
 This checks that the model reproduces the notes' own figures from the same assumptions; it does not validate the physical design.
 
@@ -9,8 +9,6 @@ This checks that the model reproduces the notes' own figures from the same assum
 | § | Figure | Notes | Model | Diff | Why |
 |---|---|---|---|---|---|
 | §5c | Hull and frames, 400 m | 0.0500 Mt | 0.0465 Mt | -7.1% | the notes round 0.047 Mt to 0.05 |
-| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.124 Mt | -17.5% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
-| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.4% | the notes give no breakdown of the water; their per-m² figure falls with size (0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake water scale with the floor; the lake term is fitted at 1.6 km |
 
 ## All checks
 
@@ -54,43 +52,43 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §5c | Hull and frames, 1.6 km | 1.10 Mt | 1.13 Mt | +2.4% | ✓ |
 | §5c | Hull and frames, 2.5 km | 3.10 Mt | 3.15 Mt | +1.5% | ✓ |
 | §5c | Hull and frames, 3.6 km | 7.00 Mt | 7.28 Mt | +3.9% | ✓ |
-| §5c | Spokes, 400 m | 0.0800 Mt | 0.0816 Mt | +2.0% | ✓ |
+| §5c | Spokes, 400 m | 0.0800 Mt | 0.0816 Mt | +1.9% | ✓ |
 | §5c | Spokes, 900 m | 0.870 Mt | 0.868 Mt | -0.2% | ✓ |
-| §5c | Spokes, 1.6 km | 4.90 Mt | 4.88 Mt | -0.5% | ✓ |
-| §5c | Spokes, 2.5 km | 19.1 Mt | 19.1 Mt | +0.1% | ✓ |
+| §5c | Spokes, 1.6 km | 4.90 Mt | 4.87 Mt | -0.5% | ✓ |
+| §5c | Spokes, 2.5 km | 19.1 Mt | 19.1 Mt | +0.0% | ✓ |
 | §5c | Spokes, 3.6 km | 60.0 Mt | 59.7 Mt | -0.5% | ✓ |
 | §5c | Total per torus, 400 m | 2.70 Mt | 2.66 Mt | -1.6% | ✓ |
-| §5c | Total per torus, 900 m | 12.8 Mt | 12.8 Mt | +0.1% | ✓ |
-| §5c | Total per torus, 1.6 km | 41.5 Mt | 41.5 Mt | +0.1% | ✓ |
-| §5c | Total per torus, 2.5 km | 108 Mt | 108 Mt | -0.3% | ✓ |
-| §5c | Total per torus, 3.6 km | 243 Mt | 243 Mt | -0.2% | ✓ |
-| §5c | Mass per m² of floor, 400 m | 42.0 t | 42.3 t | +0.7% | ✓ |
-| §5c | Mass per m² of floor, 900 m | 40.0 t | 40.3 t | +0.7% | ✓ |
-| §5c | Mass per m² of floor, 1.6 km | 41.0 t | 41.3 t | +0.8% | ✓ |
-| §5c | Mass per m² of floor, 2.5 km | 44.0 t | 43.8 t | -0.3% | ✓ |
-| §5c | Mass per m² of floor, 3.6 km | 48.0 t | 47.7 t | -0.7% | ✓ |
-| §8 | Steel per torus, 900 m | 1.20 Mt | 1.17 Mt | -2.6% | ✓ |
-| §8 | Steel per torus, 1.6 km | 6.00 Mt | 6.00 Mt | +0.1% | ✓ |
-| §8 | Steel per torus, 2.5 km | 22.0 Mt | 22.3 Mt | +1.2% | ✓ |
-| §9 | Steel at 0.3 g, 900 m | 0.340 Mt | 0.340 Mt | -0.1% | ✓ |
+| §5c | Total per torus, 900 m | 12.8 Mt | 12.8 Mt | +0.0% | ✓ |
+| §5c | Total per torus, 1.6 km | 41.5 Mt | 41.5 Mt | +0.0% | ✓ |
+| §5c | Total per torus, 2.5 km | 108 Mt | 108 Mt | -0.4% | ✓ |
+| §5c | Total per torus, 3.6 km | 243 Mt | 242 Mt | -0.2% | ✓ |
+| §5c | Mass per m² of floor, 400 m | 42.0 t | 42.3 t | +0.6% | ✓ |
+| §5c | Mass per m² of floor, 900 m | 40.0 t | 40.2 t | +0.6% | ✓ |
+| §5c | Mass per m² of floor, 1.6 km | 41.0 t | 41.3 t | +0.7% | ✓ |
+| §5c | Mass per m² of floor, 2.5 km | 44.0 t | 43.8 t | -0.4% | ✓ |
+| §5c | Mass per m² of floor, 3.6 km | 48.0 t | 47.6 t | -0.8% | ✓ |
+| §8 | Steel per torus, 900 m | 1.20 Mt | 1.17 Mt | -2.7% | ✓ |
+| §8 | Steel per torus, 1.6 km | 6.00 Mt | 6.00 Mt | +0.0% | ✓ |
+| §8 | Steel per torus, 2.5 km | 22.0 Mt | 22.2 Mt | +1.1% | ✓ |
+| §9 | Steel at 0.3 g, 900 m | 0.340 Mt | 0.339 Mt | -0.2% | ✓ |
 | §9 | Steel at 0.3 g, 1.6 km | 1.70 Mt | 1.71 Mt | +0.3% | ✓ |
-| §9 | Steel at 0.3 g, 2.5 km | 6.10 Mt | 6.14 Mt | +0.7% | ✓ |
+| §9 | Steel at 0.3 g, 2.5 km | 6.10 Mt | 6.14 Mt | +0.6% | ✓ |
 | §9 | Total at 0.3 g, 900 m | 12.0 Mt | 12.0 Mt | -0.2% | ✓ |
-| §9 | Total at 0.3 g, 1.6 km | 37.2 Mt | 37.2 Mt | +0.1% | ✓ |
-| §9 | Total at 0.3 g, 2.5 km | 91.5 Mt | 91.5 Mt | +0.0% | ✓ |
+| §9 | Total at 0.3 g, 1.6 km | 37.2 Mt | 37.2 Mt | +0.0% | ✓ |
+| §9 | Total at 0.3 g, 2.5 km | 91.5 Mt | 91.4 Mt | -0.1% | ✓ |
 | §9 | Period at 0.3 g, 900 m | 110 s | 110 s | -0.4% | ✓ |
 | §9 | Period at 0.3 g, 1.6 km | 146 s | 146 s | +0.0% | ✓ |
 | §9 | Period at 0.3 g, 2.5 km | 183 s | 183 s | -0.2% | ✓ |
-| §7 | Water needed (soil, O₂, lakes), 900 m | 0.150 Mt | 0.124 Mt | -17.5% | ✗ |
-| §7 | Water needed (soil, O₂, lakes), 1.6 km | 0.400 Mt | 0.401 Mt | +0.3% | ✓ |
-| §7 | Water needed (soil, O₂, lakes), 2.5 km | 0.900 Mt | 1.01 Mt | +12.4% | ✗ |
-| §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.400 Mt | 0.402 Mt | +0.6% | ✓ |
+| §7 | Water needed (soil, lakes, O₂, ballast, vegetation), 900 m | 0.120 Mt | 0.117 Mt | -2.5% | ✓ |
+| §7 | Water needed (soil, lakes, O₂, ballast, vegetation), 1.6 km | 0.380 Mt | 0.379 Mt | -0.2% | ✓ |
+| §7 | Water needed (soil, lakes, O₂, ballast, vegetation), 2.5 km | 0.960 Mt | 0.958 Mt | -0.2% | ✓ |
+| §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.400 Mt | 0.402 Mt | +0.5% | ✓ |
 | §7 | Spin-up propellant (water, 3 km/s), 1.6 km | 1.70 Mt | 1.74 Mt | +2.3% | ✓ |
-| §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.60 Mt | 5.64 Mt | +0.6% | ✓ |
+| §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.60 Mt | 5.63 Mt | +0.6% | ✓ |
 | §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 5.05 Mt | +1.0% | ✓ |
 | §7 | C-type sized by nitrogen, 1.6 km | 27.0 Mt | 27.5 Mt | +2.0% | ✓ |
 | §7 | C-type sized by nitrogen, 2.5 km | 100 Mt | 104 Mt | +3.6% | ✓ |
-| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 8.22 Mt | +2.8% | ✓ |
+| §7 | C-type with water spin-up, 900 m | 8.00 Mt | 8.11 Mt | +1.4% | ✓ |
 | §10 | C-type water contained, 900 m | 0.320 Mt | 0.323 Mt | +1.0% | ✓ |
 | §10 | C-type water contained, 1.6 km | 1.70 Mt | 1.76 Mt | +3.7% | ✓ |
 | §10 | C-type water contained, 2.5 km | 6.50 Mt | 6.63 Mt | +2.0% | ✓ |
@@ -108,9 +106,9 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §10 | Soil (0.5 m), 2.5 km | 2.00 Mt | 1.96 Mt | -1.8% | ✓ |
 | §10 | S-type, H host, 900 m | 14.0 Mt | 13.6 Mt | -2.8% | ✓ |
 | §10 | S-type, H host, 1.6 km | 44.0 Mt | 44.5 Mt | +1.2% | ✓ |
-| §10 | S-type, H host, 2.5 km | 165 Mt | 165 Mt | -0.2% | ✓ |
+| §10 | S-type, H host, 2.5 km | 165 Mt | 165 Mt | -0.3% | ✓ |
 | §10 | S-type, LL host, 900 m | 32.0 Mt | 32.9 Mt | +2.9% | ✓ |
-| §10 | S-type, LL host, 1.6 km | 165 Mt | 168 Mt | +2.0% | ✓ |
+| §10 | S-type, LL host, 1.6 km | 165 Mt | 168 Mt | +1.9% | ✓ |
 | §10 | S-type, LL host, 2.5 km | 620 Mt | 622 Mt | +0.3% | ✓ |
 | §10 | S-type, L host, 900 m | 16.0 Mt | 16.5 Mt | +2.9% | ✓ |
 | §10 | S-type diameter, H host, 900 m | 235 m | 235 m | +0.0% | ✓ |

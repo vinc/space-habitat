@@ -36,9 +36,9 @@ Uniform chords keep one area all along, sized at mid-chord where their own spin 
 
 | Torus | Chord angle at the rim | Net, uniform chords (Mt) | System model spokes (Mt) | Chords vs radial spokes | Saved by tapering | Taper (mid / end area) | Tension per chord end (MN) | Uniform chord area (cm²) | Tapered chord, end area (cm²) | Bow at mid-chord (m) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 4.3° | 0.0816 | 0.0816 | -0.01% | 0.5% | 1.02 | 50.8 | 516 | 508 | 0.46 |
+| 400 m | 4.3° | 0.0815 | 0.0816 | -0.01% | 0.5% | 1.02 | 50.7 | 515 | 507 | 0.46 |
 | 900 m | 4.3° | 0.868 | 0.868 | -0.02% | 1.2% | 1.04 | 105 | 1,080 | 1,050 | 2.3 |
-| 1.6 km | 4.3° | 4.87 | 4.88 | -0.04% | 2.2% | 1.06 | 180 | 1,920 | 1,800 | 7.4 |
+| 1.6 km | 4.3° | 4.87 | 4.87 | -0.04% | 2.2% | 1.06 | 180 | 1,920 | 1,800 | 7.4 |
 | 2.5 km | 4.3° | 19.1 | 19.1 | -0.06% | 3.6% | 1.10 | 279 | 3,090 | 2,790 | 18 |
 
 ## Building the ring: assembled statics (provisional)
@@ -49,22 +49,22 @@ A stage is **resolved** only if the taut set converges, every segment balances (
 
 | Torus | Stage | Joints | Status | Chord tensions (MN) | Max chord vs finished | Peak cable stress (MPa) | Max spin fraction within 1 GPa | Max joint tension (MN, share of full hoop) | Max joint moment (GN·m) | Rotation / displacement | Residual |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m | finished ring | sliding | resolved | 99.7–109 | 1.0 | 1,040 | 0.98 | — | — | 0.021 rad / 6.4 m | 3e-09 |
+| 900 m | finished ring | sliding | resolved | 99.6–109 | 1.0 | 1,040 | 0.98 | — | — | 0.021 rad / 6.4 m | 3e-09 |
 | 900 m | finished ring | locked | resolved | 37.9–38.0 | 0.36 | 386 | 1.0 | 12,000 (63.8%) | 0.072 | 4.7e-07 rad / 1.6 m | 2e-11 |
 | 1.6 km | finished ring | sliding | resolved | 179–181 | 1.0 | 1,000 | 1.00 | — | — | 0.0014 rad / 9.0 m | 1e-10 |
-| 1.6 km | finished ring | locked | resolved | 90.7–91.0 | 0.50 | 535 | 1.0 | 28,600 (49.7%) | 0.11 | 6.1e-07 rad / 3.8 m | 1e-11 |
-| 400 m | two arcs of 119 m (shortest) | locked | resolved | 99.8–100 | 2.0 | 1,960 | 0.72 | 34.6 (0.9%) | 2.2 | 3.9e-05 rad / 3.9 m | 7e-06 |
+| 1.6 km | finished ring | locked | resolved | 90.6–90.9 | 0.50 | 535 | 1.0 | 28,600 (49.7%) | 0.11 | 6.1e-07 rad / 3.8 m | 1e-11 |
+| 400 m | two arcs of 119 m (shortest) | locked | resolved | 99.7–100.0 | 2.0 | 1,960 | 0.72 | 34.6 (0.9%) | 2.2 | 3.9e-05 rad / 3.9 m | 7e-06 |
 | 400 m | two arcs of 119 m (shortest) | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 7e-02 |
 | 900 m | two arcs of 268 m (shortest) | locked | resolved | 213–214 | 2.0 | 2,010 | 0.71 | 176 (0.9%) | 6.0 | 2.3e-05 rad / 8.9 m | 8e-06 |
 | 900 m | two arcs of 268 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.52 rad / 27 m | 8e-06 |
-| 1.6 km | two arcs of 476 m (shortest) | locked | resolved | 355–356 | 2.0 | 1,910 | 0.72 | 546 (0.9%) | 26 | 3.1e-05 rad / 15 m | 8e-06 |
+| 1.6 km | two arcs of 476 m (shortest) | locked | resolved | 355–356 | 2.0 | 1,910 | 0.72 | 545 (0.9%) | 26 | 3.2e-05 rad / 15 m | 8e-06 |
 | 1.6 km | two arcs of 476 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.2 rad / 78 m | 8e-06 |
 | 2.5 km | two arcs of 743 m (shortest) | locked | resolved | 556–557 | 2.0 | 1,900 | 0.72 | 1,400 (1.0%) | 59 | 2.9e-05 rad / 23 m | 1e-05 |
-| 2.5 km | two arcs of 743 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.53 rad / 80 m | 8e-06 |
+| 2.5 km | two arcs of 743 m (shortest) | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 0.53 rad / 80 m | 9e-06 |
 | 900 m | two arcs of 401 m | locked | resolved | 153–155 | 1.5 | 1,460 | 0.83 | 234 (1.2%) | 68 | 0.0003 rad / 6.4 m | 1e-05 |
 | 900 m | two arcs of 401 m | pinned | **unresolved:** no equilibrium (mechanism) |  |  |  |  |  |  | — | 2e-01 |
 | 900 m | two arcs of 803 m | locked | resolved | 122–125 | 1.2 | 1,190 | 0.92 | 373 (2.0%) | 220 | 0.0023 rad / 5.6 m | 1e-05 |
-| 900 m | two arcs of 803 m | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.9 rad / 74 m | 1e-05 |
+| 900 m | two arcs of 803 m | pinned | **unresolved:** outside the small-displacement range |  |  |  |  |  |  | 1.9 rad / 74 m | 2e-05 |
 
 Rigid segments make this a crude model: even resolved stages settle the force balance, not the construction sequence, and the joint moments of the longer locked arcs depend on the segments' real flexibility.
 
@@ -88,8 +88,8 @@ Each torus has two chord nets, one in each side plane of its tube. In each, the 
 | Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin K / μω² | Natural frequency / spin: inertial; rotating modes | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t), + inclined option |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 400 m | 0.032 | 3.2 | 502 | 128 (-1%) | 30.6 | 39 | 6.3; 5.3 and 7.3 | 9.92 | 0.21 / 4.86 | 0.51 / 2.5 | 0.17 | 41.5 | 1.3 | 0.52 (+0.25) |
-| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 64.7 | 21 | 4.5; 3.5 and 5.5 | 73.2 | 0.71 / 11.2 | 0.48 / 1.9 | 3.0 | 170 | 5.3 | 13 (+4.0) |
-| 1.6 km | 1.5 | 18 | 2,010 | 116 (-4%) | 114 | 13 | 3.6; 2.6 and 4.6 | 350 | 1.7 / 19.7 | 0.44 / 1.5 | 24 | 500 | 16 | 140 (+32) |
+| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 64.7 | 21 | 4.5; 3.5 and 5.5 | 73.1 | 0.71 / 11.2 | 0.48 / 1.9 | 3.0 | 170 | 5.3 | 13 (+4.0) |
+| 1.6 km | 1.5 | 18 | 2,010 | 115 (-4%) | 114 | 13 | 3.6; 2.6 and 4.6 | 350 | 1.7 / 19.6 | 0.44 / 1.5 | 24 | 500 | 16 | 140 (+32) |
 | 2.5 km | 5.6 | 35 | 3,142 | 116 (-7%) | 179 | 8.6 | 2.9; 1.9 and 3.9 | 1,250 | 3.4 / 29.7 | 0.41 / 1.3 | 120 | 1,240 | 38 | 1,100 (+170) |
 
 Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown. Torsion is likewise held by preload only.
@@ -117,8 +117,8 @@ At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of 
 | 900 m | two pairs at right angles | 54 | 4.4 | stable | 102 | 67.9 | 0.85 | 0.58 | 4.0 |
 | 1.6 km | one opposite pair | 48 | 0.025 | grows ×e every 0.25 turns | 909 | 276 | 7.6 | 16 | 78 |
 | 1.6 km | two pairs at right angles | 96 | 2.9 | stable | 300 | 200 | 2.5 | 1.7 | 22 |
-| 2.5 km | one opposite pair | 74 | 0.019 | grows ×e every 0.28 turns | 2,320 | 440 | 19 | 25 | 250 |
-| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 745 | 497 | 6.2 | 4.2 | 87 |
+| 2.5 km | one opposite pair | 74 | 0.019 | grows ×e every 0.28 turns | 2,320 | 439 | 19 | 25 | 250 |
+| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 745 | 496 | 6.2 | 4.2 | 87 |
 
 Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through the lines.
 
@@ -131,9 +131,9 @@ One metre of tube in the plane of its cross-section (`structure_model/tube_secti
 | Torus | Load (MN per m of tube) | Hull (Mt) | Outer wall (Mt) | Bulkheads (Mt) | Panels, cell walls, bumper (Mt) | Hull and frames (Mt) | System model, r^2.3 (Mt) | Difference | Steel per torus (with spokes) vs model | Sizing |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 400 m | 10.1 | 0.015 | 0.022 | 0.0080 | 0.011 | **0.055** | 0.046 | +19% | +7% | fully stressed |
-| 900 m | 20.8 | 0.077 | 0.091 | 0.061 | 0.045 | **0.28** | 0.30 | -8% | -2% | fully stressed |
-| 1.6 km | 35.9 | 0.33 | 0.29 | 0.39 | 0.14 | **1.1** | 1.1 | +1% | +0% | fully stressed |
-| 2.5 km | 56.5 | 1.4 | 0.99 | 1.9 | 0.32 | **4.6** | 3.1 | +46% | +7% | fully stressed |
+| 900 m | 20.7 | 0.077 | 0.091 | 0.061 | 0.045 | **0.27** | 0.30 | -8% | -2% | fully stressed |
+| 1.6 km | 35.9 | 0.32 | 0.29 | 0.39 | 0.14 | **1.1** | 1.1 | +1% | +0% | fully stressed |
+| 2.5 km | 56.4 | 1.4 | 0.99 | 1.9 | 0.32 | **4.6** | 3.1 | +46% | +6% | fully stressed |
 
 ### Where the chords anchor
 
@@ -141,21 +141,21 @@ Anchors on the hub-facing crest (one net in the torus's mid-plane), at the two s
 
 | Torus | Anchors | Ceiling | Steel (t per m of tube) | Per torus (Mt) | Anchor loads (MN/m) | Max skin compression (MN/m) | Max displacement (m) | Sizing |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | crest | vaulted | 168 | 0.92 | 180°: 21.9 | 29 | 0.41 | fully stressed |
-| 900 m | crest | hung | 179 | 0.98 | 180°: 22.0 | 29 | 0.41 | fully stressed |
-| 900 m | sides | vaulted | 50.2 | 0.28 | 90°: 10.4, 270°: 10.4 | 1.3 | 0.079 | fully stressed |
-| 900 m | sides | hung | 53.5 | 0.29 | 90°: 10.4, 270°: 10.4 | 2.2 | 0.11 | fully stressed |
-| 900 m | fan | vaulted | 49.4 | 0.27 | 90°: 8.80, 120°: 1.04, 150°: 0.208, 180°: 0.670, 210°: 0.208, 240°: 1.04, 270°: 8.80 | 1.4 | 0.11 | fully stressed |
-| 900 m | fan | hung | 52.8 | 0.29 | 90°: 9.53, 120°: 0.609, 150°: 0.0587, 180°: 0.397, 210°: 0.0587, 240°: 0.609, 270°: 9.53 | 2.8 | 0.12 | fully stressed |
-| 1.6 km | crest | vaulted | 833 | 8.1 | 180°: 42.7 | 97 | 1.1 | safe, up to 4% spare |
-| 1.6 km | crest | hung | 854 | 8.3 | 180°: 42.9 | 96 | 1.1 | fully stressed |
-| 1.6 km | sides | vaulted | 117 | 1.1 | 90°: 18.0, 270°: 18.0 | 4.1 | 0.20 | fully stressed |
-| 1.6 km | sides | hung | 124 | 1.2 | 90°: 18.0, 270°: 18.0 | 3.7 | 0.27 | fully stressed |
-| 1.6 km | fan | vaulted | 112 | 1.1 | 90°: 17.3, 180°: 1.21, 270°: 17.3 | 3.1 | 0.28 | fully stressed |
-| 1.6 km | fan | hung | 121 | 1.2 | 90°: 17.7, 180°: 0.662, 270°: 17.7 | 5.0 | 0.32 | fully stressed |
-| 2.5 km | crest | vaulted | 3,610 | 55 | 180°: 87.6 | 300 | 2.4 | safe, up to 3% spare |
-| 2.5 km | sides | vaulted | 303 | 4.6 | 90°: 28.2, 270°: 28.2 | 10 | 0.62 | fully stressed |
-| 2.5 km | fan | vaulted | 285 | 4.3 | 90°: 27.3, 180°: 1.78, 270°: 27.3 | 6.1 | 0.83 | fully stressed |
+| 900 m | crest | vaulted | 167 | 0.92 | 180°: 21.8 | 29 | 0.41 | fully stressed |
+| 900 m | crest | hung | 179 | 0.98 | 180°: 21.9 | 29 | 0.41 | fully stressed |
+| 900 m | sides | vaulted | 50.2 | 0.27 | 90°: 10.4, 270°: 10.4 | 1.3 | 0.079 | fully stressed |
+| 900 m | sides | hung | 53.4 | 0.29 | 90°: 10.4, 270°: 10.4 | 2.2 | 0.11 | fully stressed |
+| 900 m | fan | vaulted | 49.3 | 0.27 | 90°: 8.78, 120°: 1.04, 150°: 0.213, 180°: 0.674, 210°: 0.213, 240°: 1.04, 270°: 8.78 | 1.4 | 0.11 | fully stressed |
+| 900 m | fan | hung | 52.8 | 0.29 | 90°: 9.51, 120°: 0.609, 150°: 0.0642, 180°: 0.402, 210°: 0.0642, 240°: 0.609, 270°: 9.51 | 2.8 | 0.12 | fully stressed |
+| 1.6 km | crest | vaulted | 831 | 8.1 | 180°: 42.6 | 97 | 1.1 | safe, up to 4% spare |
+| 1.6 km | crest | hung | 852 | 8.3 | 180°: 42.8 | 96 | 1.1 | fully stressed |
+| 1.6 km | sides | vaulted | 117 | 1.1 | 90°: 17.9, 270°: 17.9 | 4.1 | 0.20 | fully stressed |
+| 1.6 km | sides | hung | 123 | 1.2 | 90°: 18.0, 270°: 18.0 | 3.6 | 0.27 | fully stressed |
+| 1.6 km | fan | vaulted | 112 | 1.1 | 90°: 17.3, 180°: 1.22, 270°: 17.3 | 3.1 | 0.28 | fully stressed |
+| 1.6 km | fan | hung | 121 | 1.2 | 90°: 17.6, 180°: 0.678, 270°: 17.6 | 5.0 | 0.32 | fully stressed |
+| 2.5 km | crest | vaulted | 3,600 | 55 | 180°: 87.4 | 300 | 2.4 | safe, up to 3% spare |
+| 2.5 km | sides | vaulted | 302 | 4.6 | 90°: 28.2, 270°: 28.2 | 10 | 0.61 | fully stressed |
+| 2.5 km | fan | vaulted | 284 | 4.3 | 90°: 27.2, 180°: 1.80, 270°: 27.2 | 6.0 | 0.83 | fully stressed |
 
 ### Sensitivity at 900 m (sides, vaulted)
 

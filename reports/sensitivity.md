@@ -1,58 +1,58 @@
 # Sensitivity (tornado)
 
-One-at-a-time sweep for 6 × 900 m, 2 tier(s) lit, L host at Eros. Each cell: change of the output with the input at its low / high end. Ranked by the largest swing on any output.
+One-at-a-time sweep for 2 × 900 m, 1 tier(s) lit, L host at 1 AU. Each cell: change of the output with the input at its low / high end. Ranked by the largest swing on any output. Left out as unknown for this design: Shipping energy per torus, Processing + shipping per torus, Energy-limited generation time.
 
-| Rank | Assumption | Status | Range | Mass per m² of floor (t/m²) | Rock mined per torus (S-type) (Mt) | C-type per torus (Mt) | Despun array at the site (km²) | People per torus | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) (×) | Processing energy per torus (PJ) | Shipping energy per torus (PJ) | Processing + shipping per torus (PJ) | Energy-limited generation time (yr) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|  | **Baseline** |  |  | **40.3** | **16.5** | **5.05** | **1.39** | **2,030** | **4.76** | **8.97** | **20.9** | **29.8** | **5.67** |
-| 1 | `ep_exhaust_km_s` | estimate | 20.0–50.0 km/s |  |  |  |  |  |  |  | -31% / +61% | -21% / +43% | -21% / +43% |
-| 2 | `lake_water_t_m2` | guess | 0.100–0.500 t per m2 of floor | -0% / +1% |  |  |  |  |  |  | -29% / +48% | -20% / +34% | -20% / +34% |
-| 3 | `nitrogen_recovery` | estimate | 0.500–0.900 fraction |  |  | +40% / -22% |  |  |  | +34% / -19% |  | +10% / -6% | +10% / -6% |
-| 4 | `bake_mj_kg` | estimate | 1.00–2.00 MJ per kg of C-type |  |  |  |  |  |  | -28% / +28% |  | -8% / +8% | -8% / +8% |
-| 5 | `pv_efficiency` | estimate | 0.180–0.280 fraction |  |  |  | +39% / -11% |  |  |  |  |  |  |
-| 6 | `metal_wt_L` | sourced | 0.0700–0.110 free metal, wt fraction |  | +29% / -18% |  |  |  |  | +4% / -3% |  | +1% / -1% | +1% / -1% |
-| 7 | `crop_light_mol` | estimate | 30.0–45.0 mol/m2/day on the crops |  |  |  | -11% / +17% | -17% / +25% |  |  |  |  |  |
-| 8 | `shield_areal_t_m2` | sourced | 9.00–13.0 t/m2 | -19% / +19% | -14% / +14% |  |  |  |  | -2% / +2% |  | -1% / +1% | -1% / +1% |
-| 9 | `ep_efficiency` | estimate | 0.500–0.700 fraction |  |  |  |  |  |  |  | +20% / -14% | +14% / -10% | +14% / -10% |
-| 10 | `yield_wheat` | sourced | 0.150–0.400 g/mol |  |  |  |  | -7% / +25% |  |  |  |  |  |
-| 11 | `wire_stress_mpa` | estimate | 800–1,200 MPa (working) | +2% / -1% | +19% / -13% |  |  |  |  | +3% / -2% |  | +1% / -1% | +1% / -1% |
-| 12 | `radiator_temp_k` | estimate | 275–295 K |  |  |  |  |  | -13% / +15% |  |  |  |  |
-| 13 | `hub_factory_metal_frac` | guess | 0.150–0.500 fraction of torus steel |  | -8% / +20% |  |  |  |  | -1% / +3% |  | -0% / +1% | -0% / +1% |
-| 14 | `diet_kcal` | estimate | 2,200–2,800 kcal per person per day |  |  |  |  | +14% / -11% |  |  |  |  |  |
-| 15 | `hull_frames_ref_mt` | estimate | 0.200–0.450 Mt at the reference radius | -1% / +1% | -9% / +14% |  |  |  |  | -1% / +2% |  | -0% / +1% | -0% / +1% |
-| 16 | `soil_water_vol_frac` | estimate | 0.150–0.350 m3 water / m3 soil |  |  |  |  |  |  |  | -10% / +10% | -7% / +7% | -7% / +7% |
-| 17 | `organics_shipped_t_m2` | guess | 0.0500–0.150 t per m2 of floor |  |  |  |  |  |  |  | -10% / +10% | -7% / +7% | -7% / +7% |
-| 18 | `farm_planted_frac` | estimate | 0.700–0.850 fraction of each tier |  |  |  | -8% / +4% | -13% / +6% |  |  |  |  |  |
-| 19 | `ceiling_delivery` | estimate | 0.650–0.800 fraction |  |  |  | +4% / -2% |  | -12% / +6% |  |  |  |  |
-| 20 | `crush_mj_kg` | estimate | 0.0500–0.150 MJ per kg of S-type rock |  |  |  |  |  |  | -6% / +12% |  | -2% / +4% | -2% / +4% |
-| 21 | `valley_diet_share` | estimate | 0–0.150 fraction of calories |  |  |  |  | -7% / +9% |  |  |  |  |  |
-| 22 | `lamp_efficacy_umol_j` | sourced | 1.30–1.50 umol/J at the wall |  |  |  | +7% / -6% |  | -7% / +7% |  |  |  |  |
-| 23 | `crop_overhead` | estimate | 0.0500–0.200 fraction |  |  |  |  | +5% / -8% |  |  |  |  |  |
-| 24 | `yield_potato` | sourced | 0.300–0.600 g/mol |  |  |  |  | -5% / +9% |  |  |  |  |  |
-| 25 | `farm_delivery` | estimate | 0.750–0.900 fraction |  |  |  | +9% / -4% |  |  |  |  |  |  |
-| 26 | `yield_soybean` | estimate | 0.120–0.220 g/mol |  |  |  |  | -5% / +6% |  |  |  |  |  |
-| 27 | `yield_lentils` | estimate | 0.100–0.220 g/mol |  |  |  |  | -5% / +4% |  |  |  |  |  |
-| 28 | `c_nitrogen_wt` | sourced | 0.00230–0.00250 wt fraction |  |  | +4% / -4% |  |  |  | +4% / -3% |  | +1% / -1% | +1% / -1% |
-| 29 | `other_loads_w_m2` | guess | 10.0–25.0 W per m2 of floor |  |  |  | -2% / +3% |  | +3% / -5% |  |  |  |  |
-| 30 | `farm_pressure_kpa` | guess | 30.0–70.0 kPa |  |  | -5% / +0% |  |  |  | -5% / +0% |  | -2% / +0% | -2% / +0% |
-| 31 | `yield_flax` | estimate | 0.0500–0.120 g/mol |  |  |  |  | -3% / +3% |  |  |  |  |  |
-| 32 | `kcal_wheat` | estimate | 3.40–3.80 kcal/g dry |  |  |  |  | -2% / +2% |  |  |  |  |  |
-| 33 | `kcal_potato` | estimate | 3.50–3.90 kcal/g dry |  |  |  |  | -1% / +1% |  |  |  |  |  |
-| 34 | `farm_shell_m` | guess | 0.00500–0.0200 m of steel |  | -1% / +1% |  |  |  |  |  |  |  |  |
-| 35 | `kcal_soybean` | estimate | 4.20–4.70 kcal/g dry |  |  |  |  | -1% / +1% |  |  |  |  |  |
-| 36 | `yield_berries` | estimate | 0.200–0.300 g/mol |  |  |  |  | -1% / +1% |  |  |  |  |  |
-| 37 | `rock_density` | estimate | 1.80–2.20 t/m3 | +1% / -1% | +1% / -1% |  |  |  |  |  |  |  |  |
-| 38 | `kcal_lentils` | estimate | 3.40–3.90 kcal/g dry |  |  |  |  | -1% / +1% |  |  |  |  |  |
-| 39 | `kcal_berries` | estimate | 3.00–3.60 kcal/g dry |  |  |  |  | -1% / +0% |  |  |  |  |  |
-| 40 | `yield_greens` | sourced | 0.350–0.740 g/mol |  |  |  |  | -0% / +1% |  |  |  |  |  |
-| 41 | `kcal_flax` | estimate | 5.20–5.90 kcal/g dry |  |  |  |  |  |  |  |  |  |  |
-| 42 | `kcal_greens` | estimate | 2.50–3.30 kcal/g dry |  |  |  |  |  |  |  |  |  |  |
-| 43 | `crawl_space_m` | estimate | 1.00–2.00 m |  |  |  |  |  |  |  |  |  |  |
-| 44 | `hub_radius_per_width` | estimate | 1.00–1.20 hub radius / tube width |  |  |  |  |  |  |  |  |  |  |
-| 45 | `rock_per_water_shield` | sourced | 1.40–1.75 t rock / t water |  |  |  |  |  |  |  |  |  |  |
-| 46 | `soil_density` | estimate | 1.30–1.80 t/m3 |  |  |  |  |  |  |  |  |  |  |
-| 47 | `regolith_density` | estimate | 1.60–2.00 t/m3 |  |  |  |  |  |  |  |  |  |  |
-| 48 | `farm_growing_kg_m2` | guess | 50.0–200 kg per m2 planted |  |  |  |  |  |  |  |  |  |  |
+| Rank | Assumption | Status | Range | Mass per m² of floor (t/m²) | Rock mined per torus (S-type) (Mt) | C-type per torus (Mt) | Despun array at the site (km²) | People per torus | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) (×) | Processing energy per torus (PJ) |
+|---|---|---|---|---|---|---|---|---|---|---|
+|  | **Baseline** |  |  | **40.2** | **16.5** | **5.05** | **0.292** | **1,020** | **14.3** | **8.97** |
+| 1 | `nitrogen_recovery` | estimate | 0.500–0.900 fraction |  |  | +40% / -22% |  |  |  | +34% / -19% |
+| 2 | `bake_mj_kg` | estimate | 1.00–2.00 MJ per kg of C-type |  |  |  |  |  |  | -28% / +28% |
+| 3 | `pv_efficiency` | estimate | 0.180–0.280 fraction |  |  |  | +39% / -11% |  |  |  |
+| 4 | `metal_wt_L` | sourced | 0.0700–0.110 free metal, wt fraction |  | +29% / -18% |  |  |  |  | +4% / -3% |
+| 5 | `crop_light_mol` | estimate | 30.0–45.0 mol/m2/day on the crops |  |  |  | -8% / +13% | -17% / +25% |  |  |
+| 6 | `shield_areal_t_m2` | sourced | 9.00–13.0 t/m2 | -19% / +20% | -14% / +14% |  |  |  |  | -2% / +2% |
+| 7 | `yield_wheat` | sourced | 0.150–0.400 g/mol |  |  |  |  | -7% / +25% |  |  |
+| 8 | `wire_stress_mpa` | estimate | 800–1,200 MPa (working) | +2% / -1% | +19% / -13% |  |  |  |  | +3% / -2% |
+| 9 | `radiator_temp_k` | estimate | 275–295 K |  |  |  |  |  | -13% / +15% |  |
+| 10 | `hub_factory_metal_frac` | guess | 0.150–0.500 fraction of torus steel |  | -8% / +20% |  |  |  |  | -1% / +3% |
+| 11 | `diet_kcal` | estimate | 2,200–2,800 kcal per person per day |  |  |  |  | +14% / -11% |  |  |
+| 12 | `hull_frames_ref_mt` | estimate | 0.200–0.450 Mt at the reference radius | -1% / +1% | -9% / +14% |  |  |  |  | -1% / +2% |
+| 13 | `farm_planted_frac` | estimate | 0.700–0.850 fraction of each tier |  |  |  | -6% / +3% | -13% / +6% |  |  |
+| 14 | `ceiling_delivery` | estimate | 0.650–0.800 fraction |  |  |  | +6% / -3% |  | -12% / +6% |  |
+| 15 | `crush_mj_kg` | estimate | 0.0500–0.150 MJ per kg of S-type rock |  |  |  |  |  |  | -6% / +12% |
+| 16 | `valley_diet_share` | estimate | 0–0.150 fraction of calories |  |  |  |  | -7% / +9% |  |  |
+| 17 | `lamp_efficacy_umol_j` | sourced | 1.30–1.50 umol/J at the wall |  |  |  | +7% / -6% |  | -7% / +7% |  |
+| 18 | `crop_overhead` | estimate | 0.0500–0.200 fraction |  |  |  |  | +5% / -8% |  |  |
+| 19 | `yield_potato` | sourced | 0.300–0.600 g/mol |  |  |  |  | -5% / +9% |  |  |
+| 20 | `yield_soybean` | estimate | 0.120–0.220 g/mol |  |  |  |  | -5% / +6% |  |  |
+| 21 | `farm_delivery` | estimate | 0.750–0.900 fraction |  |  |  | +7% / -3% |  |  |  |
+| 22 | `yield_lentils` | estimate | 0.100–0.220 g/mol |  |  |  |  | -5% / +4% |  |  |
+| 23 | `c_nitrogen_wt` | sourced | 0.00230–0.00250 wt fraction |  |  | +4% / -4% |  |  |  | +4% / -3% |
+| 24 | `other_loads_w_m2` | guess | 10.0–25.0 W per m2 of floor |  |  |  | -3% / +5% |  | +3% / -5% |  |
+| 25 | `farm_pressure_kpa` | guess | 30.0–70.0 kPa |  |  | -5% / +0% |  |  |  | -5% / +0% |
+| 26 | `yield_flax` | estimate | 0.0500–0.120 g/mol |  |  |  |  | -3% / +3% |  |  |
+| 27 | `kcal_wheat` | estimate | 3.40–3.80 kcal/g dry |  |  |  |  | -2% / +2% |  |  |
+| 28 | `kcal_potato` | estimate | 3.50–3.90 kcal/g dry |  |  |  |  | -1% / +1% |  |  |
+| 29 | `farm_shell_m` | guess | 0.00500–0.0200 m of steel |  | -1% / +1% |  |  |  |  |  |
+| 30 | `kcal_soybean` | estimate | 4.20–4.70 kcal/g dry |  |  |  |  | -1% / +1% |  |  |
+| 31 | `yield_berries` | estimate | 0.200–0.300 g/mol |  |  |  |  | -1% / +1% |  |  |
+| 32 | `rock_density` | estimate | 1.80–2.20 t/m3 | +1% / -1% | +1% / -1% |  |  |  |  |  |
+| 33 | `kcal_lentils` | estimate | 3.40–3.90 kcal/g dry |  |  |  |  | -1% / +1% |  |  |
+| 34 | `kcal_berries` | estimate | 3.00–3.60 kcal/g dry |  |  |  |  | -1% / +0% |  |  |
+| 35 | `lake_floor_frac` | guess | 0.0300–0.200 share of the floor under lakes and streams | -0% / +1% |  |  |  |  |  |  |
+| 36 | `yield_greens` | sourced | 0.350–0.740 g/mol |  |  |  |  | -0% / +1% |  |  |
+| 37 | `kcal_flax` | estimate | 5.20–5.90 kcal/g dry |  |  |  |  |  |  |  |
+| 38 | `lake_depth_m` | guess | 1.00–3.00 m, mean depth |  |  |  |  |  |  |  |
+| 39 | `kcal_greens` | estimate | 2.50–3.30 kcal/g dry |  |  |  |  |  |  |  |
+| 40 | `crawl_space_m` | estimate | 1.00–2.00 m |  |  |  |  |  |  |  |
+| 41 | `hub_radius_per_width` | estimate | 1.00–1.20 hub radius / tube width |  |  |  |  |  |  |  |
+| 42 | `ballast_frac` | guess | 0.000100–0.00200 share of the rim's mass |  |  |  |  |  |  |  |
+| 43 | `soil_water_vol_frac` | estimate | 0.150–0.350 m3 water / m3 soil |  |  |  |  |  |  |  |
+| 44 | `rock_per_water_shield` | sourced | 1.40–1.75 t rock / t water |  |  |  |  |  |  |  |
+| 45 | `soil_density` | estimate | 1.30–1.80 t/m3 |  |  |  |  |  |  |  |
+| 46 | `regolith_density` | estimate | 1.60–2.00 t/m3 |  |  |  |  |  |  |  |
+| 47 | `biomass_water_kg_m2` | estimate | 3.00–30.0 kg per m2 of floor |  |  |  |  |  |  |  |
+| 48 | `farm_growing_kg_m2` | guess | 50.0–200 kg per m2 planted |  |  |  |  |  |  |  |
 
 # Combined ranking
 
@@ -61,56 +61,59 @@ Each input's largest swing on any output, over representative designs (sizes, ho
 | Rank | Assumption | Status | Largest effect on | Low / high | Design |
 |---|---|---|---|---|---|
 | 1 | `ep_exhaust_km_s` | estimate | Shipping energy per torus | -31% / +61% | 1.6 km six-stack, LL host, Eros |
-| 2 | `lake_water_t_m2` | guess | Shipping energy per torus | -30% / +51% | 400 m pair, LL host, Itokawa |
+| 2 | `lake_floor_frac` | guess | Shipping energy per torus | -29% / +42% | 400 m pair, LL host, Itokawa |
 | 3 | `nitrogen_recovery` | estimate | C-type per torus | +40% / -22% | 900 m six-stack, L host, Eros |
 | 4 | `bake_mj_kg` | estimate | Processing energy per torus | -31% / +31% | 2.5 km pair, H host, Eros |
 | 5 | `pv_efficiency` | estimate | Despun array at the site | +39% / -11% | 2.5 km pair, H host, Eros |
-| 6 | `metal_wt_LL` | sourced | Rock mined per torus (S-type) | +29% / -18% | 400 m pair, LL host, Itokawa |
+| 6 | `metal_wt_LL` | sourced | Rock mined per torus (S-type) | +29% / -18% | 1.6 km six-stack, LL host, Eros |
 | 7 | `metal_wt_L` | sourced | Rock mined per torus (S-type) | +29% / -18% | 900 m six-stack, L host, Eros |
-| 8 | `shield_areal_t_m2` | sourced | Mass per m² of floor | -20% / +22% | 400 m pair, LL host, Itokawa |
-| 9 | `crop_light_mol` | estimate | People per torus | -17% / +25% | 1.6 km six-stack, LL host, Eros |
-| 10 | `wire_stress_mpa` | estimate | Rock mined per torus (S-type) | +24% / -15% | 2.5 km pair, H host, Eros |
-| 11 | `crush_mj_kg` | estimate | Processing energy per torus | -12% / +23% | 400 m pair, LL host, Itokawa |
-| 12 | `ep_efficiency` | estimate | Shipping energy per torus | +20% / -14% | 400 m pair, LL host, Itokawa |
-| 13 | `yield_wheat` | sourced | People per torus | -7% / +25% | 900 m six-stack, L host, Eros |
-| 14 | `hull_frames_ref_mt` | estimate | Rock mined per torus (S-type) | -12% / +18% | 400 m pair, LL host, Itokawa |
-| 15 | `radiator_temp_k` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | -13% / +15% | 900 m six-stack, L host, Eros |
-| 16 | `hub_factory_metal_frac` | guess | Rock mined per torus (S-type) | -8% / +20% | 2.5 km pair, H host, Eros |
-| 17 | `diet_kcal` | estimate | People per torus | +14% / -11% | 900 m six-stack, L host, Eros |
-| 18 | `metal_wt_H` | sourced | Rock mined per torus (S-type) | +13% / -11% | 2.5 km pair, H host, Eros |
-| 19 | `soil_water_vol_frac` | estimate | Shipping energy per torus | -10% / +10% | 400 m pair, LL host, Itokawa |
-| 20 | `organics_shipped_t_m2` | guess | Shipping energy per torus | -10% / +10% | 400 m pair, LL host, Itokawa |
-| 21 | `farm_planted_frac` | estimate | People per torus | -13% / +6% | 900 m six-stack, L host, Eros |
-| 22 | `ceiling_delivery` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | -12% / +6% | 1.6 km six-stack, LL host, Eros |
-| 23 | `valley_diet_share` | estimate | People per torus | -7% / +9% | 900 m six-stack, L host, Eros |
-| 24 | `lamp_efficacy_umol_j` | sourced | Despun array at the site | +7% / -6% | 900 m six-stack, L host, Eros |
-| 25 | `crop_overhead` | estimate | People per torus | +5% / -8% | 900 m six-stack, L host, Eros |
-| 26 | `yield_potato` | sourced | People per torus | -5% / +9% | 900 m six-stack, L host, Eros |
-| 27 | `farm_delivery` | estimate | Despun array at the site | +9% / -4% | 1.6 km six-stack, LL host, Eros |
-| 28 | `hull_frames_exponent` | estimate | Rock mined per torus (S-type) | +6% / -5% | 400 m pair, LL host, Itokawa |
-| 29 | `farm_pressure_kpa` | guess | C-type per torus | -11% / +0% | 400 m pair, LL host, Itokawa |
-| 30 | `yield_soybean` | estimate | People per torus | -5% / +6% | 1.6 km six-stack, LL host, Eros |
-| 31 | `yield_lentils` | estimate | People per torus | -5% / +4% | 1.6 km six-stack, LL host, Eros |
-| 32 | `c_nitrogen_wt` | sourced | C-type per torus | +4% / -4% | 400 m pair, LL host, Itokawa |
-| 33 | `other_loads_w_m2` | guess | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +3% / -5% | 900 m pair, L host, Torifune |
-| 34 | `yield_flax` | estimate | People per torus | -3% / +3% | 2.5 km pair, H host, Eros |
-| 35 | `farm_shell_m` | guess | Rock mined per torus (S-type) | -1% / +3% | 400 m pair, LL host, Itokawa |
-| 36 | `kcal_wheat` | estimate | People per torus | -2% / +2% | 900 m six-stack, L host, Eros |
-| 37 | `rock_density` | estimate | Mass per m² of floor | +2% / -1% | 400 m pair, LL host, Itokawa |
-| 38 | `kcal_potato` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
-| 39 | `kcal_soybean` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
-| 40 | `yield_berries` | estimate | People per torus | -1% / +1% | 2.5 km pair, H host, Eros |
-| 41 | `kcal_lentils` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
-| 42 | `kcal_berries` | estimate | People per torus | -1% / +0% | 900 m six-stack, L host, Eros |
-| 43 | `yield_greens` | sourced | People per torus | -0% / +1% | 900 m six-stack, L host, Eros |
-| 44 | `kcal_flax` | estimate | People per torus | -0% / +0% | 900 m six-stack, L host, Eros |
-| 45 | `crawl_space_m` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +0% / -0% | 400 m pair, LL host, Itokawa |
-| 46 | `kcal_greens` | estimate | People per torus | -0% / +0% | 1.6 km six-stack, LL host, Eros |
-| 47 | `soil_density` | estimate | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
-| 48 | `hub_radius_per_width` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +0% / -0% | 400 m pair, LL host, Itokawa |
-| 49 | `regolith_density` | estimate | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
-| 50 | `rock_per_water_shield` | sourced | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
-| 51 | `farm_growing_kg_m2` | guess | Rock mined per torus (S-type) | -0% / +0% | 2.5 km pair, H host, Eros |
+| 8 | `lake_depth_m` | guess | Shipping energy per torus | -21% / +21% | 400 m pair, LL host, Itokawa |
+| 9 | `shield_areal_t_m2` | sourced | Mass per m² of floor | -20% / +22% | 400 m pair, LL host, Itokawa |
+| 10 | `crop_light_mol` | estimate | People per torus | -17% / +25% | 1.6 km six-stack, LL host, Eros |
+| 11 | `wire_stress_mpa` | estimate | Rock mined per torus (S-type) | +24% / -15% | 2.5 km pair, H host, Eros |
+| 12 | `crush_mj_kg` | estimate | Processing energy per torus | -12% / +23% | 400 m pair, LL host, Itokawa |
+| 13 | `ep_efficiency` | estimate | Shipping energy per torus | +20% / -14% | 900 m six-stack, L host, Eros |
+| 14 | `yield_wheat` | sourced | People per torus | -7% / +25% | 900 m six-stack, L host, Eros |
+| 15 | `hull_frames_ref_mt` | estimate | Rock mined per torus (S-type) | -12% / +18% | 400 m pair, LL host, Itokawa |
+| 16 | `radiator_temp_k` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | -13% / +15% | 900 m six-stack, L host, Eros |
+| 17 | `hub_factory_metal_frac` | guess | Rock mined per torus (S-type) | -8% / +20% | 2.5 km pair, H host, Eros |
+| 18 | `diet_kcal` | estimate | People per torus | +14% / -11% | 900 m six-stack, L host, Eros |
+| 19 | `metal_wt_H` | sourced | Rock mined per torus (S-type) | +13% / -11% | 2.5 km pair, H host, Eros |
+| 20 | `organics_shipped_t_m2` | guess | Shipping energy per torus | -11% / +11% | 400 m pair, LL host, Itokawa |
+| 21 | `soil_water_vol_frac` | estimate | Shipping energy per torus | -11% / +11% | 400 m pair, LL host, Itokawa |
+| 22 | `farm_planted_frac` | estimate | People per torus | -13% / +6% | 900 m six-stack, L host, Eros |
+| 23 | `ceiling_delivery` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | -12% / +6% | 1.6 km six-stack, LL host, Eros |
+| 24 | `valley_diet_share` | estimate | People per torus | -7% / +9% | 900 m six-stack, L host, Eros |
+| 25 | `ballast_frac` | guess | Shipping energy per torus | -3% / +13% | 400 m pair, LL host, Itokawa |
+| 26 | `lamp_efficacy_umol_j` | sourced | Despun array at the site | +7% / -6% | 900 m six-stack, L host, Eros |
+| 27 | `crop_overhead` | estimate | People per torus | +5% / -8% | 900 m six-stack, L host, Eros |
+| 28 | `yield_potato` | sourced | People per torus | -5% / +9% | 900 m six-stack, L host, Eros |
+| 29 | `farm_delivery` | estimate | Despun array at the site | +9% / -4% | 1.6 km six-stack, LL host, Eros |
+| 30 | `hull_frames_exponent` | estimate | Rock mined per torus (S-type) | +6% / -5% | 400 m pair, LL host, Itokawa |
+| 31 | `farm_pressure_kpa` | guess | C-type per torus | -11% / +0% | 400 m pair, LL host, Itokawa |
+| 32 | `yield_soybean` | estimate | People per torus | -5% / +6% | 1.6 km six-stack, LL host, Eros |
+| 33 | `yield_lentils` | estimate | People per torus | -5% / +4% | 1.6 km six-stack, LL host, Eros |
+| 34 | `c_nitrogen_wt` | sourced | C-type per torus | +4% / -4% | 400 m pair, LL host, Itokawa |
+| 35 | `other_loads_w_m2` | guess | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +3% / -5% | 900 m pair, L host, Torifune |
+| 36 | `biomass_water_kg_m2` | estimate | Shipping energy per torus | -1% / +4% | 400 m pair, LL host, Itokawa |
+| 37 | `yield_flax` | estimate | People per torus | -3% / +3% | 2.5 km pair, H host, Eros |
+| 38 | `farm_shell_m` | guess | Rock mined per torus (S-type) | -1% / +3% | 400 m pair, LL host, Itokawa |
+| 39 | `kcal_wheat` | estimate | People per torus | -2% / +2% | 900 m six-stack, L host, Eros |
+| 40 | `rock_density` | estimate | Mass per m² of floor | +2% / -1% | 400 m pair, LL host, Itokawa |
+| 41 | `kcal_potato` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
+| 42 | `kcal_soybean` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
+| 43 | `yield_berries` | estimate | People per torus | -1% / +1% | 2.5 km pair, H host, Eros |
+| 44 | `kcal_lentils` | estimate | People per torus | -1% / +1% | 900 m six-stack, L host, Eros |
+| 45 | `kcal_berries` | estimate | People per torus | -1% / +0% | 900 m six-stack, L host, Eros |
+| 46 | `yield_greens` | sourced | People per torus | -0% / +1% | 900 m six-stack, L host, Eros |
+| 47 | `kcal_flax` | estimate | People per torus | -0% / +0% | 900 m six-stack, L host, Eros |
+| 48 | `crawl_space_m` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +0% / -0% | 400 m pair, LL host, Itokawa |
+| 49 | `kcal_greens` | estimate | People per torus | -0% / +0% | 1.6 km six-stack, LL host, Eros |
+| 50 | `soil_density` | estimate | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
+| 51 | `hub_radius_per_width` | estimate | Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | +0% / -0% | 400 m pair, LL host, Itokawa |
+| 52 | `regolith_density` | estimate | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
+| 53 | `rock_per_water_shield` | sourced | Mass per m² of floor | +0% / -0% | 400 m pair, LL host, Itokawa |
+| 54 | `farm_growing_kg_m2` | guess | Rock mined per torus (S-type) | -0% / +0% | 2.5 km pair, H host, Eros |
 
 # Monte Carlo (2000 samples)
 
@@ -118,16 +121,13 @@ Each input drawn independently from a triangular distribution (low, value, high)
 
 | Output | Unit | 5th percentile | Median | 95th percentile |
 |---|---|---|---|---|
-| Mass per m² of floor | t/m² | 35.3 | 40.3 | 45.8 |
-| Rock mined per torus (S-type) | Mt | 13.7 | 17.5 | 22.5 |
-| C-type per torus | Mt | 4.13 | 4.97 | 6.20 |
-| Despun array at the site | km² | 1.28 | 1.52 | 1.87 |
-| People per torus |  | 1,830 | 2,300 | 2,930 |
-| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 4.04 | 4.61 | 5.19 |
-| Processing energy per torus | PJ | 7.06 | 9.17 | 11.9 |
-| Shipping energy per torus | PJ | 15.8 | 23.8 | 35.4 |
-| Processing + shipping per torus | PJ | 24.8 | 33.0 | 44.7 |
-| Energy-limited generation time | yr | 4.71 | 6.27 | 8.50 |
+| Mass per m² of floor | t/m² | 35.1 | 40.4 | 45.8 |
+| Rock mined per torus (S-type) | Mt | 13.7 | 17.5 | 22.2 |
+| C-type per torus | Mt | 4.13 | 4.98 | 6.14 |
+| Despun array at the site | km² | 0.272 | 0.318 | 0.387 |
+| People per torus |  | 922 | 1,160 | 1,470 |
+| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 12.2 | 13.9 | 15.6 |
+| Processing energy per torus | PJ | 6.92 | 9.17 | 11.8 |
 
 # Farm radiators' reach: `farm_radiator_outer_frac` across its range
 

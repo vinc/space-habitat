@@ -7,12 +7,12 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | rpm / rim speed | 1.0 / 94.2 m/s | 0.75 / 126 m/s | 0.60 / 157 m/s |
 | Tube width / floor area | 56.2 m / 31.8 ha | 100 m / 101 ha | 156 m / 245 ha |
 | Rock shield (after fill credit) | 11.0 Mt | 33.5 Mt | 80.3 Mt |
-| Steel (spokes + hull + frames, excl. hub and factory) | 1.17 Mt | 6.00 Mt | 22.3 Mt |
+| Steel (spokes + hull + frames, excl. hub and factory) | 1.17 Mt | 6.00 Mt | 22.2 Mt |
 | Fill (soil + regolith) | 0.54 Mt | 1.7 Mt | 4.2 Mt |
-| Water (soil, O₂, lakes) | 0.12 Mt | 0.40 Mt | 1.0 Mt |
+| Water (soil, lakes, O₂, ballast, vegetation) | 0.12 Mt | 0.38 Mt | 0.96 Mt |
 | N₂ | 7.9 kt | 44 kt | 170 kt |
 | **Total** | **12.8 Mt** | **41.5 Mt** | **108 Mt** |
-| Mass per m² of floor | 40.3 t | 41.3 t | 43.8 t |
+| Mass per m² of floor | 40.2 t | 41.3 t | 43.8 t |
 | S-type mined per torus, H / L / LL host | 14 / 16 / 33 Mt | 45 / 84 / 170 Mt | 160 / 310 / 620 Mt |
 | C-type per torus (sized by nitrogen) | 5.0 Mt | 28 Mt | 100 Mt |
 | Valley lighting, daily average (sulfur) | 52.6 MW | 166 MW | 406 MW |
@@ -28,7 +28,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | Stack of 900 m tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
 | Floor area | 63.6 ha | 191 ha |
-| Mass (excl. shared hub and factory) | 25.6 Mt | 76.9 Mt |
+| Mass (excl. shared hub and factory) | 25.6 Mt | 76.8 Mt |
 | Material mined (H-like host) | 37.3 Mt | 112 Mt |
 | Main section length (10–40 m gaps between tori) | 160–220 m | 482–662 m |
 | Whole stack with its farm section (10 m gaps) | 332 m | 895 m |
@@ -43,7 +43,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | Stack of 1.6 km tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
 | Floor area | 201 ha | 603 ha |
-| Mass (excl. shared hub and factory) | 83.1 Mt | 249 Mt |
+| Mass (excl. shared hub and factory) | 83.0 Mt | 249 Mt |
 | Material mined (H-like host) | 144 Mt | 432 Mt |
 | Main section length (10–40 m gaps between tori) | 248–308 m | 744–924 m |
 | Whole stack with its farm section (10 m gaps) | 498 m | 1,390 m |
