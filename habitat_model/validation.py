@@ -56,9 +56,6 @@ def _sizes(section, label, unit, fn, refs, **kw):
             for r, ref in refs.items()]
 
 
-WATER_NOTE = ("the notes give no breakdown of the water; their per-m² figure falls with size "
-              "(0.47 -> 0.40 -> 0.37 t/m²) for no stated reason, while the model's soil and lake "
-              "water scale with the floor; the lake term is fitted at 1.6 km")
 CHECKS = [
     # §1, §2: rotation and floor
     *_sizes("§1", "Rotation", "rpm", lambda r: r["geometry"]["rpm"], {900: 1.0, 1600: 0.75, 2500: 0.6}),
@@ -91,14 +88,14 @@ CHECKS = [
     *_sizes("§9", "Total at 0.3 g", "Mt", lambda r: r["mass"]["total"] / MT, {900: 12.0, 1600: 37.2, 2500: 91.5}, g=0.3),
     *_sizes("§9", "Period at 0.3 g", "s", lambda r: r["geometry"]["period"], {900: 110, 1600: 146, 2500: 183}, g=0.3),
     # §7, §10 water, volatiles, metal
-    *_sizes("§7", "Water needed (soil, O₂, lakes)", "Mt", lambda r: r["mass"]["water_needed"] / MT,
-            {900: 0.15, 1600: 0.4, 2500: 0.9}, known={900: WATER_NOTE, 2500: WATER_NOTE}),
+    *_sizes("§7", "Water needed (soil, ponds, O₂, ballast, vegetation)", "Mt",
+            lambda r: r["mass"]["water_needed"] / MT, {900: 0.066, 1600: 0.22, 2500: 0.56}),
     *_sizes("§7", "Spin-up propellant (water, 3 km/s)", "Mt", lambda r: r["mass"]["spinup_propellant"] / MT,
             {900: 0.40, 1600: 1.7, 2500: 5.6}),
     *_sizes("§7", "C-type sized by nitrogen", "Mt", lambda r: r["materials"]["c_type"] / MT,
             {900: 5, 1600: 27, 2500: 100}),
     Check("§7", "C-type with water spin-up, 900 m", _d(900, water_spinup=True),
-          lambda r: r["materials"]["c_type"] / MT, 8, "Mt"),
+          lambda r: r["materials"]["c_type"] / MT, 7.2, "Mt"),
     *_sizes("§10", "C-type water contained", "Mt", lambda r: r["materials"]["c_water_contained"] / MT,
             {900: 0.32, 1600: 1.7, 2500: 6.5}),
     *_sizes("§10", "C-type diameter", "m", lambda r: r["materials"]["c_diameter"],

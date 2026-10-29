@@ -57,7 +57,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [x] Markdown report that regenerates the §0 tables (so the notes' tables can come from the model)
 - [x] JSON export for the 3D model's stats panel
 
-**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 189 of 197 checked figures within 5% (192 within their configured tolerance) after correcting the notes (`reports/validation.md`); this shows the model reproduces the notes, not that the design is physically validated. Ranking in `reports/sensitivity.md`; sections 2–7 re-ordered by it.
+**Status:** implemented in `habitat_model/` (see its README); reports in `reports/`. 190 of 193 checked figures within 5% (192 within their configured tolerance) after correcting the notes (`reports/validation.md`); this shows the model reproduces the notes, not that the design is physically validated. Ranking in `reports/sensitivity.md`; sections 2–7 re-ordered by it.
 
 **Review (issue #1), addressed:** the tube's rock jacket and crawl space are now in the geometry (pitch, gaps, end openings, stability) and the jacket has a finite thickness; the fill credit follows the actual fill; the heat capacity is labelled an ideal limit, with a preliminary radiative exchange model alongside; an unknown Δv stays unknown; shipping, total energy and generation time are in the sensitivity outputs, ranked over several designs; the trace budget compares demand with recoverable supply; the validation headline separates the literal 5% from the configured tolerances.
 
@@ -131,13 +131,21 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 5. Replication logistics
 
-**Why fifth:** once shipping is counted, its inputs top the combined ranking (`reports/sensitivity.md`): the electric propulsion's exhaust speed (−31% / +61% on shipping energy) and the water shipped, set by the lake water per m² of floor, a guess (−30% / +51%). With the notes' Δv, shipping volatiles from Ryugu to Eros takes ~2.5× the energy of crushing and baking. C-type nitrogen recovery and baking energy, also near the top, are Earth tests (section 8).
+**Why fifth:** once shipping is counted, its inputs top the combined ranking (`reports/sensitivity.md`): the electric propulsion's exhaust speed (−31% / +61% on shipping energy). The water shipped ranked second while the lakes were fitted (0.25 t/m²); with small ponds instead (plan §5, below) it drops out of the top ranks, but the ballast's share, a guess, now ranks ~5th (+39% on shipping energy at its high end). With the notes' Δv, shipping volatiles from Ryugu to Eros takes ~1.3× the energy of crushing and baking. C-type nitrogen recovery and baking energy, also near the top, are Earth tests (section 8).
 
-- [ ] Stock-and-flow or discrete-event model of mining, factory throughput, shipping and imported vitamins per generation. Output: doubling time, and the share of each child habitat that is made locally
-- [ ] Water budget per torus with a breakdown (soil, lakes, O₂, ballast, spin-up), replacing the lake-water guess; which water is shipped and which is made locally
-- [ ] Transfer Δv from current ephemerides for the chosen S/C pairs (the system model uses the notes' table), and propulsion options (exhaust speed, efficiency, propellant source)
+- [x] Stock-and-flow model of a generation (`logistics_model/flows.py`): the rates a parent's lines must sustain for a given generation (rock mined, metal, rock placed, C-type baked, cargo per window, power), what a child is made of by source, and the cluster's growth until its C-type runs out
+  - found: at 10-year generations a 900 m torus's child takes ~9 kt of S-type and ~400 t of metal a day, ~2% of Earth's largest mines and steelworks; ~99.2% of it comes from the host, ~0.8% from the C-type, ~0.003% are vitamins; Ryugu's nitrogen caps a 900 m cluster after ~55 years of doubling (1.6 km six-stacks after ~14)
+  - open: factory throughput against its own mass (how fast a factory copies itself), people, seed transfers to new sites, failures and spares
+- [x] Water budget per torus with a breakdown (soil, ponds, O₂, ballast, vegetation; spin-up as an option), replacing the lake-water guess (`logistics_model/water.py`, system model): ~0.066 / 0.22 / 0.56 Mt at 900 m / 1.6 km / 2.5 km, soil moisture about 60% of it, ballast (2 e M for an unbalanced e M at the rim) about a fifth; the lakes become small ponds and streams (~2% of the floor, ~1 m deep), water access for the biosphere rather than a feature
+  - investigated: ship only the water's hydrogen, as methane, with the oxygen from the silicates by molten-oxide electrolysis. Charged for the electrolysis and furnace heat the baseline doesn't otherwise run, it only just beats shipping water with electric thrusters and loses with mass drivers; it pays only on a host that electrolyses its silicates for iron anyway. Methane stays useful as a storable fuel (methalox)
+- [ ] Transfer Δv from current ephemerides for the chosen S/C pairs; propulsion options
+  - done: a Lambert solver (`logistics_model/transfers.py`) reproduces the notes' best-phase Δv within ~0.1 km/s (Torifune 0.1–0.4 lower), with the synodic periods as a timescale (when good windows recur needs a dated search); propulsion options by energy and propellant (`propulsion.py`)
+  - found: the electricity per kg delivered is lowest at vₑ ≈ Δv / 1.59 (~3 km/s): mass-driver freighters using the C-type's baked residue need ~3.7× less than electric thrusters at 30 km/s (proposed)
+  - open: dated windows from current ephemerides, and when good ones recur (JPL Horizons is blocked from the modelling environment), low-thrust trajectories, the freighters' mass and power
 
 **Changes the design if:** shipping dominates the generation time enough to favour a different C-type partner, local water, or a different propulsion.
+
+**Status:** with small ponds, shipping is ~1.3× the processing energy; mass-driver freighters (proposed) cut it ~3.7×, so a generation's energy floor goes from ~1.5 to ~0.9 years for a 900 m pair at 1 GW per stack (~19 → ~13 years for a 1.6 km six-stack). Shipping only the hydrogen doesn't pay unless the host electrolyses its silicates anyway. Ryugu's nitrogen, not shipping, sets the cluster's horizon (`reports/logistics.md`).
 
 ---
 

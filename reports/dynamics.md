@@ -13,7 +13,7 @@ Torus centring: the nets' lateral stiffness over the centrifugal pull on a torus
 | 900 m | 2 | 0.46 | 1.99 | 0.45 | grows ×e every 2.3 h |
 | 900 m | 6 | 0.46 | 1.90 | 0.16 | grows ×e every 2.4 h |
 | 1.6 km | 2 | 0.44 | 1.99 | 0.46 | grows ×e every 3.1 h |
-| 1.6 km | 6 | 0.44 | 1.92 | 0.16 | grows ×e every 3.1 h |
+| 1.6 km | 6 | 0.44 | 1.92 | 0.17 | grows ×e every 3.1 h |
 
 ## Fixes
 
@@ -23,7 +23,7 @@ Rim links: neighbouring tori joined at their rims (tunnels, or a thin cylinder a
 |---|---|---|---|---|---|
 | 900 m | 2 | 1.1e+08 N/m (0.0051 mm shell, 2.2 t per link) | 0.18% (23 kt per torus) | 1.80 | stable |
 | 900 m | 6 | 1.2e+09 N/m (0.058 mm shell, 25 t per link) | 1.69% (220 kt per torus) | 1.62 | stable |
-| 1.6 km | 2 | 2.1e+08 N/m (0.0055 mm shell, 4.3 t per link) | 0.30% (120 kt per torus) | 1.57 | stable |
+| 1.6 km | 2 | 2.1e+08 N/m (0.0055 mm shell, 4.3 t per link) | 0.30% (120 kt per torus) | 1.56 | stable |
 | 1.6 km | 6 | not enough alone | 2.81% (1,200 kt per torus) | 1.28 | stable |
 
 ## How long a stack: the hub's wall
@@ -32,17 +32,17 @@ With rim links (1e+11 N/m) and a trace of ties (0.01%), long stacks are limited 
 
 | Torus | Tori | Stack length (m) | Rigid J/I_t | Forward whirl / spin, 2.00 cm wall | Wall needed (cm) | Wall from the hub's budget (cm) | Forward whirl / spin at that wall |
 |---|---|---|---|---|---|---|---|
-| 900 m | 2 | 332 | 1.99 | 1.80 | 0.10 | 58.4 | 1.81 |
-| 900 m | 6 | 895 | 1.90 | 1.62 | 0.36 | 64.9 | 1.77 |
-| 900 m | 10 | 1,460 | 1.73 | 1.10 | 2.7 | 66.4 | 1.62 |
-| 900 m | 14 | 2,020 | 1.54 | 0.724 | 12 | 67.1 | 1.42 |
-| 900 m | 18 | 2,590 | 1.34 | 0.509 | 63 | 67.4 | 1.20 |
-| 900 m | 22 | 3,150 | 1.15 | 0.377 | **not enough** | 67.7 | 1.01 |
-| 1.6 km | 2 | 498 | 1.99 | 1.57 | 0.10 | 112 | 1.57 |
-| 1.6 km | 6 | 1,390 | 1.92 | 1.28 | 1.2 | 121 | 1.44 |
+| 900 m | 2 | 332 | 1.99 | 1.80 | 0.10 | 58.2 | 1.81 |
+| 900 m | 6 | 895 | 1.90 | 1.62 | 0.36 | 64.7 | 1.77 |
+| 900 m | 10 | 1,460 | 1.73 | 1.10 | 2.7 | 66.2 | 1.62 |
+| 900 m | 14 | 2,020 | 1.54 | 0.725 | 12 | 66.8 | 1.42 |
+| 900 m | 18 | 2,590 | 1.34 | 0.509 | 64 | 67.2 | 1.20 |
+| 900 m | 22 | 3,150 | 1.15 | 0.377 | **not enough** | 67.4 | 1.01 |
+| 1.6 km | 2 | 498 | 1.99 | 1.56 | 0.10 | 112 | 1.57 |
+| 1.6 km | 6 | 1,390 | 1.92 | 1.28 | 1.2 | 120 | 1.44 |
 | 1.6 km | 10 | 2,290 | 1.78 | 0.846 | 10 | 122 | 1.38 |
 | 1.6 km | 14 | 3,190 | 1.61 | 0.546 | 53 | 123 | 1.27 |
 | 1.6 km | 18 | 4,080 | 1.43 | 0.380 | **not enough** | 123 | 1.11 |
-| 1.6 km | 22 | 4,980 | 1.25 | 0.279 | **not enough** | 124 | 0.945 |
+| 1.6 km | 22 | 4,980 | 1.25 | 0.279 | **not enough** | 123 | 0.944 |
 
 Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the rim links' and ties' preload and details, and disturbances (docking, rim trains, ballast transfers, the array's bearing, sunlight pressure).
