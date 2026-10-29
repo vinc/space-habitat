@@ -79,6 +79,49 @@ The stack spins freely about its centre of mass, so a mismatch moves the spin ax
 | 1.6 km | 1.7 | 5.6 | 64 |
 | 2.5 km | 4.2 | 7.5 | 92 |
 
+## The hub in the nets: stabilising lines
+
+Each torus has two chord nets, one in each side plane of its tube. In each, the chords pass the hub tangent to a circle 1.1 × its radius, bowed outward by their spin load, leaving a window gap around it. A short line runs from the hub to every chord's tangent point (`structure_model/hub.py`). A chord pulled sideways at its middle resists like a taut string, 2T/L, a little less under its own spin load (shown in brackets); lines and chords act in series, and N lines spread around the window give N k / 2 in any direction of a net's plane, twice that for the torus's two nets. The hub's share is the system model's hub, dock and factory metal (25% of the torus steel). The torus and its hub move relative to each other with their reduced mass μ; off the axis they are pulled apart by μω²x, so the margin is K / μω². In the rotating frame Coriolis couples the two directions of the window's plane: the relative motion has two modes, at |√(K/μ) ∓ ω| (√(K/μ) seen from outside). Lines are preloaded 1.5× their largest swing of tension, in service and while building, and the area, preload, stiffness and loads are iterated until they agree, every line taut and within the wire stress.
+
+### Finished torus
+
+| Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin K / μω² | Natural frequency / spin: inertial; rotating modes | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t), + inclined option |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 400 m | 0.032 | 3.2 | 502 | 128 (-1%) | 30.6 | 39 | 6.3; 5.3 and 7.3 | 9.92 | 0.21 / 4.86 | 0.51 / 2.5 | 0.17 | 41.5 | 1.3 | 0.52 (+0.25) |
+| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 64.7 | 21 | 4.5; 3.5 and 5.5 | 73.2 | 0.71 / 11.2 | 0.48 / 1.9 | 3.0 | 170 | 5.3 | 13 (+4.0) |
+| 1.6 km | 1.5 | 18 | 2,010 | 116 (-4%) | 114 | 13 | 3.6; 2.6 and 4.6 | 350 | 1.7 / 19.7 | 0.44 / 1.5 | 24 | 500 | 16 | 140 (+32) |
+| 2.5 km | 5.6 | 35 | 3,142 | 116 (-7%) | 179 | 8.6 | 2.9; 1.9 and 3.9 | 1,250 | 3.4 / 29.7 | 0.41 / 1.3 | 120 | 1,240 | 38 | 1,100 (+170) |
+
+Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown. Torsion is likewise held by preload only.
+
+### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines
+
+Hub imbalance: 1% of the hub's mass at its rim. Torus imbalance: a 1% mismatch between two opposite arcs of 4θr, never ballasted. Orbit thrust: 1e-05 m/s² for the torus, pushed through its hub (notes §15). The torus and its hub turn about their common centre of mass.
+
+| Torus | Hub imbalance | Torus imbalance | Orbit thrust |
+|---|---|---|---|
+| 400 m | 0.71 cm / 0.22 MN | 0.48 cm / 0.15 MN | 0.089 cm / 0.027 MN |
+| 900 m | 3.1 cm / 2.0 MN | 2.0 cm / 1.3 MN | 0.21 cm / 0.13 MN |
+| 1.6 km | 9.2 cm / 10 MN | 5.7 cm / 6.5 MN | 0.40 cm / 0.45 MN |
+| 2.5 km | 22 cm / 40 MN | 13 cm / 23 MN | 0.68 cm / 1.2 MN |
+
+### Building: the first arcs
+
+At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of a pair. A pair's chords run between its two arcs, nearly parallel: the lines hold the hub across them, but along them only through the arcs' small spread and the lines' preload. A second pair at right angles holds that direction. The preload is the larger of what gives the stiffness margin and what keeps every line 1.5× above its swing; the stiffness differs by direction, so the modes are solved: without preload a single pair is an asymmetric rotor and the hub's motion grows. Pull-in: how far the preload draws those chords into the window.
+
+| Torus | First stage | Chords per net | Margin without preload | Without preload | Preload (kN) | Swing of tension (kN) | Chord pull-in (m) | Hub offset from the arcs (m) | Force in the lines (MN) |
+|---|---|---|---|---|---|---|---|---|---|
+| 400 m | one opposite pair | 12 | 0.062 | grows ×e every 0.20 turns | 110 | 73.2 | 0.85 | 4.0 (**more than the gap**) | 2.1 |
+| 400 m | two pairs at right angles | 24 | 7.9 | stable | 24.9 | 16.6 | 0.19 | 0.13 | 0.42 |
+| 900 m | one opposite pair | 27 | 0.036 | grows ×e every 0.22 turns | 292 | 156 | 2.4 | 9.0 (**more than the gap**) | 17 |
+| 900 m | two pairs at right angles | 54 | 4.4 | stable | 102 | 67.9 | 0.85 | 0.58 | 4.0 |
+| 1.6 km | one opposite pair | 48 | 0.025 | grows ×e every 0.25 turns | 909 | 276 | 7.6 | 16 | 78 |
+| 1.6 km | two pairs at right angles | 96 | 2.9 | stable | 300 | 200 | 2.5 | 1.7 | 22 |
+| 2.5 km | one opposite pair | 74 | 0.019 | grows ×e every 0.28 turns | 2,320 | 440 | 19 | 25 | 250 |
+| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 745 | 497 | 6.2 | 4.2 | 87 |
+
+Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through the lines.
+
 ## Tube cross-section: hull and frames by finite elements
 
 One metre of tube in the plane of its cross-section (`structure_model/tube_section.py`): the pressure hull and the outer cell wall as membrane skins, the jacket's transverse bulkheads (one every 10 m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall holding the section along the radius. Every part is sized fully stressed at 300 MPa (von Mises at every integration point; half that in compression, blended with tension by the compression's share of the stress state, an allowance for stiffeners), or held at its minimum gauge (1 cm for the skins, 5 mm for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners (vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are together in one column. Each anchor is a fitting through the jacket's depth, spreading the chord's pull over the radial line of nodes at its angle and pinned at the chord's attachment on the outer wall (a force, no couple). **Sizing:** *fully stressed* when every part is within 2% of its allowable or at its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds (heavier than needed); *over* when some part still exceeds it (not a design).

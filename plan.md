@@ -80,10 +80,13 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - done: assembled statics with one tension per chord, rigid segments and joint springs (`structure_model/net_statics.py`): arcs must span ≥ ~4θr (~270 m at 900 m); their chords carry 2× the finished load, so spin ≤ ~0.71 of the final rate; joints locked while building (~1% of the hoop force, plus bending), released after closure
   - checks: tension-only law for every chord, segment balance, and small displacements at the reported spin; stages failing them (pinned joints, some sliding cases) are left unresolved
   - open: a geometrically nonlinear, prestressed analysis for those, flexible segments (the joint moments of longer arcs), the hub and its stabilising lines, the actual sequence
-- [ ] Hub held in the net by stabilising lines
+- [x] Hub held in the nets by stabilising lines (`structure_model/hub.py`): two-body statics and modes (Coriolis) of a torus and its share of the hub in the rotating frame, chords as taut strings, lines in series, sizing iterated with every line taut
+  - found: the lines beat the spin's pull on torus and hub ~21× at 900 m (~9× at 2.5 km); in the rotating frame their relative motion has two modes at ~3.5× and ~5.5× the spin (Coriolis); loads move the hub by cm; ~13 t of lines per torus
+  - found: hang the first arcs as two pairs at right angles (a single pair can't hold the hub along its chords: without preload it is an unstable rotor); ~10% of the lines inclined to the side nets for axial hold (radial lines alone hold it below the spin rate)
+  - open: torque and docking loads through the lines, the elevator and pipe shafts' compliant joints
 - [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
   - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)
-- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate (done for hull and frames: +19% / −8% / +1% / +46%; −2% to +7% with the spokes); stiffness for model 4 (stack dynamics)
+- [ ] Output: steel per torus at 400 m / 900 m / 1.6 km / 2.5 km vs the r^2.3 estimate (done for hull and frames: +19% / −8% / +1% / +46%; −2% to +7% with the spokes); stiffness for model 4 (stack dynamics; done for the nets: lateral, tilt, axial and torsion per torus, `reports/structure.md`)
 
 **Changes the design if:** the steel per torus differs from the r^2.3 estimate by more than ~30%, or ~1 GPa working stress isn't reachable with asteroid iron.
 
@@ -112,7 +115,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 **Why fourth:** not in the sweep (the system model treats the stack as rigid), but it decides whether the "nothing has to keep working" principle holds; it needs the stiffness from model 2. The farm section nearly doubles the hub's length (~480 → ~900 m for a 900 m six-stack), which lowers its bending modes.
 
 - [ ] Rigid stack with energy dissipation: margin vs number of tori and gaps
-- [ ] Flexible stack: hub as a beam, tori as rings on cable nets; lowest bending modes vs spin rate for a pair and a six-stack
+- [ ] Flexible stack: hub as a beam, tori as rings on cable nets (their stiffness per torus from plan §2, `structure_model/hub.py`); lowest bending modes vs spin rate for a pair and a six-stack
 - [ ] Disturbances: docking, rim trains, ballast transfers, friction in the despun array's bearing, sunlight pressure on the array
 - [ ] Tools: Python (scipy) multibody model, or modal analysis using model 2's stiffness
 - [ ] Output: ratio of lowest mode to spin rate, damping needed, maximum tori

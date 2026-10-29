@@ -284,3 +284,118 @@ class TestTubeSection(unittest.TestCase):
         coarse = self.runs["sides"]["per_metre"]["total"]
         fine = tube_section.run(self.p, 900, "sides", "vaulted", n_radial=6, n_around=216)["per_metre"]["total"]
         self.assertAlmostEqual(fine / coarse, 1, delta=0.01)
+
+
+class TestHub(unittest.TestCase):
+    """The hub held in the two chord nets by stabilising lines (plan §2)."""
+
+    @classmethod
+    def setUpClass(cls):
+        from structure_model import hub
+        cls.hub = hub
+        cls.p = params(load())
+        cls.out = {}
+        for r in (400, 900, 1600, 2500):
+            res = evaluate(cls.p, Design(radius_m=r, n_tori=1))
+            cls.out[r] = hub.compute(cls.p, res["geometry"], res["mass"])
+
+    def test_chord_stiffness_is_a_taut_string(self):
+        k = self.hub.chord_stiffness(5e7, 900.0, 400.0, 0.0)
+        self.assertAlmostEqual(k, 2 * 5e7 / 900)
+        # Its own spin load softens it a little: 2 T beta cot(beta L) < 2 T / L.
+        soft = self.hub.chord_stiffness(5e7, 900.0, 400.0, 0.105)
+        beta = math.sqrt(400 * 0.105 ** 2 / 5e7)
+        self.assertAlmostEqual(soft, 2 * 5e7 * beta / math.tan(beta * 900))
+        self.assertLess(soft, k)
+        self.assertAlmostEqual(soft / k, 1 - (beta * 900) ** 2 / 3, delta=1e-3)
+
+    def test_two_bodies_balance(self):
+        mt, mh, k, w, ft, fh = 1e10, 3e8, 6e7, 0.1, 2e6, -5e5
+        res = self.hub.two_bodies(mt, mh, k, w, ft, fh)
+        w2 = w * w
+        self.assertAlmostEqual((mt * w2 * res["x_torus"] + mh * w2 * res["x_hub"] + ft + fh) / ft, 0, places=9)
+        self.assertAlmostEqual(mh * w2 * res["x_hub"] - res["force"] + fh, 0, delta=1e-6 * abs(ft))
+
+    def test_finished_nets_hold_the_hub(self):
+        for r, out in self.out.items():
+            self.assertGreater(out["margin"], 5, r)
+            self.assertGreater(out["natural_vs_spin"], 2, r)
+            # Lines much stiffer than chords: the nets give about N k_chord / 2 per plane.
+            self.assertAlmostEqual(out["k_plane"] / (out["n_lines"] / 2 * out["k_chord"] / 2), 1, delta=0.1)
+            for case in out["cases"].values():
+                self.assertLess(abs(case["relative"]), out["gap"] / 10)
+            # Light lines: well under 0.1% of the torus.
+            self.assertLess(out["line_mass"], 1e-3 * out["torus_mass"])
+
+    def test_one_pair_cannot_hold_the_hub_two_can(self):
+        for r, out in self.out.items():
+            self.assertFalse(out["build"][1]["stable_unbraced"], r)
+            self.assertTrue(out["build"][2]["stable_unbraced"], r)
+            self.assertLess(abs(out["build"][2]["offset"]), abs(out["build"][1]["offset"]))
+            self.assertLess(abs(out["build"][2]["offset"]), out["gap"])
+
+    def test_axial_hold_needs_inclined_lines(self):
+        for r, out in self.out.items():
+            self.assertLess(out["axial_natural_vs_spin"], 1, r)
+            self.assertGreater(out["k_axial_inclined"], 5 * out["k_axial"], r)
+
+
+class TestHubReview(unittest.TestCase):
+    """Review on PR #5: Coriolis modes, taut lines while building, inclined length, consistent sizing."""
+
+    @classmethod
+    def setUpClass(cls):
+        from structure_model import hub
+        cls.hub = hub
+        cls.p = params(load())
+        cls.out = {}
+        for r in (400, 900, 2500):
+            res = evaluate(cls.p, Design(radius_m=r, n_tori=1))
+            cls.out[r] = (hub.compute(cls.p, res["geometry"], res["mass"]), res["geometry"])
+
+    def test_isotropic_modes_split_by_the_spin(self):
+        mu, k, w = 2e8, 6e7, 0.1
+        m = self.hub.modes(mu, k, k, w)
+        wn = math.sqrt(k / mu)
+        np.testing.assert_allclose(m["frequencies"], [abs(wn - w), wn + w], rtol=1e-9)
+        self.assertEqual(m["growth"], 0.0)
+
+    def test_asymmetric_rotor_grows_between_its_frequencies(self):
+        mu, w = 1e8, 0.1
+        grows = self.hub.modes(mu, 0.5 * mu * w * w, 3 * mu * w * w, w)
+        self.assertGreater(grows["growth"], 0)
+        stable = self.hub.modes(mu, 1.5 * mu * w * w, 3 * mu * w * w, w)
+        self.assertEqual(stable["growth"], 0.0)
+
+    def test_finished_modes_in_the_rotating_frame(self):
+        for r, (out, geo) in self.out.items():
+            wn = math.sqrt(out["k_torus"] / out["reduced_mass"]) / geo["omega"]
+            np.testing.assert_allclose(out["rotating_vs_spin"], [wn - 1, wn + 1], rtol=1e-6)
+            self.assertAlmostEqual(out["natural_vs_spin"], wn)
+            self.assertEqual(out["growth"], 0.0)
+
+    def test_load_cases_use_the_final_stiffness(self):
+        for r, (out, _) in self.out.items():
+            for case in out["cases"].values():
+                self.assertAlmostEqual(case["force"] / (out["k_torus"] * case["relative"]), 1, places=9)
+
+    def test_lines_stay_taut_and_within_the_wire_stress(self):
+        sigma = self.p.wire_stress_mpa * 1e6
+        for r, (out, _) in self.out.items():
+            self.assertGreater(out["service_preload"], out["service_swing"])
+            self.assertLessEqual((out["service_preload"] + out["service_swing"]) / out["line_area"], sigma * (1 + 1e-6))
+            first = out["build"][out["build_pairs"]]
+            self.assertGreaterEqual(first["preload"], self.hub.TAUT_MARGIN * first["swing"] * (1 - 1e-6))
+            self.assertLessEqual(first["line_stress"], sigma * (1 + 1e-6))
+            self.assertEqual(first["growth"], 0.0)
+            # A single pair without preload is an asymmetric rotor: the hub's motion grows.
+            self.assertGreater(out["build"][1]["growth_unbraced"], 0)
+
+    def test_inclined_lines_use_their_length(self):
+        hub = self.hub
+        for r, (out, _) in self.out.items():
+            length = math.hypot(out["gap"], out["plane_offset"])
+            self.assertAlmostEqual(out["inclined_length"], length)
+            k = hub.series(out["k_chord"], hub.E_WIRE * out["line_area"] / length)
+            expected = hub.INCLINED_FRAC * out["n_lines"] * k * math.sin(out["inclination"]) ** 2
+            self.assertAlmostEqual(out["k_axial_inclined"] / expected, 1, places=9)
