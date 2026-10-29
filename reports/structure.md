@@ -81,18 +81,18 @@ The stack spins freely about its centre of mass, so a mismatch moves the spin ax
 
 ## The hub in the nets: stabilising lines
 
-Each torus has two chord nets, one in each side plane of its tube. In each, the chords pass the hub tangent to a circle 1.1 × its radius, bowed outward by their spin load, leaving a window gap around it. A short line runs from the hub to every chord's tangent point (`structure_model/hub.py`). A chord pulled sideways at its middle resists like a taut string, 2T/L, a little less under its own spin load (shown in brackets); lines and chords act in series, and N lines spread around the window give N k / 2 in any direction of a net's plane, twice that for the torus's two nets. The hub's share is the system model's hub, dock and factory metal (25% of the torus steel). Off the axis by x, it feels M ω² x outward: the margin is the lines' stiffness over that. Lines are preloaded 1.5× their largest swing in service so none goes slack, and sized at the wire stress for the first construction stage too (two pairs of arcs, below).
+Each torus has two chord nets, one in each side plane of its tube. In each, the chords pass the hub tangent to a circle 1.1 × its radius, bowed outward by their spin load, leaving a window gap around it. A short line runs from the hub to every chord's tangent point (`structure_model/hub.py`). A chord pulled sideways at its middle resists like a taut string, 2T/L, a little less under its own spin load (shown in brackets); lines and chords act in series, and N lines spread around the window give N k / 2 in any direction of a net's plane, twice that for the torus's two nets. The hub's share is the system model's hub, dock and factory metal (25% of the torus steel). The torus and its hub move relative to each other with their reduced mass μ; off the axis they are pulled apart by μω²x, so the margin is K / μω². In the rotating frame Coriolis couples the two directions of the window's plane: the relative motion has two modes, at |√(K/μ) ∓ ω| (√(K/μ) seen from outside). Lines are preloaded 1.5× their largest swing of tension, in service and while building, and the area, preload, stiffness and loads are iterated until they agree, every line taut and within the wire stress.
 
 ### Finished torus
 
-| Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin over the hub's pull | Hub's natural frequency / spin | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t) |
+| Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin K / μω² | Natural frequency / spin: inertial; rotating modes | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t), + inclined option |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 0.032 | 3.2 | 502 | 128 (-1%) | 29.2 | 37 | 6.0 | 9.46 | 0.21 / 5.67 | 0.52 / 2.7 | 0.17 | 20.3 | 1.3 | 0.25 |
-| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 63.2 | 20 | 4.3 | 71.4 | 0.73 / 11.9 | 0.48 / 1.9 | 3.1 | 90.6 | 5.4 | 6.8 |
-| 1.6 km | 1.5 | 18 | 2,010 | 116 (-4%) | 112 | 12 | 3.3 | 346 | 1.8 / 20.3 | 0.44 / 1.5 | 24 | 302 | 16 | 87 |
-| 2.5 km | 5.6 | 35 | 3,142 | 116 (-7%) | 178 | 8.1 | 2.7 | 1,250 | 3.6 / 30.4 | 0.40 / 1.2 | 120 | 1,060 | 40 | 920 |
+| 400 m | 0.032 | 3.2 | 502 | 128 (-1%) | 30.6 | 39 | 6.3; 5.3 and 7.3 | 9.92 | 0.21 / 4.86 | 0.51 / 2.5 | 0.17 | 41.5 | 1.3 | 0.52 (+0.25) |
+| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 64.7 | 21 | 4.5; 3.5 and 5.5 | 73.2 | 0.71 / 11.2 | 0.48 / 1.9 | 3.0 | 170 | 5.3 | 13 (+4.0) |
+| 1.6 km | 1.5 | 18 | 2,010 | 116 (-4%) | 114 | 13 | 3.6; 2.6 and 4.6 | 350 | 1.7 / 19.7 | 0.44 / 1.5 | 24 | 500 | 16 | 140 (+32) |
+| 2.5 km | 5.6 | 35 | 3,142 | 116 (-7%) | 179 | 8.6 | 2.9; 1.9 and 3.9 | 1,250 | 3.4 / 29.7 | 0.41 / 1.3 | 120 | 1,240 | 38 | 1,100 (+170) |
 
-Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets (a chord resists sideways pulls out of its plane alike) holds it ~8–30× more stiffly (second figure). Torsion is likewise held by preload only.
+Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown. Torsion is likewise held by preload only.
 
 ### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines
 
@@ -100,25 +100,25 @@ Hub imbalance: 1% of the hub's mass at its rim. Torus imbalance: a 1% mismatch b
 
 | Torus | Hub imbalance | Torus imbalance | Orbit thrust |
 |---|---|---|---|
-| 400 m | 1.3 cm / 0.22 MN | 0.90 cm / 0.15 MN | 0.17 cm / 0.028 MN |
-| 900 m | 4.8 cm / 2.1 MN | 3.1 cm / 1.3 MN | 0.32 cm / 0.14 MN |
-| 1.6 km | 13 cm / 11 MN | 8.0 cm / 6.7 MN | 0.56 cm / 0.47 MN |
-| 2.5 km | 30 cm / 41 MN | 17 cm / 24 MN | 0.91 cm / 1.3 MN |
+| 400 m | 0.71 cm / 0.22 MN | 0.48 cm / 0.15 MN | 0.089 cm / 0.027 MN |
+| 900 m | 3.1 cm / 2.0 MN | 2.0 cm / 1.3 MN | 0.21 cm / 0.13 MN |
+| 1.6 km | 9.2 cm / 10 MN | 5.7 cm / 6.5 MN | 0.40 cm / 0.45 MN |
+| 2.5 km | 22 cm / 40 MN | 13 cm / 23 MN | 0.68 cm / 1.2 MN |
 
 ### Building: the first arcs
 
-At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of a pair. A pair's chords run between its two arcs, nearly parallel: the lines hold the hub across them, but along them only through the arcs' small spread and the lines' preload. A second pair at right angles holds that direction. Preload: what the lines need to beat the hub's pull with the same 1.5× margin; pull-in: how far that preload draws the few chords into the window.
+At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of a pair. A pair's chords run between its two arcs, nearly parallel: the lines hold the hub across them, but along them only through the arcs' small spread and the lines' preload. A second pair at right angles holds that direction. The preload is the larger of what gives the stiffness margin and what keeps every line 1.5× above its swing; the stiffness differs by direction, so the modes are solved: without preload a single pair is an asymmetric rotor and the hub's motion grows. Pull-in: how far the preload draws those chords into the window.
 
-| Torus | First stage | Chords per net | Weakest stiffness, no preload (MN/m) | Hub's pull (MN/m) | Margin, no preload | Preload needed (kN) | Chord pull-in (m) | Hub offset from the arcs (m) | Force in the lines (MN) |
+| Torus | First stage | Chords per net | Margin without preload | Without preload | Preload (kN) | Swing of tension (kN) | Chord pull-in (m) | Hub offset from the arcs (m) | Force in the lines (MN) |
 |---|---|---|---|---|---|---|---|---|---|
-| 400 m | one opposite pair | 12 | 0.012 | 0.40 | 0.030 | 77.1 | 0.59 | 2.9 | 1.7 |
-| 400 m | two pairs at right angles | 24 | 1.6 | 0.40 | 4.0 | — | — | 0.30 | 0.49 |
-| 900 m | one opposite pair | 27 | 0.031 | 1.6 | 0.019 | 372 | 3.1 | 5.1 | 12 |
-| 900 m | two pairs at right angles | 54 | 4.2 | 1.6 | 2.6 | — | — | 1.2 | 4.9 |
-| 1.6 km | one opposite pair | 48 | 0.060 | 4.7 | 0.013 | 1,310 | 11 | 7.0 | 49 |
-| 1.6 km | two pairs at right angles | 96 | 8.1 | 4.7 | 1.7 | — | — | 3.6 | 29 |
-| 2.5 km | one opposite pair | 74 | 0.100 | 11 | 0.0090 | 3,890 | 32 | 8.4 | 140 |
-| 2.5 km | two pairs at right angles | 148 | 14 | 11 | 1.2 | 361 | 3.0 | 6.3 | 100 |
+| 400 m | one opposite pair | 12 | 0.062 | grows ×e every 0.20 turns | 110 | 73.2 | 0.85 | 4.0 (**more than the gap**) | 2.1 |
+| 400 m | two pairs at right angles | 24 | 7.9 | stable | 24.9 | 16.6 | 0.19 | 0.13 | 0.42 |
+| 900 m | one opposite pair | 27 | 0.036 | grows ×e every 0.22 turns | 292 | 156 | 2.4 | 9.0 (**more than the gap**) | 17 |
+| 900 m | two pairs at right angles | 54 | 4.4 | stable | 102 | 67.9 | 0.85 | 0.58 | 4.0 |
+| 1.6 km | one opposite pair | 48 | 0.025 | grows ×e every 0.25 turns | 909 | 276 | 7.6 | 16 | 78 |
+| 1.6 km | two pairs at right angles | 96 | 2.9 | stable | 300 | 200 | 2.5 | 1.7 | 22 |
+| 2.5 km | one opposite pair | 74 | 0.019 | grows ×e every 0.28 turns | 2,320 | 440 | 19 | 25 | 250 |
+| 2.5 km | two pairs at right angles | 148 | 2.1 | stable | 745 | 497 | 6.2 | 4.2 | 87 |
 
 Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through the lines.
 

@@ -227,21 +227,25 @@ def hub_report(p):
     for r in SIZES:
         res = evaluate(p, Design(radius_m=r, n_tori=1))
         out = hub.compute(p, res["geometry"], res["mass"])
+        low, high = out["rotating_vs_spin"]
         finished.append([
             size_label(r), num(out["hub_mass"] / MT, 2), num(out["gap"], 2), f"{out['n_lines']:,}",
             f"{num(out['k_chord'] / 1e3)} ({out['k_chord'] / out['k_chord_string'] - 1:+.0%})",
-            num(out["k_torus"] / 1e6), num(out["margin"], 2), num(out["natural_vs_spin"], 2),
+            num(out["k_torus"] / 1e6), num(out["margin"], 2),
+            f"{num(out['natural_vs_spin'], 2)}; {num(low, 2)} and {num(high, 2)}",
             num(out["k_tilt"] / 1e9), f"{num(out['k_axial'] / 1e6, 2)} / {num(out['k_axial_inclined'] / 1e6)}",
             f"{num(out['axial_natural_vs_spin'], 2)} / {num(out['axial_inclined_natural_vs_spin'], 2)}",
             num(out["k_torsion"] / 1e9, 2), num(out["line_area"] * 1e6), num(out["service_preload"] / 1e3, 2),
-            num(out["line_mass"] / 1e3, 2)])
+            f"{num(out['line_mass'] / 1e3, 2)} (+{num(out['inclined_extra_mass'] / 1e3, 2)})"])
         cases.append([size_label(r)] + [f"{num(abs(c['relative']) * 100, 2)} cm / {num(abs(c['force']) / 1e6, 2)} MN"
                                         for c in out["cases"].values()])
         for pairs, b in out["build"].items():
+            unbraced = ("grows ×e every " + num(b["e_folding_unbraced_spins"], 2) + " turns"
+                        if b["growth_unbraced"] else "stable")
+            offset = num(abs(b["offset"]), 2) + (" (**more than the gap**)" if abs(b["offset"]) > out["gap"] else "")
             build.append([size_label(r), "one opposite pair" if pairs == 1 else "two pairs at right angles",
-                          str(b["chords"]), num(b["weak_unbraced"] / 1e6, 2), num(b["hub_pull"] / 1e6, 2),
-                          num(b["margin_unbraced"], 2), num(b["preload"] / 1e3) if b["preload"] else "—",
-                          num(b["pull_in"], 2) if b["preload"] else "—", num(abs(b["offset"]), 2),
+                          str(b["chords"]), num(b["margin_unbraced"], 2), unbraced,
+                          num(b["preload"] / 1e3), num(b["swing"] / 1e3), num(b["pull_in"], 2), offset,
                           num(abs(b["force"]) / 1e6, 2)])
     names = list(out["cases"])
     return "\n\n".join([
@@ -252,20 +256,23 @@ def hub_report(p):
         "sideways at its middle resists like a taut string, 2T/L, a little less under its own spin load (shown in "
         "brackets); lines and chords act in series, and N lines spread around the window give N k / 2 in any "
         "direction of a net's plane, twice that for the torus's two nets. The hub's share is the system model's "
-        f"hub, dock and factory metal ({p.hub_factory_metal_frac:.0%} of the torus steel). Off the axis by x, it "
-        "feels M ω² x outward: the margin is the lines' stiffness over that. Lines are preloaded "
-        f"{hub.TAUT_MARGIN:g}× their largest swing in service so none goes slack, and sized at the wire stress "
-        "for the first construction stage too (two pairs of arcs, below).",
+        f"hub, dock and factory metal ({p.hub_factory_metal_frac:.0%} of the torus steel). The torus and its hub "
+        "move relative to each other with their reduced mass μ; off the axis they are pulled apart by μω²x, so the "
+        "margin is K / μω². In the rotating frame Coriolis couples the two directions of the window's plane: the "
+        "relative motion has two modes, at |√(K/μ) ∓ ω| (√(K/μ) seen from outside). Lines are preloaded "
+        f"{hub.TAUT_MARGIN:g}× their largest swing of tension, in service and while building, and the area, "
+        "preload, stiffness and loads are iterated until they agree, every line taut and within the wire stress.",
         "### Finished torus",
         table(["Torus", "Hub share (Mt)", "Window gap (m)", "Lines", "Chord stiffness (kN/m)",
-               "Lateral stiffness (MN/m)", "Margin over the hub's pull", "Hub's natural frequency / spin",
+               "Lateral stiffness (MN/m)", "Margin K / μω²", "Natural frequency / spin: inertial; rotating modes",
                "Tilt stiffness (GN·m/rad)", f"Axial stiffness (MN/m): radial lines / {hub.INCLINED_FRAC:.0%} inclined",
                "Axial natural frequency / spin", "Torsional stiffness (GN·m/rad)", "Line area (mm²)",
-               "Service preload (kN)", "Lines' mass (t)"], finished),
+               "Service preload (kN)", "Lines' mass (t), + inclined option"], finished),
         "Radial lines hold the hub along the axis only through their preload: its axial natural frequency is "
         f"below the spin rate. Running {hub.INCLINED_FRAC:.0%} of the lines from the hub's mid-plane out to the side "
-        "nets (a chord resists sideways pulls out of its plane alike) holds it ~8–30× more stiffly (second "
-        "figure). Torsion is likewise held by preload only.",
+        "nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more "
+        "stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass "
+        "shown. Torsion is likewise held by preload only.",
         "### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines",
         f"Hub imbalance: {hub.HUB_IMBALANCE_FRAC:.0%} of the hub's mass at its rim. Torus imbalance: a "
         f"{hub.ARC_MISMATCH:.0%} mismatch between two opposite arcs of 4θr, never ballasted. Orbit thrust: "
@@ -276,11 +283,13 @@ def hub_report(p):
         f"At {hub.BUILD_SPIN:g} of the final spin (net_statics), with a {hub.ARC_MISMATCH:.0%} mismatch between the "
         "arcs of a pair. A pair's chords run between its two arcs, nearly parallel: the lines hold the hub across "
         "them, but along them only through the arcs' small spread and the lines' preload. A second pair at right "
-        "angles holds that direction. Preload: what the lines need to beat the hub's pull with the same "
-        f"{hub.TAUT_MARGIN:g}× margin; pull-in: how far that preload draws the few chords into the window.",
-        table(["Torus", "First stage", "Chords per net", "Weakest stiffness, no preload (MN/m)",
-               "Hub's pull (MN/m)", "Margin, no preload", "Preload needed (kN)", "Chord pull-in (m)",
-               "Hub offset from the arcs (m)", "Force in the lines (MN)"], build),
+        "angles holds that direction. The preload is the larger of what gives the stiffness margin and what keeps "
+        f"every line {hub.TAUT_MARGIN:g}× above its swing; the stiffness differs by direction, so the modes are "
+        "solved: without preload a single pair is an asymmetric rotor and the hub's motion grows. Pull-in: how far "
+        "the preload draws those chords into the window.",
+        table(["Torus", "First stage", "Chords per net", "Margin without preload", "Without preload",
+               "Preload (kN)", "Swing of tension (kN)", "Chord pull-in (m)", "Hub offset from the arcs (m)",
+               "Force in the lines (MN)"], build),
         "Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and "
         "power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through "
         "the lines.",

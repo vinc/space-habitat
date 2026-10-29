@@ -80,9 +80,9 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - done: assembled statics with one tension per chord, rigid segments and joint springs (`structure_model/net_statics.py`): arcs must span ≥ ~4θr (~270 m at 900 m); their chords carry 2× the finished load, so spin ≤ ~0.71 of the final rate; joints locked while building (~1% of the hoop force, plus bending), released after closure
   - checks: tension-only law for every chord, segment balance, and small displacements at the reported spin; stages failing them (pinned joints, some sliding cases) are left unresolved
   - open: a geometrically nonlinear, prestressed analysis for those, flexible segments (the joint moments of longer arcs), the hub and its stabilising lines, the actual sequence
-- [x] Hub held in the nets by stabilising lines (`structure_model/hub.py`): two-body statics of a torus and its share of the hub in the rotating frame, chords as taut strings, lines in series
-  - found: the lines beat the hub's own centrifugal pull ~20× at 900 m (~8× at 2.5 km), natural frequency ~4× the spin; loads move the hub by cm; ~7 t of lines per torus
-  - found: hang the first arcs as two pairs at right angles (a single pair can't hold the hub along its chords); ~10% of the lines inclined to the side nets for axial hold (radial lines alone hold it below the spin rate)
+- [x] Hub held in the nets by stabilising lines (`structure_model/hub.py`): two-body statics and modes (Coriolis) of a torus and its share of the hub in the rotating frame, chords as taut strings, lines in series, sizing iterated with every line taut
+  - found: the lines beat the spin's pull on torus and hub ~21× at 900 m (~9× at 2.5 km); in the rotating frame their relative motion has two modes at ~3.5× and ~5.5× the spin (Coriolis); loads move the hub by cm; ~13 t of lines per torus
+  - found: hang the first arcs as two pairs at right angles (a single pair can't hold the hub along its chords: without preload it is an unstable rotor); ~10% of the lines inclined to the side nets for axial hold (radial lines alone hold it below the spin rate)
   - open: torque and docking loads through the lines, the elevator and pipe shafts' compliant joints
 - [x] Wire from asteroid iron-nickel: literature on drawn pearlitic wire with nickel, cobalt, phosphorus and sulfur; achievable strength, creep and fatigue
   - found: the wire needs carbonyl-refined iron (chondritic metal holds ~9%+ Ni, P and S nearby); fatigue left to the stack dynamics (§4)

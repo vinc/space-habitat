@@ -338,3 +338,64 @@ class TestHub(unittest.TestCase):
         for r, out in self.out.items():
             self.assertLess(out["axial_natural_vs_spin"], 1, r)
             self.assertGreater(out["k_axial_inclined"], 5 * out["k_axial"], r)
+
+
+class TestHubReview(unittest.TestCase):
+    """Review on PR #5: Coriolis modes, taut lines while building, inclined length, consistent sizing."""
+
+    @classmethod
+    def setUpClass(cls):
+        from structure_model import hub
+        cls.hub = hub
+        cls.p = params(load())
+        cls.out = {}
+        for r in (400, 900, 2500):
+            res = evaluate(cls.p, Design(radius_m=r, n_tori=1))
+            cls.out[r] = (hub.compute(cls.p, res["geometry"], res["mass"]), res["geometry"])
+
+    def test_isotropic_modes_split_by_the_spin(self):
+        mu, k, w = 2e8, 6e7, 0.1
+        m = self.hub.modes(mu, k, k, w)
+        wn = math.sqrt(k / mu)
+        np.testing.assert_allclose(m["frequencies"], [abs(wn - w), wn + w], rtol=1e-9)
+        self.assertEqual(m["growth"], 0.0)
+
+    def test_asymmetric_rotor_grows_between_its_frequencies(self):
+        mu, w = 1e8, 0.1
+        grows = self.hub.modes(mu, 0.5 * mu * w * w, 3 * mu * w * w, w)
+        self.assertGreater(grows["growth"], 0)
+        stable = self.hub.modes(mu, 1.5 * mu * w * w, 3 * mu * w * w, w)
+        self.assertEqual(stable["growth"], 0.0)
+
+    def test_finished_modes_in_the_rotating_frame(self):
+        for r, (out, geo) in self.out.items():
+            wn = math.sqrt(out["k_torus"] / out["reduced_mass"]) / geo["omega"]
+            np.testing.assert_allclose(out["rotating_vs_spin"], [wn - 1, wn + 1], rtol=1e-6)
+            self.assertAlmostEqual(out["natural_vs_spin"], wn)
+            self.assertEqual(out["growth"], 0.0)
+
+    def test_load_cases_use_the_final_stiffness(self):
+        for r, (out, _) in self.out.items():
+            for case in out["cases"].values():
+                self.assertAlmostEqual(case["force"] / (out["k_torus"] * case["relative"]), 1, places=9)
+
+    def test_lines_stay_taut_and_within_the_wire_stress(self):
+        sigma = self.p.wire_stress_mpa * 1e6
+        for r, (out, _) in self.out.items():
+            self.assertGreater(out["service_preload"], out["service_swing"])
+            self.assertLessEqual((out["service_preload"] + out["service_swing"]) / out["line_area"], sigma * (1 + 1e-6))
+            first = out["build"][out["build_pairs"]]
+            self.assertGreaterEqual(first["preload"], self.hub.TAUT_MARGIN * first["swing"] * (1 - 1e-6))
+            self.assertLessEqual(first["line_stress"], sigma * (1 + 1e-6))
+            self.assertEqual(first["growth"], 0.0)
+            # A single pair without preload is an asymmetric rotor: the hub's motion grows.
+            self.assertGreater(out["build"][1]["growth_unbraced"], 0)
+
+    def test_inclined_lines_use_their_length(self):
+        hub = self.hub
+        for r, (out, _) in self.out.items():
+            length = math.hypot(out["gap"], out["plane_offset"])
+            self.assertAlmostEqual(out["inclined_length"], length)
+            k = hub.series(out["k_chord"], hub.E_WIRE * out["line_area"] / length)
+            expected = hub.INCLINED_FRAC * out["n_lines"] * k * math.sin(out["inclination"]) ** 2
+            self.assertAlmostEqual(out["k_axial_inclined"] / expected, 1, places=9)
