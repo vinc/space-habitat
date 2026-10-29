@@ -35,6 +35,7 @@
 | `skin_min_gauge_m` | 0.01000 | m of steel | 0.005000–0.02000 | estimate | §12, hull at minimum gauge (1 cm per hull): the pressure hull and the outer cell wall |
 | `cell_wall_min_gauge_m` | 0.005000 | m of steel | 0.003000–0.01000 | guess | bulkheads and cell walls of the rock jacket at their thinnest |
 | `cell_size_m` | 10.00 | m | fixed | design | spacing of the jacket's bulkheads and cell walls, as the chords' anchors (§12) |
+| `hub_shell_m` | 0.02000 | m of steel | 0.005000–0.05000 | guess | the shared hub's structural wall (a thin tube of the hub's radius); dynamics_model only |
 | `bumper_m` | 0.002000 | m of steel | 0.001000–0.003000 | estimate | §13, thin outer bumper (~1-3 mm) |
 | `wire_stress_mpa` | 1,000 | MPa (working) | 800.0–1,200 | estimate | structure_model/README.md: 1,770 MPa bridge wire at SF 2.2 to ~1 mm wire (~2.25 GPa) at SF ~1.9; 1 GPa is SF ~1.96 on 1,960 MPa wire |
 | `steel_density` | 7,900 | kg/m3 | fixed | sourced | §5a |
