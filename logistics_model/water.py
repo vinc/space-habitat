@@ -19,7 +19,7 @@ def budget(r, water_spinup=False):
     m = r["mass"]
     uses = {
         "Soil moisture": m["water_soil"],
-        "Lakes and streams": m["water_lakes"],
+        "Ponds and streams": m["water_lakes"],
         "Electrolysed for the O₂ (valley and farm ring)": m["water_o2"],
         "Ballast": m["water_ballast"],
         "Vegetation": m["water_biomass"],

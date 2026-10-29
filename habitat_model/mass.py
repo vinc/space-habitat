@@ -65,9 +65,9 @@ def compute(p, d, geo):
     soil = soil_depth * p.soil_density * 1e3 * floor
     regolith = regolith_depth * p.regolith_density * 1e3 * floor
 
-    # Water to source: soil moisture, lakes, the water electrolysed for the O2, ballast and the
+    # Water to source: soil moisture, ponds and streams, the water electrolysed for the O2, ballast and the
     # vegetation's water. The soil's water is already in its moist density, and the electrolysed
-    # water is in the air as O2, so lakes, ballast and vegetation add mass on the rim.
+    # water is in the air as O2, so ponds, ballast and vegetation add mass on the rim.
     water_soil = soil_depth * p.soil_water_vol_frac * 1e3 * floor
     water_lakes = p.lake_floor_frac * p.lake_depth_m * 1e3 * floor
     water_biomass = p.biomass_water_kg_m2 * floor

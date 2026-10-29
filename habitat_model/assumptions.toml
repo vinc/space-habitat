@@ -183,19 +183,19 @@ source = "§6, ~25% water by volume"
 status = "estimate"
 
 [shield.lake_floor_frac]
-value = 0.1
-unit = "share of the floor under lakes and streams"
-low = 0.03
-high = 0.2
-source = "a climate dial (§16: arid canyon to fern gully); replaces the fitted lake water (plan §5)"
+value = 0.02
+unit = "share of the floor under ponds and streams"
+low = 0.01
+high = 0.05
+source = "small ponds and streams giving the biosphere access to water, not a main feature (design intent, 29 Oct 2026); replaces the fitted lake water (plan §5)"
 status = "guess"
 
 [shield.lake_depth_m]
-value = 2.0
+value = 1.0
 unit = "m, mean depth"
-low = 1.0
-high = 3.0
-source = "ponds and shallow lakes in the fill and the jacket below it (§6: water shields too)"
+low = 0.5
+high = 1.5
+source = "within the 1 m fill, so the jacket is left as it is (§6)"
 status = "guess"
 
 [shield.ballast_frac]

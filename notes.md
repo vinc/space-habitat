@@ -41,11 +41,11 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Rock shield (after fill credit) | ~11.0 Mt | ~33.5 Mt | ~80 Mt |
 | Steel (spokes + hull + frames, excl. hub and factory) | ~1.2 Mt | ~6.0 Mt | ~22 Mt |
 | Fill (soil + regolith) | ~0.54 Mt | ~1.7 Mt | ~4.2 Mt |
-| Water (soil, lakes, O₂, ballast, vegetation) | ~0.12 Mt | ~0.38 Mt | ~0.96 Mt |
+| Water (soil, ponds, O₂, ballast, vegetation) | ~0.06 Mt | ~0.20 Mt | ~0.52 Mt |
 | N₂ | ~8 kt | ~45 kt | ~170 kt |
 | **Total** | **~12.8 Mt** | **~41.5 Mt** | **~108 Mt** |
 | Mass per m² of floor | ~40 t | ~41 t | ~44 t |
-| Mined per torus (S-type, H-like host + C-type) | ~14 + ~5–8 Mt | ~44 + ~27 Mt | ~165 + ~100 Mt |
+| Mined per torus (S-type, H-like host + C-type) | ~14 + ~5–7 Mt | ~44 + ~27 Mt | ~165 + ~100 Mt |
 | Valley lighting, daily average (sulfur lamps; ~15 mol/m²/day on the floor with the light-box ceiling) | ~53 MW | ~166 MW | ~410 MW |
 | Farm ring at ~0.4 r: three tiers, crops per tier | ~9 ha | ~29 ha | ~70 ha |
 | People fed, 1 / 2 / 3 tiers lit (conservative yields) | ~1,000 / ~2,000 / ~3,050 | ~3,250 / ~6,500 / ~9,750 | ~7,900 / ~15,800 / ~23,700 |
@@ -339,11 +339,11 @@ The jacket has a finite thickness t (~5.5 m) outside the tube of radius a = w/2,
 
 | Radius | Rock shield (after fill credit) | Fill | Water + air | Hull and frames | Spokes | Total | Per m² of floor |
 |---|---|---|---|---|---|---|---|
-| 400 m | ~2.4 Mt | 0.11 Mt | 0.02 Mt | 0.05 Mt | 0.08 Mt | ~2.7 Mt | ~42 t |
-| 900 m | ~11.0 Mt | 0.54 Mt | 0.14 Mt | 0.30 Mt | 0.87 Mt | ~12.8 Mt | ~40 t |
-| 1.6 km | ~33.5 Mt | 1.7 Mt | 0.47 Mt | 1.1 Mt | 4.9 Mt | ~41.5 Mt | ~41 t |
-| 2.5 km | ~80 Mt | 4.2 Mt | 1.26 Mt | 3.1 Mt | 19.1 Mt | ~108 Mt | ~44 t |
-| 3.6 km | ~165 Mt | 8.6 Mt | 2.9 Mt | 7.3 Mt | 60 Mt | ~243 Mt | ~48 t |
+| 400 m | ~2.4 Mt | 0.11 Mt | 0.01 Mt | 0.05 Mt | 0.08 Mt | ~2.7 Mt | ~42 t |
+| 900 m | ~11.0 Mt | 0.54 Mt | 0.07 Mt | 0.30 Mt | 0.87 Mt | ~12.8 Mt | ~40 t |
+| 1.6 km | ~33.5 Mt | 1.7 Mt | 0.26 Mt | 1.1 Mt | 4.9 Mt | ~41.5 Mt | ~41 t |
+| 2.5 km | ~80 Mt | 4.2 Mt | 0.76 Mt | 3.1 Mt | 19.1 Mt | ~108 Mt | ~44 t |
+| 3.6 km | ~165 Mt | 8.6 Mt | 1.9 Mt | 7.3 Mt | 60 Mt | ~243 Mt | ~48 t |
 
 (Water + air: water needed plus N₂ and O₂. The earlier thin-shell figures were ~2.2, 11.9, 40, 105 and 238 Mt, ~36–47 t per m².)
 
@@ -387,7 +387,7 @@ Using Globus's equivalence (~11 t/m² of regolith for the protection of 7 t/m² 
 | **Total, 900 m** | **~12.8 Mt** | **~7.8 Mt** |
 | **Total, 1.6 km** | **~41.5 Mt** | **~26 Mt** |
 | Mass per m² of floor | ~40–41 t | ~24–26 t |
-| Water needed per 900 m torus | ~0.12 Mt (soil, lakes, O₂, ballast, vegetation) | ~6.5 Mt |
+| Water needed per 900 m torus | ~0.06 Mt (soil, ponds, O₂, ballast, vegetation) | ~6.5 Mt |
 | C-type rock baked for volatiles | ~2–5 Mt | ~100 Mt |
 | Baking energy | ~5 × 10¹⁵ J (~2 months at 1 GW) | ~1.5 × 10¹⁷ J (~5 years at 1 GW) |
 | **Total mass mined and moved per 900 m torus** | **~18–21 Mt** (H or L host) | **~100 Mt** |
@@ -445,27 +445,26 @@ A metre of fill shields like ~1.84 t/m² of the rock jacket, so the jacket under
 
 With the rock jacket, water is a small need and **nitrogen sizes the C-type** (section 10):
 
-| Radius | Water needed (soil, lakes, O₂, ballast, vegetation) | + spin-up with water thrusters | N₂ | C-type sized by nitrogen | Water it contains (~6.4%) |
+| Radius | Water needed (soil, ponds, O₂, ballast, vegetation) | + spin-up with water thrusters | N₂ | C-type sized by nitrogen | Water it contains (~6.4%) |
 |---|---|---|---|---|---|
-| 900 m | ~0.12 Mt | ~0.40 Mt | 8 kt | ~5 Mt | ~0.32 Mt |
-| 1.6 km | ~0.38 Mt | ~1.7 Mt | 45 kt | ~27 Mt | ~1.7 Mt |
-| 2.5 km | ~0.96 Mt | ~5.6 Mt | 170 kt | ~100 Mt | ~6.5 Mt |
+| 900 m | ~0.06 Mt | ~0.40 Mt | 8 kt | ~5 Mt | ~0.32 Mt |
+| 1.6 km | ~0.20 Mt | ~1.7 Mt | 45 kt | ~27 Mt | ~1.7 Mt |
+| 2.5 km | ~0.52 Mt | ~5.6 Mt | 170 kt | ~100 Mt | ~6.5 Mt |
 
-Water is in excess, except at 900 m with water spin-up (the C-type grows to ~8 Mt, or spin-up uses rock in a mass driver, section 15). Spin-up propellant with water thrusters: `m_p ≈ M·v/vₑ`, ~3–5% of the habitat at vₑ ≈ 3 km/s.
+Water is in excess, except at 900 m with water spin-up (the C-type grows to ~7 Mt, or spin-up uses rock in a mass driver, section 15). Spin-up propellant with water thrusters: `m_p ≈ M·v/vₑ`, ~3–5% of the habitat at vₑ ≈ 3 km/s.
 
 **Water by use (logistics model, `logistics_model/`, plan §5):** built up from its parts instead of fitted to the totals above:
 
 | Use, per torus | 900 m | 1.6 km | 2.5 km |
 |---|---|---|---|
 | Soil moisture (25% of 0.5 m of soil) | ~40 kt | ~126 kt | ~307 kt |
-| Lakes and streams (10% of the floor, ~2 m deep; a guess) | ~64 kt | ~201 kt | ~491 kt |
+| Ponds and streams (2% of the floor, ~1 m deep; a guess) | ~6 kt | ~20 kt | ~49 kt |
 | Electrolysed for the O₂ (valley and farm ring) | ~4 kt | ~24 kt | ~91 kt |
 | Ballast (trims 0.05% of the rim's mass; a guess) | ~6 kt | ~18 kt | ~44 kt |
 | Vegetation (~10 kg/m² of floor) | ~3 kt | ~10 kt | ~25 kt |
 
-- **Lakes and soil are ~90% of it.** The lakes are a climate dial (an arid canyon to a fern gully, section 16): 3–20% of the floor at 1–3 m moves the total by about −45% / +110%.
+- **Soil moisture is about two thirds of it.** The ponds and streams are kept small (29 Oct 2026): water access for the biosphere, not a main feature, within the 1 m fill so the jacket is left as it is. 1–5% of the floor at 0.5–1.5 m moves the total by about −8% / +30%.
 - **Ballast is small.** Water spread as 1 − cos around the rim trims a first-harmonic imbalance e of the rim's mass with e M of water in all, in tanks holding twice the mean. Construction scatter is trimmed with rock; the tanks handle what moves (rim trains, stores, water shifted between valleys).
-- **Lakes shield too:** each tonne of water stands for ~1.6 t of rock (section 6), a ~0.3% credit not taken.
 
 ### 7b. First design: water jacket (reference)
 
@@ -581,7 +580,7 @@ The shield dominates, so lower gravity saves little mass: ~6% at 900 m, ~10% at 
 | Rock for the shield (after fill credit) | ~11.0 Mt | ~33.5 Mt | ~80 Mt |
 | Regolith (0.5 m of the fill) | 0.29 Mt | 0.9 Mt | 2.2 Mt |
 | Soil (0.5 m of the fill) | 0.25 Mt | 0.8 Mt | 2.0 Mt |
-| Water (soil, lakes, O₂, ballast, vegetation) | ~0.12 Mt | ~0.38 Mt | ~0.96 Mt |
+| Water (soil, ponds, O₂, ballast, vegetation) | ~0.06 Mt | ~0.20 Mt | ~0.52 Mt |
 | Spin-up propellant (if water thrusters, vₑ ≈ 3 km/s) | ~0.40 Mt | ~1.7 Mt | ~5.6 Mt |
 | Nitrogen (as N₂) | 8 kt | 45 kt | 170 kt |
 | Carbon | ~15 kt | ~35 kt | ~85 kt |
@@ -655,10 +654,10 @@ With the rock shield, the C-type is **sized by nitrogen**, as in the original an
 | Nitrogen needed (N₂) | 8 kt | 45 kt | 170 kt |
 | C-type mass (~0.24% N, ~70% recovered) | ~5 Mt | ~27 Mt | ~100 Mt |
 | Diameter | ~200 m | ~350 m | ~540 m |
-| Water contained (6.4%) | ~0.32 Mt (needs ~0.12 Mt + spin-up) | ~1.7 Mt (needs ~0.38 Mt + spin-up) | ~6.5 Mt (needs ~0.96 Mt + spin-up) |
+| Water contained (6.4%) | ~0.32 Mt (needs ~0.06 Mt + spin-up) | ~1.7 Mt (needs ~0.20 Mt + spin-up) | ~6.5 Mt (needs ~0.52 Mt + spin-up) |
 | Carbon contained | ~0.2 Mt | ~1.2 Mt | ~4.5 Mt |
 
-If spin-up uses water thrusters (~0.40 Mt at 900 m, ~1.7 Mt at 1.6 km, ~5.6 Mt at 2.5 km), the 900 m C-type grows to ~8 Mt; at 1.6 km and 2.5 km the nitrogen-sized body roughly covers it.
+If spin-up uses water thrusters (~0.40 Mt at 900 m, ~1.7 Mt at 1.6 km, ~5.6 Mt at 2.5 km), the 900 m C-type grows to ~7 Mt; at 1.6 km and 2.5 km the nitrogen-sized body roughly covers it.
 
 A C-type also supplies a soil base (clays, organics, P, K, S) and sulfur for the lamps. Its clays carry ~1% nickel and ~0.27% chromium, so making soil means leaching them out, which recovers useful nickel, chromium and cobalt.
 
@@ -687,7 +686,7 @@ Every bulk material against what one 900 m torus's source bodies contain (~12 Mt
 | Iron (hull, wire, frames) | ~1.4 Mt | ~1.4 Mt as metal grains if H-like, ~0.5 Mt if LL-like (the rest as iron oxide in the silicates) / ~0.9 Mt in oxides and sulfides | ✓ H / ⚠ L, LL: more rock or iron from the silicates |
 | Silicate rock (shield, regolith) | ~10.4 Mt | ~10.6 Mt tailings / — | ✓ (sets the S-type's size) |
 | Nickel (cladding, Invar) | tens of kt | ~190 kt / ~50 kt | ✓ |
-| Water | ~0.12 Mt (+ ~0.40 Mt if water spin-up) | — / ~0.32 Mt | ✓ / ⚠ with water spin-up |
+| Water | ~0.06 Mt (+ ~0.40 Mt if water spin-up) | — / ~0.32 Mt | ✓ / ⚠ with water spin-up |
 | Nitrogen | 8 kt | — / ~12 kt (~8 kt recovered) | ⚠ sets the C-type's size |
 | Carbon (steel, CO, organics) | ~20 kt | — / ~0.2 Mt | ✓ |
 | Sulfur (lamps, chemistry) | small | troilite / ~0.27 Mt | ✓ |
@@ -1047,7 +1046,7 @@ Dawn, dusk and seasonal day length are schedule settings.
   - **The rectenna is almost a cap:** at ~1 kW/m² of microwaves, ~420 m across for a 900 m pair, ~730 m for a 900 m six-stack and ~1.3 km for a 1.6 km six-stack (~20% of an end opening), across the docking lane and the radiator vent. At 5.8 GHz, transmitter and receiver a few hundred metres across can be up to ~1,000 km apart (~200 km at 915 MHz).
   - Station-keeping is trivial (~4.6 N per km² of array), but the habitat would depend on an actively pointed free-flier. Magnetrons are local; rectenna diodes are semiconductors (a vitamin), with vacuum-tube cyclotron-wave converters (~70–80%) a less mature local alternative.
   - **Superseded** for the habitat by the despun array (~3× the cylinder per m² of PV, ~1–2% losses, no cap-sized receiver, no free-flier to keep in place). Beaming remains a way to bring power from the free-flying industrial array to the hub factory, which tolerates interruptions.
-- **Processing energy no longer sets the generation time.** With the rock shield, a 900 m torus needs ~10¹⁵ J to crush and separate ~12 Mt of S-type rock and ~10¹⁶ J to bake ~5–8 Mt of C-type at ~1–2 MJ/kg: ~2–6 months at 1 GW (≈ 1 km² of solar furnace mirror, or ≈ 3 km² of panels at 25%), ~2–5 years at 100 MW. A six-torus stack is ~6× that. Logistics and factory throughput become the pacing items. (The water jacket needed ~1.5 × 10¹⁷ J per torus to bake ~100 Mt of C-type: ~5 years at 1 GW.)
+- **Processing energy no longer sets the generation time.** With the rock shield, a 900 m torus needs ~10¹⁵ J to crush and separate ~12 Mt of S-type rock and ~10¹⁶ J to bake ~5–7 Mt of C-type at ~1–2 MJ/kg: ~2–6 months at 1 GW (≈ 1 km² of solar furnace mirror, or ≈ 3 km² of panels at 25%), ~2–5 years at 100 MW. A six-torus stack is ~6× that. Logistics and factory throughput become the pacing items. (The water jacket needed ~1.5 × 10¹⁷ J per torus to bake ~100 Mt of C-type: ~5 years at 1 GW.)
 - **Silicon PV is a vitamin** (very pure silicon). Solar-thermal concentrators for the furnaces are easy to make locally.
 
 ### Distance from the Sun
@@ -1352,7 +1351,7 @@ Consequences:
 - **The archipelago spreads by seeds:** factory modules, people, seed bank, soil microbiome and starter wildlife, ~0.1–1 Mt, then a new habitat built from local rock. This is the Polynesian model: canoes carried people, plants and knowledge, not islands.
 - **The choice of asteroid is a choice of orbit and climate, for good.** Eccentricity sets the seasons (Itokawa's sunlight swings ~3×, from 1.1× to 0.35×), aphelion sets the size of the solar array, the semi-major axis sets the length of the year, and the orbit sets the close approaches and transfer windows; the C-type partner should be well aligned. S-types are ranked by orbit shape (low e, a near 1 AU) as well as by size and composition.
 - **One km-class S-type supplies a whole cluster** (a 1 km rubble pile holds ~1 Gt, enough for ~80 tori of 900 m): the cluster's "mine island".
-- **The C-type is refined at its source and only the products are shipped:** ~0.16–0.6 Mt per 900 m torus (nitrogen ~8 kt, carbon/organics ~15–50 kt, water ~0.12 Mt, plus ~0.40 Mt if spin-up uses water thrusters), ~1–5% of the habitat; ~60 kt if only the water's hydrogen is shipped, as methane (below). Soil is made from crushed S-type silicates plus imported organics, nitrogen and microbes. Spin-up reaction mass is better sourced locally (rock in a mass driver) than shipped as water.
+- **The C-type is refined at its source and only the products are shipped:** ~0.1–0.5 Mt per 900 m torus (nitrogen ~8 kt, carbon/organics ~15–50 kt, water ~0.06 Mt, plus ~0.40 Mt if spin-up uses water thrusters), ~1–4% of the habitat; ~47 kt if only the water's hydrogen is shipped, as methane (below). Soil is made from crushed S-type silicates plus imported organics, nitrogen and microbes. Spin-up reaction mass is better sourced locally (rock in a mass driver) than shipped as water.
 
 **Moving a newly built habitat, before it is inhabited (investigated, rejected).** Test case: circularising a 900 m pair at Itokawa (~25 Mt with hub and factory; ~5 km/s, since steered low thrust needs ≈ 0.7 × orbital speed × eccentricity) and a 1.6 km six-stack at Eros (~245 Mt; ~3.8 km/s).
 
@@ -1457,11 +1456,11 @@ Findings:
 A model of the logistics (`logistics_model/`, `reports/logistics.md`): the water by use (section 7), where it comes from, the transfers and propulsion, and the flows of a generation, for 900 m pairs and 1.6 km six-stacks at Eros with Ryugu as the C-type.
 
 - **The transfers check out.** A Lambert solver over published orbital elements, with the departure and arrival points and the flight time all free, reproduces the best-phase column above within ~0.1 km/s (Ryugu → Eros 4.5 km/s, ~320 days), except to Torifune (0.1–0.4 km/s lower; its elements are the least certain). Current ephemerides (JPL Horizons) are blocked from the modelling environment, so the dated column stays as quoted. **Good windows recur every synodic period:** ~4.9 years for Ryugu → Eros, ~3.7 for Bennu → Eros, ~8.7 for Ryugu → Itokawa, ~2.3 from Earth's orbit to Eros. Volatiles therefore move in batches, a few windows per generation, and need storage at both ends.
-- **Ship the hydrogen, not the water (proposed).** Water is 89% oxygen by mass, and the S-type's silicates are ~40% oxygen. Molten-oxide electrolysis (section 10, proposed) frees ~0.29 kg of oxygen per kg of iron. On an LL host, the iron the free metal lacks already frees ~2.6× (900 m) to ~5× (1.6 km) the oxygen the water needs, so the oxygen costs nothing extra. The water's hydrogen then travels as methane: it is storable at ~111 K, where hydrogen needs ~20 K, and its carbon replaces the organics shipped for the soil. Per torus, the cargo falls from ~157 to ~61 kt at 900 m (~526 to ~215 kt at 1.6 km). The water's energy falls from ~20 to ~10 PJ (~67 to ~35 PJ), with splitting the water at the C-type (~20 MJ/kg) the main new cost. Methane is also a fuel: burnt with the silicates' oxygen (methalox, ~3.6 km/s exhaust) it is a storable propellant for tugs and docking, needing no power where it is used. On a large host that mines more rock for its metal instead (Eros), electrolysing iron only for its oxygen adds ~3.1 kg of iron per kg of water at ~10 MJ/kg (~3.6 PJ per 900 m torus), still well below the ~10 PJ of shipping it saves.
-- **Slow exhaust saves energy (proposed: mass-driver freighters).** For a fixed Δv, the electricity per kg delivered, ½ (e^(Δv/vₑ) − 1) vₑ² / η, is lowest at vₑ ≈ Δv / 1.59: ~3 km/s from Ryugu to Eros, not the ~30 km/s of electric thrusters, which save propellant instead. A mass driver (O'Neill's reaction engine) at ~2.9 km/s and ~50% efficiency (a guess, 30–80%) uses ~3.7× less electricity than electric thrusters (~5.4 against ~20 PJ per 900 m torus). Its reaction mass is the C-type's baked residue, waste otherwise: ~0.6 Mt of ~4.5 Mt available. It also gives ~8× the thrust per watt. It keeps the lead down to ~13% efficiency. Electrothermal thrusters on the C-type's spare water fall between the two (~9.6 PJ), using most of that water.
-- **Together, the generation's energy floor halves:** with the factory at 1 GW per stack, ~1.9 → ~0.9 years for a 900 m pair, ~23 → ~13 years for a 1.6 km six-stack (processing ~10 and ~56 PJ per torus, the rest shipping). **Bigger stacks need more power per stack:** at 1 GW, energy alone holds a 1.6 km six-stack to ~13–23-year generations.
-- **The rates are modest by Earth's standards.** For a 10-year generation, each torus of a 900 m pair has its child mined at ~9 kt of S-type a day (~2% of the largest open-pit mines), its metal made at ~400 t a day (~1.5% of a large steelworks), ~3 kt of rock placed and ~1.4 kt of C-type baked a day, and ~80 kt of cargo delivered per Ryugu window, at ~100 MW on average. A 1.6 km six-stack's lines handle ~5× that per torus, six tori at a time.
-- **Made locally:** ~98.8% of a child by mass comes from its host (rock, metal), ~1.2% from the C-type (nitrogen, water, organics), and ~0.003% is imported vitamins (~420 t per 900 m torus: the array's silicon and ~50 t of electronics, dopants, catalysts and the like, a guess). With methane instead of water, the shipped share falls to ~0.5%.
+- **Ship the hydrogen, not the water (proposed).** Water is 89% oxygen by mass, and the S-type's silicates are ~40% oxygen. Molten-oxide electrolysis (section 10, proposed) frees ~0.29 kg of oxygen per kg of iron. On an LL host, the iron the free metal lacks already frees ~5× (900 m) to ~10× (1.6 km) the oxygen the water needs, so the oxygen costs nothing extra. The water's hydrogen then travels as methane: it is storable at ~111 K, where hydrogen needs ~20 K, and its carbon replaces the organics shipped for the soil, so the cargo weighs the same as with bare hydrogen. Methane is also a fuel: burnt with the silicates' oxygen (methalox, ~3.6 km/s exhaust) it is a storable propellant for tugs and docking, needing no power where it is used. Per torus, the cargo falls from ~100 to ~47 kt at 900 m (~345 to ~169 kt at 1.6 km), and its energy from ~12.7 to ~7.2 PJ (~44 to ~26 PJ), with splitting the water at the C-type (~20 MJ/kg) the main new cost. On a large host that mines more rock for its metal instead (Eros), electrolysing iron only for its oxygen adds ~3.1 kg of iron per kg of water at ~10 MJ/kg (~1.9 PJ per 900 m torus), still below the ~6.7 PJ of shipping it saves.
+- **Slow exhaust saves energy (proposed: mass-driver freighters).** For a fixed Δv, the electricity per kg delivered, ½ (e^(Δv/vₑ) − 1) vₑ² / η, is lowest at vₑ ≈ Δv / 1.59: ~3 km/s from Ryugu to Eros, not the ~30 km/s of electric thrusters, which save propellant instead. A mass driver (O'Neill's reaction engine) at ~2.9 km/s and ~50% efficiency (a guess, 30–80%) uses ~3.7× less electricity than electric thrusters (~3.4 against ~12.7 PJ per 900 m torus). Its reaction mass is the C-type's baked residue, waste otherwise: ~0.4 Mt of ~4.5 Mt available. It also gives ~8× the thrust per watt. It keeps the lead down to ~13% efficiency. Electrothermal thrusters on the C-type's spare water fall between the two (~6.1 PJ).
+- **Together, shipping drops below processing:** with the factory at 1 GW per stack, the generation's energy floor goes from ~1.5 to ~0.8 years for a 900 m pair and ~19 to ~12 years for a 1.6 km six-stack (processing ~10 and ~56 PJ per torus, the rest shipping). **Bigger stacks need more power per stack:** at 1 GW, energy alone holds a 1.6 km six-stack to ~12–19-year generations.
+- **The rates are modest by Earth's standards.** For a 10-year generation, each torus of a 900 m pair has its child mined at ~9 kt of S-type a day (~2% of the largest open-pit mines), its metal made at ~400 t a day (~1.5% of a large steelworks), ~3 kt of rock placed and ~1.4 kt of C-type baked a day, and ~50 kt of cargo delivered per Ryugu window, at ~75 MW on average. A 1.6 km six-stack's lines handle ~5× that per torus, six tori at a time.
+- **Made locally:** ~99.2% of a child by mass comes from its host (rock, metal), ~0.8% from the C-type (nitrogen, organics, water), and ~0.003% is imported vitamins (~420 t per 900 m torus: the array's silicon and ~50 t of electronics, dopants, catalysts and the like, a guess). With methane instead of water, the shipped share falls to ~0.4%.
 - **Ryugu's nitrogen sets the cluster's horizon.** Doubling every 10 years, a 900 m pair reaches Ryugu's ~89 tori in ~55 years; 1.6 km six-stacks reach its ~16 tori in ~14 years (~36 at 25-year generations). A second C-type partner, a lower pressure or better nitrogen recovery is needed early (section 15, phases).
 - **Open:** factory throughput against its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' mass and power (their solar arrays are silicon, a vitamin), failures and spares, low-thrust trajectories and dated windows from current ephemerides.
 
@@ -1927,7 +1926,7 @@ Status of the gaps identified so far:
 | Size | 900 m and 1.6 km shortlisted. **To decide:** 2.5 km / 100 s as a later candidate (section 8): structurally fine, limited by nitrogen (~100 Mt of C-type per torus) and slower replication |
 | Despun solar array | Adopted (section 13); ~2.6× larger with three farm tiers lit than for the valley alone. **Open:** bearing and drive redundancy, magnetic bearing design, a rotary transformer at 100 MW–GW scale, buffering the locked array's pulsing output, a second dock now that one hub end carries the array, concentrators for the outer system |
 | Heat rejection | Architecture chosen (coolant loops, radiators on the spokes, thermosiphon), one set per section (proposed): the valleys' heat in the tori's drum, venting through its open ends and gaps; the farm's in the open farm section. Ideal limit treated as an upper bound. A preliminary radiative exchange model (section 13) gives a 900 m six-stack with three tiers lit ~3.9× margin in the drum and ~3.6× in the farm section (~3.3× / ~2.6× counting the sections' facing ends as lost), so heat no longer limits the stack (~28 tori for the drum, against ~22 for stability). **Open:** sunlight through the gaps, spokes and cables, real panel layouts, the farm radiators' reach, loop sizing (plan §6) |
-| Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~2× that from Ryugu to Eros (~20 PJ against ~10 PJ per 900 m torus). Shipping only the water's hydrogen (as methane, oxygen from the silicates) and mass-driver freighters at ~3 km/s halve the total (section 15, logistics model); at 10-year generations the rates are a few % of Earth's largest mines and steelworks. **Open:** factory throughput against its own mass, dated windows, the freighters, Ryugu's nitrogen limit (~55 years of doubling for 900 m pairs) |
+| Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~1.2× that from Ryugu to Eros (~13 PJ against ~10 PJ per 900 m torus). Shipping only the water's hydrogen (as methane, oxygen from the silicates) and mass-driver freighters at ~3 km/s cut the volatiles' energy ~4.5× (~12.7 → ~2.8 PJ) (section 15, logistics model); at 10-year generations the rates are a few % of Earth's largest mines and steelworks. **Open:** factory throughput against its own mass, dated windows, the freighters, Ryugu's nitrogen limit (~55 years of doubling for 900 m pairs) |
 | Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under sulfur lamps costs ~31 kW of electricity per person with conservative yields (~18 kW at the best demonstrated), so each tier lit (~1,000 people per 900 m torus) needs ~32 MW and ~0.15 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under sulfur light at ~0.4 g; 915 MHz sources (~20% less power); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
 | Nitrogen | C-type sized by nitrogen again (~5 Mt per 900 m torus, ~27 Mt per 1.6 km torus at ~70% recovery); **open:** recovery from organics and ammonium salts |
 | Soil from C-type clays | **Open:** leaching nickel, chromium and salts (recovering the metals), microbial start-up |
@@ -1961,7 +1960,7 @@ Status of the gaps identified so far:
 
 ## 19. Assumptions to revisit
 
-These are the inputs of the parametric model (`habitat_model/assumptions.toml`), each with a range, source and status. Ranked by impact over representative designs (`reports/sensitivity.md`), the ones that move the results most are the electric propulsion's exhaust speed and the water shipped (through the lakes' share of the floor and their depth, guesses), C-type nitrogen recovery and baking energy, PV efficiency, free metal in the host rock, the shield's areal density and light on the crops.
+These are the inputs of the parametric model (`habitat_model/assumptions.toml`), each with a range, source and status. Ranked by impact over representative designs (`reports/sensitivity.md`), the ones that move the results most are the electric propulsion's exhaust speed, C-type nitrogen recovery and baking energy, PV efficiency, free metal in the host rock, the shield's areal density and light on the crops.
 
 - 80/20 N₂/O₂ reference; 70 kPa / 29% O₂ design atmosphere.
 - Cometary NH₃ at ~1% of ice by mass (optimistic; ~0.5–0.8% by number is typical); Bennu-like C-type with ~6.4 wt% recoverable water and ~0.24 wt% N.
@@ -1974,7 +1973,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 - Hub, dock and factory mass as rough guesses.
 - Farm section (proposed): one farm ring per torus at ~0.4 r, 10 m apart, 50 m from the tori; its atmosphere at the valleys' 70 kPa until its pressure is decided (30–70 kPa swept); its radiators reaching to ~1 r on the farm spokes (a guess).
 - Soil 1.6 t/m³, regolith 1.8 t/m³, fill 1 m.
-- Water (section 7): lakes and streams on ~10% of the floor at ~2 m mean depth, ballast for 0.05% of the rim's mass, ~10 kg/m² of water in the vegetation (guesses); freighters: mass drivers at ~50% efficiency (a guess), electrothermal thrusters at ~6 km/s and ~35%, water split at ~20 MJ/kg.
+- Water (section 7): ponds and streams kept small, ~2% of the floor at ~1 m mean depth, ballast for 0.05% of the rim's mass, ~10 kg/m² of water in the vegetation (guesses); freighters: mass drivers at ~50% efficiency (a guess), electrothermal thrusters at ~6 km/s and ~35%, water split at ~20 MJ/kg.
 - Rotation comfort < 2 rpm; g tolerance unknown (0.15–1 g).
 - Spin-up exhaust velocity ~3 km/s for water thrusters.
 - Lamps ~1.4 µmol/J (sulfur plasma) or ~3 µmol/J (LED); ~25% of emitted light lost in the light-box ceiling (first assumed ~50%); ~85% of the light reaches the crops in the farm tiers; PV at 25% efficiency on the sun-facing despun array (the former spinning cylinder averaged ~1/π of full sunlight); a locked two-sided array averages 2/π; radiators at ~285 K for passive loops.
@@ -1990,7 +1989,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **29 October 2026**
-- **Replication logistics (sections 7, 15, 18; plan §5):** the water per torus built up from its uses (soil, lakes, O₂, ballast, vegetation): ~0.12 / 0.38 / 0.96 Mt at 900 m / 1.6 km / 2.5 km, replacing the fitted ~0.15 / 0.4 / 0.9 Mt. A Lambert solver reproduces the notes' best-phase Δv within ~0.1 km/s (Torifune 0.1–0.4 lower); Ryugu → Eros windows recur every ~4.9 years. Proposed: ship only the water's hydrogen, as methane, and take the oxygen from the silicates' iron oxide (molten-oxide electrolysis), and use mass-driver freighters at ~3 km/s with the C-type's baked residue as reaction mass; together they halve a generation's energy floor (~1.9 → ~0.9 years for a 900 m pair at 1 GW). At 10-year generations a child takes a few % of the throughput of Earth's largest mines and steelworks; ~98.8% of it comes from its host, ~0.003% are vitamins; Ryugu's nitrogen caps a 900 m cluster after ~55 years of doubling.
+- **Replication logistics (sections 7, 15, 18; plan §5):** the water per torus built up from its uses (soil, ponds, O₂, ballast, vegetation): ~0.06 / 0.20 / 0.52 Mt at 900 m / 1.6 km / 2.5 km, replacing the fitted ~0.15 / 0.4 / 0.9 Mt; the lakes, never asked for, become small ponds and streams for the biosphere's water access. A Lambert solver reproduces the notes' best-phase Δv within ~0.1 km/s (Torifune 0.1–0.4 lower); Ryugu → Eros windows recur every ~4.9 years. Proposed: ship only the water's hydrogen, as methane, and take the oxygen from the silicates' iron oxide (molten-oxide electrolysis), and use mass-driver freighters at ~3 km/s with the C-type's baked residue as reaction mass; together they cut the volatiles' energy ~4.5× and nearly halve a generation's energy floor (~1.5 → ~0.8 years for a 900 m pair at 1 GW). At 10-year generations a child takes a few % of the throughput of Earth's largest mines and steelworks; ~99.2% of it comes from its host, ~0.003% are vitamins; Ryugu's nitrogen caps a 900 m cluster after ~55 years of doubling.
 - **Stack dynamics (sections 11, 12, 18; plan §4):** the stack modelled as one flexible spinning body (`dynamics_model/`). With dissipation, every forward whirl must beat the spin, the maximum-axis rule's flexible form. The tangent-chord nets hold each torus on the shared axis at only ~half its centrifugal pull, so with the nets alone a stack is not passively stable (a six-stack's lowest forward whirl ~0.16 of the spin). Rim links between neighbouring tori, with a trace of radial ties from the hub, fix it (proposed); the hub's wall then sets the length: ~18 tori of 900 m and ~14–17 of 1.6 km with its whole mass budget, against the rigid 22 and 25, a few mm to ~1 cm for a six-stack.
 - **The hub in the nets (sections 12, 18; plan §2):** stabilising lines from the hub to every chord's tangent point hold it ~21× more stiffly than the spin pulls it off the axis at 900 m (~9× at 2.5 km); its two modes in the rotating frame sit at ~3.5× and ~5.5× the spin. Imbalances and the orbit-raising thrust move it by cm; the lines weigh ~13 t per torus. While building, a single pair of arcs can't hold the hub along their chords (without preload it is an unstable rotor): hang the first arcs as two pairs at right angles (proposed). Radial lines hold the hub along the axis only by their preload; ~10% of the lines inclined to the side nets fix that (proposed). (Revised after review: Coriolis modes, lines kept taut while building, inclined lines' full length, sizing iterated to agree.)
 - **Tube cross-section revised after review (PR #4):** stresses at every integration point, the rock on the walls, sizing run to full stress, anchor fittings pinned at the chords: ~0.055 / 0.28 / 1.1 / 4.6 Mt of hull and frames at 400 m / 900 m / 1.6 km / 2.5 km.
@@ -2225,4 +2224,4 @@ How the design evolved, newest first. Entries before 22 October 2026 come from e
 
 ### Still unsourced (first-principles estimates or general knowledge)
 
-Rotation, floor area, gas laws, stoichiometry, hoop-stress and spoke models, tangent-chord net and partial-ring loads, spin stability condition, radiator and conduction estimates, Coriolis effect: derived here from standard physics. Not yet backed by a specific source: steel plate strength, the design safety factors of new bridge cables (~2.2–2.5, commonly quoted), maraging steel composition, LED die and phosphor quantities, LED lifetime, ceiling light losses, nickel-iron battery performance, M-type metal fraction and density, soil and regolith densities, rim speed comfort limit (< 2 rpm), light requirements of shade and meadow plants, overcast-sky brightness and its overhead-to-horizon ratio, magnesium oxide reflectance, light-box efficiency, C-type processing energy (~1–2 MJ/kg), solar particle event arrival direction, Bennu's size and mass, taro and loʻi practice, mirror delivery efficiency and facet mass (17.29), protected-aluminium reflectance, city population densities, edible yields per mol for soybean, lentils, berries and flax (estimates), food energy per gram of the crops, the working diet's protein and fat, the farm's light delivery (~85%), tier spacing and ring mass, the asteroids' orbital elements (rounded from JPL's Small-Body Database, recalled), mass-driver and electrothermal thruster efficiencies, water electrolysis energy, PV wafer silicon per m², lake share and depth, ballast share, vegetation water, Earth's largest mines and steelworks.
+Rotation, floor area, gas laws, stoichiometry, hoop-stress and spoke models, tangent-chord net and partial-ring loads, spin stability condition, radiator and conduction estimates, Coriolis effect: derived here from standard physics. Not yet backed by a specific source: steel plate strength, the design safety factors of new bridge cables (~2.2–2.5, commonly quoted), maraging steel composition, LED die and phosphor quantities, LED lifetime, ceiling light losses, nickel-iron battery performance, M-type metal fraction and density, soil and regolith densities, rim speed comfort limit (< 2 rpm), light requirements of shade and meadow plants, overcast-sky brightness and its overhead-to-horizon ratio, magnesium oxide reflectance, light-box efficiency, C-type processing energy (~1–2 MJ/kg), solar particle event arrival direction, Bennu's size and mass, taro and loʻi practice, mirror delivery efficiency and facet mass (17.29), protected-aluminium reflectance, city population densities, edible yields per mol for soybean, lentils, berries and flax (estimates), food energy per gram of the crops, the working diet's protein and fat, the farm's light delivery (~85%), tier spacing and ring mass, the asteroids' orbital elements (rounded from JPL's Small-Body Database, recalled), mass-driver and electrothermal thruster efficiencies, water electrolysis energy, PV wafer silicon per m², pond share and depth, ballast share, vegetation water, Earth's largest mines and steelworks.

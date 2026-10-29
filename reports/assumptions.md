@@ -26,8 +26,8 @@
 | `soil_density` | 1.600 | t/m3 | 1.300–1.800 | estimate | §6, moist agricultural soil (unsourced) |
 | `regolith_density` | 1.800 | t/m3 | 1.600–2.000 | estimate | §6, regolith / mine tailings (unsourced) |
 | `soil_water_vol_frac` | 0.2500 | m3 water / m3 soil | 0.1500–0.3500 | estimate | §6, ~25% water by volume |
-| `lake_floor_frac` | 0.1000 | share of the floor under lakes and streams | 0.03000–0.2000 | guess | a climate dial (§16: arid canyon to fern gully); replaces the fitted lake water (plan §5) |
-| `lake_depth_m` | 2.000 | m, mean depth | 1.000–3.000 | guess | ponds and shallow lakes in the fill and the jacket below it (§6: water shields too) |
+| `lake_floor_frac` | 0.02000 | share of the floor under ponds and streams | 0.01000–0.05000 | guess | small ponds and streams giving the biosphere access to water, not a main feature (design intent, 29 Oct 2026); replaces the fitted lake water (plan §5) |
+| `lake_depth_m` | 1.000 | m, mean depth | 0.5000–1.500 | guess | within the 1 m fill, so the jacket is left as it is (§6) |
 | `ballast_frac` | 0.0005000 | share of the rim's mass | 0.0001000–0.002000 | guess | operational imbalance trimmed by ballast water (rim trains, stores, water moved between valleys; §5e, §12); construction scatter is trimmed with rock |
 | `biomass_water_kg_m2` | 10.00 | kg per m2 of floor | 3.000–30.00 | estimate | standing vegetation: temperate woodland ~15-30 kg/m2 of dry biomass, about as much water fresh, on part of the floor (unsourced) |
 | `hull_frames_ref_mt` | 0.3000 | Mt at the reference radius | 0.2000–0.4500 | estimate | §5c, hull and frames of a 900 m torus |

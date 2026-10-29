@@ -56,7 +56,7 @@ def key_numbers(p):
     row("Rock shield (after fill credit)", lambda r, x: f"{num(x[1]['mass']['shield'] / MT)} Mt")
     row("Steel (spokes + hull + frames, excl. hub and factory)", lambda r, x: f"{num(x[1]['mass']['steel'] / MT)} Mt")
     row("Fill (soil + regolith)", lambda r, x: f"{num(x[1]['mass']['fill'] / MT, 2)} Mt")
-    row("Water (soil, lakes, O₂, ballast, vegetation)", lambda r, x: f"{num(x[1]['mass']['water_needed'] / MT, 2)} Mt")
+    row("Water (soil, ponds, O₂, ballast, vegetation)", lambda r, x: f"{num(x[1]['mass']['water_needed'] / MT, 2)} Mt")
     row("N₂", lambda r, x: f"{num(x[1]['mass']['n2'] / KT, 2)} kt")
     row("**Total**", lambda r, x: f"**{num(x[1]['mass']['total'] / MT)} Mt**")
     row("Mass per m² of floor", lambda r, x: f"{num(x[1]['mass']['per_floor'] / 1e3)} t")

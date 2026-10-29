@@ -60,16 +60,15 @@ def water_section(p):
     return [
         "## Water per torus",
         "Built up from its uses instead of fitted to the notes' totals: soil moisture (25% of 0.5 m of soil), "
-        f"lakes and streams on {p.lake_floor_frac:.0%} of the floor at {num(p.lake_depth_m)} m mean depth (a "
-        "climate dial, from an arid canyon to a fern gully), the water electrolysed for the O₂, ballast to trim "
+        f"ponds and streams on {p.lake_floor_frac:.0%} of the floor at {num(p.lake_depth_m)} m mean depth (kept "
+        "small: water access for the biosphere, not a main feature; within the fill), the water electrolysed for the O₂, ballast to trim "
         f"an operational imbalance of {p.ballast_frac:.2%} of the rim's mass (water spread as 1 − cos around the "
         f"rim, e M in all), and the vegetation's water (~{num(p.biomass_water_kg_m2)} kg/m² of floor). Not "
         "counted: coolant loops (plan §6), people, stores and pipes (hundreds of tonnes), the algae trays "
         "(~200 m³).",
         table(["Use", *[label(r) for r in SIZES]], rows),
-        "Lakes and soil dominate; the C-type sized by nitrogen holds ~2.5–7× the water needed, so water never "
-        "sizes the C-type unless spin-up uses water thrusters (900 m). A lake also shields: each tonne of water "
-        "stands for ~1.6 t of rock, a credit not taken here (~0.3% of the rim).",
+        "Soil moisture is about two thirds of it, the ponds about a tenth. The C-type sized by nitrogen holds "
+        "~5–13× the water needed, so water never sizes the C-type unless spin-up uses water thrusters (900 m).",
         "## Where the water comes from",
         "Water is 89% oxygen, which the S-type has in its silicates. Ship only the hydrogen (split from the "
         "C-type's water) and take the oxygen as the by-product of molten-oxide electrolysis (notes §10, "
@@ -78,7 +77,8 @@ def water_section(p):
         "(20 K); methane (111 K) carries it with carbon, which replaces the organics shipped for the soil, and "
         "burnt with the same oxygen it is a storable rocket propellant (methalox, ~3.6 km/s) for tugs and docking. "
         "Shipping by electric thrusters at the notes' Ryugu → Eros Δv; the other energy is splitting the water "
-        "at the C-type (and any iron reduced only for its oxygen).",
+        "at the C-type (and any iron reduced only for its oxygen). Hydrogen and methane ship the same mass while "
+        "the methane's carbon stays below the organics needed: its carbon replaces as much organics.",
         table(["Stack (per torus)", "Route", "Shipped", "Shipping", "Other energy", "Total"], route_rows),
         table(["Stack", "Iron reduced to free the water's oxygen", "Iron the free metal lacks (LL host)",
                "Electrolysis if the host mines more rock instead", "Hydrogen", "Carbon in the methane",
