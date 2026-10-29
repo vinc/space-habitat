@@ -114,13 +114,18 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Why fourth:** not in the sweep (the system model treats the stack as rigid), but it decides whether the "nothing has to keep working" principle holds; it needs the stiffness from model 2. The farm section nearly doubles the hub's length (~480 → ~900 m for a 900 m six-stack), which lowers its bending modes.
 
-- [ ] Rigid stack with energy dissipation: margin vs number of tori and gaps
-- [ ] Flexible stack: hub as a beam, tori as rings on cable nets (their stiffness per torus from plan §2, `structure_model/hub.py`); lowest bending modes vs spin rate for a pair and a six-stack
+- [x] Rigid and flexible stack with energy dissipation (`dynamics_model/`): whirl modes in the inertial frame (gyroscopic), the criterion that every forward whirl beats the spin (the maximum-axis rule for a rigid stack), checked by a damped solve
+  - found: the nets alone hold a torus on the shared axis at only ~half its centrifugal pull: a stack is not passively stable (six-stack ~0.16 of the spin); rim links between neighbouring tori and a trace of radial ties from the hub fix it (proposed)
+  - found: long stacks are then set by the hub's bending with the farm section at its end: ~18 tori of 900 m, ~14–17 of 1.6 km with the hub's mass budget as its wall (rigid rule: 22, 25); a six-stack needs a few mm to ~1 cm of wall
+- [x] Flexible stack: hub as a beam, tori as rings on cable nets (their stiffness per torus from plan §2, `structure_model/hub.py`); lowest forward whirl vs spin rate for a pair and a six-stack, and vs stack length
 - [ ] Disturbances: docking, rim trains, ballast transfers, friction in the despun array's bearing, sunlight pressure on the array
 - [ ] Tools: Python (scipy) multibody model, or modal analysis using model 2's stiffness
-- [ ] Output: ratio of lowest mode to spin rate, damping needed, maximum tori
+- [ ] Output: ratio of lowest mode to spin rate and maximum tori (done, `reports/dynamics.md`); damping needed and the disturbances' response still open
+- [ ] Rim links and radial ties: design, preload, how they're built in the construction sequence; the hub's shear and joints; axial and torsional modes
 
 **Changes the design if:** a six-stack needs active control to stay stable, which would break the "nothing has to keep working" principle.
+
+**Status:** no active control is needed, but the nets alone don't hold the tori on the shared axis: rim links between neighbouring tori (and a trace of radial ties) are added to the design (proposed), and the hub's wall sets the longest stack (`reports/dynamics.md`).
 
 ---
 

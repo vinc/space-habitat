@@ -32,3 +32,4 @@ jobs:
           python -m habitat_model --validate > /dev/null
           python -m habitat_model --json - > /dev/null
           python -m structure_model > /dev/null
+          python -m dynamics_model > /dev/null

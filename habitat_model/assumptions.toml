@@ -254,6 +254,14 @@ unit = "m"
 source = "spacing of the jacket's bulkheads and cell walls, as the chords' anchors (§12)"
 status = "design"
 
+[structure.hub_shell_m]
+value = 0.02
+unit = "m of steel"
+low = 0.005
+high = 0.05
+source = "the shared hub's structural wall (a thin tube of the hub's radius); dynamics_model only"
+status = "guess"
+
 [structure.bumper_m]
 value = 0.002
 unit = "m of steel"
