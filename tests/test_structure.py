@@ -284,3 +284,57 @@ class TestTubeSection(unittest.TestCase):
         coarse = self.runs["sides"]["per_metre"]["total"]
         fine = tube_section.run(self.p, 900, "sides", "vaulted", n_radial=6, n_around=216)["per_metre"]["total"]
         self.assertAlmostEqual(fine / coarse, 1, delta=0.01)
+
+
+class TestHub(unittest.TestCase):
+    """The hub held in the two chord nets by stabilising lines (plan §2)."""
+
+    @classmethod
+    def setUpClass(cls):
+        from structure_model import hub
+        cls.hub = hub
+        cls.p = params(load())
+        cls.out = {}
+        for r in (400, 900, 1600, 2500):
+            res = evaluate(cls.p, Design(radius_m=r, n_tori=1))
+            cls.out[r] = hub.compute(cls.p, res["geometry"], res["mass"])
+
+    def test_chord_stiffness_is_a_taut_string(self):
+        k = self.hub.chord_stiffness(5e7, 900.0, 400.0, 0.0)
+        self.assertAlmostEqual(k, 2 * 5e7 / 900)
+        # Its own spin load softens it a little: 2 T beta cot(beta L) < 2 T / L.
+        soft = self.hub.chord_stiffness(5e7, 900.0, 400.0, 0.105)
+        beta = math.sqrt(400 * 0.105 ** 2 / 5e7)
+        self.assertAlmostEqual(soft, 2 * 5e7 * beta / math.tan(beta * 900))
+        self.assertLess(soft, k)
+        self.assertAlmostEqual(soft / k, 1 - (beta * 900) ** 2 / 3, delta=1e-3)
+
+    def test_two_bodies_balance(self):
+        mt, mh, k, w, ft, fh = 1e10, 3e8, 6e7, 0.1, 2e6, -5e5
+        res = self.hub.two_bodies(mt, mh, k, w, ft, fh)
+        w2 = w * w
+        self.assertAlmostEqual((mt * w2 * res["x_torus"] + mh * w2 * res["x_hub"] + ft + fh) / ft, 0, places=9)
+        self.assertAlmostEqual(mh * w2 * res["x_hub"] - res["force"] + fh, 0, delta=1e-6 * abs(ft))
+
+    def test_finished_nets_hold_the_hub(self):
+        for r, out in self.out.items():
+            self.assertGreater(out["margin"], 5, r)
+            self.assertGreater(out["natural_vs_spin"], 2, r)
+            # Lines much stiffer than chords: the nets give about N k_chord / 2 per plane.
+            self.assertAlmostEqual(out["k_plane"] / (out["n_lines"] / 2 * out["k_chord"] / 2), 1, delta=0.1)
+            for case in out["cases"].values():
+                self.assertLess(abs(case["relative"]), out["gap"] / 10)
+            # Light lines: well under 0.1% of the torus.
+            self.assertLess(out["line_mass"], 1e-3 * out["torus_mass"])
+
+    def test_one_pair_cannot_hold_the_hub_two_can(self):
+        for r, out in self.out.items():
+            self.assertFalse(out["build"][1]["stable_unbraced"], r)
+            self.assertTrue(out["build"][2]["stable_unbraced"], r)
+            self.assertLess(abs(out["build"][2]["offset"]), abs(out["build"][1]["offset"]))
+            self.assertLess(abs(out["build"][2]["offset"]), out["gap"])
+
+    def test_axial_hold_needs_inclined_lines(self):
+        for r, out in self.out.items():
+            self.assertLess(out["axial_natural_vs_spin"], 1, r)
+            self.assertGreater(out["k_axial_inclined"], 5 * out["k_axial"], r)

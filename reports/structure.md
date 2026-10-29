@@ -79,6 +79,49 @@ The stack spins freely about its centre of mass, so a mismatch moves the spin ax
 | 1.6 km | 1.7 | 5.6 | 64 |
 | 2.5 km | 4.2 | 7.5 | 92 |
 
+## The hub in the nets: stabilising lines
+
+Each torus has two chord nets, one in each side plane of its tube. In each, the chords pass the hub tangent to a circle 1.1 × its radius, bowed outward by their spin load, leaving a window gap around it. A short line runs from the hub to every chord's tangent point (`structure_model/hub.py`). A chord pulled sideways at its middle resists like a taut string, 2T/L, a little less under its own spin load (shown in brackets); lines and chords act in series, and N lines spread around the window give N k / 2 in any direction of a net's plane, twice that for the torus's two nets. The hub's share is the system model's hub, dock and factory metal (25% of the torus steel). Off the axis by x, it feels M ω² x outward: the margin is the lines' stiffness over that. Lines are preloaded 1.5× their largest swing in service so none goes slack, and sized at the wire stress for the first construction stage too (two pairs of arcs, below).
+
+### Finished torus
+
+| Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin over the hub's pull | Hub's natural frequency / spin | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 400 m | 0.032 | 3.2 | 502 | 128 (-1%) | 29.2 | 37 | 6.0 | 9.46 | 0.21 / 5.67 | 0.52 / 2.7 | 0.17 | 20.3 | 1.3 | 0.25 |
+| 900 m | 0.29 | 8.4 | 1,130 | 118 (-2%) | 63.2 | 20 | 4.3 | 71.4 | 0.73 / 11.9 | 0.48 / 1.9 | 3.1 | 90.6 | 5.4 | 6.8 |
+| 1.6 km | 1.5 | 18 | 2,010 | 116 (-4%) | 112 | 12 | 3.3 | 346 | 1.8 / 20.3 | 0.44 / 1.5 | 24 | 302 | 16 | 87 |
+| 2.5 km | 5.6 | 35 | 3,142 | 116 (-7%) | 178 | 8.1 | 2.7 | 1,250 | 3.6 / 30.4 | 0.40 / 1.2 | 120 | 1,060 | 40 | 920 |
+
+Radial lines hold the hub along the axis only through their preload: its axial natural frequency is below the spin rate. Running 10% of the lines from the hub's mid-plane out to the side nets (a chord resists sideways pulls out of its plane alike) holds it ~8–30× more stiffly (second figure). Torsion is likewise held by preload only.
+
+### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines
+
+Hub imbalance: 1% of the hub's mass at its rim. Torus imbalance: a 1% mismatch between two opposite arcs of 4θr, never ballasted. Orbit thrust: 1e-05 m/s² for the torus, pushed through its hub (notes §15). The torus and its hub turn about their common centre of mass.
+
+| Torus | Hub imbalance | Torus imbalance | Orbit thrust |
+|---|---|---|---|
+| 400 m | 1.3 cm / 0.22 MN | 0.90 cm / 0.15 MN | 0.17 cm / 0.028 MN |
+| 900 m | 4.8 cm / 2.1 MN | 3.1 cm / 1.3 MN | 0.32 cm / 0.14 MN |
+| 1.6 km | 13 cm / 11 MN | 8.0 cm / 6.7 MN | 0.56 cm / 0.47 MN |
+| 2.5 km | 30 cm / 41 MN | 17 cm / 24 MN | 0.91 cm / 1.3 MN |
+
+### Building: the first arcs
+
+At 0.71 of the final spin (net_statics), with a 1% mismatch between the arcs of a pair. A pair's chords run between its two arcs, nearly parallel: the lines hold the hub across them, but along them only through the arcs' small spread and the lines' preload. A second pair at right angles holds that direction. Preload: what the lines need to beat the hub's pull with the same 1.5× margin; pull-in: how far that preload draws the few chords into the window.
+
+| Torus | First stage | Chords per net | Weakest stiffness, no preload (MN/m) | Hub's pull (MN/m) | Margin, no preload | Preload needed (kN) | Chord pull-in (m) | Hub offset from the arcs (m) | Force in the lines (MN) |
+|---|---|---|---|---|---|---|---|---|---|
+| 400 m | one opposite pair | 12 | 0.012 | 0.40 | 0.030 | 77.1 | 0.59 | 2.9 | 1.7 |
+| 400 m | two pairs at right angles | 24 | 1.6 | 0.40 | 4.0 | — | — | 0.30 | 0.49 |
+| 900 m | one opposite pair | 27 | 0.031 | 1.6 | 0.019 | 372 | 3.1 | 5.1 | 12 |
+| 900 m | two pairs at right angles | 54 | 4.2 | 1.6 | 2.6 | — | — | 1.2 | 4.9 |
+| 1.6 km | one opposite pair | 48 | 0.060 | 4.7 | 0.013 | 1,310 | 11 | 7.0 | 49 |
+| 1.6 km | two pairs at right angles | 96 | 8.1 | 4.7 | 1.7 | — | — | 3.6 | 29 |
+| 2.5 km | one opposite pair | 74 | 0.100 | 11 | 0.0090 | 3,890 | 32 | 8.4 | 140 |
+| 2.5 km | two pairs at right angles | 148 | 14 | 11 | 1.2 | 361 | 3.0 | 6.3 | 100 |
+
+Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through the lines.
+
 ## Tube cross-section: hull and frames by finite elements
 
 One metre of tube in the plane of its cross-section (`structure_model/tube_section.py`): the pressure hull and the outer cell wall as membrane skins, the jacket's transverse bulkheads (one every 10 m) smeared into a plane-stress annulus between them, the rock, fill, lakes, air, bumper and steel under spin gravity, 70 kPa on the hull, and the chords' anchors on the outer wall holding the section along the radius. Every part is sized fully stressed at 300 MPa (von Mises at every integration point; half that in compression, blended with tension by the compression's share of the stress state, an allowance for stiffeners), or held at its minimum gauge (1 cm for the skins, 5 mm for bulkheads and cell walls). The skins also carry the hull's lengthwise pressure load and the pillowing of their panels between bulkheads; the hub-facing hull panels pressed in by the rock get stiffeners (vaulted ceiling), or the rock rests on hung cell floors instead (hung). Panels, cell walls and bumper are together in one column. Each anchor is a fitting through the jacket's depth, spreading the chord's pull over the radial line of nodes at its angle and pinned at the chord's attachment on the outer wall (a force, no couple). **Sizing:** *fully stressed* when every part is within 2% of its allowable or at its minimum gauge; *safe* when none is over it but some still have spare capacity after 200 rounds (heavier than needed); *over* when some part still exceeds it (not a design).

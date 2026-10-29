@@ -1,6 +1,6 @@
 # Structural model (plan §2)
 
-The wire, the tangent-chord net, the spin-up of a partial ring, and the tube's cross-section by finite elements. It uses the system model (`habitat_model`) for the rim mass and geometry.
+The wire, the tangent-chord net, the spin-up of a partial ring, the tube's cross-section by finite elements, and the hub held in the nets. It uses the system model (`habitat_model`) for the rim mass and geometry.
 
 ```bash
 python -m structure_model                       # full report
@@ -13,6 +13,7 @@ python -m structure_model --anchor-spacing 20 --mismatch 0.02 --set wire_stress_
 | `cable_net.py` | chord geometry, tension along a chord, uniform vs tapered mass, comparison with radial spokes, bowing |
 | `spinup.py` | single-laced end zones of a partial ring, a local estimate of its joint tension, axis offset from a mass mismatch |
 | `net_statics.py` | assembled statics of a ring or of two opposite arcs: one tension per chord, rigid segments, sliding / pinned / locked joints, tension-only chords, residual check |
+| `hub.py` | the hub held in the two chord nets by stabilising lines: chords as taut strings, the hub's centrifugal divergence, load cases, the first construction stage, stiffness for the stack dynamics |
 | `tube_section.py` | the tube's cross-section by finite elements: membrane skins (hull, outer cell wall), the jacket's bulkheads as a plane-stress annulus, spin and pressure loads, chord anchors, fully stressed sizing |
 
 ## Findings
@@ -62,10 +63,18 @@ Cold-drawn wire relaxes ~5% in 1,000 h at half its strength (r = 30 f/f_u − 10
 - **Sensitivity at 900 m:** the skins' minimum gauge dominates (2 cm: +56%; 5 mm: −19%); working stress 200 / 500 MPa: +20% / −10%; 1 cm bulkheads and cell walls: +13%.
 - **Not modelled:** buckling of the hub-facing half (up to ~1.3 MN/m of compression in the skins at 900 m, ~10 MN/m at 2.5 km), the segment joints and seals, the anchors' local details, and the valley's buildings, light box and ceiling.
 
+### The hub in the nets: stabilising lines
+
+- **Model** (`hub.py`): one torus and its share of the hub (the system model's hub, dock and factory metal, 25% of the torus steel). In each of the two nets the chords pass the hub at 1.1 × its radius, bowed outward, and a line runs from the hub to every chord's tangent point. A chord pulled sideways at its middle resists like a taut string, k = 2Tβ cot(βL) with β² = μω²/T for its own spin load (~2T/L); a line and its chord act in series; N lines spread around the window give Nk/2 in any direction of a net's plane. The hub off the axis by x is pulled outward by Mω²x. A torus and its hub turn about their common centre of mass: two bodies joined by a spring, in the rotating frame. Lines are preloaded 1.5× their largest swing in service and sized at the wire stress.
+- **Finished torus:** lateral stiffness ~29 / 63 / 112 / 178 MN/m at 400 m / 900 m / 1.6 km / 2.5 km, ~37 / 20 / 12 / 8 times the hub's centrifugal pull; the hub's natural frequency on the lines is ~6 / 4.3 / 3.3 / 2.7 times the spin. 1% of the hub's mass at its rim, a 1% mismatch between opposite arcs or the orbit-raising thrust move the hub by up to ~5 cm at 900 m (≤ 30 cm at 2.5 km). The lines weigh ~0.25 / 7 / 87 / 920 t per torus.
+- **Building:** a single opposite pair of arcs can't hold the hub along its chords (stiffness ~2% of the hub's pull); preload would need ~0.37 MN per line at 900 m, pulling those chords ~3 m into an ~8 m window, and the hub would still swing ~5 m. Two pairs at right angles hold it without preload up to 1.6 km (margin 4 / 2.6 / 1.7), with ~0.36 MN at 2.5 km.
+- **Axial and torsion:** radial lines give only their preload's geometric stiffness: the axial natural frequency is ~0.5 of the spin. Inclining 10% of the lines from the hub's mid-plane to the side nets gives ~8–30× more axial stiffness, above the spin rate.
+- **Not modelled:** the hub as a beam between tori, the elevator, pipe and power shafts, docking loads, torque through the lines.
+
 ## Still open in plan §2
 
 - Buckling of the hub-facing half of the section, and a 3D shell model of a segment with its joints and anchors.
-- The hub held in the net by stabilising lines (its motion relative to the net under imbalance), and the net's stiffness for the stack dynamics (plan §4).
+- Torque and docking loads through the hub's lines, and the elevator, pipe and power shafts' compliant joints.
 - Fatigue: the spin load is static; the cyclic loads (rim trains, ballast transfers, day/night temperatures) are small and belong with the stack dynamics.
 
 ## Sources
