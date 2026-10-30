@@ -1,8 +1,8 @@
 """Rendezvous delta-v between two heliocentric orbits (plan §5): zero-revolution Lambert transfers, two impulses.
 
 Phase-free ("best phase"): the departure and arrival points are free on each orbit, as are the flight time,
-so the result is a lower bound for the pair, whatever the bodies' positions. A dated search needs current
-ephemerides (JPL Horizons; blocked from this environment), so the notes' dated values stay quoted as they are.
+so the result is a lower bound for the pair, whatever the bodies' positions. Dated windows, on JPL Horizons'
+ephemerides, are in `windows.py`.
 """
 
 import math
@@ -15,9 +15,11 @@ DAY = 86400.0
 YEAR = 365.25 * DAY
 
 
-# Osculating elements (a AU, e, i deg, node deg, argument of perihelion deg), rounded from JPL's Small-Body
-# Database as recalled, not fetched; angles in the J2000 ecliptic. Enough for phase-free transfers, which use
-# the orbits' shapes and orientations only. Apophis after its 2029 flyby: a and e approximated, angles kept (§15).
+# Osculating elements (a AU, e, i deg, node deg, argument of perihelion deg), J2000 ecliptic: Earth's mean
+# elements, and the asteroids' from JPL's Small-Body Database (fetched, `logistics_model/data/`, below; the
+# values here are the rounded ones they replace, kept if the data file is missing). Enough for phase-free
+# transfers, which use the orbits' shapes and orientations only. Apophis after its 2029 flyby: a and e
+# approximated, angles kept (§15); its dated windows use Horizons' integrated orbit instead.
 ELEMENTS = {
     "Earth": (1.00000, 0.0167, 0.000, 0.00, 102.94),
     "Ryugu": (1.1896, 0.1902, 5.884, 251.29, 211.43),
@@ -29,6 +31,13 @@ ELEMENTS = {
     "Didymos": (1.6427, 0.3839, 3.408, 73.20, 319.32),
     "Torifune": (1.0324, 0.2194, 4.81, 75.63, 179.38),
 }
+
+
+try:
+    from .ephemeris import elements as _fetched
+    ELEMENTS.update(_fetched())
+except (OSError, ValueError):
+    pass
 
 
 def period(a_au):
