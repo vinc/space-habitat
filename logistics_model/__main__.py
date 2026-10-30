@@ -38,16 +38,30 @@ GOOD = 1000.0            # m/s above a pair's best: a usable window
 @functools.lru_cache(maxsize=None)
 def dated(origin, target):
     """Dated windows on JPL Horizons' ephemerides, 2028–2072 (Apophis after its 2029 flyby): the best, the best
-    in 2030–2060 (the notes' span), the usable windows (within GOOD of the best) and their mean interval."""
+    in 2030–2060 (the notes' span), the usable windows (within GOOD of the best), the mean interval between
+    them and the longest gap (years, with its dates)."""
     eph = _eph()
     body = "Apophis" if target == "Apophis 2029" else target
     start = jd_of(2029, 6) if target == "Apophis 2029" else jd_of(SPAN[0])
     s = windows.summary(eph, origin, body, start, jd_of(SPAN[1]), within=GOOD)
     in_notes = [w for w in s["all"] if jd_of(2030) <= w[1] < jd_of(2060)]
     usable = [w for w in s["all"] if w[0] <= s["best"][0] + GOOD]
-    gaps = np.diff([w[1] for w in usable]) / 365.25
+    dates = [w[1] for w in usable]
+    gaps = np.diff(dates) / 365.25
+    longest = int(np.argmax(gaps)) if len(gaps) else None
     return {"best": s["best"], "notes_span": min(in_notes) if in_notes else None, "usable": usable,
-            "interval": float(np.mean(gaps)) if len(gaps) else None}
+            "interval": float(np.mean(gaps)) if len(gaps) else None,
+            "longest": float(gaps[longest]) if len(gaps) else None,
+            "longest_from": (dates[longest], dates[longest + 1]) if len(gaps) else None}
+
+
+def cadence(d):
+    """'N: mean ~x yr, longest y yr (from–to)' for a pair's usable windows."""
+    if not d["interval"]:
+        return f"{len(d['usable'])}"
+    a, b = d["longest_from"]
+    return (f"{len(d['usable'])}: mean ~{num(d['interval'], 2)} yr, longest {num(d['longest'], 2)} yr "
+            f"({windows.date_str(a)[:4]}–{windows.date_str(b)[:4]})")
 
 
 @functools.lru_cache(maxsize=None)
@@ -135,7 +149,7 @@ def transfer_section():
                      f"{num(n30[0] / 1e3, 3)} km/s ({windows.date_str(n30[1])[:7]})" if n30 else "—",
                      f"{dated_notes} km/s" if dated_notes else "—",
                      f"{num(b[0] / 1e3, 3)} km/s ({windows.date_str(b[1])[:7]}, {num(b[2])} d)",
-                     f"{len(d['usable'])}, every ~{num(d['interval'], 2)} yr" if d["interval"] else "1"])
+                     cadence(d)])
     eph = _eph()
     return [
         "## Transfers",
@@ -151,9 +165,10 @@ def transfer_section():
                f"Best, {SPAN[0]}–{SPAN[1]}", "Usable windows"], rows),
         "The dated search lands on the notes' quoted values within ~0.1 km/s (Bennu → Eros 0.3 lower), and "
         "on the phase-free bound within ~0.1–0.3 km/s at its best window: the bound is reached about once in "
-        "a few decades. Usable windows come every ~2–7 years, not once per synodic period on the dot; a "
-        "freighter fleet times its departures to them. Low-thrust transfers need somewhat more than these "
-        "impulsive values.",
+        "a few decades. Usable windows average one every ~2–7 years but come in clusters, with gaps of up to "
+        "~10–20 years between them (Ryugu → Eros: none from 2036 to 2056): a shipping schedule must stock the "
+        "C-type's products through the longest gap, or depart off-window at a higher Δv (the generation "
+        "below). Low-thrust transfers need somewhat more than these impulsive values.",
     ]
 
 
@@ -176,7 +191,7 @@ def partner_section(p):
         b, n30 = d["best"], d["notes_span"]
         ref_rows.append([f"{origin} → {target}", f"{num(n30[0] / 1e3, 3)} km/s ({windows.date_str(n30[1])[:7]})",
                          f"{num(b[0] / 1e3, 3)} km/s ({windows.date_str(b[1])[:7]})",
-                         f"every ~{num(d['interval'], 2)} yr" if d["interval"] else "—"])
+                         cadence(d)])
     energy_rows = []
     for partner, dv_pair in (("Ryugu", ("Ryugu", "Eros")), ("1999 XX262", NEW_PAIRS[0]), ("2015 DX198", NEW_PAIRS[1])):
         dv = dated(*dv_pair)["notes_span"][0] / 1e3
@@ -204,14 +219,16 @@ def partner_section(p):
               cand_rows),
         f"Ryugu ({num(ryugu / MT)} Mt, ~{ryugu / c_per_torus:,.0f} tori) is at 4.5 km/s from Eros, 6.3 from "
         "Itokawa and 7.6 from Torifune. Dated, on Horizons' ephemerides:",
-        table(["Transfer", "Best, 2030–2060", f"Best, {SPAN[0]}–{SPAN[1]}", "Usable windows"], ref_rows),
+        table(["Transfer", "Best, 2030–2060", f"Best, {SPAN[0]}–{SPAN[1]}", "Usable windows, 2028–2072"], ref_rows),
         "And what the lower Δv saves, per torus of a 1.6 km six-stack at Eros (electric thrusters, the system "
         "model's baseline):",
         table(["Volatiles from", "Δv (best, 2030–2060)", "Shipping", "Energy per torus", "Generation (yr)"],
               energy_rows),
         "**Proposed: characterise 1999 XX262 for Eros and 2001 WT1 for Itokawa and Torifune.** 1999 XX262 is "
         f"~1.5 km across, ~{xx_mass / ryugu:.1f}× Ryugu's mass, ~{num(gain('1999 XX262', 'Eros'), 2)} km/s closer "
-        f"to Eros at its 2030–2060 windows and with usable windows ~3× as often; 2001 WT1 (~0.5 km) is "
+        f"to Eros at its 2030–2060 windows, its usable windows more frequent and its longest gap "
+        f"{num(dated('1999 XX262', 'Eros')['longest'], 2)} years against Ryugu's {num(dated('Ryugu', 'Eros')['longest'], 2)}; "
+        "2001 WT1 (~0.5 km) is "
         f"~{num(gain('2001 WT1', 'Itokawa'), 2)} km/s closer to Itokawa and ~{num(gain('2001 WT1', 'Torifune'), 2)} "
         "closer to Torifune than Ryugu. **1999 XX262 is already a B-type**, like Bennu: visible and "
         "near-infrared spectra (Popescu et al. 2019; Marsset et al. 2022, MIT–Hawaii survey) and SDSS colours "
@@ -257,7 +274,8 @@ def propulsion_section(p):
 
 def generation_section(p):
     comp_rows, time_rows, rate_rows, growth_rows, best_names = [], [], [], [], []
-    window = dated("Ryugu", "Eros")["interval"]
+    ryugu_eros = dated("Ryugu", "Eros")
+    window, longest = ryugu_eros["interval"], ryugu_eros["longest"]
     for r, n, name in CASES:
         d = design(r, n)
         res = evaluate(p, d)
@@ -279,7 +297,8 @@ def generation_section(p):
             rate_rows.append([name, f"{years} yr", f"{num(x['s_type_day'] / 1e6)} kt ({x['s_type_day'] / flows.MINE_KG_DAY:.1%})",
                               f"{num(x['metal_day'] / 1e3)} t ({x['metal_day'] / flows.STEELWORKS_KG_DAY:.1%})",
                               f"{num(x['rock_placed_day'] / 1e6)} kt", f"{num(x['c_type_day'] / 1e6, 2)} kt",
-                              f"{num(x['shipped_per_window'] / KT)} kt", f"{num(x['power'] / 1e6)} MW"])
+                              f"{num(x['shipped_per_window'] / KT)} kt",
+                              f"{num(rep['shipped'] * longest / years / KT)} kt", f"{num(x['power'] / 1e6)} MW"])
             g = flows.growth(p, d, res, years)
             growth_rows.append([name, f"{years} yr", f"{g['after'][50]:,.0f}", f"{g['after'][100]:,.0f}",
                                 f"{g['c_type_supports']:,.0f}", num(g["years_to_c_limit"], 2)])
@@ -298,11 +317,15 @@ def generation_section(p):
                "Generation (yr)"], time_rows),
         "**Rates for a given generation**, per torus of the parent (a stack's lines handle n times these), against "
         "Earth benchmarks (orders of magnitude, unsourced): the largest open-pit mines move ~0.5 Mt of material a "
-        "day, a large steelworks makes ~10 Mt of steel a year. Cargo per window: one usable Ryugu → Eros "
-        f"window every ~{num(window, 2)} years (dated search, above).",
+        "day, a large steelworks makes ~10 Mt of steel a year. Cargo per window, on average: one usable Ryugu → "
+        f"Eros window every ~{num(window, 2)} years (dated search, above). The windows cluster, so the stock the "
+        f"C-type's plant must hold through the longest gap ({num(longest, 2)} years, "
+        f"{windows.date_str(ryugu_eros['longest_from'][0])[:4]}–{windows.date_str(ryugu_eros['longest_from'][1])[:4]}) "
+        "is the larger figure: a store at the C-type and a fleet sized for it, or departures off-window at a "
+        "higher Δv.",
         table(["Stack", "Generation", "S-type mined a day (share of a large mine)",
                "Metal a day (share of a large steelworks)", "Rock placed a day", "C-type baked a day",
-               "Cargo per window", "Mean power"], rate_rows),
+               "Cargo per window, average", "Stock through the longest gap", "Mean power"], rate_rows),
         "**Growth.** A cluster started by one stack, doubling every generation, until Ryugu's nitrogen runs out:",
         table(["Stack", "Generation", "Tori after 50 years", "After 100 years", "Tori Ryugu supports",
                "Years to reach it"], growth_rows),

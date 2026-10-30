@@ -46,20 +46,20 @@ Two-impulse rendezvous on zero-revolution Lambert arcs (`logistics_model/transfe
 
 | Transfer | Best phase (model) | Best phase (notes) | Dated, 2030–2060 | Dated (notes) | Best, 2028–2072 | Usable windows |
 |---|---|---|---|---|---|---|
-| Ryugu → Eros | 4.51 km/s | 4.5 km/s | 4.66 km/s (2031-07) | 4.7 km/s | 4.52 km/s (2061-07, 318 d) | 8, every ~5.7 yr |
-| Bennu → Eros | 5.74 km/s | 5.8 km/s | 5.90 km/s (2049-03) | 6.2 km/s | 5.90 km/s (2049-03, 174 d) | 10, every ~4.5 yr |
-| Ryugu → Itokawa | 6.26 km/s | 6.3 km/s | 6.30 km/s (2051-06) | 6.3 km/s | 6.28 km/s (2069-09, 351 d) | 10, every ~4.2 yr |
-| Bennu → Itokawa | 8.23 km/s | 8.3 km/s | 8.42 km/s (2059-02) | 8.5 km/s | 8.42 km/s (2059-02, 218 d) | 17, every ~2.5 yr |
-| Ryugu → Apophis 2029 | 5.45 km/s | 5.5 km/s | 5.77 km/s (2059-06) | — | 5.63 km/s (2069-11, 265 d) | 8, every ~4.7 yr |
-| Bennu → Apophis 2029 | 7.43 km/s | 7.4 km/s | 8.65 km/s (2058-12) | — | 8.45 km/s (2067-03, 432 d) | 22, every ~2.0 yr |
-| Ryugu → Torifune | 7.58 km/s | 7.6 km/s | 7.67 km/s (2056-09) | 7.6 km/s | 7.64 km/s (2061-11, 300 d) | 10, every ~4.2 yr |
-| Itokawa → Torifune | 3.49 km/s | 3.6 km/s | 3.50 km/s (2048-01) | 3.6 km/s | 3.50 km/s (2048-01, 168 d) | 9, every ~4.6 yr |
-| Itokawa → Eros | 7.81 km/s | 7.8 km/s | 7.80 km/s (2043-05) | — | 7.80 km/s (2043-05, 470 d) | 8, every ~5.0 yr |
-| Earth → Eros | 6.87 km/s | 6.9 km/s | 6.92 km/s (2042-01) | — | 6.92 km/s (2042-01, 297 d) | 6, every ~6.9 yr |
-| Earth → Torifune | 4.07 km/s | 4.0 km/s | 4.11 km/s (2047-06) | — | 4.11 km/s (2047-06, 201 d) | 8, every ~3.8 yr |
-| Ryugu → Didymos | 7.14 km/s | — | 7.12 km/s (2058-06) | — | 7.12 km/s (2058-06, 582 d) | 14, every ~3.1 yr |
+| Ryugu → Eros | 4.51 km/s | 4.5 km/s | 4.66 km/s (2031-07) | 4.7 km/s | 4.52 km/s (2061-07, 318 d) | 8: mean ~5.7 yr, longest 20 yr (2036–2056) |
+| Bennu → Eros | 5.74 km/s | 5.8 km/s | 5.90 km/s (2049-03) | 6.2 km/s | 5.90 km/s (2049-03, 174 d) | 10: mean ~4.5 yr, longest 15 yr (2049–2063) |
+| Ryugu → Itokawa | 6.26 km/s | 6.3 km/s | 6.30 km/s (2051-06) | 6.3 km/s | 6.28 km/s (2069-09, 351 d) | 10: mean ~4.2 yr, longest 7.9 yr (2052–2060) |
+| Bennu → Itokawa | 8.23 km/s | 8.3 km/s | 8.42 km/s (2059-02) | 8.5 km/s | 8.42 km/s (2059-02, 218 d) | 17: mean ~2.5 yr, longest 4.8 yr (2037–2042) |
+| Ryugu → Apophis 2029 | 5.45 km/s | 5.5 km/s | 5.77 km/s (2059-06) | — | 5.63 km/s (2069-11, 265 d) | 8: mean ~4.7 yr, longest 8.9 yr (2038–2047) |
+| Bennu → Apophis 2029 | 7.43 km/s | 7.4 km/s | 8.65 km/s (2058-12) | — | 8.45 km/s (2067-03, 432 d) | 22: mean ~2.0 yr, longest 12 yr (2041–2054) |
+| Ryugu → Torifune | 7.58 km/s | 7.6 km/s | 7.67 km/s (2056-09) | 7.6 km/s | 7.64 km/s (2061-11, 300 d) | 9: mean ~4.7 yr, longest 5.3 yr (2051–2056) |
+| Itokawa → Torifune | 3.49 km/s | 3.6 km/s | 3.50 km/s (2048-01) | 3.6 km/s | 3.50 km/s (2048-01, 168 d) | 9: mean ~4.6 yr, longest 11 yr (2054–2065) |
+| Itokawa → Eros | 7.81 km/s | 7.8 km/s | 7.80 km/s (2043-05) | — | 7.80 km/s (2043-05, 470 d) | 8: mean ~5.0 yr, longest 11 yr (2032–2043) |
+| Earth → Eros | 6.87 km/s | 6.9 km/s | 6.92 km/s (2042-01) | — | 6.92 km/s (2042-01, 297 d) | 6: mean ~6.9 yr, longest 7.0 yr (2035–2042) |
+| Earth → Torifune | 4.07 km/s | 4.0 km/s | 4.11 km/s (2047-06) | — | 4.11 km/s (2047-06, 201 d) | 8: mean ~3.8 yr, longest 16 yr (2049–2064) |
+| Ryugu → Didymos | 7.14 km/s | — | 7.12 km/s (2058-06) | — | 7.12 km/s (2058-06, 582 d) | 14: mean ~3.1 yr, longest 3.9 yr (2058–2062) |
 
-The dated search lands on the notes' quoted values within ~0.1 km/s (Bennu → Eros 0.3 lower), and on the phase-free bound within ~0.1–0.3 km/s at its best window: the bound is reached about once in a few decades. Usable windows come every ~2–7 years, not once per synodic period on the dot; a freighter fleet times its departures to them. Low-thrust transfers need somewhat more than these impulsive values.
+The dated search lands on the notes' quoted values within ~0.1 km/s (Bennu → Eros 0.3 lower), and on the phase-free bound within ~0.1–0.3 km/s at its best window: the bound is reached about once in a few decades. Usable windows average one every ~2–7 years but come in clusters, with gaps of up to ~10–20 years between them (Ryugu → Eros: none from 2036 to 2056): a shipping schedule must stock the C-type's products through the longest gap, or depart off-window at a higher Δv (the generation below). Low-thrust transfers need somewhat more than these impulsive values.
 
 ## Better C-type partners
 
@@ -86,15 +86,15 @@ A catalogue search (`logistics_model/catalogue.py`, JPL's Small-Body Database, f
 
 Ryugu (448 Mt, ~89 tori) is at 4.5 km/s from Eros, 6.3 from Itokawa and 7.6 from Torifune. Dated, on Horizons' ephemerides:
 
-| Transfer | Best, 2030–2060 | Best, 2028–2072 | Usable windows |
+| Transfer | Best, 2030–2060 | Best, 2028–2072 | Usable windows, 2028–2072 |
 |---|---|---|---|
-| Ryugu → Eros | 4.66 km/s (2031-07) | 4.52 km/s (2061-07) | every ~5.7 yr |
-| 1999 XX262 → Eros | 3.95 km/s (2044-11) | 3.91 km/s (2067-11) | every ~1.9 yr |
-| 2015 DX198 → Eros | 3.60 km/s (2030-02) | 3.19 km/s (2071-03) | every ~8.2 yr |
-| Ryugu → Itokawa | 6.30 km/s (2051-06) | 6.28 km/s (2069-09) | every ~4.2 yr |
-| 2001 WT1 → Itokawa | 3.86 km/s (2054-09) | 3.86 km/s (2054-09) | every ~4.5 yr |
-| Ryugu → Torifune | 7.67 km/s (2056-09) | 7.64 km/s (2061-11) | every ~4.2 yr |
-| 2001 WT1 → Torifune | 2.99 km/s (2053-01) | 2.99 km/s (2053-01) | every ~6.8 yr |
+| Ryugu → Eros | 4.66 km/s (2031-07) | 4.52 km/s (2061-07) | 8: mean ~5.7 yr, longest 20 yr (2036–2056) |
+| 1999 XX262 → Eros | 3.95 km/s (2044-11) | 3.91 km/s (2067-11) | 15: mean ~2.3 yr, longest 16 yr (2044–2060) |
+| 2015 DX198 → Eros | 3.60 km/s (2030-02) | 3.19 km/s (2071-03) | 3: mean ~21 yr, longest 30 yr (2030–2060) |
+| Ryugu → Itokawa | 6.30 km/s (2051-06) | 6.28 km/s (2069-09) | 10: mean ~4.2 yr, longest 7.9 yr (2052–2060) |
+| 2001 WT1 → Itokawa | 3.86 km/s (2054-09) | 3.86 km/s (2054-09) | 10: mean ~4.5 yr, longest 4.5 yr (2032–2036) |
+| Ryugu → Torifune | 7.67 km/s (2056-09) | 7.64 km/s (2061-11) | 9: mean ~4.7 yr, longest 5.3 yr (2051–2056) |
+| 2001 WT1 → Torifune | 2.99 km/s (2053-01) | 2.99 km/s (2053-01) | 7: mean ~6.8 yr, longest 11 yr (2042–2053) |
 
 And what the lower Δv saves, per torus of a 1.6 km six-stack at Eros (electric thrusters, the system model's baseline):
 
@@ -104,7 +104,7 @@ And what the lower Δv saves, per torus of a 1.6 km six-stack at Eros (electric 
 | 1999 XX262 → Eros | 3.95 km/s | 38.4 PJ | 93.9 PJ | 17.9 |
 | 2015 DX198 → Eros | 3.60 km/s | 34.8 PJ | 90.3 PJ | 17.2 |
 
-**Proposed: characterise 1999 XX262 for Eros and 2001 WT1 for Itokawa and Torifune.** 1999 XX262 is ~1.5 km across, ~4.5× Ryugu's mass, ~0.71 km/s closer to Eros at its 2030–2060 windows and with usable windows ~3× as often; 2001 WT1 (~0.5 km) is ~2.4 km/s closer to Itokawa and ~4.7 closer to Torifune than Ryugu. **1999 XX262 is already a B-type**, like Bennu: visible and near-infrared spectra (Popescu et al. 2019; Marsset et al. 2022, MIT–Hawaii survey) and SDSS colours (Sergeyev et al. 2023) all give B, Mahlke et al. (2022) Ch, with the 0.7 µm band of water-bearing clays; NEOWISE puts it at 1.48 ± 0.01 km and albedo 0.044 (SsODNet, consulted 30 October 2026). Its nitrogen is unknown: the 3 µm band of hydrated minerals and ammonium (JWST, or IRTF at its 2033–2038 passes) comes next, then a sample. **2001 WT1** has only near-infrared colours from the VISTA survey (MOVIS, too uncertain to class it) and NEOWISE's albedo (~0.04–0.06, ~0.54 km): a spectrum first, at its October 2027 or October 2035 passes. Ryugu stays the baseline until then.
+**Proposed: characterise 1999 XX262 for Eros and 2001 WT1 for Itokawa and Torifune.** 1999 XX262 is ~1.5 km across, ~4.5× Ryugu's mass, ~0.71 km/s closer to Eros at its 2030–2060 windows, its usable windows more frequent and its longest gap 16 years against Ryugu's 20; 2001 WT1 (~0.5 km) is ~2.4 km/s closer to Itokawa and ~4.7 closer to Torifune than Ryugu. **1999 XX262 is already a B-type**, like Bennu: visible and near-infrared spectra (Popescu et al. 2019; Marsset et al. 2022, MIT–Hawaii survey) and SDSS colours (Sergeyev et al. 2023) all give B, Mahlke et al. (2022) Ch, with the 0.7 µm band of water-bearing clays; NEOWISE puts it at 1.48 ± 0.01 km and albedo 0.044 (SsODNet, consulted 30 October 2026). Its nitrogen is unknown: the 3 µm band of hydrated minerals and ammonium (JWST, or IRTF at its 2033–2038 passes) comes next, then a sample. **2001 WT1** has only near-infrared colours from the VISTA survey (MOVIS, too uncertain to class it) and NEOWISE's albedo (~0.04–0.06, ~0.54 km): a spectrum first, at its October 2027 or October 2035 passes. Ryugu stays the baseline until then.
 
 ## Propulsion
 
@@ -137,14 +137,14 @@ A parent stack builds a child stack torus by torus, so a cluster doubles once pe
 | 900 m pair | 10.4 PJ | 13.5 PJ | 1.5 | 14.0 PJ | 0.89 |
 | 1.6 km six-stack | 55.6 PJ | 46.2 PJ | 19 | 67.9 PJ | 13 |
 
-**Rates for a given generation**, per torus of the parent (a stack's lines handle n times these), against Earth benchmarks (orders of magnitude, unsourced): the largest open-pit mines move ~0.5 Mt of material a day, a large steelworks makes ~10 Mt of steel a year. Cargo per window: one usable Ryugu → Eros window every ~5.7 years (dated search, above).
+**Rates for a given generation**, per torus of the parent (a stack's lines handle n times these), against Earth benchmarks (orders of magnitude, unsourced): the largest open-pit mines move ~0.5 Mt of material a day, a large steelworks makes ~10 Mt of steel a year. Cargo per window, on average: one usable Ryugu → Eros window every ~5.7 years (dated search, above). The windows cluster, so the stock the C-type's plant must hold through the longest gap (20 years, 2036–2056) is the larger figure: a store at the C-type and a fleet sized for it, or departures off-window at a higher Δv.
 
-| Stack | Generation | S-type mined a day (share of a large mine) | Metal a day (share of a large steelworks) | Rock placed a day | C-type baked a day | Cargo per window | Mean power |
-|---|---|---|---|---|---|---|---|
-| 900 m pair | 10 yr | 8.99 kt (1.8%) | 404 t (1.5%) | 3.16 kt | 1.4 kt | 60.1 kt | 75.5 MW |
-| 900 m pair | 25 yr | 3.59 kt (0.7%) | 162 t (0.6%) | 1.26 kt | 0.55 kt | 24.0 kt | 30.2 MW |
-| 1.6 km six-stack | 10 yr | 45.9 kt (9.2%) | 2,060 t (7.5%) | 9.64 kt | 7.5 kt | 206 kt | 322 MW |
-| 1.6 km six-stack | 25 yr | 18.3 kt (3.7%) | 826 t (3.0%) | 3.86 kt | 3.0 kt | 82.4 kt | 129 MW |
+| Stack | Generation | S-type mined a day (share of a large mine) | Metal a day (share of a large steelworks) | Rock placed a day | C-type baked a day | Cargo per window, average | Stock through the longest gap | Mean power |
+|---|---|---|---|---|---|---|---|---|
+| 900 m pair | 10 yr | 8.99 kt (1.8%) | 404 t (1.5%) | 3.16 kt | 1.4 kt | 60.1 kt | 209 kt | 75.5 MW |
+| 900 m pair | 25 yr | 3.59 kt (0.7%) | 162 t (0.6%) | 1.26 kt | 0.55 kt | 24.0 kt | 83.4 kt | 30.2 MW |
+| 1.6 km six-stack | 10 yr | 45.9 kt (9.2%) | 2,060 t (7.5%) | 9.64 kt | 7.5 kt | 206 kt | 715 kt | 322 MW |
+| 1.6 km six-stack | 25 yr | 18.3 kt (3.7%) | 826 t (3.0%) | 3.86 kt | 3.0 kt | 82.4 kt | 286 kt | 129 MW |
 
 **Growth.** A cluster started by one stack, doubling every generation, until Ryugu's nitrogen runs out:
 

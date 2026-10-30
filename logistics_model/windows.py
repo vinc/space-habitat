@@ -40,16 +40,18 @@ def curve(eph, origin, target, start_jd, end_jd, step=STEP, tofs=TOF_DAYS):
     return t1, dv[np.arange(len(t1)), k], tofs[k]
 
 
-def refine(eph, origin, target, t1, tof, start_jd=None):
-    """Pattern search on (departure JD, flight days) from a grid point."""
+def refine(eph, origin, target, t1, tof, start_jd=None, end_jd=None):
+    """Pattern search on (departure JD, flight days) from a grid point, the departure kept within
+    [start_jd, end_jd] and the arrival within the ephemeris."""
     first, last = eph.span()
     lo = first if start_jd is None else start_jd
-    x = np.array([t1, tof], float)
-    f = float(delta_v(eph, origin, target, x[0], x[1]))
+    hi = last if end_jd is None else min(end_jd, last)
+    x = np.array([np.clip(t1, lo, hi), tof], float)
+    f = float(delta_v(eph, origin, target, x[0], x[1])) if x[0] + x[1] <= last else np.inf
     steps = np.array([STEP / 2, 5.0])
     while steps[0] > 0.01:
         trial = x + np.concatenate([np.diag(steps), -np.diag(steps)])
-        trial[:, 0] = np.clip(trial[:, 0], lo, last)
+        trial[:, 0] = np.clip(trial[:, 0], lo, hi)
         trial[:, 1] = np.clip(trial[:, 1], 20.0, None)
         valid = trial[:, 0] + trial[:, 1] <= last
         fs = np.full(len(trial), np.inf)
@@ -62,30 +64,55 @@ def refine(eph, origin, target, t1, tof, start_jd=None):
     return float(f), float(x[0]), float(x[1])
 
 
+def local_minima(dv, half_width):
+    """Indices of the departure curve's minima: points no higher than any other within half_width samples
+    (one per basin; a plateau keeps its first point)."""
+    n = len(dv)
+    out = []
+    for i in range(n):
+        if not np.isfinite(dv[i]):
+            continue
+        lo, hi = max(0, i - half_width), min(n, i + half_width + 1)
+        window = dv[lo:hi]
+        if dv[i] <= window.min() and int(np.argmin(window)) + lo == i:
+            out.append(i)
+    return out
+
+
+def deduplicate(found, separation):
+    """The best of every group of windows departing within `separation` days of each other, by date."""
+    kept = []
+    for w in sorted(found, key=lambda w: w[0]):
+        if all(abs(w[1] - k[1]) >= separation for k in kept):
+            kept.append(w)
+    return sorted(kept, key=lambda w: w[1])
+
+
 def windows(eph, origin, target, start_jd, end_jd, margin=1000.0, separation=120.0):
-    """Windows: the local minima of the departure curve within `margin` (m/s) of its lowest value, at least
-    `separation` days apart, each refined. Returns [(Δv m/s, departure JD, flight days)], by date, and the
+    """Windows: the minima of the best-flight curve (one per basin, `separation` days wide) within `margin`
+    (m/s) of its lowest value, each refined within the span, then deduplicated so no two depart within
+    `separation` days (the better kept). Returns [(Δv m/s, departure JD, flight days)], by date, and the
     curve."""
     t1, dv, tof = curve(eph, origin, target, start_jd, end_jd)
     best = float(np.min(dv))
-    picks = []
-    order = np.argsort(dv)
-    for i in order:
-        if dv[i] > best + margin:
-            break
-        if all(abs(t1[i] - t1[j]) >= separation for j in picks):
-            picks.append(int(i))
-    out = [refine(eph, origin, target, t1[i], tof[i], start_jd) for i in picks]
-    return sorted(out, key=lambda w: w[1]), (t1, dv, tof)
+    half = max(1, int(round(separation / 2 / STEP)))
+    picks = [i for i in local_minima(dv, half) if dv[i] <= best + margin]
+    refined = [refine(eph, origin, target, t1[i], tof[i], start_jd, end_jd) for i in picks]
+    refined = [w for w in refined if np.isfinite(w[0])]
+    out = deduplicate(refined, separation)
+    return out, (t1, dv, tof)
 
 
 def summary(eph, origin, target, start_jd, end_jd, within=500.0):
-    """The best window in the span, the windows within `within` m/s of it, and how often they come."""
+    """The best window in the span, the windows within `within` m/s of it, and the gaps between them
+    (years): mean and longest, which sets the stock a shipping schedule must buffer."""
     found, curve_ = windows(eph, origin, target, start_jd, end_jd, margin=max(within, 1000.0))
     best = min(found, key=lambda w: w[0])
     good = [w for w in found if w[0] <= best[0] + within]
     gaps = np.diff([w[1] for w in good]) / 365.25 if len(good) > 1 else np.array([])
-    return {"best": best, "good": good, "all": found, "gaps_yr": gaps, "curve": curve_}
+    return {"best": best, "good": good, "all": found, "gaps_yr": gaps, "curve": curve_,
+            "mean_gap": float(np.mean(gaps)) if len(gaps) else None,
+            "max_gap": float(np.max(gaps)) if len(gaps) else None}
 
 
 def date_str(jd):

@@ -207,6 +207,43 @@ class TestWindows(unittest.TestCase):
         for d1, d2 in ((3, 0), (-3, 0), (0, 5), (0, -5)):
             self.assertGreaterEqual(float(windows.delta_v(self.e, "Ryugu", "Eros", t1 + d1, tof + d2)), dv - 1e-6)
 
+    def test_refined_departures_stay_in_the_span(self):
+        # The reviewer's case: a two-day span on a descending stretch of the curve.
+        from logistics_model import windows
+        from logistics_model.ephemeris import jd_of
+        lo, hi = jd_of(2031, 5, 1), jd_of(2031, 5, 2)
+        s = windows.summary(self.e, "Ryugu", "Eros", lo, hi, within=1000.0)
+        for w in s["all"]:
+            self.assertGreaterEqual(w[1], lo - 1e-6)
+            self.assertLessEqual(w[1], hi + 1e-6)
+
+    def test_one_window_per_basin(self):
+        from logistics_model import windows
+        # A broad single minimum: one basin, one pick.
+        x = np.linspace(-1, 1, 400)
+        self.assertEqual(windows.local_minima(1000 * x ** 2, 12), [200])
+        # Two refined results a day apart collapse to the better one; others stay, separated.
+        found = [(3660.5, 1000.0, 300.0), (3660.4, 1000.6, 301.0), (3189.0, 5000.0, 390.0), (3189.1, 5000.3, 390.0),
+                 (4000.0, 1300.0, 200.0)]
+        kept = windows.deduplicate(found, 120.0)
+        self.assertEqual([round(w[1], 1) for w in kept], [1000.6, 1300.0, 5000.0])
+
+    def test_final_windows_obey_their_separation(self):
+        from logistics_model import windows
+        from logistics_model.ephemeris import jd_of
+        for origin in ("2015 DX198", "Ryugu"):
+            found, _ = windows.windows(self.e, origin, "Eros", jd_of(2028), jd_of(2072))
+            dates = [w[1] for w in found]
+            self.assertTrue(np.all(np.diff(dates) >= 120.0 - 1e-6), origin)
+
+    def test_gaps_are_reported(self):
+        from logistics_model import windows
+        from logistics_model.ephemeris import jd_of
+        s = windows.summary(self.e, "Ryugu", "Eros", jd_of(2028), jd_of(2072), within=1000.0)
+        self.assertGreaterEqual(s["max_gap"], s["mean_gap"])
+        # No usable Ryugu → Eros window between 2036 and 2056.
+        self.assertGreater(s["max_gap"], 15.0)
+
     def test_rendezvous_with_itself_costs_nothing(self):
         from logistics_model import windows
         jd = float(self.e.jd[300])
