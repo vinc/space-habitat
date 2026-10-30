@@ -707,6 +707,56 @@ high = 295
 source = "§13, passive loops colder than the habitat"
 status = "estimate"
 
+# Heat rejection only (thermal_model/, plan §6); the system model doesn't use these.
+
+[heat.solar_absorptivity]
+value = 0.15
+unit = "fraction"
+low = 0.1
+high = 0.3
+source = "white radiator paint (AZ-93-like ~0.15 new, degrading towards ~0.3; unsourced)"
+status = "estimate"
+
+[heat.par_j_per_umol]
+value = 0.22
+unit = "J per umol of light"
+low = 0.2
+high = 0.25
+source = "energy of visible light per photon, ~0.22 J/umol for a sunlight-like spectrum (unsourced)"
+status = "estimate"
+
+[heat.coolant_dt_k]
+value = 10
+unit = "K"
+low = 5
+high = 15
+source = "temperature rise of the coolant across the heat source (design choice to optimise)"
+status = "estimate"
+
+[heat.coolant_loops_per_torus]
+value = 12
+unit = "loops"
+low = 6
+high = 24
+source = "independent radiator loops per torus or farm ring, one per radiator spoke (guess)"
+status = "guess"
+
+[heat.pump_efficiency]
+value = 0.7
+unit = "fraction"
+low = 0.5
+high = 0.8
+source = "large water pumps (unsourced)"
+status = "estimate"
+
+[heat.valley_cooling_u]
+value = 7
+unit = "W/m2K"
+low = 3
+high = 15
+source = "cold ceiling's radiation (~5 W/m2K) and air handling, valley to coolant (unsourced)"
+status = "estimate"
+
 # --- Processing and replication ---------------------------------------------
 
 [processing.crush_mj_kg]

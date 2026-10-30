@@ -93,6 +93,12 @@
 | `kcal_greens` | 2.900 | kcal/g dry | 2.500–3.300 | estimate | §13, implied by ~40 mol per person |
 | `radiator_emissivity` | 0.9000 | fraction | 0.7900–0.9300 | sourced | AZ-93 white paint 0.91 +/- 0.02; silvered Teflon OSR ~0.79 (thermal control coating patent US 10,100,203) |
 | `radiator_temp_k` | 285.0 | K | 275.0–295.0 | estimate | §13, passive loops colder than the habitat |
+| `solar_absorptivity` | 0.1500 | fraction | 0.1000–0.3000 | estimate | white radiator paint (AZ-93-like ~0.15 new, degrading towards ~0.3; unsourced) |
+| `par_j_per_umol` | 0.2200 | J per umol of light | 0.2000–0.2500 | estimate | energy of visible light per photon, ~0.22 J/umol for a sunlight-like spectrum (unsourced) |
+| `coolant_dt_k` | 10.00 | K | 5.000–15.00 | estimate | temperature rise of the coolant across the heat source (design choice to optimise) |
+| `coolant_loops_per_torus` | 12.00 | loops | 6.000–24.00 | guess | independent radiator loops per torus or farm ring, one per radiator spoke (guess) |
+| `pump_efficiency` | 0.7000 | fraction | 0.5000–0.8000 | estimate | large water pumps (unsourced) |
+| `valley_cooling_u` | 7.000 | W/m2K | 3.000–15.00 | estimate | cold ceiling's radiation (~5 W/m2K) and air handling, valley to coolant (unsourced) |
 | `crush_mj_kg` | 0.08500 | MJ per kg of S-type rock | 0.05000–0.1500 | estimate | §5e, §10: ~1e15 J for ~12 Mt, ~3e15 J for ~32 Mt |
 | `bake_mj_kg` | 1.500 | MJ per kg of C-type | 1.000–2.000 | estimate | §19, C-type processing ~1-2 MJ/kg (unsourced) |
 | `organics_shipped_t_m2` | 0.1000 | t per m2 of floor | 0.05000–0.1500 | guess | §15, carbon/organics ~15-50 kt per 900 m torus |

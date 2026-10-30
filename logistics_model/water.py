@@ -2,7 +2,8 @@
 
 The system model sizes the parts (`habitat_model.mass`); this module lays out the budget and compares three
 ways to supply it: ship water from the C-type, or ship only its hydrogen (as H2 or as methane) and take the
-oxygen from the S-type's silicates, a by-product of molten-oxide electrolysis (notes §10, proposed).
+oxygen from the S-type's silicates by molten-oxide electrolysis (notes §10, proposed), charged in full
+since the baseline host runs none.
 """
 
 from habitat_model.mass import M_H2O

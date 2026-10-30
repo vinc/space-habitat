@@ -72,20 +72,31 @@ def main_scene(geo, n, side_gaps=False):
                  envelope_half=geo["envelope_radius"], side_gaps=side_gaps)
 
 
-def _farm_band(geo):
+FARM_LAYOUTS = ("outboard", "inboard")
+
+
+def _farm_band(geo, layout="outboard"):
+    """The farm radiators' annulus: outboard, from the farm rings out to farm_radiator_outer (heat flows
+    outward, against spin gravity: pumped loops), or inboard, from the hub to the rings (heat flows inward,
+    with spin gravity: passive thermosiphons)."""
+    if layout == "inboard":
+        return geo["hub_radius"] + 1.0, geo["farm_radius"]
+    if layout != "outboard":
+        raise ValueError(f"farm radiator layout must be one of {FARM_LAYOUTS}, not {layout!r}")
     ring_outer = geo["farm_radius"] + geo["farm_height"]
     return ring_outer, max(geo["farm_radiator_outer"], ring_outer + 1.0)
 
 
-def farm_scene(geo, n):
+def farm_scene(geo, n, layout="outboard"):
     fp = geo["farm_pitch"]
-    band = _farm_band(geo)
+    band = _farm_band(geo, layout)
+    ring_outer = geo["farm_radius"] + geo["farm_height"]
     return Scene(**_section(((k + 0.5) * fp for k in range(n)), band, 1), length=n * fp, hub=geo["hub_radius"],
                  ring_radius=geo["farm_radius"] + geo["farm_height"] / 2, ring_half=geo["farm_width"] / 2,
-                 open_radius=band[1] + 1.0)
+                 open_radius=max(band[1], ring_outer) + 1.0)
 
 
-def assembled_scene(geo, n, open_margin=1.0):
+def assembled_scene(geo, n, open_margin=1.0, layout="outboard"):
     """The whole stack: the main section's drum, the gap, then the open farm section, traced together.
 
     The tori bound the main section physically: at the drum's farm end, the last torus's side (from
@@ -94,7 +105,7 @@ def assembled_scene(geo, n, open_margin=1.0):
     ends the rays: beyond every surface, a ray moving outward never comes back, so its margin
     (open_margin) doesn't change the result.
     """
-    main, farm = main_scene(geo, n), farm_scene(geo, n)
+    main, farm = main_scene(geo, n), farm_scene(geo, n, layout)
     start = geo["main_length"] + geo["farm_section_gap"]
     outer = geo["envelope_outer"]
     open_radius = max(farm.bands[0][1], outer) + open_margin
@@ -340,7 +351,7 @@ def check_farm(p, d, geo, heat, n_rays=20000):
 GRID = (0.0, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0)
 
 
-def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_feasible=False):
+def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_feasible=False, layout="outboard"):
     """The whole stack, traced as one scene: can both sections reject their heat at once?
 
     Each section's panels run at the same temperature, so what one absorbs from the other it sends back
@@ -349,7 +360,7 @@ def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_f
     shade the main drum's farm end, more main panels shade the farm section's near end); the result
     is the grid point with the best worse-of-the-two margin.
     """
-    scene = assembled_scene(geo, d.n_tori)
+    scene = assembled_scene(geo, d.n_tori, layout=layout)
     flux, eps = radiator_flux(p.radiator_temp_k), p.radiator_emissivity
     loads = (heat["main_stack"], heat["farm_stack"])
     annuli = (scene.annulus(0), scene.annulus(1))
@@ -378,7 +389,7 @@ def _assembled(points, loads):
             "feasible": best["margin"] >= 1}
 
 
-def assembled_limit(p, design, n_rays=3000, max_tori=40):
+def assembled_limit(p, design, n_rays=3000, max_tori=40, layout="outboard"):
     """Most tori (with their farm rings) the whole stack can cool, both sections traced together."""
     from dataclasses import replace
 
@@ -387,7 +398,8 @@ def assembled_limit(p, design, n_rays=3000, max_tori=40):
     def ok(n):
         d = replace(design, n_tori=n)
         r = evaluate(p, d)
-        return check_assembled(p, d, r["geometry"], r["heat"], n_rays=n_rays, stop_when_feasible=True)["feasible"]
+        return check_assembled(p, d, r["geometry"], r["heat"], n_rays=n_rays, stop_when_feasible=True,
+                               layout=layout)["feasible"]
 
     if not ok(1):
         return 0
