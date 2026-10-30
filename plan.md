@@ -145,7 +145,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - done: a Lambert solver (`logistics_model/transfers.py`) on JPL's current elements reproduces the notes' best-phase Δv within ~0.1 km/s; dated windows (`windows.py`) on JPL Horizons' ephemerides for 2027–2077 (`ephemeris.py`, stored in `logistics_model/data/`) confirm the notes' dated values within ~0.1 km/s (Ryugu → Eros 4.66 km/s in 2031, best 4.52 in 2061), with usable windows on average every ~2–7 years but clustered, gaps up to ~20 years (Ryugu → Eros, 2036–2056) setting the stock to hold; propulsion options by energy and propellant (`propulsion.py`)
   - found: the electricity per kg delivered is lowest at vₑ ≈ Δv / 1.59 (~3 km/s): mass-driver freighters using the C-type's baked residue need ~3.7× less than electric thrusters at 30 km/s (proposed)
   - found: a catalogue search (`catalogue.py`, 365 dark or C-complex near-Earth asteroids) finds better partners than Ryugu: 1999 XX262 for Eros (~3.6 km/s phase-free, ~1.5 km) and 2001 WT1 for Itokawa and Torifune (~3.9 / ~2.8 km/s); 1999 XX262 is already a B/Ch type in published spectra (SsODNet); next its 3 µm band (water, ammonium), and a spectrum of 2001 WT1
-  - open: low-thrust and multi-revolution trajectories, gravity assists, the freighters' mass and power, ranking S-type hosts by orbit and metal class
+  - open: low-thrust and multi-revolution trajectories, gravity assists, a dated shipping schedule (stock against off-window departures and their Δv), the freighters' mass and power, ranking S-type hosts by orbit and metal class
 
 **Changes the design if:** shipping dominates the generation time enough to favour a different C-type partner, local water, or a different propulsion.
 
