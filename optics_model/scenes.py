@@ -38,7 +38,8 @@ def valley_pitch(p):
 
 
 def farm_pipes_per_bed(p):
-    return max(1, round(p.bed_width_m * farm_peak_w_m2(p) / p.pipe_w_per_m))
+    """Pipes over each bed: enough for the bed's peak power at no more than the pipes' loading."""
+    return max(1, math.ceil(p.bed_width_m * farm_peak_w_m2(p) / p.pipe_w_per_m - 1e-9))
 
 
 def light_box(p, pitch=None, gap=None, n=200_000, seed=2, bins=24, **over):
@@ -111,11 +112,37 @@ def farm_tier(p, pipe_gap=None, pipes=None, n=200_000, seed=3, bins=24, **over):
             "lost": out["lost"] / total}
 
 
-def delivery(p, n=200_000, pipe_result=None, box=None, tier=None):
-    """The whole chain for the valley and the farm: lamp into pipe, pipe out, light box or tier."""
+def delivery(p, n=200_000, pipe_result=None, box=None, tier=None, pitch=None, pipes=None):
+    """The whole chain for the valley and the farm: lamp into pipe, pipe out, light box or tier. The layout
+    is sized from p's deliveries unless pitch (valley) and pipes (per bed) are given."""
     pr = pipe.efficiency(p) if pipe_result is None else pipe_result
-    box = light_box(p, n=n) if box is None else box
-    tier = farm_tier(p, n=n) if tier is None else tier
+    box = light_box(p, pitch=pitch, n=n) if box is None else box
+    tier = farm_tier(p, pipes=pipes, n=n) if tier is None else tier
     chain = p.pipe_coupling * pr["efficiency"]
     return {"pipe": pr, "box": box, "tier": tier, "lamp_to_pipe_out": chain,
             "valley": chain * box["delivered"], "farm": chain * tier["delivered"]}
+
+
+def with_delivery(p, d):
+    """p with its deliveries replaced by a traced chain's."""
+    return type(p)(**{**vars(p), "ceiling_delivery": d["valley"], "farm_delivery": d["farm"]})
+
+
+def converged(p, n=200_000, pipe_result=None, tol=0.002, max_iter=12):
+    """The layout and the delivery that agree: the pipes spaced for the power the traced delivery needs at
+    their loading, traced again, until the delivery settles. A denser layout takes back more of the light.
+    Returns the chain, with `params`: p carrying the converged deliveries, which size the layout."""
+    pr = pipe.efficiency(p) if pipe_result is None else pipe_result
+    q = p
+    d = delivery(q, n, pr)
+    for _ in range(max_iter):
+        q = with_delivery(p, d)
+        nxt = delivery(q, n, pr)
+        done = abs(nxt["valley"] - d["valley"]) < tol and nxt["tier"]["pipes"] == d["tier"]["pipes"]
+        d = nxt
+        if done:
+            break
+    else:
+        raise RuntimeError("the layout and the delivery did not settle")
+    # The layout was sized from q's deliveries; d is what it delivers. Size it once more from d's own.
+    return {**d, "params": with_delivery(p, d), "sized_from": q}

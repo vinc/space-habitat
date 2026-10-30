@@ -14,7 +14,22 @@ class TestPipe(unittest.TestCase):
     def test_light_is_accounted_for(self):
         r = pipe.design(40, 0.25, 27.6, 0.01, 0.85, 0.5, 0.3)
         self.assertAlmostEqual(r["efficiency"] + r["film"] + r["extractor"] + r["ends"], 1.0, places=9)
-        self.assertGreater(r["uniformity"], 0.98)
+
+    def test_the_graded_glow_holds_on_independent_rays(self):
+        # Graded on the quadrature, checked on a large sample it never saw.
+        r = pipe.design(40, 0.25, 27.6, 0.01, 0.85, 0.5, 0.3)
+        self.assertGreater(r["design_uniformity"], 0.98)
+        self.assertGreater(r["uniformity"], 0.97)
+        self.assertLess(r["peak"], 1.03)
+        check = pipe.evaluate(r["coverage"], 40, 0.25, 27.6, 0.01, 0.85, 0.5, pipe.classes(27.6, 50_000, seed=3))
+        self.assertAlmostEqual(check["efficiency"], r["efficiency"], delta=0.003)
+
+    def test_quadrature_matches_the_distributions(self):
+        tan_t, b = pipe.quadrature(27.6, 32, 64)
+        # Mean impact parameter of (4/π) √(1 − b²) on [0, 1]: 4 / (3π).
+        self.assertAlmostEqual(b.mean(), 4 / (3 * math.pi), places=3)
+        cos_t = 1 / np.sqrt(1 + tan_t ** 2)
+        self.assertAlmostEqual(cos_t.mean(), (1 + math.cos(math.radians(27.6))) / 2, places=9)
 
     def test_a_lossless_pipe_loses_only_at_its_ends(self):
         r = pipe.design(40, 0.25, 27.6, 0.0, 1.0, 0.0, 0.3)
@@ -86,6 +101,26 @@ class TestDelivery(unittest.TestCase):
 
     def test_pitch_follows_the_loading(self):
         self.assertAlmostEqual(scenes.valley_pitch(P) * scenes.valley_peak_w_m2(P), P.pipe_w_per_m)
+
+    def test_farm_pipes_cover_the_bed_s_power(self):
+        for delivery in (0.5, 0.6, 0.85, 0.9):
+            q = scenes.with_delivery(P, {"valley": 0.75, "farm": delivery})
+            pipes = scenes.farm_pipes_per_bed(q)
+            need = P.bed_width_m * scenes.farm_peak_w_m2(q)
+            self.assertGreaterEqual(pipes * P.pipe_w_per_m, need)
+            self.assertLess((pipes - 1) * P.pipe_w_per_m, need)
+
+    def test_converged_layout_carries_its_own_power(self):
+        pr = {"efficiency": 0.72}
+        d = scenes.converged(P, n=50_000, pipe_result=pr)
+        q = d["params"]
+        installed_valley = P.pipe_w_per_m / d["box"]["pitch"]
+        self.assertAlmostEqual(installed_valley / scenes.valley_peak_w_m2(q), 1.0, delta=0.01)
+        self.assertGreaterEqual(d["tier"]["pipes"] * P.pipe_w_per_m, P.bed_width_m * scenes.farm_peak_w_m2(q))
+        # Denser than the layout sized for the assumed deliveries, and so less delivered.
+        first = scenes.delivery(P, n=50_000, pipe_result=pr)
+        self.assertLess(d["box"]["pitch"], first["box"]["pitch"])
+        self.assertLess(d["valley"], first["valley"])
 
 
 if __name__ == "__main__":

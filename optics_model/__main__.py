@@ -27,15 +27,18 @@ def pct(x, sig=2):
     return f"{num(100 * x, sig)}%"
 
 
-def chain_section(p, d):
+def chain_section(p, d, first):
     pr, box, tier = d["pipe"], d["box"], d["tier"]
     rows = [
+        ["Layout: valley pipes apart / farm pipes over each bed", f"{num(box['pitch'], 2)} m", f"{tier['pipes']}"],
         ["Lamp into the pipe, inside its acceptance cone (`pipe_coupling`)", pct(p.pipe_coupling),
          pct(p.pipe_coupling)],
         [f"Out of the pipe along its length ({p.pipe_length_m:g} m, fed from both ends)", pct(pr["efficiency"]),
          pct(pr["efficiency"])],
         ["Through the light box to the floor / onto the crops", pct(box["delivered"]), pct(tier["delivered"])],
         ["**Lamp to floor / crops**", f"**{pct(d['valley'])}**", f"**{pct(d['farm'])}**"],
+        [f"… with the layout sized for the assumed deliveries ({num(first['box']['pitch'], 2)} m, "
+         f"{first['tier']['pipes']} a bed)", pct(first["valley"]), pct(first["farm"])],
         ["Assumed until now (`ceiling_delivery`, `farm_delivery`)", pct(p.ceiling_delivery), pct(p.farm_delivery)],
     ]
     return [
@@ -43,10 +46,14 @@ def chain_section(p, d):
         "The share of the sulfur lamps' light that reaches the valley's floor and the farm's crops, step by "
         "step. \"Delivered\" counts what the floor or the canopy absorbs, divided by its absorptance: the light "
         "that, falling once, would be absorbed the same, which is how the sizing's daily light integrals are "
-        "meant.",
+        "meant. The pipes are laid out for the power the traced delivery itself needs at "
+        f"{p.pipe_w_per_m:g} W a metre of pipe (valley: spaced for the sky's peak; farm: enough pipes for a "
+        "bed's peak, rounded up), traced again until the two agree: more power means pipes closer together, "
+        "which take back more of the light (`scenes.converged`).",
         table(["Step", "Valley", "Farm"], rows),
         f"The light box and the tiers do as well as the notes expected, or better: ~{pct(box['delivered'])} of "
-        f"the pipes' light reaches the valley's floor (the notes: ~75–85%), ~{pct(tier['delivered'])} the crops. "
+        f"the pipes' light reaches the valley's floor (the notes: ~75–85%), ~{pct(tier['delivered'])} the crops "
+        "(more with the pipes farther apart, below). "
         "But the notes' figures counted only the ceiling: getting the lamps' light into the pipes and out "
         f"along them costs another ~{pct(1 - d['lamp_to_pipe_out'])}, which the sizing left out. Most of the "
         "chain's inputs are guesses (the coupling, the film's loss, the extractor); they need measuring on "
@@ -62,7 +69,8 @@ def pipe_section(p):
             r = pipe.design(length, p.pipe_diameter_m, p.pipe_cone_deg, loss, p.extractor_efficiency,
                             p.pipe_end_return, p.extractor_max_frac)
             rows.append([f"{length} m", pct(loss, 2), f"**{pct(r['efficiency'])}**", pct(r["film"]),
-                         pct(r["extractor"]), pct(r["ends"]), f"±{num(100 * (1 - r['uniformity']), 1)}%"])
+                         pct(r["extractor"]), pct(r["ends"]),
+                         f"{num(100 * (r['uniformity'] - 1), 2)}% / +{num(100 * (r['peak'] - 1), 2)}%"])
     return [
         "## The light pipe",
         f"A {p.pipe_diameter_m * 100:g} cm prism light pipe fed by a lamp at each end (`optics_model/pipe.py`). "
@@ -71,17 +79,19 @@ def pipe_section(p):
         f"strip inside, graded along the pipe for an even glow (at most {p.extractor_max_frac:.0%} of "
         f"reflections), scatters the light out; {p.extractor_efficiency:.0%} of what it scatters leaves the "
         f"pipe. Light reaching the far end enters the other lamp's reflector, which returns "
-        f"{p.pipe_end_return:.0%}.",
+        f"{p.pipe_end_return:.0%}. The extractor is graded on a 16 × 16 quadrature of the classes; the figures "
+        "below are that profile checked on 20,000 classes sampled independently.",
         table(["Pipe length", "Film loss per reflection", "Light out", "Absorbed by the film", "By the extractor",
-               "At the far ends", "Glow along the pipe"], rows),
+               "At the far ends", "Glow along the pipe: dimmest / brightest, from the mean"], rows),
         "Long pipes and lossy film compound: each ray reflects ~1–3 times a metre. Shorter pipes (more, smaller "
         "lamps) or better film recover some of it.",
     ]
 
 
-def box_section(p):
+def box_section(p, d):
     rows = []
-    base_pitch = scenes.valley_pitch(p)
+    q = d["params"]
+    base_pitch = d["box"]["pitch"]
     for pitch in (0.35, 0.5, base_pitch, 1.5):
         r = scenes.light_box(p, pitch=pitch, n=N_SWEEP)
         a = r["absorbed"]
@@ -89,7 +99,7 @@ def box_section(p):
                      pct(a["pipe"]), pct(a["top"]), pct(a["diffuser"]), f"{num(r['glow_ratio'], 3)}"])
     gaps = []
     for gap in (0.1, 0.25, 0.5, 0.75, 1.0):
-        r = scenes.light_box(p, gap=gap, n=N_SWEEP)
+        r = scenes.light_box(p, pitch=base_pitch, gap=gap, n=N_SWEEP)
         gaps.append([f"{gap:g} m", pct(r["delivered"]), f"{num(r['glow_ratio'], 3)}"])
     return [
         "## The light box",
@@ -100,36 +110,44 @@ def box_section(p):
         f"{p.diffuser_absorptance:.0%} absorbed, all diffusely), and the floor ({p.floor_albedo:.0%} "
         "reflected). Traced across the pipes (`optics_model/trace.py`): diffuse rays in three dimensions, "
         "projected on the cross-section, which is exact for pipes long against their spacing. At the sky's "
-        f"peak ({num(scenes.valley_peak_w_m2(p))} W/m² over a {p.valley_day_h:g} h day) and "
+        f"peak ({num(scenes.valley_peak_w_m2(q))} W/m² over a {p.valley_day_h:g} h day, at the traced delivery) and "
         f"{p.pipe_w_per_m:g} W a metre of pipe, the pipes sit {num(base_pitch, 2)} m apart.",
         table(["Pipe spacing", "To the floor", "Back into the pipes", "Into the top", "Into the diffuser",
                "Stripes on the diffuser (brightest / dimmest)"], rows),
         "The diffuser sends back ~a third of the light; the box returns it, so what matters is what absorbs on "
         "the way. The pipes themselves take the most: light falling back on them is partly lost inside, so "
-        "pipes packed side by side (as the notes had them) lose more than pipes ~1 m apart.",
+        "pipes packed side by side (as the notes had them) lose more than pipes ~1 m apart; the power the "
+        "traced delivery needs packs them closer than the assumed one did.",
         table(["Diffuser below the pipes", "To the floor", "Stripes (brightest / dimmest)"], gaps),
         "The stripes fade by ~0.5 m (one to two pipe widths, as the notes proposed); the ratios here are "
         "within the tracing's noise (~±3–5%) beyond it.",
     ]
 
 
-def farm_section(p):
+def farm_section(p, d):
     rows = []
+    q = d["params"]
+    pipes = d["tier"]["pipes"]
     for gap in (0.1, 0.3, 0.6, 1.0):
-        r = scenes.farm_tier(p, pipe_gap=gap, n=N_SWEEP)
+        r = scenes.farm_tier(p, pipe_gap=gap, pipes=pipes, n=N_SWEEP)
         a = r["absorbed"]
         rows.append([f"{gap:g} m", f"**{pct(r['delivered'])}**", pct(a["pipe"]), pct(a["ceiling"]), pct(a["aisle"]),
                      f"{num(r['uniformity'], 2)} / {num(r['peak'], 3)}"])
     aisles = []
     for ar in (0.2, 0.5, 0.9):
-        r = scenes.farm_tier(p, aisle_reflectance=ar, n=N_SWEEP)
+        r = scenes.farm_tier(p, pipes=pipes, aisle_reflectance=ar, n=N_SWEEP)
         aisles.append([pct(ar), pct(r["delivered"])])
-    pipes = scenes.farm_pipes_per_bed(p)
+    counts = []
+    for k in sorted({max(1, pipes - 3), pipes - 1, pipes}):
+        r = scenes.farm_tier(p, pipes=k, n=N_SWEEP)
+        counts.append([f"{k}" + (" (sized)" if k == pipes else ""), f"{num(p.bed_width_m / k, 2)} m",
+                       f"{num(k * p.pipe_w_per_m / p.bed_width_m)} W/m²", pct(r["delivered"]),
+                       pct(r["absorbed"]["pipe"])])
     return [
         "## A farm tier",
         f"One bed ({p.bed_width_m:g} m) and one aisle ({p.aisle_width_m:g} m), repeating around the ring: the "
         f"canopy as a block {p.canopy_height_m:g} m tall ({p.canopy_reflectance:.0%} reflected), {pipes} pipes "
-        f"over each bed ({num(p.bed_width_m / pipes, 2)} m apart, for {num(scenes.farm_peak_w_m2(p))} W/m² "
+        f"over each bed ({num(p.bed_width_m / pipes, 2)} m apart, for {num(scenes.farm_peak_w_m2(q))} W/m² "
         f"over a {p.farm_photoperiod_h:g} h photoperiod), the white underside of the tier above "
         f"{p.tier_clear_m:g} m over the floor (2.5 m floor to floor).",
         table(["Pipes above the canopy", "Onto the crops", "Back into the pipes", "Into the ceiling",
@@ -139,11 +157,18 @@ def farm_section(p):
         "mean, the dimmest at the bed's edges, where the aisles take some. The pipes can hang at a fixed "
         "height and the crops grow towards them.",
         table(["Aisle floor reflectance", "Onto the crops"], aisles),
+        f"The bed needs {num(scenes.farm_peak_w_m2(q))} W/m² at the traced delivery, so {pipes} pipes of "
+        f"{p.pipe_diameter_m * 100:g} cm crowd a {p.bed_width_m:g} m bed and take "
+        "back more of the light; fewer pipes, each loaded more, would leave more for the crops (each pipe "
+        f"at {p.pipe_w_per_m:g} W/m and above, as the lamps allow):",
+        table(["Pipes per bed", "Apart", "Lamp power at 300 W/m, per m² of bed", "Onto the crops",
+               "Back into the pipes"], counts),
     ]
 
 
 def sensitivity_section(p, base):
     rows = []
+    pitch, pipes = base["box"]["pitch"], base["tier"]["pipes"]
     pipe_cache = {}
     for name in SWEPT:
         a = load()[name]
@@ -154,8 +179,9 @@ def sensitivity_section(p, base):
                 pr = pipe_cache.setdefault((name, v), pipe.efficiency(q))
             else:
                 pr = base["pipe"]
-            box = scenes.light_box(q, n=N_SWEEP) if name not in PIPE_INPUTS | {"pipe_coupling"} else base["box"]
-            tier = scenes.farm_tier(q, n=N_SWEEP) if name not in PIPE_INPUTS | {"pipe_coupling"} else base["tier"]
+            optical = name not in PIPE_INPUTS | {"pipe_coupling"}
+            box = scenes.light_box(q, pitch=pitch, n=N_SWEEP) if optical else base["box"]
+            tier = scenes.farm_tier(q, pipes=pipes, n=N_SWEEP) if optical else base["tier"]
             d = scenes.delivery(q, pipe_result=pr, box=box, tier=tier)
             cells.append(d)
         rows.append([f"`{name}`", f"{num(a.low, 3)} – {num(a.high, 3)}", a.status,
@@ -163,7 +189,7 @@ def sensitivity_section(p, base):
                      f"{pct(cells[0]['farm'])} – {pct(cells[1]['farm'])}"])
     return [
         "## What moves it",
-        "Each input at its low and high, the rest as configured (rays: "
+        "Each input at its low and high, the rest as configured and the layout held as converged (rays: "
         f"{N_SWEEP:,} a trace, so ±~0.5 point of noise).",
         table(["Input", "Range", "Status", "Valley, lamp to floor", "Farm, lamp to crops"], rows),
     ]
@@ -171,7 +197,7 @@ def sensitivity_section(p, base):
 
 def impact_section(p, d):
     rows = []
-    traced = params(load(), **{**vars(p), "ceiling_delivery": d["valley"], "farm_delivery": d["farm"]})
+    traced = d["params"]
     for radius, name in ((900, "900 m"), (1600, "1.6 km")):
         des = Design(radius_m=radius, n_tori=6, tiers_lit=3, host_class="LL", site="Eros", c_partner="Ryugu")
         before, after = evaluate(p, des), evaluate(traced, des)
@@ -202,23 +228,24 @@ def impact_section(p, d):
         "with the lamps does. The configured deliveries are left as they are until the chain's guesses are "
         "measured.",
         table(["Torus", "", "Assumed", "Traced", "Change"], rows),
-        "The radiators still reach 1.5× with every panel in place, but need about twice the panel area (on "
-        "the 1.5× search's coverage grid): a panel's output falls as coverage rises and the panels shade "
-        "each other, so ~40% more heat takes ~2× the panels.",
+        "The radiators still reach 1.5× with every panel in place, but need about twice the panel area or "
+        "more (on the 1.5× search's coverage grid): a panel's output falls as coverage rises and the panels "
+        "shade each other, so the extra heat costs more than its share of panels.",
     ]
 
 
 def report(p):
-    d = scenes.delivery(p, n=N)
+    first = scenes.delivery(p, n=N)
+    d = scenes.converged(p, n=N, pipe_result=first["pipe"])
     parts = [
         "# Light pipes, the light box and the farm's tiers",
         "Plan §7 (`optics_model/`): how much of the sulfur lamps' light the prism light pipes carry, the "
         "valley's magnesium-oxide light box and diffuser pass to the floor, and a farm tier's pipes put on the "
         "crops, and how evenly. Most inputs are estimates or guesses (`reports/assumptions.md`).",
-        *chain_section(p, d),
+        *chain_section(p, d, first),
         *pipe_section(p),
-        *box_section(p),
-        *farm_section(p),
+        *box_section(p, d),
+        *farm_section(p, d),
         *sensitivity_section(p, d),
         *impact_section(p, d),
         "Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley "
