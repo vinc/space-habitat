@@ -1019,6 +1019,184 @@ high = 40
 source = "CO2 -> C + O2 needs ~12 MJ/kg of O2; Bosch or Sabatier with electrolysis at ~50% (unsourced)"
 status = "estimate"
 
+# --- Light pipes, light box and farm optics (plan §7) ------------------------
+
+[optics.pipe_coupling]
+value = 0.85
+unit = "share of the lamp's light entering the pipe inside its acceptance cone"
+low = 0.75
+high = 0.92
+source = "sulfur bulb in a reflector aimed into the pipe (guess)"
+status = "guess"
+
+[optics.pipe_diameter_m]
+value = 0.25
+unit = "m"
+source = "§13, ~25 cm prism light pipes"
+status = "design"
+
+[optics.pipe_length_m]
+value = 40
+unit = "m, fed from both ends"
+source = "§13, a pair of lamps per ~40 m pipe"
+status = "design"
+
+[optics.pipe_w_per_m]
+value = 300
+unit = "W of lamp electricity per m of pipe"
+source = "§13, a pair of ~6 kW lamps per 40 m pipe"
+status = "design"
+
+[optics.pipe_cone_deg]
+value = 27.6
+unit = "degrees, half-angle guided by the prism film"
+source = "acrylic prism film (n ~1.49): total internal reflection within ~27.6° of the axis (Whitehead et al. 1982, recalled)"
+status = "estimate"
+
+[optics.film_loss_per_reflection]
+value = 0.01
+unit = "share absorbed per reflection"
+low = 0.005
+high = 0.02
+source = "prism film absorption and imperfections (unsourced)"
+status = "estimate"
+
+[optics.extractor_efficiency]
+value = 0.85
+unit = "share of the light scattered by the extractor that leaves the pipe"
+low = 0.75
+high = 0.95
+source = "white scattering strip inside the pipe (guess)"
+status = "guess"
+
+[optics.extractor_max_frac]
+value = 0.3
+unit = "largest share of reflections landing on the extractor"
+source = "extractor up to about a third of the circumference (design)"
+status = "design"
+
+[optics.pipe_end_return]
+value = 0.5
+unit = "share of the light reaching a pipe's far end that the other lamp's reflector sends back"
+low = 0.2
+high = 0.8
+source = "guess"
+status = "guess"
+
+[optics.pipe_emit_arc_deg]
+value = 180
+unit = "degrees of the pipe's circumference that glow, centred downward"
+source = "extractor on the top, light leaving through the bottom (design)"
+status = "design"
+
+[optics.pipe_albedo]
+value = 0.8
+unit = "share of the light falling on a pipe from outside that it sends back out"
+low = 0.6
+high = 0.9
+source = "prism film reflecting much of it, the rest re-guided (guess)"
+status = "guess"
+
+[optics.mgo_reflectance]
+value = 0.95
+unit = "fraction"
+low = 0.9
+high = 0.98
+source = "§13, magnesium oxide ~95-98% fresh; less with dust and age"
+status = "estimate"
+
+[optics.diffuser_transmittance]
+value = 0.6
+unit = "fraction, diffuse"
+low = 0.45
+high = 0.75
+source = "opal or sandblasted patterned glass, strongly diffusing (unsourced)"
+status = "estimate"
+
+[optics.diffuser_absorptance]
+value = 0.05
+unit = "fraction (the rest is reflected, diffusely)"
+low = 0.02
+high = 0.1
+source = "low-iron glass with scattering (unsourced)"
+status = "estimate"
+
+[optics.diffuser_gap_m]
+value = 0.75
+unit = "m from the pipes' bottom to the diffuser"
+source = "§13, about one pipe-width (~0.5-1 m)"
+status = "design"
+
+[optics.valley_day_h]
+value = 12
+unit = "hours the sky is lit"
+source = "§13, a 12 h day"
+status = "design"
+
+[optics.floor_albedo]
+value = 0.1
+unit = "PAR reflectance of the valley's floor and plants"
+low = 0.05
+high = 0.2
+source = "vegetation reflects ~5-10% of PAR (unsourced)"
+status = "estimate"
+
+[optics.canopy_reflectance]
+value = 0.08
+unit = "PAR reflectance of a crop canopy"
+low = 0.05
+high = 0.12
+source = "unsourced"
+status = "estimate"
+
+[optics.aisle_reflectance]
+value = 0.5
+unit = "fraction, diffuse"
+low = 0.2
+high = 0.9
+source = "aisle floors, painted (guess)"
+status = "guess"
+
+[optics.canopy_height_m]
+value = 0.6
+unit = "m above the tier's floor"
+low = 0.3
+high = 1.0
+source = "dwarf wheat, soybean, potatoes (§13)"
+status = "estimate"
+
+[optics.farm_pipe_gap_m]
+value = 0.3
+unit = "m from the canopy's top to the pipes' bottom"
+source = "§13, pipes just above the canopy"
+status = "design"
+
+[optics.bed_width_m]
+value = 2.4
+unit = "m"
+source = "beds and aisles for 80% planted (§13)"
+status = "design"
+
+[optics.aisle_width_m]
+value = 0.6
+unit = "m"
+source = "walking aisles, 80% planted (§13)"
+status = "design"
+
+[optics.tier_clear_m]
+value = 2.2
+unit = "m from a tier's floor to the underside of the next"
+source = "§13, 2.5 m floor to floor less ~0.3 m of floor"
+status = "design"
+
+[optics.farm_photoperiod_h]
+value = 16
+unit = "hours a zone is lit, on average"
+low = 12
+high = 20
+source = "§13, day lengths by crop (estimate)"
+status = "estimate"
+
 # --- Stability --------------------------------------------------------------
 
 [stability.stability_margin]

@@ -131,4 +131,29 @@
 | `o2_min_kpa` | 17.00 | kPa | 16.00–19.00 | estimate | ~1,800 m altitude's O2 partial pressure (unsourced) |
 | `leak_frac_yr` | 0.001000 | share of the air lost per year | 0.0001000–0.01000 | guess | seals, docking, airlocks (guess) |
 | `o2_regen_mj_kg` | 25.00 | MJ per kg of O2 recovered from CO2 | 15.00–40.00 | estimate | CO2 -> C + O2 needs ~12 MJ/kg of O2; Bosch or Sabatier with electrolysis at ~50% (unsourced) |
+| `pipe_coupling` | 0.8500 | share of the lamp's light entering the pipe inside its acceptance cone | 0.7500–0.9200 | guess | sulfur bulb in a reflector aimed into the pipe (guess) |
+| `pipe_diameter_m` | 0.2500 | m | fixed | design | §13, ~25 cm prism light pipes |
+| `pipe_length_m` | 40.00 | m, fed from both ends | fixed | design | §13, a pair of lamps per ~40 m pipe |
+| `pipe_w_per_m` | 300.0 | W of lamp electricity per m of pipe | fixed | design | §13, a pair of ~6 kW lamps per 40 m pipe |
+| `pipe_cone_deg` | 27.60 | degrees, half-angle guided by the prism film | fixed | estimate | acrylic prism film (n ~1.49): total internal reflection within ~27.6° of the axis (Whitehead et al. 1982, recalled) |
+| `film_loss_per_reflection` | 0.01000 | share absorbed per reflection | 0.005000–0.02000 | estimate | prism film absorption and imperfections (unsourced) |
+| `extractor_efficiency` | 0.8500 | share of the light scattered by the extractor that leaves the pipe | 0.7500–0.9500 | guess | white scattering strip inside the pipe (guess) |
+| `extractor_max_frac` | 0.3000 | largest share of reflections landing on the extractor | fixed | design | extractor up to about a third of the circumference (design) |
+| `pipe_end_return` | 0.5000 | share of the light reaching a pipe's far end that the other lamp's reflector sends back | 0.2000–0.8000 | guess | guess |
+| `pipe_emit_arc_deg` | 180.0 | degrees of the pipe's circumference that glow, centred downward | fixed | design | extractor on the top, light leaving through the bottom (design) |
+| `pipe_albedo` | 0.8000 | share of the light falling on a pipe from outside that it sends back out | 0.6000–0.9000 | guess | prism film reflecting much of it, the rest re-guided (guess) |
+| `mgo_reflectance` | 0.9500 | fraction | 0.9000–0.9800 | estimate | §13, magnesium oxide ~95-98% fresh; less with dust and age |
+| `diffuser_transmittance` | 0.6000 | fraction, diffuse | 0.4500–0.7500 | estimate | opal or sandblasted patterned glass, strongly diffusing (unsourced) |
+| `diffuser_absorptance` | 0.05000 | fraction (the rest is reflected, diffusely) | 0.02000–0.1000 | estimate | low-iron glass with scattering (unsourced) |
+| `diffuser_gap_m` | 0.7500 | m from the pipes' bottom to the diffuser | fixed | design | §13, about one pipe-width (~0.5-1 m) |
+| `valley_day_h` | 12.00 | hours the sky is lit | fixed | design | §13, a 12 h day |
+| `floor_albedo` | 0.1000 | PAR reflectance of the valley's floor and plants | 0.05000–0.2000 | estimate | vegetation reflects ~5-10% of PAR (unsourced) |
+| `canopy_reflectance` | 0.08000 | PAR reflectance of a crop canopy | 0.05000–0.1200 | estimate | unsourced |
+| `aisle_reflectance` | 0.5000 | fraction, diffuse | 0.2000–0.9000 | guess | aisle floors, painted (guess) |
+| `canopy_height_m` | 0.6000 | m above the tier's floor | 0.3000–1.000 | estimate | dwarf wheat, soybean, potatoes (§13) |
+| `farm_pipe_gap_m` | 0.3000 | m from the canopy's top to the pipes' bottom | fixed | design | §13, pipes just above the canopy |
+| `bed_width_m` | 2.400 | m | fixed | design | beds and aisles for 80% planted (§13) |
+| `aisle_width_m` | 0.6000 | m | fixed | design | walking aisles, 80% planted (§13) |
+| `tier_clear_m` | 2.200 | m from a tier's floor to the underside of the next | fixed | design | §13, 2.5 m floor to floor less ~0.3 m of floor |
+| `farm_photoperiod_h` | 16.00 | hours a zone is lit, on average | 12.00–20.00 | estimate | §13, day lengths by crop (estimate) |
 | `stability_margin` | 0.2000 | required I_axis / I_transverse - 1 | fixed | design | §11, 20% margin |
