@@ -138,5 +138,108 @@ class TestFlows(unittest.TestCase):
         self.assertAlmostEqual(2 * 2 ** (g["years_to_c_limit"] / 10), g["c_type_supports"])
 
 
+class TestEphemeris(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from logistics_model.ephemeris import Ephemeris
+        cls.e = Ephemeris()
+
+    def test_interpolation_hits_the_table(self):
+        from logistics_model.ephemeris import KM
+        jd = self.e.jd[100]
+        r, v = self.e.state("Eros", np.array([jd]))
+        self.assertTrue(np.allclose(r[0], self.e.tables["Eros"][100, :3] * KM))
+        self.assertTrue(np.allclose(v[0], self.e.tables["Eros"][100, 3:] * KM))
+
+    def test_interpolation_between_samples_follows_kepler(self):
+        # Halfway between two samples, against a two-body propagation from the first: Eros meets no planet
+        # closely, so the two agree to well under a km/s of Δv precision (positions to ~100 km).
+        from logistics_model.ephemeris import DAY, KM
+        k = 400
+        jd0 = self.e.jd[k]
+        r0, v0 = self.e.tables["Eros"][k, :3] * KM, self.e.tables["Eros"][k, 3:] * KM
+        r_mid, v_mid = self.e.state("Eros", np.array([jd0 + 5.0]))
+        # Two-body step by fine RK4.
+        y, h = np.concatenate([r0, v0]), 5 * DAY / 2000
+        f = lambda y: np.concatenate([y[3:], -transfers.MU_SUN * y[:3] / np.linalg.norm(y[:3]) ** 3])
+        for _ in range(2000):
+            k1 = f(y); k2 = f(y + h / 2 * k1); k3 = f(y + h / 2 * k2); k4 = f(y + h * k3)
+            y = y + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+        self.assertLess(np.linalg.norm(r_mid[0] - y[:3]), 1e5)
+        self.assertLess(np.linalg.norm(v_mid[0] - y[3:]), 0.1)
+
+    def test_calendar_round_trip(self):
+        from logistics_model.ephemeris import calendar, jd_of
+        self.assertEqual(jd_of(2000, 1, 1), 2451544.5)
+        for jd in (2451544.5, 2462502.5, 2470000.5):
+            self.assertAlmostEqual(jd_of(*calendar(jd)), jd)
+
+    def test_fetched_elements_replace_the_recalled_ones(self):
+        from logistics_model.ephemeris import elements
+        fetched = elements()
+        # Within rounding of the values recalled before the network was open.
+        recalled = {"Ryugu": (1.1896, 0.1902, 5.884), "Eros": (1.4580, 0.2227, 10.828), "Itokawa": (1.3241, 0.2801, 1.621)}
+        for name, (a, e, i) in recalled.items():
+            self.assertAlmostEqual(fetched[name][0], a, delta=0.002)
+            self.assertAlmostEqual(fetched[name][1], e, delta=0.001)
+            self.assertAlmostEqual(fetched[name][2], i, delta=0.02)
+            self.assertEqual(transfers.ELEMENTS[name], fetched[name])
+
+
+class TestWindows(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from logistics_model.ephemeris import Ephemeris
+        cls.e = Ephemeris()
+
+    def test_dated_windows_above_the_phase_free_bound(self):
+        from logistics_model import windows
+        from logistics_model.ephemeris import jd_of
+        s = windows.summary(self.e, "Ryugu", "Eros", jd_of(2028), jd_of(2072))
+        bound = transfers.best_phase("Ryugu", "Eros")[0]
+        self.assertGreater(s["best"][0], bound - 50)
+        self.assertLess(s["best"][0], bound + 300)
+        # The notes' dated value, ~4.7 km/s in 2030–2060.
+        in_span = [w for w in s["all"] if jd_of(2030) <= w[1] < jd_of(2060)]
+        self.assertAlmostEqual(min(in_span)[0] / 1e3, 4.7, delta=0.1)
+        # The refined window is a local minimum.
+        dv, t1, tof = s["best"]
+        for d1, d2 in ((3, 0), (-3, 0), (0, 5), (0, -5)):
+            self.assertGreaterEqual(float(windows.delta_v(self.e, "Ryugu", "Eros", t1 + d1, tof + d2)), dv - 1e-6)
+
+    def test_rendezvous_with_itself_costs_nothing(self):
+        from logistics_model import windows
+        jd = float(self.e.jd[300])
+        # Ryugu to Ryugu over a quarter of its period: the transfer arc is Ryugu's own orbit.
+        self.assertLess(float(windows.delta_v(self.e, "Ryugu", "Ryugu", jd, 120.0)), 50.0)
+
+
+class TestCatalogue(unittest.TestCase):
+    def test_ranked_and_screened(self):
+        from logistics_model import catalogue
+        data = catalogue.load()
+        for host in catalogue.HOSTS:
+            rows = catalogue.ranked(data, host, 6)
+            self.assertEqual([r[2] for r in rows], sorted(r[2] for r in rows))
+            for key, _, best, _ in rows:
+                # The coarse screen sits above the refined value.
+                self.assertGreaterEqual(data["delta_v"][host][key]["coarse"], best - 1.0)
+        self.assertAlmostEqual(catalogue.mass_kg(0.896) / 1e9, 448, delta=5)     # Ryugu, ~4.5e11 kg
+
+    def test_stored_result_reproduces(self):
+        from logistics_model import catalogue
+        data = catalogue.load()
+        key, entry, best, _ = catalogue.ranked(data, "Eros", 1)[0]
+        saved = transfers.ELEMENTS.get(key)
+        transfers.ELEMENTS[key] = tuple(entry["elements"])
+        try:
+            self.assertAlmostEqual(transfers.best_phase(key, "Eros")[0], best, delta=1.0)
+        finally:
+            if saved is None:
+                del transfers.ELEMENTS[key]
+            else:
+                transfers.ELEMENTS[key] = saved
+
+
 if __name__ == "__main__":
     unittest.main()
