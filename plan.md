@@ -175,10 +175,13 @@ Check the design's load-bearing assumptions with models before going deeper. The
 **Why seventh:** the farm inputs set the population (light on the crops −17% / +25% on people per torus, wheat yield −7% / +25%) and the light delivery moves the array by under 10%; the closed atmosphere is a control question rather than a sizing one.
 
 - [ ] **Light-box and farm optics:** ray trace of the magnesium-oxide cavity, diffuser and light pipes. Check the ~75% (valley) and ~85% (farm) delivery, and the light uniformity at 2.5 m tier spacing
-- [ ] **Closed atmosphere and ecology:** compartment model (ODEs) of O₂, CO₂, N₂, water and soil carbon across farm, valley, soil, people and algae
-  - validate by replaying Biosphere 2 (O₂ from ~21% to ~14% in ~16 months)
-  - failure scenarios: a farm tier dark, a soil respiration burst, a leak
-  - output: buffer and control needs
+- [x] **Closed atmosphere and ecology:** compartment model (`ecology_model/`, `reports/atmosphere.md`) of O₂, CO₂, N₂ and carbon across the farm, the valley's air and woodland, the soil (fast and slow pools), the people and leaks; the farm's air quasi-steady through the hub ducts
+  - Biosphere 2 replayed (approximate, recalled figures): its O₂ loss takes ~1.2 µmol/m²/s of excess soil respiration, the CO₂ going into the concrete; the same in a torus shows as CO₂ within ~8 months
+  - failure scenarios: one / two / all farm tiers dark reach the CO₂ limit in ~110 / ~36 / ~22 days (900 m), a soil burst is absorbed by the CO₂-fertilised crops, a 10 cm hole loses 10% of the air in ~19 days
+  - buffer and control needs: the air holds ~5 years of O₂; a ~1 MW CO₂-to-O₂ recovery plant per 900 m torus holds the whole farm going dark (proposed); a new torus's imported organics need ~8 MW at first unless composted first (~1.4 MW, proposed)
+  - open: water and humidity, trace gases, the nitrogen cycle, daily swings, the controls' failures; the algae (not yet in the model)
+
+**Status:** the closed atmosphere holds with a modest recovery plant; the startup soil is the hard case. The light-box and farm optics remain.
 
 ---
 
