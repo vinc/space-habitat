@@ -35,8 +35,17 @@ def table2(material, tonnes):
     return np.exp(np.where(x <= t[-1], np.interp(x, t, ref), ref[-1] + slope * (x - t[-1])))
 
 
-def needed(material, limit):
-    """Tonnes per m² for the limit on OLTARIS's curve."""
-    xs = np.linspace(1, 20, 1901)
-    d = table2(material, xs)
-    return float(xs[np.argmax(d <= limit)]) if (d <= limit).any() else None
+def needed(material, limit, factor=1.0, low=0.0, high=30.0):
+    """Tonnes per m² at which factor × OLTARIS's curve falls to the limit (log interpolation, the curve
+    extended past its table); low if it is already below the limit there, None if not even at high."""
+    xs = np.linspace(max(low, 1.0), high, int(round((high - max(low, 1.0)) * 100)) + 1)
+    d = factor * table2(material, xs)
+    ok = d <= limit
+    if not ok.any():
+        return None
+    i = int(np.argmax(ok))
+    if i == 0:
+        return float(xs[0])
+    # Between xs[i - 1] and xs[i], in log dose.
+    l0, l1 = np.log(d[i - 1]), np.log(d[i])
+    return float(xs[i - 1] + (xs[i] - xs[i - 1]) * (l0 - np.log(limit)) / (l0 - l1))

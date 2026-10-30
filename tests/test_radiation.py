@@ -66,6 +66,33 @@ class TestNeutrons(unittest.TestCase):
         self.assertLess(with_water, 0.2 * rock_only)
 
 
+class TestCollisions(unittest.TestCase):
+    def setUp(self):
+        self.t = Transport()
+        self.d = self.t.data(ROCK)
+        self.c = self.t.grid.centres
+
+    def test_no_pions_below_threshold(self):
+        from radiation_model.transport import PION_THRESHOLD_MEV
+        low = self.c < PION_THRESHOLD_MEV
+        self.assertEqual(float(self.d.pions[low].sum()), 0.0)
+        self.assertGreater(float(self.d.pions[~low].sum()), 0.0)
+
+    def test_collision_energy_budget(self):
+        from radiation_model.environment import PION_A
+        from radiation_model.transport import M_PION, NAMES
+        a = (0.30 * 2.7 - 1) / (1 - 0.30)
+        lead = (a + 1) / (a + 2) * self.c
+        casc = (self.d.casc * self.c[None, :]).sum(axis=1)
+        pion_total = (self.d.pions * (self.c * PION_A + M_PION)[None, :]).sum(axis=1)      # rest masses included
+        # Charged pions carry two thirds of what's left; with the neutral third, nothing is created.
+        self.assertTrue(np.all(lead + casc + 1.5 * pion_total <= self.c * (1 + 1e-3) + 1e-6))
+        self.assertTrue(np.all(pion_total <= self.d.pion_budget * (1 + 1e-3) + 1e-9))
+        # Within the pion grid (kinetic energies up to ~15 GeV) the budget is spent in full.
+        mid = (self.c > 1000) & (self.c < 5000)
+        self.assertTrue(np.allclose(pion_total[mid], self.d.pion_budget[mid], rtol=0.01))
+
+
 class TestTransport(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -144,6 +171,23 @@ class TestReference(unittest.TestCase):
         r = reference.TABLE2["Lunar regolith (OLTARIS's)"]
         self.assertAlmostEqual(float(reference.table2("Lunar regolith (OLTARIS's)", 12)), r[-1] ** 2 / r[-2], places=6)
         self.assertAlmostEqual(reference.WALL_FACTOR, 0.4985, places=4)
+
+    def test_needed_reports_limits_out_of_reach(self):
+        reg = "Lunar regolith (OLTARIS's)"
+        # 1 mSv/yr lies beyond the table: found on its extension, not at the bottom of the range.
+        x = reference.needed(reg, 1.0)
+        self.assertGreater(x, 11)
+        self.assertAlmostEqual(float(reference.table2(reg, x)), 1.0, delta=0.01)
+        self.assertIsNone(reference.needed(reg, 1.0, high=14.0))
+        self.assertAlmostEqual(reference.needed(reg, 1000.0), 1.0)
+        # Halving the dose (near a wall) needs less.
+        self.assertLess(reference.needed(reg, 20, 0.5), reference.needed(reg, 20))
+
+    def test_jacket_section_out_of_range(self):
+        from radiation_model.__main__ import jacket_section
+        text = "\n".join(jacket_section(params(load(), dose_limit_msv_yr=1e-6), 1.0))
+        self.assertIn("beyond the curve", text)
+        self.assertNotIn("with ~6", text)
 
     def test_model_matches_oltaris_for_water(self):
         m = shield.Model(P)

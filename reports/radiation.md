@@ -13,7 +13,7 @@ Against figures the model should reproduce (all but PSTAR's recalled, not looked
 | Inelastic cross section, p + O | 309 mb | ~300 mb (measured) |
 | … C + C | 869 mb | ~850–900 mb (measured) |
 | Nucleons above 1 GeV in air, attenuation length | 115 g/cm² | ~120 g/cm² (Gaisser; this air's interaction length is ~7% short) |
-| Free space behind 5 g/cm², solar minimum | 1.7 Sv/yr, 0.36 Gy/yr | ~1 Sv/yr, ~0.2–0.3 Gy/yr (recalled): the model runs ~1.5× high here, from its heavy ions |
+| Free space behind 5 g/cm², solar minimum | 1.7 Sv/yr, 0.34 Gy/yr | ~1 Sv/yr, ~0.2–0.3 Gy/yr (recalled): the model runs ~1.5× high here, from its heavy ions |
 
 ## Dose against areal density
 
@@ -22,17 +22,17 @@ Dose equivalent (mSv/yr, ICRP 60 quality factors, at a point with no body around
 | Shield | Tailings (L/LL, metal removed) | CI-like clays | Water | Polyethylene |
 |---|---|---|---|---|
 | 0 t/m² (unshielded) | 2,600 | 2,600 | 2,600 | 2,600 |
-| 1 t/m² | 690 (48%) | 530 (32%) | 440 (24%) | 390 (26%) |
-| 2 t/m² | 550 (52%) | 430 (37%) | 330 (31%) | 270 (34%) |
-| 3 t/m² | 380 (54%) | 300 (41%) | 210 (37%) | 160 (40%) |
-| 5 t/m² | 150 (57%) | 120 (48%) | 69 (46%) | 46 (50%) |
-| 7 t/m² | 54 (61%) | 43 (54%) | 19 (52%) | 11 (57%) |
-| 9 t/m² | 18 (64%) | 14 (59%) | 4.8 (58%) | 2.3 (63%) |
-| 11 t/m² | 5.4 (67%) | 4.1 (62%) | 1.1 (62%) | 0.46 (67%) |
-| 13 t/m² | 1.6 (69%) | 1.2 (65%) | 0.24 (65%) | 0.087 (71%) |
-| 15 t/m² | 0.44 (71%) | 0.32 (68%) | 0.052 (68%) | 0.015 (73%) |
-| 20 t/m² | 0.016 (75%) | 0.011 (72%) | 0.00090 (73%) | 0.00018 (78%) |
-| **20 mSv/yr reached at** | **8.8 t/m²** | **8.4 t/m²** | **6.9 t/m²** | **6.2 t/m²** |
+| 1 t/m² | 560 (53%) | 420 (37%) | 340 (30%) | 290 (33%) |
+| 2 t/m² | 440 (58%) | 330 (44%) | 250 (39%) | 200 (43%) |
+| 3 t/m² | 300 (60%) | 240 (49%) | 160 (45%) | 120 (49%) |
+| 5 t/m² | 120 (64%) | 98 (56%) | 54 (54%) | 35 (59%) |
+| 7 t/m² | 44 (68%) | 35 (61%) | 15 (60%) | 8.7 (66%) |
+| 9 t/m² | 14 (71%) | 11 (65%) | 3.9 (65%) | 1.9 (71%) |
+| 11 t/m² | 4.5 (73%) | 3.4 (69%) | 0.91 (69%) | 0.38 (75%) |
+| 13 t/m² | 1.3 (75%) | 0.98 (71%) | 0.20 (72%) | 0.072 (78%) |
+| 15 t/m² | 0.37 (77%) | 0.27 (74%) | 0.043 (75%) | 0.013 (80%) |
+| 20 t/m² | 0.013 (80%) | 0.0091 (78%) | 0.00076 (79%) | 0.00015 (85%) |
+| **20 mSv/yr reached at** | **8.4 t/m²** | **8.0 t/m²** | **6.6 t/m²** | **5.8 t/m²** |
 
 Per tonne, hydrogen shields best: it makes no neutrons of its own and slows the others. The tailings, rich in iron and magnesium, are the worst of the four; the clays' bound water helps a little. Behind a few t/m² the dose is mostly secondaries: neutrons (two thirds of it, deep in rock), pions and the protons and light ions the cascade knocks out, regenerated all the way through; the heavy ions are gone by ~1 t/m².
 
@@ -44,18 +44,18 @@ OLTARIS (NASA's HZETRN, with its neutrons' angular spread) for the same sphere, 
 
 | Shield | Lunar regolith | Water | Polyethylene |
 |---|---|---|---|
-| 1 t/m² | 700 / 281 | 440 / 200 | 390 / 194 |
-| 2 t/m² | 560 / 275 | 330 / 147 | 270 / 137 |
-| 3 t/m² | 390 / 240 | 210 / 101 | 160 / 91.0 |
-| 4 t/m² | 250 / 194 | 120 / 67.0 | 88 / 57.0 |
-| 5 t/m² | 150 / 149 | 69 / 43.0 | 46 / 35.0 |
-| 6 t/m² | 92 / 109 | 37 / 26.5 | 23 / 21.0 |
-| 7 t/m² | 54 / 77.0 | 19 / 16.1 | 11 / 12.3 |
-| 8 t/m² | 31 / 52.0 | — | — |
-| 9 t/m² | 17 / 34.9 | — | — |
-| 10 t/m² | 9.6 / 22.8 | — | — |
-| 11 t/m² | 5.3 / 14.5 | — | — |
-| **20 mSv/yr** | **8.8 / 10.3 t/m²** | **6.9 / 6.57 t/m²** | **6.2 / 6.10 t/m²** |
+| 1 t/m² | 560 / 281 | 340 / 200 | 290 / 194 |
+| 2 t/m² | 440 / 275 | 250 / 147 | 200 / 137 |
+| 3 t/m² | 310 / 240 | 160 / 101 | 120 / 91.0 |
+| 4 t/m² | 200 / 194 | 96 / 67.0 | 68 / 57.0 |
+| 5 t/m² | 120 / 149 | 54 / 43.0 | 36 / 35.0 |
+| 6 t/m² | 75 / 109 | 29 / 26.5 | 18 / 21.0 |
+| 7 t/m² | 44 / 77.0 | 15 / 16.1 | 8.7 / 12.3 |
+| 8 t/m² | 25 / 52.0 | — | — |
+| 9 t/m² | 14 / 34.9 | — | — |
+| 10 t/m² | 8.0 / 22.8 | — | — |
+| 11 t/m² | 4.4 / 14.5 | — | — |
+| **20 mSv/yr** | **8.4 / 10.3 t/m²** | **6.6 / 6.56 t/m²** | **5.8 / 6.09 t/m²** |
 
 Two differences, both expected: shallow, the model's point dose runs ~2× OLTARIS's dose averaged over a body, which shields its own organs from the heavy ions; deep, the model falls too fast, e-fold every ~1.7 t/m² of rock against OLTARIS's ~2.3, so behind 9–11 t/m² of regolith it is 2–3× low. For water the two cross near the limit and agree on the thickness; for rock the model's ~8.8 t/m² is too thin, and OLTARIS's ~10.3 t/m² (the notes' ~11) stands. Two cascade inputs can't match all three materials at once (fitting rock's slope puts water ~2.5× high), so the model is kept for what it compares, and the sizing below rests on OLTARIS's curve.
 
@@ -67,23 +67,23 @@ The 900 m torus's cross-section (`radiation_model/tube.py`): the tube (radius 28
 
 | Jacket | Sphere centre | On the floor (1.5 m up) | Tube's centre | Under the ceiling | Cliff dwelling behind 2 m of soil |
 |---|---|---|---|---|---|
-| 7 t/m² (3.5 m; 2.6 m under the fill) | 54 | 19 | 33 | 19 | 15 |
-| 9 t/m² (4.5 m; 3.6 m under the fill) | 18 | 5.1 | 9.5 | 5.2 | 4.1 |
-| 11 t/m² (5.5 m; 4.6 m under the fill) | 5.4 | 1.4 | 2.7 | 1.4 | 1.1 |
-| 13 t/m² (6.5 m; 5.6 m under the fill) | 1.6 | 0.34 | 0.73 | 0.35 | 0.28 |
+| 7 t/m² (3.5 m; 2.6 m under the fill) | 44 | 16 | 28 | 16 | 13 |
+| 9 t/m² (4.5 m; 3.6 m under the fill) | 14 | 4.4 | 8.0 | 4.4 | 3.6 |
+| 11 t/m² (5.5 m; 4.6 m under the fill) | 4.5 | 1.2 | 2.3 | 1.2 | 0.95 |
+| 13 t/m² (6.5 m; 5.6 m under the fill) | 1.3 | 0.30 | 0.62 | 0.30 | 0.24 |
 
 Straight ahead, a long tube shields better than a sphere of the same wall: a ray leaving at an angle ψ to its axis crosses 1/sin ψ times the wall, so the model puts the floor and the walls at ~¼ of the sphere's dose and the axis at ~½. That overstates it: in OLTARIS a point at the wall of a slab gets ~50% of the sphere's centre (Janhunen 2020), because deep in the shield the dose comes from particles spread in angle (neutrons above all), which slant paths don't stop as well. The sizing takes OLTARIS's ½ near the walls.
 
 ## A hydrogen-rich inner layer
 
-9.0 t/m² of tailings (sphere centre: 18 mSv/yr, 2.6 of it from slow neutrons), then an inner layer: more tailings, water (moist soil, ponds, tanks) or polyethylene. The slow neutrons are traced at every slant through the layers.
+9.0 t/m² of tailings (sphere centre: 15 mSv/yr, 2.3 of it from slow neutrons), then an inner layer: more tailings, water (moist soil, ponds, tanks) or polyethylene. The slow neutrons are traced at every slant through the layers.
 
 | Inner layer | More tailings | Water | Polyethylene | Water saves, against tailings |
 |---|---|---|---|---|
-| 0.25 t/m² | 15 | 13 | 12 | 2.3 |
-| 0.5 t/m² | 13 | 11 | 9.6 | 2.3 |
-| 1 t/m² | 9.8 | 7.6 | 6.5 | 2.2 |
-| 2 t/m² | 5.4 | 3.7 | 2.9 | 1.7 |
+| 0.25 t/m² | 13 | 11 | 9.4 | 2.1 |
+| 0.5 t/m² | 11 | 8.8 | 7.8 | 2.1 |
+| 1 t/m² | 8.1 | 6.2 | 5.3 | 2.0 |
+| 2 t/m² | 4.5 | 3.0 | 2.4 | 1.5 |
 
 A water layer stops the neutrons that diffuse out of the dry rock (a few cm of it already) and shields the high-energy particles about as well as rock per tonne; the floor's moist fill, the cliff dwellings' soil and any tanks against the walls do this already.
 
@@ -95,12 +95,12 @@ The August 1972 event's protons (King 1974), taken as isotropic over the event: 
 
 | Shield | Tailings | Water |
 |---|---|---|
-| 1 g/cm² | 29 | 33 |
-| 5 g/cm² | 4.9 | 4.1 |
-| 10 g/cm² | 1.4 | 0.91 |
-| 20 g/cm² | 0.28 | 0.13 |
-| 50 g/cm² | 0.065 | 0.019 |
-| 100 g/cm² | 0.029 | 0.011 |
+| 1 g/cm² | 29 | 32 |
+| 5 g/cm² | 4.8 | 4.0 |
+| 10 g/cm² | 1.3 | 0.90 |
+| 20 g/cm² | 0.28 | 0.12 |
+| 50 g/cm² | 0.064 | 0.018 |
+| 100 g/cm² | 0.028 | 0.011 |
 
 Lethal in a light spacecraft, nothing behind the jacket: the event's protons are spent within a few tens of g/cm², and what reaches ~1 t/m² is a trickle of neutrons. Crews outside the jacket (the hub, the farm, the factory) need a storm shelter of ~20–50 g/cm², as the notes have it.
 
@@ -110,15 +110,15 @@ Each input at its low and high, the rest as configured: the tailings at the sphe
 
 | Input | Range | Status | Dose at 11 t/m², mSv/yr | For 20 mSv/yr |
 |---|---|---|---|---|
-| `solar_min_phi_mv` | 250 – 450 | estimate | 5.5 – 5.0 | 8.8 – 8.6 t/m² |
-| `leading_nucleon_z` | 0.250 – 0.350 | estimate | 3.3 – 8.6 | 8.2 – 9.5 t/m² |
-| `cascade_nucleons_coeff` | 0.300 – 0.800 | guess | 3.7 – 8.6 | 8.2 – 9.5 t/m² |
-| `cascade_nucleon_mev` | 60.0 – 150 | guess | 4.0 – 7.1 | 8.4 – 9.2 t/m² |
-| `evaporation_neutrons_coeff` | 0.100 – 0.300 | guess | 5.1 – 5.6 | 8.7 – 8.9 t/m² |
-| `knockout_alphas_coeff` | 0.0500 – 0.200 | guess | 5.0 – 6.2 | 8.6 – 9.0 t/m² |
-| `fast_neutron_dose_psv_cm2` | 250 – 420 | estimate | 5.2 – 5.5 | 8.7 – 8.8 t/m² |
+| `solar_min_phi_mv` | 250 – 450 | estimate | 4.6 – 4.1 | 8.5 – 8.3 t/m² |
+| `leading_nucleon_z` | 0.250 – 0.350 | estimate | 2.7 – 7.4 | 7.8 – 9.2 t/m² |
+| `cascade_nucleons_coeff` | 0.300 – 0.800 | guess | 3.0 – 7.4 | 7.8 – 9.3 t/m² |
+| `cascade_nucleon_mev` | 60.0 – 150 | guess | 3.2 – 6.0 | 8.0 – 8.9 t/m² |
+| `evaporation_neutrons_coeff` | 0.100 – 0.300 | guess | 4.2 – 4.7 | 8.3 – 8.5 t/m² |
+| `knockout_alphas_coeff` | 0.0500 – 0.200 | guess | 4.1 – 5.2 | 8.3 – 8.7 t/m² |
+| `fast_neutron_dose_psv_cm2` | 250 – 420 | estimate | 4.3 – 4.6 | 8.4 – 8.5 t/m² |
 
-The cascade's guessed inputs move the model's dose behind 11 t/m² by about −40% / +60%, its thickness for the limit by ±0.6 t/m²; none of them closes the gap to OLTARIS at depth on its own.
+The cascade's guessed inputs move the model's dose behind 11 t/m² by about −40% / +60%, its thickness for the limit by ±0.7 t/m²; none of them closes the gap to OLTARIS at depth on its own.
 
 ## The jacket's thickness
 
@@ -127,7 +127,7 @@ OLTARIS's lunar regolith curve (Globus & Strout, Table 2, extended past 11 t/m²
 | Jacket | Sphere's centre (the tube's middle, at most) | Near the walls, where people live | Sphere's centre, solar maximum |
 |---|---|---|---|
 | 8 t/m² | 53 | 26 | 39 |
-| 9 t/m² | 36 | 18 | 26 |
+| 9 t/m² | 36 | 18 | 27 |
 | 10 t/m² (proposed) | 23 | 12 | 17 |
 | 11 t/m² (configured) | 15 | 7.4 | 11 |
 | 12 t/m² | 9.4 | 4.7 | 7.0 |

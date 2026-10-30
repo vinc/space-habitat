@@ -236,10 +236,9 @@ def jacket_section(p, ratio):
                      num(sphere * reference.WALL_FACTOR, 2), num(sphere * reference.JANHUNEN["solar_max_centre"]
                                                                  / reference.JANHUNEN["sphere_centre"], 2)])
     limit = p.dose_limit_msv_yr
-    xs = np.linspace(6, 14, 801)
-    sph = reference.table2(LUNAR, xs) * ratio
-    centre_need = float(xs[np.argmax(sph <= limit)])
-    wall_need = float(xs[np.argmax(sph * reference.WALL_FACTOR <= limit)])
+    centre_need = reference.needed(LUNAR, limit, ratio)
+    wall_need = reference.needed(LUNAR, limit, ratio * reference.WALL_FACTOR)
+    thick = lambda x, sig: f"~{num(x, sig)} t/m²" if x is not None else "more than 30 t/m² (beyond the curve)"
     return [
         "## The jacket's thickness",
         "OLTARIS's lunar regolith curve (Globus & Strout, Table 2, extended past 11 t/m² at its last slope), "
@@ -248,8 +247,8 @@ def jacket_section(p, ratio):
         f"~{reference.WALL_FACTOR:.2f}. Solar maximum: 25% less (Janhunen). mSv/yr:",
         table(["Jacket", "Sphere's centre (the tube's middle, at most)", "Near the walls, where people live",
                "Sphere's centre, solar maximum"], rows),
-        f"**{limit:g} mSv/yr is met at a sphere's centre with ~{num(centre_need, 3)} t/m² and near the walls with "
-        f"~{num(wall_need, 2)} t/m².** The configured {p.shield_areal_t_m2:g} t/m² gives "
+        f"**{limit:g} mSv/yr is met at a sphere's centre with {thick(centre_need, 3)} and near the walls with "
+        f"{thick(wall_need, 2)}.** The configured {p.shield_areal_t_m2:g} t/m² gives "
         f"~{num(float(reference.table2(LUNAR, p.shield_areal_t_m2)) * ratio, 2)} mSv/yr at a sphere's centre and "
         f"~{num(float(reference.table2(LUNAR, p.shield_areal_t_m2)) * ratio * reference.WALL_FACTOR, 2)} near the "
         "walls. **Proposed: "
@@ -280,7 +279,7 @@ def sensitivity_section(p):
         "Each input at its low and high, the rest as configured: the tailings at the sphere's centre.",
         table(["Input", "Range", "Status", "Dose at 11 t/m², mSv/yr", f"For {p.dose_limit_msv_yr:g} mSv/yr"], rows),
         "The cascade's guessed inputs move the model's dose behind 11 t/m² by about −40% / +60%, its thickness "
-        "for the limit by ±0.6 t/m²; none of them closes the gap to OLTARIS at depth on its own.",
+        "for the limit by ±0.7 t/m²; none of them closes the gap to OLTARIS at depth on its own.",
     ]
 
 

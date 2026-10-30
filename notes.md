@@ -333,9 +333,9 @@ Hydrogen by-product is useful as propellant or for reducing oxides.
 
 | For 20 mSv/yr at a sphere's centre | Model | OLTARIS |
 |---|---|---|
-| Water | ~6.9 t/m² | ~6.6 t/m² |
-| Polyethylene | ~6.2 t/m² | ~6.1 t/m² |
-| Lunar regolith | ~8.8 t/m² | ~10.3 t/m² |
+| Water | ~6.6 t/m² | ~6.6 t/m² |
+| Polyethylene | ~5.8 t/m² | ~6.1 t/m² |
+| Lunar regolith | ~8.4 t/m² | ~10.3 t/m² |
 
 - **The model agrees for hydrogen-rich shields but falls too fast in rock** (e-fold every ~1.7 t/m² against OLTARIS's ~2.3), so behind 9–11 t/m² of rock it is 2–3× low. It is kept for comparisons; **the sizing rests on OLTARIS's regolith curve.** The model puts the tailings within ~2% of lunar regolith per tonne, so that curve stands for them.
 - **Near the walls the dose is about half the sphere's centre** (OLTARIS's slab geometry, Janhunen). A straight-ahead sum through the tube would give ~¼, but deep in the shield the dose comes from particles spread in angle, neutrons above all, which slant paths don't stop as well.
@@ -2044,7 +2044,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **30 October 2026**
-- **Radiation transport (sections 5b, 18; plan §3):** a stand-in transport model (`radiation_model/`): straight-ahead cosmic rays and their cascade along each ray, slow neutrons diffusing across the shield, the directions summed at a sphere's centre or inside the tube. Checked against OLTARIS's published results, it agrees for water (~6.9 t/m² for 20 mSv/yr against ~6.6) but falls too fast in rock, so the sizing rests on OLTARIS's regolith curve: ~10.3 t/m² at a sphere's centre, about half that dose near the walls (Janhunen's slab), ~7 mSv/yr near the walls behind 11 t/m². Proposed: a 10 t/m² jacket (~−10% mass per torus), kept at 11 until a run in the tube's own geometry. A water and boron inner layer saves ~1.3 t/m²; solar events don't reach behind the jacket.
+- **Radiation transport (sections 5b, 18; plan §3):** a stand-in transport model (`radiation_model/`): straight-ahead cosmic rays and their cascade along each ray, slow neutrons diffusing across the shield, the directions summed at a sphere's centre or inside the tube. Checked against OLTARIS's published results, it agrees for water (~6.6 t/m² for 20 mSv/yr, as OLTARIS) but falls too fast in rock, so the sizing rests on OLTARIS's regolith curve: ~10.3 t/m² at a sphere's centre, about half that dose near the walls (Janhunen's slab), ~7 mSv/yr near the walls behind 11 t/m². Proposed: a 10 t/m² jacket (~−10% mass per torus), kept at 11 until a run in the tube's own geometry. A water and boron inner layer saves ~1.3 t/m²; solar events don't reach behind the jacket.
 - **Light delivery (sections 13, 18; plan §7):** the light pipes, the valley's light box and a farm tier ray-traced across the pipes (`optics_model/`). The light box passes ~82% of the pipes' light to the floor (the ~75–85% estimated) and its diffuser blends the stripes ~0.5 m below the pipes; a farm tier puts ~93% on the crops, within ~15% across a bed with the pipes ~0.6 m up. But the sizing counted only the ceiling: with the lamps' coupling into the pipes and the pipes' own losses (guesses), and the pipes laid out for the power that then needs, ~50% (valley) and ~57% (farm) of the lamps' light arrives, against ~75% / ~85% assumed, which would mean ~50% more lighting power and array and ~2–3× the radiator panels. The sizing is unchanged until a sulfur lamp on a prism pipe is measured.
 - **Closed atmosphere (sections 3d, 18; plan §7):** a compartment model of a torus's air, crops, people, soil and woodland (`ecology_model/`). The air holds ~5 years of O₂ at 900 m; the whole farm going dark reaches the CO₂ limit in ~22 days and O₂'s in ~176 (the food store runs out at ~97); a ~1 MW recovery plant per torus (CO₂ back to O₂) holds both (proposed). A new torus's imported organics respire ~14× faster than its people breathe: compost them before they go in (proposed). Biosphere 2's oxygen loss replayed: ~1.2 µmol/m²/s of excess soil respiration.
 

@@ -11,8 +11,9 @@ down continuously (CSDA, `physics.RangeTable`) and all are removed by inelastic 
 - **Every collision** also knocks out cascade nucleons from the target, `cascade_coeff` × A^(1/3) of them
   (fewer below ~500 MeV), with an exponential spectrum of mean `cascade_t_mev`, half protons, half
   neutrons; and evaporates `evaporation_coeff` × A^0.6 neutrons of a few MeV.
-- **Charged pions** take two thirds of the energy the nucleons don't (the rest, neutral pions, goes into
-  electromagnetic showers, left out), spread as (b + 1) f (1 − x)^b / x with b = 4. In dense rock they
+- **Charged pions**, above the production threshold (~290 MeV), take two thirds of the energy the leading
+  nucleon and the cascade don't, rest masses included (the rest, neutral pions, goes into electromagnetic
+  showers, left out), their total energies spread as (1 − y)^b / y from m_π / E up, with b = 4. In dense rock they
   interact long before they decay, so they carry the cascade on like nucleons (interaction length
   `PION_LAMBDA` × the nucleons'), making nucleons and pions again; they ionise like protons of their speed.
 - **Light ions** are knocked out of the struck nuclei too: `alpha_coeff` × A^(1/3) helium nuclei (standing
@@ -49,6 +50,8 @@ ALPHA_SHARE = 0.3          # of the left-over nucleons
 CHARGE_EXCHANGE = 0.3
 PION_LAMBDA = 1.15         # pions' interaction length over the nucleons'
 PION_B = 4.0
+M_PION = 139.57            # MeV
+PION_THRESHOLD_MEV = 290.0 # nucleon kinetic energy for single-pion production on a nucleon
 ALPHA_T_MEV = 30.0
 SUBSTEPS = 4
 
@@ -100,20 +103,12 @@ class MaterialData:
         # Below the grid's bottom (1 MeV): neutrons from the cascade's low end, counted with the evaporation.
         self.casc_below = nu * cdf(e[0], c)
         self.evap = knobs.evaporation_coeff * a06 * np.minimum(1.0, c / 50.0)
-        # Charged pions: the energy the leading nucleon and the cascade leave, two thirds of it; produced at
-        # kinetic energy x E, filed on the pion grid at x E / PION_A.
-        mean_lead = (a + 1) / (a + 2)
-        cascade_energy = (self.casc * c[None, :]).sum(axis=1) / c
-        f = np.clip(2 / 3 * (1 - mean_lead - cascade_energy), 0, None)
-        b = PION_B
-        xs = np.geomspace(1e-6, 1, 4001)
-        cum = np.concatenate([[0.0], np.cumsum(0.5 * ((1 - xs[1:]) ** b / xs[1:] + (1 - xs[:-1]) ** b / xs[:-1])
-                                                * np.diff(xs))])
-        def cum_at(x):
-            return np.interp(np.clip(x, 1e-6, 1), xs, cum)
-        lo_x = e[None, :-1] * PION_A / c[:, None]
-        hi_x = e[None, 1:] * PION_A / c[:, None]
-        self.pions = (f * (b + 1))[:, None] * (cum_at(hi_x) - cum_at(lo_x))       # [incident j, pion bin i]
+        # Charged pions: two thirds of the energy the leading nucleon and the cascade leave, rest mass included,
+        # above the production threshold. A pion's total energy y E (y ≥ m_π / E) is spread as
+        # A (1 − y)^b / y, with ∫ y dN = f, so the pions' total energy, masses and all, is f E. Filed on the
+        # pion grid by kinetic energy y E − m_π, over PION_A.
+        self.pion_budget = pion_budget(self.lead, self.casc, c, a)
+        self.pions = pion_kernel(self.pion_budget, c, e)                             # [incident j, pion bin i]
         # Pions as projectiles: the bin's kinetic energy is c × PION_A; same shapes at that energy.
         self.pion_energy = c * PION_A
         # Knocked-out light ions, per collision, in energy per nucleon.
@@ -130,6 +125,32 @@ class MaterialData:
             r = self.ranges.range(grid.edges, z, a)
             self._shift[key] = self.ranges.energy(r - dx, z, a)
         return self._shift[key]
+
+
+def pion_budget(lead, casc, c, a):
+    """Energy (MeV) going into charged pions per collision at each incident kinetic energy c: two thirds of
+    what the leading particle and the cascade leave, none below the threshold."""
+    mean_lead = (a + 1) / (a + 2)
+    cascade_energy = (casc * c[None, :]).sum(axis=1)
+    return np.where(c >= PION_THRESHOLD_MEV, np.clip(2 / 3 * ((1 - mean_lead) * c - cascade_energy), 0, None), 0.0)
+
+
+def pion_kernel(budget, c, edges, b=PION_B):
+    """Pions per collision, [incident bin, pion bin], for total-energy fractions y = (T + m_π) / E spread as
+    A (1 − y)^b / y on [m_π / E, 1] with ∫ y dN = budget / E."""
+    ys = np.linspace(0.0, 1.0, 20001)[1:]
+    shape = (1 - ys) ** b / ys
+    cum = np.concatenate([[0.0], np.cumsum(0.5 * (shape[1:] + shape[:-1]) * np.diff(ys))])
+    ys = ys
+    out = np.zeros((len(c), len(edges) - 1))
+    for j, energy in enumerate(c):
+        if budget[j] <= 0 or energy <= M_PION:
+            continue
+        y_min = M_PION / energy
+        amp = budget[j] / energy * (b + 1) / (1 - y_min) ** (b + 1)              # from ∫ (1 − y)^b dy
+        y = np.clip((edges * PION_A + M_PION) / energy, y_min, 1.0)
+        out[j] = amp * np.diff(np.interp(y, ys, cum))
+    return out
 
 
 def _rebin(counts, energies, grid):
