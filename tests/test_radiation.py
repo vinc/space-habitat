@@ -79,18 +79,40 @@ class TestCollisions(unittest.TestCase):
         self.assertGreater(float(self.d.pions[~low].sum()), 0.0)
 
     def test_collision_energy_budget(self):
+        # Every represented channel, for each material and at the ends of every collision input's range.
         from radiation_model.environment import PION_A
-        from radiation_model.transport import M_PION, NAMES
-        a = (0.30 * 2.7 - 1) / (1 - 0.30)
-        lead = (a + 1) / (a + 2) * self.c
-        casc = (self.d.casc * self.c[None, :]).sum(axis=1)
-        pion_total = (self.d.pions * (self.c * PION_A + M_PION)[None, :]).sum(axis=1)      # rest masses included
-        # Charged pions carry two thirds of what's left; with the neutral third, nothing is created.
-        self.assertTrue(np.all(lead + casc + 1.5 * pion_total <= self.c * (1 + 1e-3) + 1e-6))
-        self.assertTrue(np.all(pion_total <= self.d.pion_budget * (1 + 1e-3) + 1e-9))
-        # Within the pion grid (kinetic energies up to ~15 GeV) the budget is spent in full.
-        mid = (self.c > 1000) & (self.c < 5000)
-        self.assertTrue(np.allclose(pion_total[mid], self.d.pion_budget[mid], rtol=0.01))
+        from radiation_model.transport import EVAPORATION_MEV, M_PION, Knobs, MaterialData
+        assumptions = load()
+        names = ("leading_nucleon_z", "cascade_nucleons_coeff", "cascade_nucleon_mev", "evaporation_neutrons_coeff",
+                 "knockout_alphas_coeff")
+        cases = [{}] + [{n: getattr(assumptions[n], end)} for n in names for end in ("low", "high")]
+        cases.append({n: assumptions[n].high for n in names})
+        g = self.t.grid
+        c = g.centres
+        for name in ("Tailings (L/LL chondrite, metal removed)", "Steel", "Water"):
+            for over in cases:
+                knobs = Knobs.from_params(params(assumptions, **over))
+                d = MaterialData(physics.material(name), g, knobs)
+                a = (knobs.leading_z * 2.7 - 1) / (1 - knobs.leading_z)
+                lead = np.maximum((a + 1) / (a + 2) * c, d.lead @ c)
+                spent = (lead + d.casc @ c + 0.5 * d.casc_below + d.alphas @ (4 * c)
+                         + d.evap * EVAPORATION_MEV
+                         + 1.5 * d.pions @ (c * PION_A + M_PION))       # charged pions and their neutral half
+                self.assertTrue(np.all(spent <= c * (1 + 1e-3) + 1e-6), (name, over, float(np.max(spent / c))))
+        # Within the pion grid (kinetic energies up to ~15 GeV) the pions' budget is spent in full.
+        mid = (c > 1000) & (c < 5000)
+        spent = self.d.pions @ (c * PION_A + M_PION)
+        self.assertTrue(np.allclose(spent[mid], self.d.pion_budget[mid], rtol=0.01))
+
+    def test_reviewer_case_stays_within_energy(self):
+        # Tailings with the most light ions: the 301 MeV bin was 11.7% over its input.
+        from radiation_model.environment import PION_A
+        from radiation_model.transport import M_PION, Knobs, MaterialData
+        d = MaterialData(ROCK, self.t.grid, Knobs.from_params(params(load(), knockout_alphas_coeff=0.2)))
+        c = self.t.grid.centres
+        j = int(np.argmin(np.abs(c - 301.4)))
+        total = (d.lead[j] @ c + d.casc[j] @ c + d.pions[j] @ (c * PION_A + M_PION) + d.alphas[j] @ (4 * c))
+        self.assertLessEqual(total, c[j])
 
 
 class TestTransport(unittest.TestCase):

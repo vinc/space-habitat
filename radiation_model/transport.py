@@ -11,8 +11,11 @@ down continuously (CSDA, `physics.RangeTable`) and all are removed by inelastic 
 - **Every collision** also knocks out cascade nucleons from the target, `cascade_coeff` × A^(1/3) of them
   (fewer below ~500 MeV), with an exponential spectrum of mean `cascade_t_mev`, half protons, half
   neutrons; and evaporates `evaporation_coeff` × A^0.6 neutrons of a few MeV.
-- **Charged pions**, above the production threshold (~290 MeV), take two thirds of the energy the leading
-  nucleon and the cascade don't, rest masses included (the rest, neutral pions, goes into electromagnetic
+- **Every collision stays within its energy:** the leading particle first, then the target's products
+  (cascade nucleons, light ions, evaporation neutrons), scaled down where they would take more than it
+  leaves.
+- **Charged pions**, above the production threshold (~290 MeV), take two thirds of what is left, rest
+  masses included (the rest, neutral pions, goes into electromagnetic
   showers, left out), their total energies spread as (1 − y)^b / y from m_π / E up, with b = 4. In dense rock they
   interact long before they decay, so they carry the cascade on like nucleons (interaction length
   `PION_LAMBDA` × the nucleons'), making nucleons and pions again; they ionise like protons of their speed.
@@ -53,6 +56,7 @@ PION_B = 4.0
 M_PION = 139.57            # MeV
 PION_THRESHOLD_MEV = 290.0 # nucleon kinetic energy for single-pion production on a nucleon
 ALPHA_T_MEV = 30.0
+EVAPORATION_MEV = 2.0      # mean kinetic energy of an evaporation neutron
 SUBSTEPS = 4
 
 
@@ -103,18 +107,27 @@ class MaterialData:
         # Below the grid's bottom (1 MeV): neutrons from the cascade's low end, counted with the evaporation.
         self.casc_below = nu * cdf(e[0], c)
         self.evap = knobs.evaporation_coeff * a06 * np.minimum(1.0, c / 50.0)
-        # Charged pions: two thirds of the energy the leading nucleon and the cascade leave, rest mass included,
-        # above the production threshold. A pion's total energy y E (y ≥ m_π / E) is spread as
-        # A (1 − y)^b / y, with ∫ y dN = f, so the pions' total energy, masses and all, is f E. Filed on the
-        # pion grid by kinetic energy y E − m_π, over PION_A.
-        self.pion_budget = pion_budget(self.lead, self.casc, c, a)
+        # Knocked-out light ions (as helium), per collision, in energy per nucleon: [incident j, bin i].
+        nu_a = knobs.alpha_coeff * a13
+        ca = lambda x: 1 - np.exp(-x / ALPHA_T_MEV)
+        self.alphas = (nu_a * np.minimum(1.0, c / 200.0))[:, None] * (ca(e[1:]) - ca(e[:-1]))[None, :]
+        # The collision's energy: the leading particle first; the target's products (cascade nucleons, light
+        # ions, evaporation neutrons) scaled down where they would take more than it leaves; then charged
+        # pions, rest masses included, two thirds of whatever remains (the neutral third is not followed).
+        lead_energy = np.maximum((a + 1) / (a + 2) * c, self.lead @ c)          # as filed on the grid, too
+        target = target_energy(self.casc, self.casc_below, self.alphas, self.evap, c)
+        scale = np.where(target > 0, np.clip((c - lead_energy) / np.maximum(target, 1e-30), 0, 1), 1.0)
+        self.casc = self.casc * scale[:, None]
+        self.casc_below = self.casc_below * scale
+        self.alphas = self.alphas * scale[:, None]
+        self.evap = self.evap * scale
+        left = np.clip(c - lead_energy - target * scale, 0, None)
+        # A pion's total energy y E (y ≥ m_π / E) is spread as A (1 − y)^b / y, with ∫ y dN = f, so the
+        # pions' total energy, masses and all, is f E; filed on the pion grid by kinetic energy y E − m_π.
+        self.pion_budget = np.where(c >= PION_THRESHOLD_MEV, 2 / 3 * left, 0.0)
         self.pions = pion_kernel(self.pion_budget, c, e)                             # [incident j, pion bin i]
         # Pions as projectiles: the bin's kinetic energy is c × PION_A; same shapes at that energy.
         self.pion_energy = c * PION_A
-        # Knocked-out light ions, per collision, in energy per nucleon.
-        nu_a = knobs.alpha_coeff * a13
-        ca = lambda x: 1 - np.exp(-x / ALPHA_T_MEV)
-        self.alphas = nu_a * (ca(e[1:]) - ca(e[:-1]))
         self._shift = {}
 
     def shift(self, species, dx, grid):
@@ -127,12 +140,11 @@ class MaterialData:
         return self._shift[key]
 
 
-def pion_budget(lead, casc, c, a):
-    """Energy (MeV) going into charged pions per collision at each incident kinetic energy c: two thirds of
-    what the leading particle and the cascade leave, none below the threshold."""
-    mean_lead = (a + 1) / (a + 2)
-    cascade_energy = (casc * c[None, :]).sum(axis=1)
-    return np.where(c >= PION_THRESHOLD_MEV, np.clip(2 / 3 * ((1 - mean_lead) * c - cascade_energy), 0, None), 0.0)
+def target_energy(casc, casc_below, alphas, evap, c):
+    """Kinetic energy (MeV) the target's products take per collision at each incident energy c: cascade
+    nucleons, those below the grid (~half an MeV each), light ions (four nucleons each) and evaporation
+    neutrons (`EVAPORATION_MEV` each)."""
+    return casc @ c + 0.5 * casc_below + alphas @ (4 * c) + evap * EVAPORATION_MEV
 
 
 def pion_kernel(budget, c, edges, b=PION_B):
@@ -263,7 +275,7 @@ class Transport:
         add["pi"] += _rebin(pion_as_nucleon @ d.lead, g.centres / PION_A, g) + pion_as_nucleon @ d.pions
         # The target's response to every collision, by the projectile's energy per nucleon.
         total = sum(v for k, v in ints.items() if k != "pi") + pion_as_nucleon
-        add["He"] += float(total @ np.minimum(1.0, g.centres / 200.0)) * d.alphas
+        add["He"] += total @ d.alphas
         casc = total @ d.casc
         add["p"] += 0.5 * casc
         add["n"] += 0.5 * casc
