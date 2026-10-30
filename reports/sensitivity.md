@@ -121,13 +121,13 @@ Each input drawn independently from a triangular distribution (low, value, high)
 
 | Output | Unit | 5th percentile | Median | 95th percentile |
 |---|---|---|---|---|
-| Mass per m² of floor | t/m² | 34.9 | 40.2 | 45.4 |
-| Rock mined per torus (S-type) | Mt | 13.8 | 17.4 | 22.1 |
-| C-type per torus | Mt | 4.16 | 4.96 | 6.17 |
-| Despun array at the site | km² | 0.271 | 0.315 | 0.389 |
-| People per torus |  | 913 | 1,160 | 1,450 |
-| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 12.1 | 13.8 | 15.6 |
-| Processing energy per torus | PJ | 7.03 | 9.15 | 11.7 |
+| Mass per m² of floor | t/m² | 34.8 | 40.2 | 45.4 |
+| Rock mined per torus (S-type) | Mt | 13.8 | 17.5 | 22.1 |
+| C-type per torus | Mt | 4.13 | 4.94 | 6.17 |
+| Despun array at the site | km² | 0.272 | 0.317 | 0.389 |
+| People per torus |  | 922 | 1,160 | 1,450 |
+| Main section's ideal heat margin (drum end apertures / valley heat; farm section excluded) | × | 12.2 | 13.8 | 15.6 |
+| Processing energy per torus | PJ | 6.99 | 9.13 | 11.8 |
 
 # Farm radiators' reach: `farm_radiator_outer_frac` across its range
 

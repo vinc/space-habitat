@@ -112,4 +112,23 @@
 | `electrolysis_mj_kg_water` | 20.00 | MJ of electricity per kg of water split | 16.00–25.00 | estimate | ~15.9 MJ/kg (higher heating value) at 65-100% efficiency (unsourced) |
 | `pv_silicon_kg_m2` | 0.4000 | kg of silicon per m2 of array | 0.1000–0.8000 | estimate | wafer cells ~150-200 um thick, with kerf losses; thin cells at the low end (unsourced) |
 | `other_vitamins_t` | 50.00 | t per 900 m torus, scaled with the floor | 10.00–200.0 | guess | electronics, dopants, catalysts, cesium, microbes and seeds (§10, §13): kilograms to tonnes each (guess) |
+| `kcal_per_l_o2` | 4.850 | kcal of food per litre of O2 (STP) | 4.700–5.000 | estimate | indirect calorimetry, mixed diet (general physiology, unsourced) |
+| `respiratory_quotient` | 0.8700 | mol CO2 per mol O2 | 0.8000–0.9500 | estimate | mixed diet (general physiology, unsourced) |
+| `harvest_index` | 0.5000 | edible share of the carbon the crops fix | 0.4000–0.6000 | estimate | wheat, soybean and potato in controlled environments (~0.4-0.7; unsourced) |
+| `organics_carbon_frac` | 0.5000 | kg C per kg of imported organics | 0.4000–0.5800 | estimate | soil organic matter ~50-58% carbon (unsourced) |
+| `soil_labile_frac` | 0.3000 | share of the soil's organic carbon that decays fast | 0.1000–0.5000 | guess | fresh compost and residues (guess) |
+| `soil_labile_turnover_yr` | 1.000 | years | 0.5000–3.000 | guess | fresh organic matter in warm moist soil (guess) |
+| `soil_stable_turnover_yr` | 30.00 | years | 10.00–100.0 | guess | humus (guess) |
+| `humification_frac` | 0.2000 | share of decaying labile carbon that becomes humus | 0.1000–0.3000 | guess | (guess) |
+| `valley_biomass_start` | 1.000 | kg C per m2 of floor, as planted | 0.2000–3.000 | guess | young plantings (guess) |
+| `valley_biomass_max` | 8.000 | kg C per m2 of floor, grown | 4.000–15.00 | guess | temperate woodland ~10-20 kg C/m2 with roots, less under a dim sky and on part of the floor (guess) |
+| `valley_growth_rate` | 0.2000 | per year (logistic) | 0.1000–0.4000 | guess | woodland reaching most of its biomass in ~20-40 years (guess) |
+| `litter_turnover_yr` | 8.000 | years (standing biomass shed as litter) | 4.000–20.00 | guess | leaves yearly, wood over decades (guess) |
+| `farm_co2_pa` | 100.0 | Pa of CO2 at the crops | 60.00–150.0 | estimate | §13: ~1,000 ppm at sea level, as in NASA's growth chambers |
+| `co2_half_saturation_pa` | 35.00 | Pa | 25.00–50.00 | estimate | C3 canopy response: ~+30% from 400 to 800 ppm (unsourced) |
+| `duct_exchange_m3_s` | 400.0 | m3/s of air between the valleys and the farm ring, per torus | 100.0–1,000 | guess | ducts along the hub (§13; to size) |
+| `co2_limit_pa` | 500.0 | Pa | 300.0–700.0 | estimate | ~5,000 ppm at sea level, the usual long-term exposure limit (unsourced) |
+| `o2_min_kpa` | 17.00 | kPa | 16.00–19.00 | estimate | ~1,800 m altitude's O2 partial pressure (unsourced) |
+| `leak_frac_yr` | 0.001000 | share of the air lost per year | 0.0001000–0.01000 | guess | seals, docking, airlocks (guess) |
+| `o2_regen_mj_kg` | 25.00 | MJ per kg of O2 recovered from CO2 | 15.00–40.00 | estimate | CO2 -> C + O2 needs ~12 MJ/kg of O2; Bosch or Sabatier with electrolysis at ~50% (unsourced) |
 | `stability_margin` | 0.2000 | required I_axis / I_transverse - 1 | fixed | design | §11, 20% margin |

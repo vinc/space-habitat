@@ -865,6 +865,160 @@ high = 200
 source = "electronics, dopants, catalysts, cesium, microbes and seeds (§10, §13): kilograms to tonnes each (guess)"
 status = "guess"
 
+# --- Closed atmosphere (ecology_model/, plan §7); the system model doesn't use these ---
+
+[ecology.kcal_per_l_o2]
+value = 4.85
+unit = "kcal of food per litre of O2 (STP)"
+low = 4.7
+high = 5.0
+source = "indirect calorimetry, mixed diet (general physiology, unsourced)"
+status = "estimate"
+
+[ecology.respiratory_quotient]
+value = 0.87
+unit = "mol CO2 per mol O2"
+low = 0.8
+high = 0.95
+source = "mixed diet (general physiology, unsourced)"
+status = "estimate"
+
+[ecology.harvest_index]
+value = 0.5
+unit = "edible share of the carbon the crops fix"
+low = 0.4
+high = 0.6
+source = "wheat, soybean and potato in controlled environments (~0.4-0.7; unsourced)"
+status = "estimate"
+
+[ecology.organics_carbon_frac]
+value = 0.5
+unit = "kg C per kg of imported organics"
+low = 0.4
+high = 0.58
+source = "soil organic matter ~50-58% carbon (unsourced)"
+status = "estimate"
+
+[ecology.soil_labile_frac]
+value = 0.3
+unit = "share of the soil's organic carbon that decays fast"
+low = 0.1
+high = 0.5
+source = "fresh compost and residues (guess)"
+status = "guess"
+
+[ecology.soil_labile_turnover_yr]
+value = 1
+unit = "years"
+low = 0.5
+high = 3
+source = "fresh organic matter in warm moist soil (guess)"
+status = "guess"
+
+[ecology.soil_stable_turnover_yr]
+value = 30
+unit = "years"
+low = 10
+high = 100
+source = "humus (guess)"
+status = "guess"
+
+[ecology.humification_frac]
+value = 0.2
+unit = "share of decaying labile carbon that becomes humus"
+low = 0.1
+high = 0.3
+source = "(guess)"
+status = "guess"
+
+[ecology.valley_biomass_start]
+value = 1
+unit = "kg C per m2 of floor, as planted"
+low = 0.2
+high = 3
+source = "young plantings (guess)"
+status = "guess"
+
+[ecology.valley_biomass_max]
+value = 8
+unit = "kg C per m2 of floor, grown"
+low = 4
+high = 15
+source = "temperate woodland ~10-20 kg C/m2 with roots, less under a dim sky and on part of the floor (guess)"
+status = "guess"
+
+[ecology.valley_growth_rate]
+value = 0.2
+unit = "per year (logistic)"
+low = 0.1
+high = 0.4
+source = "woodland reaching most of its biomass in ~20-40 years (guess)"
+status = "guess"
+
+[ecology.litter_turnover_yr]
+value = 8
+unit = "years (standing biomass shed as litter)"
+low = 4
+high = 20
+source = "leaves yearly, wood over decades (guess)"
+status = "guess"
+
+[ecology.farm_co2_pa]
+value = 100
+unit = "Pa of CO2 at the crops"
+low = 60
+high = 150
+source = "§13: ~1,000 ppm at sea level, as in NASA's growth chambers"
+status = "estimate"
+
+[ecology.co2_half_saturation_pa]
+value = 35
+unit = "Pa"
+low = 25
+high = 50
+source = "C3 canopy response: ~+30% from 400 to 800 ppm (unsourced)"
+status = "estimate"
+
+[ecology.duct_exchange_m3_s]
+value = 400
+unit = "m3/s of air between the valleys and the farm ring, per torus"
+low = 100
+high = 1000
+source = "ducts along the hub (§13; to size)"
+status = "guess"
+
+[ecology.co2_limit_pa]
+value = 500
+unit = "Pa"
+low = 300
+high = 700
+source = "~5,000 ppm at sea level, the usual long-term exposure limit (unsourced)"
+status = "estimate"
+
+[ecology.o2_min_kpa]
+value = 17
+unit = "kPa"
+low = 16
+high = 19
+source = "~1,800 m altitude's O2 partial pressure (unsourced)"
+status = "estimate"
+
+[ecology.leak_frac_yr]
+value = 0.001
+unit = "share of the air lost per year"
+low = 0.0001
+high = 0.01
+source = "seals, docking, airlocks (guess)"
+status = "guess"
+
+[ecology.o2_regen_mj_kg]
+value = 25
+unit = "MJ per kg of O2 recovered from CO2"
+low = 15
+high = 40
+source = "CO2 -> C + O2 needs ~12 MJ/kg of O2; Bosch or Sabatier with electrolysis at ~50% (unsourced)"
+status = "estimate"
+
 # --- Stability --------------------------------------------------------------
 
 [stability.stability_margin]
