@@ -39,8 +39,9 @@ def baseline_section(p):
                      f"{num((s.labile + s.stable) * closed.M_C / r['geometry']['floor_area'], 2)} kg/m²"])
     return [
         "## A torus in balance",
-        "Per torus of a six-stack, three farm tiers lit (`ecology_model/closed.py`). The farm fixes what feeds "
-        "its people, half of it edible (`harvest_index`); people eat it and breathe it out; the inedible half "
+        "Per torus of a six-stack, three farm tiers lit (`ecology_model/closed.py`). The farm fixes its share "
+        "of its people's food and the valley's gardens the rest, half of it edible (`harvest_index`); people "
+        "eat it and breathe it out; the inedible half "
         "is composted into the soil and respired; the valley's grown woodland sheds as much as it grows. The "
         "farm's air is held at ~1,000 ppm-equivalent of CO2 (100 Pa), exchanged with the valleys' through the "
         f"hub ducts at {num(p.duct_exchange_m3_s)} m³/s, so the valleys sit a little above it. The O2 store "
@@ -58,7 +59,9 @@ def failure_section(p):
         rows.append(scenarios.soil_burst(p, r))
         for x in rows:
             out.append([name, x["name"], days(x["co2_days"]), days(x["o2_days"]),
-                        f"{num(x['co2_max'])} Pa", f"{num(x['o2_min'] / 1e3, 3)} kPa", f"{x['food_days_left']:,.0f} days",
+                        f"{num(x['co2_max'])} Pa", f"{num(x['o2_min'] / 1e3, 3)} kPa",
+                        days(x["food_out_days"]) if x["food_out_days"] is not None
+                        else f"never ({x['food_days_left']:,.0f} days left)",
                         f"{num(x['regen_peak_t_day'], 2)} t/day ({num(x['regen_peak_mw'], 2)} MW)"])
     return [
         "## Failures",
@@ -69,10 +72,11 @@ def failure_section(p):
         f"{p.o2_regen_mj_kg:g} MJ per kg of O2. The farm's crops take up more CO2 as it rises "
         f"(x / (x + {p.co2_half_saturation_pa:g} Pa)), which buffers small upsets on its own.",
         table(["Torus", "Scenario", "CO2 limit after", "O2 limit after", "Peak CO2", "Lowest O2",
-               "Food left after a year (of 90 days stored)", "Recovery needed at peak"], out),
+               "Food store (90 days) runs out after", "Recovery needed at peak"], out),
         "A dark tier costs food before it costs air: the crops fertilised by the extra CO2 make up only part "
-        "of it. With the recovery plant holding the air, the store runs down instead (stores, or tiers lit "
-        "back, cover it).",
+        "of it, and the store runs down. Once it is empty the model has people breathe out their body "
+        "reserves (tracked, so the carbon still closes); later crossings assume no resupply, so read them as "
+        "bounds. Relighting the tiers or bringing food in ends it.",
     ]
 
 

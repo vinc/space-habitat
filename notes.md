@@ -253,16 +253,16 @@ A compartment model of one torus's air with its farm ring (`ecology_model/`, `re
 - **The air is a deep buffer.** A 900 m torus's air holds ~4 kt of O₂, ~5 years of breathing for its ~3,050 people (three tiers lit); ~8 years at 1.6 km.
 - **A dark tier costs food before air.** The crops take up more CO₂ as it rises, which absorbs small upsets on its own. Uncontrolled, from a torus in balance, at 900 m:
 
-| Scenario | CO₂ past 0.5 kPa (~5,000 ppm at sea level) | O₂ below 17 kPa | Oxygen to recover from CO₂, at peak |
-|---|---|---|---|
-| One farm tier dark | ~100 days | not within a year | ~0.6 t/day (~0.2 MW) |
-| Two tiers dark (the pumps' passive fallback, section 13) | ~33 days | ~300 days | ~2.2 t/day (~0.6 MW) |
-| The whole farm dark | ~20 days | ~160 days | ~3.8 t/day (~1.1 MW) |
-| A burst of soil respiration (+1 µmol/m²/s, fading over a year) | — | — | none: the crops take it up |
+| Scenario | CO₂ past 0.5 kPa (~5,000 ppm at sea level) | O₂ below 17 kPa | Food store (90 days) runs out | Oxygen to recover from CO₂, at peak |
+|---|---|---|---|---|
+| One farm tier dark | ~110 days | not within a year | not within a year | ~0.6 t/day (~0.2 MW) |
+| Two tiers dark (the pumps' passive fallback, section 13) | ~36 days | ~330 days | ~170 days | ~2.1 t/day (~0.6 MW) |
+| The whole farm dark | ~22 days | ~176 days | ~97 days | ~3.6 t/day (~1.0 MW) |
+| A burst of soil respiration (+1 µmol/m²/s, fading over a year) | — | — | — | none: the crops take it up |
 
   (1.6 km tori last ~1.5–2× longer.) **Proposed: a ~1 MW physico-chemical recovery plant per 900 m torus** (a Bosch or Sabatier reactor with electrolysis, turning CO₂ back into oxygen at ~25 MJ per kg of O₂), enough to hold the air through the whole farm going dark; the food store (~90 days) and relighting the tiers cover the rest.
-- **A new torus is the hard case.** Its soil starts with imported organics (~0.1 t/m², ~50 kg C/m²) against the ~13 kg C/m² that residues and litter keep up once mature, so it respires the difference: uncontrolled, CO₂ passes its limit in ~3 days and O₂ in ~25. It takes ~8 MW of recovery at first (~17 t of O₂ a day after six months), ~12 kt of O₂ over ten years. **Proposed: compost the organics before they go in** (fast-decaying share 30% → 5%: ~1.3 MW at peak), or import half and grow the rest from residues (~3.3 MW, done in ~5 years). This is Biosphere 2's lesson at a larger scale.
-- **Biosphere 2, replayed.** Its O₂ fell from ~20.9% to ~14.2% in ~16 months. Run through the same model (approximate figures, recalled: ~1.27 ha, ~1.8 × 10⁵ m³ of air, eight people), that takes ~1.2 µmol/m²/s of soil respiration beyond what photosynthesis returned, a fraction of ordinary soil respiration, with ~25 t of CO₂ going into the concrete. A torus has ~2.3× the air per m² (~39 kg against ~17) and no concrete: the same imbalance shows as CO₂ within ~9 months, while the farm's crops, fertilised by it, return most of the oxygen.
+- **A new torus is the hard case.** Its soil starts with imported organics (~0.1 t/m², ~50 kg C/m²) against the ~13 kg C/m² that residues and litter keep up once mature, so it respires the difference: uncontrolled, CO₂ passes its limit in ~3 days and O₂ in ~25. It takes ~8 MW of recovery at first (~17 t of O₂ a day after six months), ~12 kt of O₂ over ten years. **Proposed: compost the organics before they go in** (fast-decaying share 30% → 5%: ~1.4 MW at peak), or import half and grow the rest from residues (~3.4 MW, done in ~5 years). This is Biosphere 2's lesson at a larger scale.
+- **Biosphere 2, replayed.** Its O₂ fell from ~20.9% to ~14.2% in ~16 months. Run through the same model (approximate figures, recalled: ~1.27 ha, ~1.8 × 10⁵ m³ of air, eight people), that takes ~1.2 µmol/m²/s of soil respiration beyond what photosynthesis returned, a fraction of ordinary soil respiration, with ~25 t of CO₂ going into the concrete. A torus has ~2.3× the air per m² (~39 kg against ~17) and no concrete: the same imbalance shows as CO₂ within ~8 months, while the farm's crops, fertilised by it, return most of the oxygen.
 - **Leaks:** a 10 cm hole in the pressure hull loses a tenth of a 900 m torus's air in ~19 days, a 1 m hole in ~5 hours.
 - **Not modelled:** water and humidity, trace gases, nitrogen fixation and denitrification, the valley's daily CO₂ swing, seasons, and the controls' own failures.
 
@@ -1971,7 +1971,7 @@ Status of the gaps identified so far:
 | Nitrogen at Eros | **Open:** Ryugu supports ~3 six-stacks of 1.6 km; more C-type partners or a lower atmospheric pressure needed beyond |
 | Biological year and photoperiod | **Open:** effects of 1.2–1.8-year years (Torifune's ~1.05-year year nearly avoids the question) on annual plants and insects; long-day species limited to six-stacks |
 | Power beyond the inner system | Nuclear investigated and rejected for now under the sourcing rule (section 17.22); **open:** thin-film concentrator mirrors (belt to Saturn), RTGs for emergency power |
-| Atmosphere chemistry | **Open:** CO₂ (plants want ≳ 40 Pa), humidity, condensation and rain under a 56–100 m ceiling, trace contaminants Closed-atmosphere model (section 3d): ~5 years of O₂ in a 900 m torus's air; the whole farm dark reaches the CO₂ limit in ~20 days, held by a ~1 MW recovery plant; a new torus's imported organics respire far faster than its people breathe, so compost them first. |
+| Atmosphere chemistry | **Open:** CO₂ (plants want ≳ 40 Pa), humidity, condensation and rain under a 56–100 m ceiling, trace contaminants Closed-atmosphere model (section 3d): ~5 years of O₂ in a 900 m torus's air; the whole farm dark reaches the CO₂ limit in ~22 days, held by a ~1 MW recovery plant; a new torus's imported organics respire far faster than its people breathe, so compost them first. |
 | Corrosion | Largely addressed (dry rock jacket, nickel cladding in wet zones) |
 | Dynamics | **Open:** ballast balancing with dedicated tanks, settling of the rock fill during spin-up, docking loads |
 | Failure modes | Micrometeoroids assessed (section 13: negligible for the panels, the rock jacket protects the pressure hull, rock leaking through the outer skin is the main risk, answered by the double skin with a crawl space). **Open:** punctures, fire at 29% O₂, compartmentalising the canyon, evacuation to sister habitats |
@@ -2014,7 +2014,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **30 October 2026**
-- **Closed atmosphere (sections 3d, 18; plan §7):** a compartment model of a torus's air, crops, people, soil and woodland (`ecology_model/`). The air holds ~5 years of O₂ at 900 m; the whole farm going dark reaches the CO₂ limit in ~20 days and O₂'s in ~160; a ~1 MW recovery plant per torus (CO₂ back to O₂) holds both (proposed). A new torus's imported organics respire ~14× faster than its people breathe: compost them before they go in (proposed). Biosphere 2's oxygen loss replayed: ~1.2 µmol/m²/s of excess soil respiration.
+- **Closed atmosphere (sections 3d, 18; plan §7):** a compartment model of a torus's air, crops, people, soil and woodland (`ecology_model/`). The air holds ~5 years of O₂ at 900 m; the whole farm going dark reaches the CO₂ limit in ~22 days and O₂'s in ~176 (the food store runs out at ~97); a ~1 MW recovery plant per torus (CO₂ back to O₂) holds both (proposed). A new torus's imported organics respire ~14× faster than its people breathe: compost them before they go in (proposed). Biosphere 2's oxygen loss replayed: ~1.2 µmol/m²/s of excess soil respiration.
 
 **29 October 2026**
 - **Heat rejection (sections 13, 18; plan §6):** a heat rejection model (`thermal_model/`). Spin gravity sets the loops: the valleys' radiators sit inboard of the heat, so their water loops run passively (~0.45 m pipes per 900 m torus); the farm's sit outboard, so they need pumps (~0.2% of the heat). Inboard farm radiators would be passive but can't cool a six-stack's farm (~0.5–0.75×): proposed as a fallback keeping ~1 tier lit. Two-phase ammonia can't boil at the rim under its own liquid column without throttling. The farm radiators must reach ~0.75 r for 1.5× margins; ~27 + 42 ha of panels per 900 m torus. Edge-on to the Sun, the drum's panels stay dark below ~1.5° of axis tilt and the open farm section takes ~1.3% of its heat per degree. Left to itself the valley swings ~2–4 K (wet) to ~4–11 K (dry).

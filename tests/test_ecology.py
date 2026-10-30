@@ -13,12 +13,56 @@ class TestClosed(unittest.TestCase):
     def setUp(self):
         self.c = replace(closed.config(P, R), leak=0.0)
 
+    def carbon_residual(self, c, s, f):
+        """Carbon in minus out over every pool: air, food, soil, vegetation, bodies, controls and leaks."""
+        return (f["d_co2"] + f["d_food"] + f["d_labile"] + f["d_stable"] + f["d_veg"] - f["d_body"]
+                + f["d_removed"] + c.leak * s.co2)
+
     def test_carbon_is_conserved(self):
         for s in (closed.initial(self.c), closed.mature(self.c)):
             f = closed.fluxes(self.c, s, self.c.lit)
-            total = f["d_co2"] + f["d_food"] + f["d_labile"] + f["d_stable"] + f["d_veg"]
             scale = f["uptake"] + f["soil"] + f["breathe_co2"]
-            self.assertLess(abs(total), 1e-12 * scale)
+            self.assertLess(abs(self.carbon_residual(self.c, s, f)), 1e-12 * scale)
+
+    def test_carbon_is_conserved_when_pools_run_out(self):
+        c = scenarios.controlled(self.c, P)
+        cases = []
+        s = closed.initial(c)                       # no oxygen left, the startup soil
+        s.o2 = 0.0
+        cases.append((c, s, c.lit))
+        s = closed.mature(c)                        # food gone, farm dark
+        s.food = 0.0
+        cases.append((c, s, 0.0))
+        s = closed.mature(c)                        # low O2 and little CO2, controls on
+        s.o2 = 17200 * c.volume / (closed.R_GAS * c.temperature)
+        cases.append((c, s, c.lit))
+        s = replace(closed.mature(c), excess=10.0)  # a burst larger than the humus can give in a step
+        s.stable = 1.0
+        cases.append((c, s, c.lit))
+        for c, s, lit in cases:
+            f = closed.fluxes(c, s, lit, 3600.0)
+            scale = f["uptake"] + f["soil"] + f["breathe_co2"] + f["regen"] + 1e-9
+            self.assertLess(abs(self.carbon_residual(c, s, f)), 1e-9 * scale)
+
+    def test_recovery_never_takes_more_co2_than_there_is(self):
+        c = scenarios.controlled(self.c, P)
+        s = closed.mature(c)
+        rt = closed.R_GAS * c.temperature / c.volume
+        s.o2 = 17200 / rt
+        co2_before, o2_before = s.co2, s.o2
+        f = closed.fluxes(c, s, c.lit, 3600.0)
+        self.assertGreaterEqual(co2_before + f["d_co2"] * 3600.0, -1e-6)
+        # The O2 it adds can't exceed the CO2 there was plus what the step produced.
+        self.assertLessEqual(f["regen"] * 3600.0, co2_before + (f["breathe_co2"] + f["soil"]) * 3600.0)
+        out = closed.run(c, 0.05, state=s)
+        self.assertGreaterEqual(min(out["co2"]), 0.0)
+        self.assertLess(out["o2"][-1], o2_before * rt + 600)
+
+    def test_farm_and_gardens_split_the_diet(self):
+        diet = self.c.people * self.c.food_c
+        self.assertAlmostEqual((self.c.farm_fix * self.c.lit + self.c.garden) * self.c.harvest_index / diet, 1.0,
+                               places=9)
+        self.assertAlmostEqual(self.c.garden * self.c.harvest_index / diet, P.valley_diet_share, places=9)
 
     def test_a_mature_torus_holds_steady(self):
         s = closed.mature(self.c)

@@ -4,29 +4,29 @@ Plan §7 (`ecology_model/`): a compartment model of one torus's air (O2, CO2, N2
 
 ## A torus in balance
 
-Per torus of a six-stack, three farm tiers lit (`ecology_model/closed.py`). The farm fixes what feeds its people, half of it edible (`harvest_index`); people eat it and breathe it out; the inedible half is composted into the soil and respired; the valley's grown woodland sheds as much as it grows. The farm's air is held at ~1,000 ppm-equivalent of CO2 (100 Pa), exchanged with the valleys' through the hub ducts at 400 m³/s, so the valleys sit a little above it. The O2 store is the air's own: years of breathing.
+Per torus of a six-stack, three farm tiers lit (`ecology_model/closed.py`). The farm fixes its share of its people's food and the valley's gardens the rest, half of it edible (`harvest_index`); people eat it and breathe it out; the inedible half is composted into the soil and respired; the valley's grown woodland sheds as much as it grows. The farm's air is held at ~1,000 ppm-equivalent of CO2 (100 Pa), exchanged with the valleys' through the hub ducts at 400 m³/s, so the valleys sit a little above it. The O2 store is the air's own: years of breathing.
 
 | Torus | People | O2 in the air | O2 breathed a day | Air's O2 / breathing | Valley CO2 | Farm CO2 | Soil carbon, at equilibrium |
 |---|---|---|---|---|---|---|---|
 | 900 m | 3,050 | 3.95 kt | 2.2 t | 4.8 yr | 108 Pa | 100 Pa | 13 kg/m² |
-| 1.6 km | 9,650 | 21.5 kt | 7.1 t | 8.3 yr | 127 Pa | 100.0 Pa | 13 kg/m² |
+| 1.6 km | 9,650 | 21.5 kt | 7.1 t | 8.3 yr | 125 Pa | 100.0 Pa | 13 kg/m² |
 
 ## Failures
 
 From a torus in balance, uncontrolled for a year: days until the valleys' CO2 passes 500 Pa (~5,000 ppm at sea level) and the O2 falls below 17 kPa, the worst of each; then the oxygen a physico-chemical plant must recover from CO2 (a Bosch or Sabatier reactor with electrolysis, undoing respiration as photosynthesis does) to hold both, at 25 MJ per kg of O2. The farm's crops take up more CO2 as it rises (x / (x + 35 Pa)), which buffers small upsets on its own.
 
-| Torus | Scenario | CO2 limit after | O2 limit after | Peak CO2 | Lowest O2 | Food left after a year (of 90 days stored) | Recovery needed at peak |
+| Torus | Scenario | CO2 limit after | O2 limit after | Peak CO2 | Lowest O2 | Food store (90 days) runs out after | Recovery needed at peak |
 |---|---|---|---|---|---|---|---|
-| 900 m | One farm tier dark | 104 days | never (1 yr) | 1,070 Pa | 19.2 kPa | 33 days | 0.62 t/day (0.18 MW) |
-| 900 m | Two tiers dark (the pumps' passive fallback) | 33 days | 304 days | 3,620 Pa | 16.4 kPa | 0 days | 2.2 t/day (0.64 MW) |
-| 900 m | The whole farm dark | 20 days | 163 days | 6,350 Pa | 13.5 kPa | 0 days | 3.8 t/day (1.1 MW) |
-| 900 m | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 245 Pa | 20.1 kPa | 182 days | 0 t/day (0 MW) |
-| 1.6 km | One farm tier dark | 177 days | never (1 yr) | 747 Pa | 19.6 kPa | 26 days | 1.9 t/day (0.55 MW) |
-| 1.6 km | Two tiers dark (the pumps' passive fallback) | 55 days | never (1 yr) | 2,180 Pa | 18.0 kPa | 0 days | 6.9 t/day (2.0 MW) |
-| 1.6 km | The whole farm dark | 33 days | 295 days | 3,740 Pa | 16.3 kPa | 0 days | 12 t/day (3.5 MW) |
-| 1.6 km | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 245 Pa | 20.2 kPa | 179 days | 0 t/day (0 MW) |
+| 900 m | One farm tier dark | 113 days | never (1 yr) | 1,020 Pa | 19.3 kPa | never (36 days left) | 0.57 t/day (0.17 MW) |
+| 900 m | Two tiers dark (the pumps' passive fallback) | 36 days | 330 days | 3,370 Pa | 16.7 kPa | 169 days | 2.1 t/day (0.60 MW) |
+| 900 m | The whole farm dark | 22 days | 176 days | 5,910 Pa | 13.9 kPa | 97 days | 3.6 t/day (1.0 MW) |
+| 900 m | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 256 Pa | 20.1 kPa | never (179 days left) | 0 t/day (0 MW) |
+| 1.6 km | One farm tier dark | 193 days | never (1 yr) | 710 Pa | 19.6 kPa | never (30 days left) | 1.7 t/day (0.50 MW) |
+| 1.6 km | Two tiers dark (the pumps' passive fallback) | 60 days | never (1 yr) | 2,040 Pa | 18.2 kPa | 167 days | 6.4 t/day (1.9 MW) |
+| 1.6 km | The whole farm dark | 36 days | 320 days | 3,490 Pa | 16.6 kPa | 97 days | 11 t/day (3.2 MW) |
+| 1.6 km | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 251 Pa | 20.1 kPa | never (176 days left) | 0 t/day (0 MW) |
 
-A dark tier costs food before it costs air: the crops fertilised by the extra CO2 make up only part of it. With the recovery plant holding the air, the store runs down instead (stores, or tiers lit back, cover it).
+A dark tier costs food before it costs air: the crops fertilised by the extra CO2 make up only part of it, and the store runs down. Once it is empty the model has people breathe out their body reserves (tracked, so the carbon still closes); later crossings assume no resupply, so read them as bounds. Relighting the tiers or bringing food in ends it.
 
 ## A new torus
 
@@ -34,9 +34,9 @@ A 900 m torus filled with its soil (imported organics at 0.1 t/m², ~50 kg C/m²
 
 | Soil | CO2 limit after | O2 limit after | Recovery at peak | O2 recovered, t/day at 0.5 / 2 / 5 yr | O2 recovered over 10 yr |
 |---|---|---|---|---|---|
-| As planned: imported organics, 30% fast-decaying | 3 days | 25 days | 7.7 MW | 17 / 4.6 / 0.84 | 12 kt |
-| Organics composted before they go in (5% fast-decaying) | 16 days | 165 days | 1.3 MW | 3.7 / 2.2 / 1.3 | 5.8 kt |
-| Half the organics, the rest grown from residues | 7 days | 62 days | 3.3 MW | 7.0 / 1.4 / 0 | 3.8 kt |
+| As planned: imported organics, 30% fast-decaying | 3 days | 25 days | 7.8 MW | 17 / 4.7 / 0.88 | 12 kt |
+| Organics composted before they go in (5% fast-decaying) | 16 days | 161 days | 1.4 MW | 3.7 / 2.3 / 1.4 | 5.9 kt |
+| Half the organics, the rest grown from residues | 7 days | 61 days | 3.4 MW | 7.1 / 1.4 / 0 | 3.9 kt |
 
 ## Leaks
 
@@ -59,7 +59,7 @@ Biosphere 2 (1991–1993): O2 fell from ~20.9% to ~14.2% in ~16 months, as the c
 | Air per m² of floor | 16.8 kg | 39.1 kg |
 | Net soil respiration beyond photosynthesis, fitted | 1.2 µmol/m²/s | — |
 | CO2 into the concrete over the 16 months | 25.1 t | no concrete |
-| The same excess per m²: CO2 limit after | (held by the concrete) | 261 days |
+| The same excess per m²: CO2 limit after | (held by the concrete) | 231 days |
 | … O2 limit after | ~a year to 14% | never (1 yr) |
 
 ~1 µmol/m²/s is a fraction of ordinary soil respiration (several µmol/m²/s), so a small imbalance is enough. In a torus the same imbalance shows first as CO2, within months, because nothing like the concrete absorbs it, and the farm's crops, fertilised by it, return most of the oxygen.

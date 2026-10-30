@@ -30,7 +30,9 @@ def summarise(p, uncontrolled, held, horizon_days):
     co2_limit, o2_min = limits(p)
     peak = max(held["regen"]) if held["regen"] else 0.0
     total = sum(held["regen"]) * DAY                      # mol O2 regenerated over the run (daily records)
+    food_out = next((t / DAY for t, f in zip(uncontrolled["t"], uncontrolled["food_days"]) if f <= 1e-6), None)
     return {
+        "food_out_days": food_out,                        # then people breathe out their body reserves
         "co2_days": first_crossing(uncontrolled, "co2", co2_limit),
         "o2_days": first_crossing(uncontrolled, "o2", o2_min, above=False),
         "food_days_left": uncontrolled["food_days"][-1],
@@ -110,11 +112,13 @@ def biosphere2(p, co2_held_pa=150.0):
     def make(excess):
         base = dict(temperature=b["temperature"], volume=b["volume"], n2=moles * (1 - b["o2_start"]),
                     o2=moles * b["o2_start"], people=b["people"], food_c=food_c, rq=p.respiratory_quotient,
-                    harvest_index=p.harvest_index, farm_fix=b["people"] * food_c / p.harvest_index, lit=1.0,
+                    harvest_index=p.harvest_index, farm_fix=b["people"] * food_c / p.harvest_index, garden=0.0,
+                    lit=1.0,
                     farm_co2=40.0, half_sat=p.co2_half_saturation_pa, exchange=1e5,
-                    # The residues' own decay at equilibrium; the fitted excess comes on top.
+                    # The residues' own decay at equilibrium; the fitted excess comes on top, drawn from the
+                    # compost-rich soil's humus (ample, so it never runs short over the 16 months).
                     soil_labile=(1 - p.harvest_index) * b["people"] * food_c / p.harvest_index * YEAR,
-                    soil_stable=0.0, k_labile=1 / YEAR, k_stable=1 / YEAR, humification=0.0,
+                    soil_stable=1e9, k_labile=1 / YEAR, k_stable=0.0, humification=0.0,
                     veg=1.0, veg_max=1.0, veg_rate=0.0, k_litter=0.0, leak=0.0,
                     food_store=b["people"] * food_c * 365 * DAY, soil_excess=excess,
                     scrub=1e6, co2_target=co2_held_pa)
