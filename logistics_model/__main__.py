@@ -213,10 +213,14 @@ def partner_section(p):
         f"~1.5 km across, ~{xx_mass / ryugu:.1f}× Ryugu's mass, ~{num(gain('1999 XX262', 'Eros'), 2)} km/s closer "
         f"to Eros at its 2030–2060 windows and with usable windows ~3× as often; 2001 WT1 (~0.5 km) is "
         f"~{num(gain('2001 WT1', 'Itokawa'), 2)} km/s closer to Itokawa and ~{num(gain('2001 WT1', 'Torifune'), 2)} "
-        "closer to Torifune than Ryugu. Both are known only by their "
-        "albedo: dark (C-, D- or P-like) is not yet carbonaceous with nitrogen, and NEOWISE's diameters are "
-        "good to ~±20–30%. A spectrum (and, for the chosen one, a sample) comes first; Ryugu stays the "
-        "baseline.",
+        "closer to Torifune than Ryugu. **1999 XX262 is already a B-type**, like Bennu: visible and "
+        "near-infrared spectra (Popescu et al. 2019; Marsset et al. 2022, MIT–Hawaii survey) and SDSS colours "
+        "(Sergeyev et al. 2023) all give B, Mahlke et al. (2022) Ch, with the 0.7 µm band of water-bearing "
+        "clays; NEOWISE puts it at 1.48 ± 0.01 km and albedo 0.044 (SsODNet, consulted 30 October 2026). "
+        "Its nitrogen is unknown: the 3 µm band of hydrated minerals and ammonium (JWST, or IRTF at its "
+        "2033–2038 passes) comes next, then a sample. **2001 WT1** has only near-infrared colours from the "
+        "VISTA survey (MOVIS, too uncertain to class it) and NEOWISE's albedo (~0.04–0.06, ~0.54 km): a "
+        "spectrum first, at its October 2027 or October 2035 passes. Ryugu stays the baseline until then.",
     ]
 
 
