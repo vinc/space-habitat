@@ -15,9 +15,11 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import environment as env, physics, shield, tube
+from . import environment as env, physics, reference, shield, tube
 
 ROCK = "Tailings (L/LL chondrite, metal removed)"
+LUNAR = "Lunar regolith (OLTARIS's)"
+PROPOSED = 10.0                                           # t/m²
 MATERIALS = (ROCK, "CI-like clays (C-type)", "Water", "Polyethylene")
 AREALS = (0, 1, 2, 3, 5, 7, 9, 11, 13, 15, 20)            # t/m²
 STEP = 50.0                                               # g/cm² between recorded depths for the sweeps
@@ -98,9 +100,43 @@ def materials_section(m, p):
         "little. Behind a few t/m² the dose is mostly secondaries: neutrons (two thirds of it, deep in rock), "
         "pions and the protons and light ions the cascade knocks out, regenerated all the way through; the "
         "heavy ions are gone by ~1 t/m².",
-        f"**For water, {need[2]} for {p.dose_limit_msv_yr:g} mSv/yr: OLTARIS (Globus & Strout 2017) gives ~7 "
-        f"t/m², so the model agrees where a check exists.** For rock it gives {need[0]} against their ~11 for "
-        "regolith (which the notes use as a rock/water equivalence).",
+        "These are the model's own figures; against OLTARIS (next) they fall too fast with depth in rock.",
+    ]
+
+
+def oltaris_section(m, p):
+    rows = []
+    mats = (LUNAR, "Water", "Polyethylene")
+    prof = {n: m.profile(physics.material(n), [100.0 * t for t in reference.TONNES]) for n in mats}
+    for i, t in enumerate(reference.TONNES):
+        row = [f"{t:g} t/m²"]
+        for n in mats:
+            ref = reference.TABLE2[n]
+            row.append(f"{num(prof[n][i].total, 2)} / {num(ref[i], 3)}" if i < len(ref) else "—")
+        rows.append(row)
+    model_need = [needed([100.0 * t for t in reference.TONNES], prof[n], p.dose_limit_msv_yr) for n in mats]
+    olt_need = [reference.needed(n, p.dose_limit_msv_yr) for n in mats]
+    rows.append([f"**{p.dose_limit_msv_yr:g} mSv/yr**"] + [f"**{num(a, 2)} / {num(b, 3)} t/m²**" for a, b in
+                                                         zip(model_need, olt_need)])
+    tail = m.profile(physics.material(ROCK), [900.0, 1100.0])
+    lun = m.profile(physics.material(LUNAR), [900.0, 1100.0])
+    ratio = tail[1].total / lun[1].total
+    return ratio, [
+        "## Against OLTARIS",
+        "OLTARIS (NASA's HZETRN, with its neutrons' angular spread) for the same sphere, from Globus & Strout "
+        "(2017, Table 2: the 1977–78 solar minimum, effective dose on a female body model). Model / OLTARIS, "
+        "mSv/yr:",
+        table(["Shield", "Lunar regolith", "Water", "Polyethylene"], rows),
+        "Two differences, both expected: shallow, the model's point dose runs ~2× OLTARIS's dose averaged "
+        "over a body, which shields its own organs from the heavy ions; deep, the model falls too fast, e-fold "
+        "every ~1.7 t/m² of rock against OLTARIS's ~2.3, so behind 9–11 t/m² of regolith it is 2–3× low. "
+        "For water the two cross near the limit and agree on the thickness; for rock the model's ~8.8 t/m² "
+        f"is too thin, and OLTARIS's ~{num(olt_need[0], 3)} t/m² (the notes' ~11) stands. Two cascade inputs "
+        "can't match all three materials at once (fitting rock's slope puts water ~2.5× high), so the model "
+        "is kept for what it compares, and the sizing below rests on OLTARIS's curve.",
+        f"Its comparison of rock types holds better than its depth: the tailings, richer in iron and "
+        f"magnesium than lunar regolith, come out within ~{abs(ratio - 1):.0%} of it at 9–11 t/m² "
+        "(about as much neutron-making per tonne), so OLTARIS's regolith curve stands for the tailings.",
     ]
 
 
@@ -125,6 +161,10 @@ def layer_section(m, p, base_areal):
         "A water layer stops the neutrons that diffuse out of the dry rock (a few cm of it already) and shields "
         "the high-energy particles about as well as rock per tonne; the floor's moist fill, the cliff "
         "dwellings' soil and any tanks against the walls do this already.",
+        "OLTARIS agrees on the direction (Janhunen 2020): 8.68 t/m² of dry regolith with 0.18 t/m² of water and "
+        "1 kg/m² of boron-10 inside it (and 0.18 t/m² of iron outside) gives 20 mSv/yr at a sphere's centre, "
+        f"~{num(sum(reference.JANHUNEN['layers_t_m2'].values()), 3)} t/m² in all against "
+        f"~{num(reference.needed(LUNAR, 20), 3)} t/m² of bare regolith.",
     ]
 
 
@@ -170,7 +210,7 @@ def tube_section(m, p, rock_profile):
         rows.append([f"{areal} t/m² ({num(lay['jacket'], 2)} m; {num(lay['jacket_under_fill'], 2)} m under the fill)",
                      num(sph.total, 2)] + [num(x, 2) for x in pts])
     return floor_doses, [
-        "## Inside the tube",
+        "## Inside the tube, straight ahead",
         "The 900 m torus's cross-section (`radiation_model/tube.py`): the tube (radius 28 m), the jacket "
         "(thinner under the fill by its credit, as the system model has it), the 1 m fill over the lower half. "
         "Rays to every direction, their path through rock and fill counted as tailings, the tube taken as "
@@ -178,10 +218,46 @@ def tube_section(m, p, rock_profile):
         "hub and the farm section, which hide some of the sky in a stack, are left out.",
         table(["Jacket", "Sphere centre", "On the floor (1.5 m up)", "Tube's centre", "Under the ceiling",
                "Cliff dwelling behind 2 m of soil"], rows),
-        "A long tube shields better than a sphere of the same wall: a ray leaving at an angle ψ to its axis "
-        "crosses 1/sin ψ times the wall, so only the directions across the tube see the jacket's thickness. "
-        "On the floor and against the walls the dose is about a quarter of the sphere's; on the tube's axis "
-        "about half.",
+        "Straight ahead, a long tube shields better than a sphere of the same wall: a ray leaving at an angle "
+        "ψ to its axis crosses 1/sin ψ times the wall, so the model puts the floor and the walls at ~¼ of the "
+        "sphere's dose and the axis at ~½. That overstates it: in OLTARIS a point at the wall of a slab gets "
+        f"~{reference.WALL_FACTOR:.0%} of the sphere's centre (Janhunen 2020), because deep in the shield the "
+        "dose comes from particles spread in angle (neutrons above all), which slant paths don't stop as well. "
+        "The sizing takes OLTARIS's ½ near the walls.",
+    ]
+
+
+def jacket_section(p, ratio):
+    rows = []
+    for t in (8.0, 9.0, 10.0, 11.0, 12.0):
+        sphere = float(reference.table2(LUNAR, t)) * ratio
+        rows.append([f"{t:g} t/m²" + (" (configured)" if t == p.shield_areal_t_m2 else "")
+                     + (" (proposed)" if t == PROPOSED else ""), num(sphere, 2),
+                     num(sphere * reference.WALL_FACTOR, 2), num(sphere * reference.JANHUNEN["solar_max_centre"]
+                                                                 / reference.JANHUNEN["sphere_centre"], 2)])
+    limit = p.dose_limit_msv_yr
+    xs = np.linspace(6, 14, 801)
+    sph = reference.table2(LUNAR, xs) * ratio
+    centre_need = float(xs[np.argmax(sph <= limit)])
+    wall_need = float(xs[np.argmax(sph * reference.WALL_FACTOR <= limit)])
+    return [
+        "## The jacket's thickness",
+        "OLTARIS's lunar regolith curve (Globus & Strout, Table 2, extended past 11 t/m² at its last slope), "
+        "scaled to the tailings by the model, for a sphere's centre, which bounds the tube's middle; near the "
+        f"walls (the floor, the cliff dwellings, under the ceiling) OLTARIS's slab factor, "
+        f"~{reference.WALL_FACTOR:.2f}. Solar maximum: 25% less (Janhunen). mSv/yr:",
+        table(["Jacket", "Sphere's centre (the tube's middle, at most)", "Near the walls, where people live",
+               "Sphere's centre, solar maximum"], rows),
+        f"**{limit:g} mSv/yr is met at a sphere's centre with ~{num(centre_need, 3)} t/m² and near the walls with "
+        f"~{num(wall_need, 2)} t/m².** The configured {p.shield_areal_t_m2:g} t/m² gives "
+        f"~{num(float(reference.table2(LUNAR, p.shield_areal_t_m2)) * ratio, 2)} mSv/yr at a sphere's centre and "
+        f"~{num(float(reference.table2(LUNAR, p.shield_areal_t_m2)) * ratio * reference.WALL_FACTOR, 2)} near the "
+        "walls. **Proposed: "
+        f"{PROPOSED:g} t/m²** (~5 m of rock): ~{num(float(reference.table2(LUNAR, PROPOSED)) * ratio * reference.WALL_FACTOR, 2)} "
+        f"mSv/yr where people live, and ~{num(float(reference.table2(LUNAR, PROPOSED)) * ratio, 2)} at worst in "
+        "the middle of the tube, where nobody lives (less still with the stack's shading and the body's own). "
+        f"The system model keeps {p.shield_areal_t_m2:g} t/m² until a run in the tube's own geometry (OLTARIS "
+        "or Geant4) confirms the factor near the walls.",
     ]
 
 
@@ -203,8 +279,8 @@ def sensitivity_section(p):
         "## What moves it",
         "Each input at its low and high, the rest as configured: the tailings at the sphere's centre.",
         table(["Input", "Range", "Status", "Dose at 11 t/m², mSv/yr", f"For {p.dose_limit_msv_yr:g} mSv/yr"], rows),
-        "The cascade's guessed inputs move the dose behind 11 t/m² by about −40% / +60%, but the thickness "
-        "for the limit by only ±0.6 t/m²: deep in the shield the dose falls e-fold every ~1.7 t/m².",
+        "The cascade's guessed inputs move the model's dose behind 11 t/m² by about −40% / +60%, its thickness "
+        "for the limit by ±0.6 t/m²; none of them closes the gap to OLTARIS at depth on its own.",
     ]
 
 
@@ -233,12 +309,10 @@ def impact_section(p, proposed):
 
 def report(p):
     m = shield.Model(p)
-    proposed = 9.0
-    profiles, materials = materials_section(m, p)
+    _, materials = materials_section(m, p)
+    ratio, oltaris = oltaris_section(m, p)
     rock_profile = m.profile(physics.material(ROCK), depth_grid(shield.CAP))
-    floor_doses, tube_part = tube_section(m, p, rock_profile)
-    need_rock = needed(depth_grid(), profiles[ROCK], p.dose_limit_msv_yr)
-    at11 = profiles[ROCK][depth_grid().index(1100.0)]
+    _, tube_part = tube_section(m, p, rock_profile)
     parts = [
         "# Radiation transport: how much shield",
         "Plan §3 (`radiation_model/`). Galactic cosmic rays carried through the shield by a one-dimensional "
@@ -247,29 +321,23 @@ def report(p):
         "and colliding (leading nucleons, cascade nucleons, evaporation neutrons, knocked-out light ions, "
         "fragments); the slow neutrons followed by two-group diffusion across the shield (`neutrons.py`); "
         "then the directions, at a sphere's centre or inside the torus's tube (`tube.py`). Geant4 and "
-        "OLTARIS can't run here; this is a stand-in, with its cascade's inputs guessed and checked against "
-        "the few figures below. Left out: the neutral pions' showers, muons, elastic scattering, and the "
-        "fragments that recoil in the body's own tissue, all of which would add to the dose at depth.",
+        "OLTARIS can't run here; this is a stand-in, with its cascade's inputs guessed, checked against the "
+        "figures below and against OLTARIS's published results (`reference.py`), which in the end size the "
+        "jacket. Left out: the neutral pions' showers, muons, elastic scattering, angular spread, and the "
+        "fragments that recoil in the body's own tissue.",
         *check_section(m, p),
         *materials,
+        *oltaris,
         *tube_part,
         *layer_section(m, p, 900.0),
         *event_section(m, p),
         *sensitivity_section(p),
-        "## The jacket's thickness",
-        f"At the configured {p.shield_areal_t_m2:g} t/m² the model gives ~{num(at11.total, 2)} mSv/yr at a "
-        f"sphere's centre and ~{num(floor_doses[11][0], 2)} on the tube's floor, against the "
-        f"{p.dose_limit_msv_yr:g} mSv/yr the jacket was sized for: the notes' ~11 t/m² (Globus & Strout's "
-        f"regolith figure, for a sphere) is conservative. A sphere needs ~{num(need_rock, 2)} t/m² of tailings; "
-        f"inside the tube ~{proposed:g} t/m² gives ~{num(floor_doses[9][0], 2)} mSv/yr on the floor and "
-        f"~{num(floor_doses[9][1], 2)} at the tube's centre, leaving a factor ~2 or more for what the transport "
-        f"leaves out. **Proposed: a {proposed:g} t/m² jacket**, kept at {p.shield_areal_t_m2:g} t/m² in the "
-        "system model until a full transport code (OLTARIS, Geant4) confirms the curve for rock.",
-        *impact_section(p, proposed),
+        *jacket_section(p, ratio),
+        *impact_section(p, PROPOSED),
         "Not modelled: the stack's neighbouring tori, hub and farm section shading the sky (less dose), "
-        "the hub-facing side's services and train tube, the body's self-shielding (effective dose is lower "
-        "than the point dose here), solar maximum (the dose behind the jacket barely changes), capture "
-        "gamma rays from the slow neutrons, and seasonal or long-term changes of the heliosphere.",
+        "the hub-facing side's services and train tube, the body's self-shielding in the model's own figures "
+        "(OLTARIS's include it), capture gamma rays from the slow neutrons, and seasonal or long-term changes "
+        "of the heliosphere (OLTARIS's 1977–78 minimum is milder than 2009–10's).",
     ]
     return "\n\n".join(parts) + "\n"
 

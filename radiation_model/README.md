@@ -1,6 +1,6 @@
 # Radiation transport (plan §3)
 
-How much shield the habitat needs against galactic cosmic rays: dose against areal density for the shield materials, the neutrons' share, a hydrogen-rich inner layer, a solar particle event, the torus's tube against a sphere, and what the dose means for the jacket's thickness. Geant4 and OLTARIS can't run here, so this is a stand-in: a simplified transport with its cascade's inputs guessed and checked against the figures it should reproduce.
+How much shield the habitat needs against galactic cosmic rays: dose against areal density for the shield materials, the neutrons' share, a hydrogen-rich inner layer, a solar particle event, the torus's tube against a sphere, and what the dose means for the jacket's thickness. Geant4 and OLTARIS can't run here, so this is a stand-in: a simplified transport with its cascade's inputs guessed, checked against the figures it should reproduce and against OLTARIS's published results, which size the jacket.
 
 ```bash
 python -m radiation_model                          # full report (reports/radiation.md), ~4 min
@@ -15,6 +15,7 @@ python -m radiation_model --set cascade_nucleons_coeff=0.8
 | `neutrons.py` | two-group diffusion of the slow neutrons across a layered slab, the source summed over incoming directions |
 | `shield.py` | dose at the centre of a spherical shell, for one material at many thicknesses or for layers |
 | `tube.py` | rays traced through the tube's cross-section: jacket, fill, a cliff dwelling's soil |
+| `reference.py` | OLTARIS's published results: Globus & Strout's Table 2, Janhunen's layered shield and slab factor |
 | `__main__.py` | the report |
 
 ## Model
@@ -24,14 +25,13 @@ python -m radiation_model --set cascade_nucleons_coeff=0.8
 - **Slow neutrons** (below 20 MeV) leave the ray and diffuse across the shield in two groups (fast and thermal), slowing mostly on hydrogen; at the inner face they cross the habitat and re-enter the wall, so its fluence is the habitat's.
 - **Dose:** dose equivalent at a point (ICRP 60 Q(L) for charged particles, fluence coefficients for neutrons), no body around it.
 - **Geometry:** the centre of a large spherical shell (every direction through the same shield, as OLTARIS's sphere), and points inside the torus's tube, taken as straight: a ray at an angle ψ to its axis crosses 1/sin ψ times the shield its projection does.
-- **Checks** (`tests/test_radiation.py`): proton ranges against PSTAR, ranges below the Bethe formula, cross sections, the quality factor, modulation; a thick slab's neutron balance, the slab source over directions, water absorbing the rock's neutrons; the free-space dose, dose falling with depth, water beating rock, neutrons dominating deep in rock, the nucleon attenuation length in air, the fine steps settling the short-ranged particles; the tube's axis against quadrature, the tube shielding better than a sphere.
+- **Checks** (`tests/test_radiation.py`): proton ranges against PSTAR, ranges below the Bethe formula, cross sections, the quality factor, modulation; a thick slab's neutron balance, the slab source over directions, water absorbing the rock's neutrons; the free-space dose, dose falling with depth, water beating rock, neutrons dominating deep in rock, the nucleon attenuation length in air, the fine steps settling the short-ranged particles; the tube's axis against quadrature, the tube shielding better than a sphere; OLTARIS's table and the model matching it for water.
 
 ## Findings
 
-- **For 20 mSv/yr at a sphere's centre:** water ~6.9 t/m² (OLTARIS: ~7), tailings ~8.8 t/m² (8.2–9.5 over the guessed inputs; the notes' 11 came as a regolith equivalence), CI clays ~8.4, polyethylene ~6.2.
-- **Deep in rock about two thirds of the dose is neutrons;** the dose falls e-fold every ~1.7 t/m².
-- **The tube shields better than a sphere:** ~¼ of the sphere's dose on the floor and against the walls, ~½ on the axis. Behind 11 t/m², ~1.4 mSv/yr on the floor; behind 9 t/m², ~5.
-- **A hydrogen-rich inner layer** saves ~2 mSv/yr per t/m² of water over rock (inside 9 t/m²).
+- **Against OLTARIS** (`reference.py`: Globus & Strout 2017, Table 2; Janhunen 2020), for 20 mSv/yr at a sphere's centre: water ~6.9 t/m² (OLTARIS ~6.6), polyethylene ~6.2 (~6.1), lunar regolith ~8.8 (~10.3). The model falls too fast in rock (e-fold every ~1.7 t/m² against ~2.3), so the sizing uses OLTARIS's regolith curve; the tailings come out within ~2% of lunar regolith per tonne.
+- **Geometry:** straight ahead, the tube's floor would get ~¼ of the sphere's dose; OLTARIS's slab gives ~½ near a wall (the deep dose is spread in angle), and the sizing uses ½.
+- **Deep in rock about two thirds of the dose is neutrons.** A hydrogen-rich inner layer saves ~2 mSv/yr per t/m² of water over rock (model); OLTARIS: water and boron-10 inside save ~1.3 t/m².
 - **Solar particle events** don't reach behind the jacket (August 1972: ~0.03 Sv behind 1 t/m²).
-- **Proposed: a 9 t/m² jacket** (~−21% rock, ~−19% mass per torus), kept at 11 t/m² in the system model until a full transport code confirms the curve for rock.
-- **Not modelled:** neutral pions' showers, muons, elastic scattering, fragments recoiling in tissue (all adding at depth); the stack's shading, the body's self-shielding (both lowering it); capture gamma rays.
+- **Behind 11 t/m²:** ~15 mSv/yr at a sphere's centre, ~7 near the walls. **Proposed: 10 t/m²** (~12 near the walls; ~−10% rock and mass per torus), kept at 11 in the system model until a run in the tube's own geometry.
+- **Not modelled:** neutral pions' showers, muons, elastic scattering and angular spread, fragments recoiling in tissue; the stack's shading; capture gamma rays.

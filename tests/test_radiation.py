@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 
 from habitat_model import load, params
-from radiation_model import environment as env, neutrons, physics, shield, tube
+from radiation_model import environment as env, neutrons, physics, reference, shield, tube
 from radiation_model.transport import Transport
 
 P = params(load())
@@ -133,6 +133,24 @@ class TestTube(unittest.TestCase):
         sphere = 4 * math.pi * math.exp(-1000 / 170.0)
         self.assertLess(axis, 0.6 * sphere)
         self.assertLess(floor, axis)
+
+
+class TestReference(unittest.TestCase):
+    def test_oltaris_table(self):
+        self.assertAlmostEqual(float(reference.table2("Water", 7)), 16.1)
+        self.assertAlmostEqual(reference.needed("Water", 20), 6.6, delta=0.1)
+        self.assertAlmostEqual(reference.needed("Lunar regolith (OLTARIS's)", 20), 10.3, delta=0.1)
+        # Past the table, the last slope carries on.
+        r = reference.TABLE2["Lunar regolith (OLTARIS's)"]
+        self.assertAlmostEqual(float(reference.table2("Lunar regolith (OLTARIS's)", 12)), r[-1] ** 2 / r[-2], places=6)
+        self.assertAlmostEqual(reference.WALL_FACTOR, 0.4985, places=4)
+
+    def test_model_matches_oltaris_for_water(self):
+        m = shield.Model(P)
+        depths = [100.0 * t for t in range(5, 9)]
+        tot = [d.total for d in m.profile(WATER, depths)]
+        need = float(np.interp(-math.log(20), -np.log(tot), depths)) / 100
+        self.assertAlmostEqual(need, reference.needed("Water", 20), delta=0.5)
 
 
 if __name__ == "__main__":
