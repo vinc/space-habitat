@@ -156,4 +156,13 @@
 | `aisle_width_m` | 0.6000 | m | fixed | design | walking aisles, 80% planted (§13) |
 | `tier_clear_m` | 2.200 | m from a tier's floor to the underside of the next | fixed | design | §13, 2.5 m floor to floor less ~0.3 m of floor |
 | `farm_photoperiod_h` | 16.00 | hours a zone is lit, on average | 12.00–20.00 | estimate | §13, day lengths by crop (estimate) |
+| `dose_limit_msv_yr` | 20.00 | mSv per year, dose equivalent | fixed | design | §5b, Globus & Strout (2017): the general population's limit, at solar minimum |
+| `solar_min_phi_mv` | 300.0 | MV, force-field modulation potential | 250.0–450.0 | estimate | deep solar minimum (2009-2010) in the Usoskin et al. (2005) convention, recalled |
+| `solar_max_phi_mv` | 1,000 | MV, force-field modulation potential | fixed | estimate | solar maximum, recalled |
+| `leading_nucleon_z` | 0.3000 | spectrum-weighted moment Z_NN of the leading nucleon | 0.2500–0.3500 | estimate | nucleon attenuation ~120 g/cm2 in air (Gaisser, Cosmic Rays and Particle Physics, recalled) |
+| `cascade_nucleons_coeff` | 0.5000 | cascade nucleons per collision per A^(1/3) of the target | 0.3000–0.8000 | guess | intranuclear cascade multiplicity (guess) |
+| `cascade_nucleon_mev` | 100.0 | MeV, mean energy of cascade nucleons | 60.00–150.0 | guess | guess |
+| `evaporation_neutrons_coeff` | 0.2000 | evaporation neutrons per collision per A^0.6 of the target | 0.1000–0.3000 | guess | ~1 for oxygen, ~2 for iron (guess) |
+| `knockout_alphas_coeff` | 0.1000 | light ions (d, t, 3He, alpha) knocked out per collision per A^(1/3) of the target | 0.05000–0.2000 | guess | guess |
+| `fast_neutron_dose_psv_cm2` | 350.0 | pSv cm2, fluence to dose equivalent, 0.1-20 MeV group | 250.0–420.0 | estimate | ICRP 74: ~90 at 0.1 MeV, ~420 at 1-10 MeV (recalled) |
 | `stability_margin` | 0.2000 | required I_axis / I_transverse - 1 | fixed | design | §11, 20% margin |

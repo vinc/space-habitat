@@ -96,15 +96,18 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Why third:** 9–13 t/m² of shield moves the mass per m² of floor by about −20% / +22%, at every size.
 
-- [ ] Tool: Geant4 (via GRAS or MULASSIS) run locally, or NASA's OLTARIS / HZETRN
-- [ ] Shield composition: L and LL chondritic tailings after metal removal (~2 t/m³), CI-like clays for comparison, water or polyethylene inner layers
-- [ ] Environment: galactic cosmic rays at solar minimum (Badhwar–O'Neill model); a worst-case solar particle event (e.g. August 1972, October 1989)
-- [ ] Geometry: flat slab first, then the tube cross-section with floor fill, cliff dwellings and the hub-facing side
-- [ ] Outputs:
-  - effective dose vs areal density (0–20 t/m²)
-  - share from secondary neutrons
-  - dose saved per t/m² of hydrogen-rich layer
-- [ ] Decide the shield thickness for 20 mSv/yr and feed it back into model 1
+- [ ] Tool: Geant4 (via GRAS or MULASSIS) run locally, or NASA's OLTARIS / HZETRN (not available here: a stand-in built instead, below; still needed to confirm the curve for rock)
+- [x] Stand-in transport model (`radiation_model/`, `reports/radiation.md`): straight-ahead transport along each ray (protons, neutrons, helium, three heavier groups and charged pions; slowing down, nuclear collisions, leading and cascade nucleons, evaporation neutrons, knocked-out light ions, fragments), two-group diffusion of the slow neutrons across the shield, directions summed at a sphere's centre or in the tube; checked against proton ranges, cross sections, the nucleon attenuation length in air, and OLTARIS's ~7 t/m² of water for 20 mSv/yr (~6.9)
+- [x] Shield composition: L and LL chondritic tailings after metal removal, CI-like clays, water and polyethylene; water or polyethylene inner layers
+- [x] Environment: galactic cosmic rays at a deep solar minimum (force-field modulation of an interstellar spectrum, in place of Badhwar–O'Neill); the August 1972 solar particle event (King's fit)
+- [x] Geometry: sphere centre (as OLTARIS), then the tube's cross-section with the floor fill and a cliff dwelling (the hub-facing side and the stack's shading left out)
+- [x] Outputs:
+  - dose vs areal density 0–20 t/m²: ~8.8 t/m² of tailings for 20 mSv/yr at a sphere's centre (8.2–9.5 over the guessed inputs); in the tube a quarter of that on the floor, half on the axis
+  - share from secondary neutrons: about two thirds deep in rock
+  - dose saved per t/m² of hydrogen-rich layer: ~2 mSv/yr more than rock, per t/m² of water inside 9 t/m²
+- [ ] Decide the shield thickness for 20 mSv/yr and feed it back into model 1: **proposed 9 t/m²** (~5 mSv/yr on the floor, ~−19% mass per torus); the system model keeps 11 t/m² until a full transport code confirms the curve for rock
+
+**Status:** the stand-in transport suggests the 11 t/m² jacket gives ~5 mSv/yr at a sphere's centre and ~1.4 on the floor, well under the 20 mSv/yr it was sized for, so ~9 t/m² would do; a run with OLTARIS or Geant4 on rock should confirm it before the design changes.
 
 **Changes the design if:** the dose at ~11 t/m² is off by more than ~20%, either way.
 
