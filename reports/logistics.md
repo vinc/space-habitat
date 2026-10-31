@@ -127,8 +127,8 @@ A parent stack builds a child stack torus by torus, so a cluster doubles once pe
 
 | Stack (per torus) | Built | From the host | Shipped from the C-type | Vitamins | PV silicon made at the host |
 |---|---|---|---|---|---|
-| 900 m pair | 13.1 Mt | 99.19% | 106 kt (0.81%) | 50.0 t (0.0004%) | 157 t |
-| 1.6 km six-stack | 43.0 Mt | 99.15% | 363 kt (0.85%) | 158 t (0.0004%) | 496 t |
+| 900 m pair | 13.1 Mt | 99.19% | 106 kt (0.81%) | 50.0 t (0.0004%) | 172 t |
+| 1.6 km six-stack | 43.0 Mt | 99.15% | 363 kt (0.85%) | 158 t (0.0004%) | 542 t |
 
 **Energy floor on the generation**, with the factory at 1.00 GW per stack: processing and shipping as in the system model (water route, electric thrusters), then the cheapest combination of route and freighter above (900 m pair: water by mass driver; 1.6 km six-stack: water by mass driver).
 

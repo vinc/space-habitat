@@ -195,6 +195,20 @@ class TestLeds(unittest.TestCase):
         cls.mixed = architectures.system(architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1])
         cls.qm = architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1]
 
+    def test_dies_hold_the_light_to_the_end_of_life(self):
+        r = self.mixed[1]
+        valley, farm = self.leds.installed(self.qm, r, 3)
+        aged = P.lamp_maintained_output / P.lamp_end_of_life_output
+        self.assertGreater(aged, 1.0)
+        self.assertAlmostEqual(valley, r["power"]["valley_sky"] * 24 / P.valley_day_h * aged)
+        self.assertAlmostEqual(farm, 3 * r["power"]["farm_per_tier"] * 24 / P.farm_photoperiod_h * aged)
+
+    def test_led_fixture_loss_counted_once(self):
+        # The efficacy is measured at the fixture's output: nothing more is lost before the light box.
+        from optics_model import architectures
+        for name, over, _, _ in architectures.options(P)[7:]:
+            self.assertEqual(over["pipe_coupling"], 1.0, msg=name)
+
     def test_die_area_follows_the_power(self):
         r = self.white[1]
         b = self.leds.budget(self.qw, r)

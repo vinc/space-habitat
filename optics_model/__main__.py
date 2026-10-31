@@ -323,7 +323,10 @@ def led_section(p, results):
         "White LEDs in the valley (blue InGaN dies under YAG:Ce phosphor), blue + red over the crops (InGaN "
         f"and 660 nm AlGaInP, {pct(p.led_farm_red_share)} of the farm's power on red), at "
         f"{num(p.lamp_efficacy_umol_j, 3)} and {num(p.farm_lamp_efficacy_umol_j, 3)} µmol/J "
-        "(`optics_model/leds.py`). Installed for the noon peak and the tiers while lit: "
+        "(`optics_model/leds.py`), both measured at the fixtures' output. Installed for the noon peak and the tiers "
+        f"while lit, and to hold the light until the LEDs fade to {pct(p.lamp_end_of_life_output)} and are replaced "
+        f"(~{num(p.lamp_maintained_output / p.lamp_end_of_life_output, 2)}× the average draw, at "
+        f"{pct(p.lamp_maintained_output)} of the initial efficacy over their life): "
         f"{num(b['valley_w'] / 1e6)} MW in the valley, {num(b['farm_w'] / 1e6)} MW in the farm; at "
         f"{num(p.led_die_w_mm2, 2)} W/mm² that is {num(b['die_m2']['blue'])} m² of blue die and "
         f"{num(b['die_m2']['red'])} m² of red, ~{num(wafers)} m² of epitaxial wafer at "
@@ -379,7 +382,7 @@ def report(p):
         *led_section(p, results),
         "Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley "
         "loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), "
-        "angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a "
+        "angular (not diffuse) scattering by real diffusers and prism film, dust (the lamps' ageing is in the sizing), the canopy as a "
         "volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a "
         "row (traced as line sources), and the waveguides' layout.",
     ]

@@ -28,7 +28,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [x] **Power and light:** valley lighting (light per m² of floor per day, lamp efficacy, ceiling losses), farm per tier lit, other loads, despun array with the survival sizing (×1.57), seasonal sizing by orbit (aphelion, half sky for the valley, full farm), concentrator option
   - check: §0 and §13 power tables, §15 seasonal sizing table
 - [x] **Food:** diet table → mol per person → crop area and kW → people per tier lit, floor per person and density
-  - check: ~3,200 mol, ~89 m², ~11 kW per person with LEDs (~31 kW with the sulfur lamps first sized); ~1,000 / 3,250 / 7,900 people per tier lit
+  - check: ~3,200 mol, ~89 m², ~12 kW per person with LEDs (~31 kW with the sulfur lamps first sized); ~1,000 / 3,250 / 7,900 people per tier lit
 - [x] **Heat:** total heat per torus and stack, radiator area at ~285 K, end-opening capacity, break-even number of tori
   - check: §13 heat table (~27 / 18 / 13 / 10–11 tori)
 - [x] **Stability (rigid body):** spin-axis vs transverse inertia of the stack, maximum tori with a 20% margin, for given gaps
@@ -155,22 +155,22 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~5.7× margin in the drum and ~5.6× in the farm section at once with LEDs (~2.4× / ~2.5× with sulfur lamps; ~1.3× with the farm rings in the tori's planes). With LEDs, heat no longer limits the stack (40 tori or more cooled; with sulfur lamps ~16–18, just below stability's ~22).
+**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~5.2× margin in the drum and ~5.0× in the farm section at once with LEDs (~2.4× / ~2.5× with sulfur lamps; ~1.3× with the farm rings in the tori's planes). With LEDs, heat no longer limits the stack (40 tori or more cooled; with sulfur lamps ~16–18, just below stability's ~22).
 
 - [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
 - [x] Farm section's radiators: reach, layout, and how much of the drum's farm end they may shade (`thermal_model/layout.py`, `reports/heat_rejection.md`)
-  - found: outboard of the farm rings (the baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.4× with three tiers lit; ~0.5–0.75× with sulfur lamps). Baseline: outboard pumped, with the inboard passive set as fallback; inboard alone now possible
+  - found: outboard of the farm rings (the baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.3× with three tiers lit; ~0.5–0.75× with sulfur lamps). Baseline: outboard pumped, with the inboard passive set as fallback; inboard alone now possible
   - found: reach ~0.45–0.5 r for 1.5× (six-stack, three tiers lit; ~0.75 r with sulfur lamps); at most ~9 + ~11 ha of panels per 900 m torus at 1.5× (~27 + ~42 with sulfur lamps)
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
   - done: end openings, gap vents, farm rings and their radiators, the whole stack as one scene (`habitat_model/cavity.py`); open: the spokes and cables, the envelopes' rounded inner faces
-- [x] Check that no direct sunlight reaches the radiators (`thermal_model/sunlight.py`): none on the drum's panels below ~1.5° of axis tilt (the tori shade them, ends and gaps alike); the open farm section takes ~0.9% of its heat per degree at 1 AU, so the axis needs holding to a degree or two
-- [x] Coolant loops (`thermal_model/coolant.py`): single-phase water, passive in the main section (~0.34 m pipes, ~0.6 m/s, ~0.5 kt per 900 m torus), pumped in the farm section (~0.3% of its heat); two-phase ammonia can't boil at the rim under its own liquid column (~1.9 MPa at 900 m) without throttling
+- [x] Check that no direct sunlight reaches the radiators (`thermal_model/sunlight.py`): none on the drum's panels below ~1.5° of axis tilt (the tori shade them, ends and gaps alike); the open farm section takes ~0.8% of its heat per degree at 1 AU, so the axis needs holding to a degree or two
+- [x] Coolant loops (`thermal_model/coolant.py`): single-phase water, passive in the main section (~0.35 m pipes, ~0.6 m/s, ~0.55 kt per 900 m torus), pumped in the farm section (~0.3% of its heat); two-phase ammonia can't boil at the rim under its own liquid column (~1.9 MPa at 900 m) without throttling
 - [x] Valley thermal model (`thermal_model/valley.py`): left to itself the valley swings ~2–4 K (baseline, wet) to ~4–11 K (dry canyon) over a 12 h day; wider swings need scheduled cooling
 - [x] Output: capacity vs stack length with 0–3 farm tiers lit (40 tori or more at any tiers lit with LEDs, 900 m and 1.6 km alike; ~24 / 18 / 18 / 16 with sulfur lamps), radiator area per torus
 
 **Changes the design if:** the end openings carry much less than ~1.6 GW for a 900 m stack, or six-stacks with two or three tiers lit don't fit.
 
-**Status:** six-stacks with three tiers lit fit easily with LEDs (~5.6–5.7× in both sections), the farm radiators reaching ~0.5 r or more; the valleys' loops are passive, the farm's pumped with a passive fallback that now carries every tier (`reports/heat_rejection.md`). Open: the spokes and the envelopes' faces in the ray tracing, freezing at low load, hardware.
+**Status:** six-stacks with three tiers lit fit easily with LEDs (~5.0–5.2× in both sections), the farm radiators reaching ~0.5 r or more; the valleys' loops are passive, the farm's pumped with a passive fallback that now carries every tier (`reports/heat_rejection.md`). Open: the spokes and the envelopes' faces in the ray tracing, freezing at low load, hardware.
 
 ---
 
@@ -187,7 +187,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - buffer and control needs: the air holds ~5 years of O₂; a ~1 MW CO₂-to-O₂ recovery plant per 900 m torus holds the whole farm going dark (proposed); a new torus's imported organics need ~8 MW at first unless composted first (~1.4 MW, proposed)
   - open: water and humidity, trace gases, the nitrogen cycle, daily swings, the controls' failures; the algae (not yet in the model)
 
-**Status:** done. The closed atmosphere holds with a modest recovery plant; the startup soil is the hard case. The light box and the farm tiers deliver what the notes expected of them, but the light pipes' own losses, left out of the sizing, could cost ~50% more lighting power; ~1 kW sulfur lamps straight in the light box (no pipes, fed by 915 MHz sector plants) avoid them, at ~81% / ~89% delivered and ~130 MW per 900 m torus (`optics_model/architectures.py`). LEDs (white in the valley, blue + red in the farm) take ~59 MW and ~71 ha of array, ~350 t less PV silicon per torus; their materials are under 1% of the source bodies' content, indium for the red the tightest (`optics_model/leds.py`). Adopted, with a semiconductor works in every factory making the array, the LEDs and their drivers (notes §13); sulfur lamps in the box are the fallback. The system model is now sized for the LEDs (~3.0 / ~3.6 µmol/J, ~85% / ~95% delivered).
+**Status:** done. The closed atmosphere holds with a modest recovery plant; the startup soil is the hard case. The light box and the farm tiers deliver what the notes expected of them, but the light pipes' own losses, left out of the sizing, could cost ~50% more lighting power; ~1 kW sulfur lamps straight in the light box (no pipes, fed by 915 MHz sector plants) avoid them, at ~81% / ~89% delivered and ~130 MW per 900 m torus (`optics_model/architectures.py`). LEDs (white in the valley, blue + red in the farm) take ~66 MW and ~79 ha of array (ageing allowed for), ~430 t less PV silicon per torus; their materials are under 1% of the source bodies' content, indium for the red the tightest (`optics_model/leds.py`). Adopted, with a semiconductor works in every factory making the array, the LEDs and their drivers (notes §13); sulfur lamps in the box are the fallback. The system model is now sized for the LEDs (~3.0 / ~3.6 µmol/J at the fixtures' output, ~85% of it over their life, ~90% / ~100% delivered).
 
 ---
 

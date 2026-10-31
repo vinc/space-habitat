@@ -16,6 +16,10 @@ Each wafer's epitaxial layers, its substrate and the reactor's feed:
   are the group V feeds.
 - **Phosphor:** `led_phosphor_g_w` of YAG:Ce (Y2.94Ce0.06Al5O12) per W of white LED.
 
+Ageing: the system model's electricity is the fleet average over the lamps' life (`lamp_maintained_output`,
+LEDs replaced one by one at L70 and driven harder as they fade); the dies are sized to hold the light down
+to `lamp_end_of_life_output`, ~1.2× that average.
+
 Replacement: each region's LEDs last `led_life_h` at its own photoperiod. Element densities and
 compositions are standard; the layer thicknesses are typical of commercial dies (estimates).
 """
@@ -45,9 +49,13 @@ def _add(out, layer, area, scale=1.0):
 
 
 def installed(p, r, tiers):
-    """Installed LED electricity (W): the valley at its noon peak, the farm's tiers while lit."""
+    """Installed LED capacity (W): the valley at its noon peak, the farm's tiers while lit, each able to hold
+    the light down to `lamp_end_of_life_output` (the system model's power is the fleet average over the
+    lamps' life, `lamp_maintained_output`)."""
     pw = r["power"]
-    return pw["valley_sky"] * 24 / p.valley_day_h, tiers * pw["farm_per_tier"] * 24 / p.farm_photoperiod_h
+    eol = p.lamp_maintained_output / p.lamp_end_of_life_output
+    return (pw["valley_sky"] * 24 / p.valley_day_h * eol,
+            tiers * pw["farm_per_tier"] * 24 / p.farm_photoperiod_h * eol)
 
 
 def budget(p, r, tiers=3):

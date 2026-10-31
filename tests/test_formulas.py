@@ -58,7 +58,7 @@ class TestFormulas(unittest.TestCase):
         self.assertAlmostEqual(heat.radiator_flux(570) / heat.radiator_flux(285), 16)
 
     def test_food_chain(self):
-        # ~3,200 mol per person per day, ~89 m^2 of crops, ~11 kW with blue + red LEDs (§13).
+        # ~3,200 mol per person per day, ~89 m^2 of crops, ~12 kW with blue + red LEDs over their life (§13).
         per_crop, mol = food.light_per_person(self.p)
         self.assertAlmostEqual(mol, 3200, delta=0.05 * 3200)
         expected = {"potato": 600, "wheat": 1080, "soybean": 560, "lentils": 320,
@@ -66,7 +66,10 @@ class TestFormulas(unittest.TestCase):
         for crop, ref in expected.items():
             self.assertAlmostEqual(per_crop[crop], ref, delta=0.05 * ref, msg=crop)
         f = evaluate(self.p, Design(radius_m=900, n_tori=1))["food"]
-        self.assertAlmostEqual(f["power_per_person"] / 1e3, 11, delta=0.5)
+        self.assertAlmostEqual(f["power_per_person"] / 1e3, 12, delta=0.6)
+        # The lamps' ageing: power scales with 1 / the fleet's maintained output.
+        new = evaluate(params(load(), lamp_maintained_output=1.0), Design(radius_m=900, n_tori=1))["food"]
+        self.assertAlmostEqual(f["power_per_person"] / new["power_per_person"], 1 / self.p.lamp_maintained_output)
         # Power per person doesn't depend on the light level on the crops, only the area does.
         brighter = evaluate(params(load(), crop_light_mol=45), Design(radius_m=900, n_tori=1))["food"]
         self.assertAlmostEqual(brighter["power_per_person"], f["power_per_person"])

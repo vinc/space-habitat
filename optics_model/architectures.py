@@ -36,7 +36,7 @@ def options(p):
               "pipe_emit_arc_deg": 180.0, "pipe_w_per_m": lamp_row, "diffuser_gap_m": max(p.diffuser_gap_m, 1.5),
               "farm_pipe_gap_m": max(p.farm_pipe_gap_m, 0.8)}
     led = {"lamp_efficacy_umol_j": p.lamp_efficacy_umol_j, "farm_lamp_efficacy_umol_j": p.farm_lamp_efficacy_umol_j,
-           "pipe_coupling": p.led_fixture_efficiency,
+           "pipe_coupling": 1.0,   # efficacy measured at the fixture's output: no loss before the light box
            "pipe_albedo": 0.5, "pipe_diameter_m": 0.1, "pipe_w_per_m": p.led_w_per_m}
     short_heavy = {**sulfur, "pipe_length_m": 20.0, "pipe_w_per_m": 600.0}
     return [
