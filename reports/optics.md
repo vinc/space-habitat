@@ -126,4 +126,28 @@ The system model with the traced chain (valley 50%, farm 57%) in place of the as
 
 The radiators still reach 1.5× with every panel in place, but need about twice the panel area or more (on the 1.5× search's coverage grid): a panel's output falls as coverage rises and the panels shade each other, so the extra heat costs more than its share of panels.
 
-Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), and lamps placed straight in the light box without pipes (an option if the pipes' losses hold up: smaller lamps, ~1 kW, behind the diffuser).
+## Lighting architectures
+
+What the pipes cost and what could replace them (`optics_model/architectures.py`): the same chain, each layout sized for the power its own delivery needs, then the system model and the assembled stack's radiators (900 m six-stack at Eros, three tiers lit). Small magnetrons give 1.40 µmol/J (the configured value); 915 MHz sector plants 1.75 µmol/J less 10.0% in waveguides (notes §13). Lamps straight in the light box: ~1 kW bulbs in reflectors that keep 88% of the light and send back 60% of what returns to them, in rows behind a 1.5 m deep diffuser, and ~0.8 m above the canopy in the farm.
+
+| Architecture | To the floor | To the crops | µmol/J at the wall | Electricity per torus | Array | Radiators' best margin | Panels for 1.5× | Bulbs |  |
+|---|---|---|---|---|---|---|---|---|---|
+| Pipes, 40 m at 300 W/m (as now) | 50% | 57% | 1.40 | 228 MW | 276 ha | 1.7× | 169 ha | ~62.4 k | pairs of ~6 kW lamps, small magnetrons |
+| Pipes, 20 m | 54% | 62% | 1.40 | 210 MW | 255 ha | 1.8× | 169 ha | ~115 k | pairs of ~3 kW lamps |
+| Pipes at 600 W/m | 55% | 62% | 1.40 | 210 MW | 255 ha | 1.8× | 169 ha | ~28.7 k | pairs of ~12 kW lamps per 40 m pipe |
+| Pipes, 20 m at 600 W/m | 59% | 66% | 1.40 | 197 MW | 239 ha | 1.9× | 137 ha | ~53.6 k | pairs of ~6 kW lamps per 20 m pipe |
+| Pipes, 20 m at 600 W/m, 915 MHz plants | 59% | 66% | 1.57 | 175 MW | 213 ha | 2.2× | 110 ha | ~47.5 k | the same, fed by sector plants through waveguides |
+| ~1 kW lamps in the light box | 81% | 89% | 1.40 | 146 MW | 177 ha | 2.6× | 78.2 ha | ~236 k | rows of lamps 1.5 m apart in reflectors, small magnetrons, a 1.5 m deep diffuser |
+| ~1 kW lamps in the light box, 915 MHz plants | 81% | 89% | 1.57 | 130 MW | 158 ha | 2.9× | 78.2 ha | ~209 k | the same, fed by sector plants through waveguides |
+| LEDs (reference) | 86% | 96% | 3.00 | 65.8 MW | 80.6 ha | 5.7× | 39.1 ha | — | strips at 200 W/m, 3 µmol/J; semiconductors are vitamins |
+
+**Lamps straight in the light box beat every pipe**: ~36% less electricity than the pipes as now, and a little less than the sizing's assumed ~75% / ~85% (they deliver more: no coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants ~11% of the power either way (their gain in efficacy, less the waveguides'). LEDs need well under half again, but their semiconductors are vitamins (notes §10, §13).
+
+The price of lamps in the box: ~3.8× as many bulbs as the pipes' lamps, spread through the ceiling's service space and above each tier, with their heat shed there rather than at the hub (both reachable by the coolant loops, notes §13), and each one maintained from above the ceiling. Fed by sector plants, the sources stay few (~100 kW each) and only the electrodeless bulbs are many; with small magnetrons every bulb has one, ~10,000–20,000 hours each.
+
+| Lamps in the box: input | Range | Electricity per torus |
+|---|---|---|
+| `luminaire_efficiency` | 0.80 – 0.93 | 160 – 138 MW |
+| `luminaire_albedo` | 0.40 – 0.80 | 149 – 143 MW |
+
+Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a row (traced as line sources), and the waveguides' layout.

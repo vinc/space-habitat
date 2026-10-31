@@ -1197,6 +1197,72 @@ high = 20
 source = "§13, day lengths by crop (estimate)"
 status = "estimate"
 
+[optics.luminaire_efficiency]
+value = 0.88
+unit = "share of a lamp's light leaving its reflector"
+low = 0.8
+high = 0.93
+source = "a ~1 kW sulfur lamp in a small specular reflector (guess)"
+status = "guess"
+
+[optics.luminaire_albedo]
+value = 0.6
+unit = "share of the light falling on a lamp and reflector that it sends back"
+low = 0.4
+high = 0.8
+source = "guess"
+status = "guess"
+
+[optics.lamp_power_w]
+value = 1000
+unit = "W per lamp, lamps straight in the light box"
+source = "§13, ~1 kW sulfur lamps"
+status = "design"
+
+[optics.lamp_spacing_m]
+value = 1.5
+unit = "m between lamps along a row"
+source = "design"
+status = "design"
+
+[optics.sector_efficacy_umol_j]
+value = 1.75
+unit = "umol/J at the wall, sulfur bulbs behind 915 MHz sector plants"
+low = 1.6
+high = 1.8
+source = "§13: Fusion's bulbs >2 umol per J of microwaves, behind ~85% sources: ~1.7-1.8"
+status = "estimate"
+
+[optics.waveguide_efficiency]
+value = 0.9
+unit = "share of a sector plant's microwaves reaching the bulbs"
+low = 0.8
+high = 0.95
+source = "waveguide runs of a few hundred metres (guess)"
+status = "guess"
+
+[optics.led_efficacy_umol_j]
+value = 3.0
+unit = "umol/J at the wall, white LEDs"
+low = 2.7
+high = 3.5
+source = "§13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020)"
+status = "estimate"
+
+[optics.led_fixture_efficiency]
+value = 0.95
+unit = "share of the LEDs' light leaving the fixture"
+low = 0.9
+high = 0.97
+source = "estimate"
+status = "estimate"
+
+[optics.led_w_per_m]
+value = 200
+unit = "W per m of LED strip"
+source = "design"
+status = "design"
+
 # --- Radiation transport (plan §3) -------------------------------------------
 
 [radiation.dose_limit_msv_yr]

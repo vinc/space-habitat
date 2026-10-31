@@ -13,7 +13,7 @@ from habitat_model.report import num, table
 
 from thermal_model import layout
 
-from . import pipe, scenes
+from . import architectures, pipe, scenes
 
 N = 200_000          # rays for the main traces
 N_SWEEP = 80_000     # rays for the sweeps (stripes resolved to ~±3%)
@@ -234,6 +234,63 @@ def impact_section(p, d):
     ]
 
 
+def architecture_section(p):
+    rows, results = [], {}
+    for name, over, pipe_eff, what in architectures.options(p):
+        d, q = architectures.evaluate_option(p, over, pipe_eff)
+        des, r = architectures.system(q)
+        check = layout._check(q, des, "outboard", 4000)
+        least = layout.smallest(check["points"], 1.5)
+        installed, count = architectures.bulbs(p, q, r, over)
+        results[name] = (d, q, r, count)
+        rows.append([name, pct(d["valley"]), pct(d["farm"]), f"{num(q.lamp_efficacy_umol_j, 3)}",
+                     f"{num(r['power']['total'] / 1e6)} MW", f"{num(r['power']['array_site'] / 1e4)} ha",
+                     f"{num(check['margin'], 2)}×",
+                     f"{num(sum(least['panel_area']) / des.n_tori / 1e4)} ha" if least else "out of reach",
+                     f"~{num(count / 1e3)} k" if count else "—", what])
+    sens = []
+    lamp_name = architectures.options(p)[5]
+    for name in ("luminaire_efficiency", "luminaire_albedo"):
+        a = load()[name]
+        cells = []
+        for v in (a.low, a.high):
+            q0 = params(load(), **{**vars(p), name: v})
+            opt = [o for o in architectures.options(q0) if o[0] == lamp_name[0]][0]
+            d, q = architectures.evaluate_option(q0, opt[1], opt[2])
+            cells.append(architectures.system(q)[1]["power"]["total"] / 1e6)
+        sens.append([f"`{name}`", f"{num(a.low, 2)} – {num(a.high, 2)}", f"{num(cells[0])} – {num(cells[1])} MW"])
+    names = [o[0] for o in architectures.options(p)]
+    base = results[names[0]][2]["power"]["total"]
+    lamps = results[lamp_name[0]][2]["power"]["total"]
+    sector_gain = 1 - results[names[6]][2]["power"]["total"] / lamps
+    bulb_ratio = results[lamp_name[0]][3] / results[names[0]][3]
+    return [
+        "## Lighting architectures",
+        "What the pipes cost and what could replace them (`optics_model/architectures.py`): the same chain, "
+        "each layout sized for the power its own delivery needs, then the system model and the assembled "
+        "stack's radiators (900 m six-stack at Eros, three tiers lit). Small magnetrons give "
+        f"{num(p.lamp_efficacy_umol_j, 3)} µmol/J (the configured value); 915 MHz sector plants "
+        f"{num(p.sector_efficacy_umol_j, 3)} µmol/J less {pct(1 - p.waveguide_efficiency)} in waveguides "
+        "(notes §13). Lamps straight in the light box: ~1 kW bulbs in reflectors that keep "
+        f"{pct(p.luminaire_efficiency)} of the light and send back {pct(p.luminaire_albedo)} of what returns to "
+        "them, in rows behind a 1.5 m deep diffuser, and ~0.8 m above the canopy in the farm.",
+        table(["Architecture", "To the floor", "To the crops", "µmol/J at the wall", "Electricity per torus",
+               "Array", "Radiators' best margin", "Panels for 1.5×", "Bulbs", ""], rows),
+        f"**Lamps straight in the light box beat every pipe**: ~{pct((base - lamps) / base)} less electricity than "
+        "the pipes as now, and a little less than the sizing's assumed ~75% / ~85% (they deliver more: no "
+        "coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than "
+        "rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants "
+        f"~{pct(sector_gain)} of the power either way (their gain in efficacy, less the waveguides'). LEDs need well under half again, but their semiconductors are vitamins "
+        "(notes §10, §13).",
+        f"The price of lamps in the box: ~{num(bulb_ratio, 2)}× as many bulbs as the pipes' lamps, spread through the ceiling's service space and "
+        "above each tier, with their heat shed there rather than at the hub (both reachable by the coolant "
+        "loops, notes §13), and each one maintained from above the ceiling. Fed by sector plants, the sources "
+        "stay few (~100 kW each) and only the electrodeless bulbs are many; with small magnetrons every bulb "
+        "has one, ~10,000–20,000 hours each.",
+        table(["Lamps in the box: input", "Range", "Electricity per torus"], sens),
+    ]
+
+
 def report(p):
     first = scenes.delivery(p, n=N)
     d = scenes.converged(p, n=N, pipe_result=first["pipe"])
@@ -248,12 +305,12 @@ def report(p):
         *farm_section(p, d),
         *sensitivity_section(p, d),
         *impact_section(p, d),
+        *architecture_section(p),
         "Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley "
         "loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), "
         "angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a "
-        "volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), and lamps "
-        "placed straight in the light box without pipes (an option if the pipes' losses hold up: smaller "
-        "lamps, ~1 kW, behind the diffuser).",
+        "volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a "
+        "row (traced as line sources), and the waveguides' layout.",
     ]
     return "\n\n".join(parts) + "\n"
 

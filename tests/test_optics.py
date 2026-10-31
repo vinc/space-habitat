@@ -123,5 +123,56 @@ class TestDelivery(unittest.TestCase):
         self.assertLess(d["valley"], first["valley"])
 
 
+class TestArchitectures(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from optics_model import architectures
+        cls.a = architectures
+        cls.opts = {o[0]: o for o in architectures.options(P)}
+        cls.names = list(cls.opts)
+
+    def run_option(self, name, n=30_000):
+        _, over, eff, _ = self.opts[name]
+        return self.a.evaluate_option(P, over, eff, n=n)
+
+    def test_lamps_in_the_box_beat_the_pipes(self):
+        pipes, _ = self.run_option(self.names[0])
+        lamps, _ = self.run_option(self.names[5])
+        self.assertGreater(lamps["valley"], pipes["valley"] + 0.2)
+        self.assertGreater(lamps["farm"], pipes["farm"] + 0.2)
+        # No pipe in the chain: the luminaire's efficiency is the whole coupling.
+        self.assertAlmostEqual(lamps["lamp_to_pipe_out"], P.luminaire_efficiency)
+
+    def test_shorter_and_heavier_pipes_help(self):
+        base, _ = self.run_option(self.names[0])
+        short, _ = self.run_option(self.names[1])
+        heavy, _ = self.run_option(self.names[2])
+        self.assertGreater(short["valley"], base["valley"])
+        self.assertGreater(heavy["valley"], base["valley"])
+        self.assertGreater(heavy["box"]["pitch"], base["box"]["pitch"])
+
+    def test_sector_plants_raise_the_efficacy_only(self):
+        _, q_small = self.run_option(self.names[5])
+        _, q_sector = self.run_option(self.names[6])
+        self.assertAlmostEqual(q_sector.lamp_efficacy_umol_j, P.sector_efficacy_umol_j * P.waveguide_efficiency)
+        self.assertAlmostEqual(q_small.lamp_efficacy_umol_j, P.lamp_efficacy_umol_j)
+        _, r_small = self.a.system(q_small)
+        _, r_sector = self.a.system(q_sector)
+        self.assertLess(r_sector["power"]["total"], r_small["power"]["total"])
+
+    def test_bulb_count(self):
+        name = self.names[5]
+        d, q = self.run_option(name)
+        _, r = self.a.system(q)
+        installed, count = self.a.bulbs(P, q, r, self.opts[name][1])
+        self.assertAlmostEqual(count, installed / P.lamp_power_w)
+        pw = r["power"]
+        self.assertAlmostEqual(installed, pw["valley_sky"] * 24 / P.valley_day_h
+                               + 3 * pw["farm_per_tier"] * 24 / P.farm_photoperiod_h)
+        led = self.names[7]
+        _, ql = self.run_option(led)
+        self.assertIsNone(self.a.bulbs(P, ql, self.a.system(ql)[1], self.opts[led][1])[1])
+
+
 if __name__ == "__main__":
     unittest.main()

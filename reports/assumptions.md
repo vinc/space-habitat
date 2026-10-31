@@ -156,6 +156,15 @@
 | `aisle_width_m` | 0.6000 | m | fixed | design | walking aisles, 80% planted (§13) |
 | `tier_clear_m` | 2.200 | m from a tier's floor to the underside of the next | fixed | design | §13, 2.5 m floor to floor less ~0.3 m of floor |
 | `farm_photoperiod_h` | 16.00 | hours a zone is lit, on average | 12.00–20.00 | estimate | §13, day lengths by crop (estimate) |
+| `luminaire_efficiency` | 0.8800 | share of a lamp's light leaving its reflector | 0.8000–0.9300 | guess | a ~1 kW sulfur lamp in a small specular reflector (guess) |
+| `luminaire_albedo` | 0.6000 | share of the light falling on a lamp and reflector that it sends back | 0.4000–0.8000 | guess | guess |
+| `lamp_power_w` | 1,000 | W per lamp, lamps straight in the light box | fixed | design | §13, ~1 kW sulfur lamps |
+| `lamp_spacing_m` | 1.500 | m between lamps along a row | fixed | design | design |
+| `sector_efficacy_umol_j` | 1.750 | umol/J at the wall, sulfur bulbs behind 915 MHz sector plants | 1.600–1.800 | estimate | §13: Fusion's bulbs >2 umol per J of microwaves, behind ~85% sources: ~1.7-1.8 |
+| `waveguide_efficiency` | 0.9000 | share of a sector plant's microwaves reaching the bulbs | 0.8000–0.9500 | guess | waveguide runs of a few hundred metres (guess) |
+| `led_efficacy_umol_j` | 3.000 | umol/J at the wall, white LEDs | 2.700–3.500 | estimate | §13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020) |
+| `led_fixture_efficiency` | 0.9500 | share of the LEDs' light leaving the fixture | 0.9000–0.9700 | estimate | estimate |
+| `led_w_per_m` | 200.0 | W per m of LED strip | fixed | design | design |
 | `dose_limit_msv_yr` | 20.00 | mSv per year, dose equivalent | fixed | design | §5b, Globus & Strout (2017): the general population's limit, at solar minimum |
 | `solar_min_phi_mv` | 300.0 | MV, force-field modulation potential | 250.0–450.0 | estimate | deep solar minimum (2009-2010) in the Usoskin et al. (2005) convention, recalled |
 | `solar_max_phi_mv` | 1,000 | MV, force-field modulation potential | fixed | estimate | solar maximum, recalled |
