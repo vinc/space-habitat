@@ -129,7 +129,7 @@ The stack's margin with one gap unlinked: a torus just closed next to the stack,
 | 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
 | 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 50 of 974 (5.1%) |
 
-**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, so the margin only falls as the stack spins up: full spin, checked above, is the worst case for whirl. Whirl only, at selected rates, the nets' stiffness scaled with the spin load; the spin-up's torque, the cables taking up tension and the fill's settling are not modelled.
+**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, so the margin only falls as the stack spins up: full spin, checked above, is the worst case for whirl. Whirl only, at selected rates, the nets' stiffness scaled with the spin load (their pretension at rest left out, which only adds to it); the ring's own statics through the spin-up, its torque and the fill's settling are in `reports/structure.md`.
 
 | Torus | Tori | 10% of the spin | 25% of the spin | 50% of the spin | 75% of the spin | 100% of the spin |
 |---|---|---|---|---|---|---|

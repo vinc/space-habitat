@@ -68,9 +68,95 @@ A stage is **resolved** only if the taut set converges, every segment balances (
 
 Rigid segments make this a crude model: even resolved stages settle the force balance, not the construction sequence, and the joint moments of the longer locked arcs depend on the segments' real flexibility.
 
+## The baseline: built at rest, spun up finished
+
+A child's stack is assembled at rest (`structure_model/rest.py`): every ring closed, the lattice fitted, the rock and soil in; then spun up slowly with the water last. In the ring's plane, with the geometrically nonlinear model above, the joints sliding along the rim but **bearing on stops**: closed (compression) they act locked, rocking once their moment passes their compression times the tube's radius; open, they slide on a light spring along the rim (~10⁸ N/m, below). The chords are pretensioned to a strain of 5 × 10⁻⁴ as installed, to stay taut through a ±20 K swing of their temperature against the hull's (a guess; α ΔT = 2.4e-04).
+
+### At rest
+
+With no spin load, only the hull resists the chords' pull: the closed ring is squeezed, its joints bear, and most of the installed stretch goes into the hull's shortening (the chords keep only a few % of their finished tension). Allowable compression 150 MPa (half the plate stress, as in the cross-section). Thermal swing: the chords colder (hull's compression) / warmer (the least chord tension). Buckling in the plane: the pretension at which the ring's lowest stiffness vanishes, over the 5 × 10⁻⁴ used (the chords hold it far beyond the free ring's 3EI/r²). Scattered as built (below).
+
+| Torus | Chords (% of finished) | Hull compression (MPa) | Joints' compression (MN) | Cold: hull (MPa) / warm: least chord | Buckling margin |
+|---|---|---|---|---|---|
+| 900 m | 2.0–3.3% | 74.3 | 499 | 110 / 0.67%, 0 slack | 53.9× |
+| 1.6 km | 1.5–2.5% | 81.2 | 1,150 | 120 / 0.57%, 0 slack | — |
+
+### Spinning up: the cables take up tension, the joints open
+
+The spin stepped up from rest to full at 900 m, each step from the last equilibrium. Spin as a share of the final rate; chords as a share of the finished tension; hull stress along the rim (negative: compression) and in bending; joints open and their gap.
+
+| Ring | Spin | Chords (× finished) | Hull along the rim (MPa) | Hull bending (MPa) | Joints open | Gap (cm) | Joints' compression (MN) |
+|---|---|---|---|---|---|---|---|
+| as drawn | 0 | 0.0267–0.0267 | -74.2 to -74.2 | 0.067 | 0/94 | closed | 498 |
+| as drawn | 0.10 | 0.0342–0.0342 | -67.0 to -67.0 | 0.061 | 0/94 | closed | 450 |
+| as drawn | 0.17 | 0.0490–0.0490 | -52.7 to -52.7 | 0.048 | 0/94 | closed | 354 |
+| as drawn | 0.32 | 0.101–0.101 | -2.44 to -2.44 | 0.0022 | 0/94 | closed | 16.4 |
+| as drawn | 0.50 | 0.250–0.251 | 0.632 to 0.632 | 0.0042 | 94/94 | 4.24–4.24 | 0 |
+| as drawn | 0.71 | 0.500–0.502 | 1.71 to 1.71 | 0.011 | 94/94 | 11.5–11.5 | 0 |
+| as drawn | 1.0 | 1.00–1.01 | 3.88 to 3.88 | 0.026 | 94/94 | 26.0–26.0 | 0 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0 | 0.0195–0.0333 | -74.3 to -74.1 | 0.88 | 0/94 | closed | 499 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0.10 | 0.0270–0.0407 | -67.1 to -67.0 | 0.90 | 0/94 | closed | 451 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0.17 | 0.0421–0.0554 | -52.8 to -52.7 | 1.5 | 0/94 | closed | 355 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0.32 | 0.0943–0.108 | -2.83 to -2.39 | 3.6 | 0/94 | closed | 19.0 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0.50 | 0.233–0.265 | 0.373 to 0.923 | 0.60 | 94/94 | 2.53–6.13 | 0 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 0.71 | 0.471–0.532 | 1.15 to 2.39 | 1.2 | 94/94 | 7.78–15.9 | 0 |
+| scattered: chords ±2 cm, mass per anchor ±2% (1σ) | 1.0 | 0.942–1.07 | 2.38 to 5.81 | 2.5 | 94/94 | 16.2–38.6 | 0 |
+
+As drawn: the joints open at ~0.32 of the spin; every chord's tension on the way is at most 1.000× its own at full spin; the hull's worst is 74.2 MPa of compression at rest (3.88 MPa along it at full spin), its bending at most 0.067 MPa (0.026 at full spin); finished, the chords at 1.00–1.01× the formula (peak 1.01× the allowable) and the joints open by 26.0–26.0 cm. Scattered: chords ±2 cm, mass per anchor ±2% (1σ): the joints open at ~0.32 of the spin; every chord's tension on the way is at most 1.000× its own at full spin; the hull's worst is 74.3 MPa of compression at rest (5.81 MPa along it at full spin), its bending at most 3.6 MPa (2.5 at full spin); finished, the chords at 0.942–1.07× the formula (peak 1.07× the allowable) and the joints open by 16.2–38.6 cm.
+
+**So nothing exceeds the finished state on the way, except the at-rest pretension:** the hoop's compression in the hull and on the joints' stops, which falls linearly with the spin load and is gone by about a third of the spin, when the joints open together and the chords carry the rim alone, as finished. The scattered ring's finished chords spread by ±~7% (mostly the mass scatter): the finished net's own tolerance, not the spin-up's; it needs the rim's mass placed within ~2% per anchor, or the chords trimmed after spin-up, or a little more safety margin.
+
+**The joints need a spring along the rim.** With joints that only slide, the segments' positions along the rim are barely held: the chords are nearly diametral, so segments sliding in odd harmonics hardly stretch them, and a 2% scatter in the rim's mass slides segments by up to ~1–2 m at a fifth of the spin (and the solution doesn't converge). A spring of ~10⁸ N/m in each joint holds them to the gaps above for a few MPa along the hull; ~10⁷ N/m is too soft to settle, ~10⁹ N/m puts ~30 MPa in the hull. The joints travel ~0.15–0.4 m each by full spin (and ~2 cm more each as the chords creep, ~0.5 m per chord at 900 m: the wire, above).
+
+### The hub at rest
+
+No spin load: the chords hold the hub sideways by their pretension alone (2T/L at the share shown), and the stabilising lines, nearly rigid next to them, keep their installed pull-in, so their preload falls in proportion. Load: a 10 kt ship docking at 0.1 m/s over 10 s.
+
+| Torus | Chords' tension at rest | Lateral stiffness at rest (MN/m) | Finished (MN/m) | Lines' preload at rest (N) | Docking offset (cm) | Window gap (m) | Hub's period (s) |
+|---|---|---|---|---|---|---|---|
+| 900 m | 2.6% | 1.8 | 64.4 | 140 | 5.46 | 8.41 | 79.2 |
+| 1.6 km | 2.0% | 2.4 | 113 | 311 | 4.01 | 18.2 | 154 |
+
+### The spin-up's torque
+
+Thrusters on each ring's rim sized to its own inertia; bounded by a fast spin-up, 30 days. Per torus with its hub share and farm ring. Rim: the tangential load over the centrifugal at full spin. Farm ring: its twist at its rim if it is turned by the hub through its radial spokes rather than its own thrusters (at rest / full spin; the spokes resist only by their tension, pretensioned like the chords). Hub: its twist (rad) through 0.2% of the stabilising lines laced (section 11), and the force per laced line against its strength. Lattice: one torus's thrusters 10% off their share, carried across a gap (a braking rim train puts ~40–120 MN·m on a lattice). Water: the spin lost as the water arrives from the axis, made up by thrust.
+
+| Torus | α (rad/s²) | Torque (MN·m) | Thrust (kN) | Rim: tangential / spin load | Farm ring twist at its rim (cm) | Hub twist; laced line force (kN) | Thrust mismatch; lattice force | Water last: spin lost |
+|---|---|---|---|---|---|---|---|---|
+| 900 m | 4.0e-08 | 399 | 440 | 4e-06 | 24.8 / 0.66 | 3e-05; 3.1 of 169 | 39.8 MN·m; 45.7 kN | 0.5% |
+| 1.6 km | 3.0e-08 | 2,960 | 1,840 | 5e-06 | 78.0 / 1.6 | 3e-05; 7.9 of 498 | 295 MN·m; 191 kN | 0.6% |
+
+The spin-up's cost, for the angular momentum of a torus with its hub and farm ring at full spin, delivered at the envelope's outer rim, at the torus's own power (its array, `habitat_model`):
+
+| Torus | Reaction mass | Exhaust (km/s) | Propellant (Mt) | Energy (PJ) | Days at the torus's power |
+|---|---|---|---|---|---|
+| 900 m | water thrusters | 3.0 | 0.38 | 4.9 | 1,370 |
+| 900 m | rock mass driver | 0.50 | 2.3 | 0.57 | 160 |
+| 1.6 km | water thrusters | 3.0 | 1.6 | 20 | 1,810 |
+| 1.6 km | rock mass driver | 0.50 | 9.5 | 2.4 | 211 |
+
+**The angular acceleration is negligible:** even at the fast rate its loads are millionths of the spin's; a farm ring turned through its radial spokes alone lags ~0.25–0.8 m at its rim at rest (centimetres at full spin), so it gets its own thrusters or simply follows; the laced lines and the lattice carry it with ample margin. What sets the spin-up is energy: water thrusters take years of the torus's own power, host rock thrown by a mass driver at ~0.5 km/s ~5–7 months (proposed; ~6× the reaction mass, of rock mined anyway). The stack at rest has no gyroscopic stiffness, so the thrusters' sideways torques must be balanced or held by the attitude thrusters until the spin builds (not modelled).
+
+### The fill as gravity grows
+
+The rock and soil are placed at rest, in compartments. Loose, they settle by their porosity as the spin grows; compacted to their final density at rest, only by their elastic compression under their own weight at full spin. The jacket (5.5 m, 2 t/m³ finished, ~43% porosity on ~3.5 t/m³ chondrite grains) settles through its thickness on the floor and ceiling, harmlessly (the mass on each ray stays the same); but at the tube's two sides its cells' columns run along the radius, a cell high (10 m), and a settled cell leaves a slot at its top through the jacket's whole thickness. A slot h high in a wall t thick lets through, unshielded, ~h/4t of the directions seen from the valley at its height, both side walls together twice that: the dose added there, against the jacket's (OLTARIS's free space less its 11 t/m²), is rough.
+
+| Fill placed | Settling strain | Settling through the jacket (cm) | Slot at the sides (cm) | Dose added at the slots' height (mSv/yr) |
+|---|---|---|---|---|
+| loose, 1.6 t/m³ | 20% | 110 | 200 | 81.4 |
+| loose, 1.75 t/m³ | 12% | 68.8 | 125 | 50.9 |
+| loose, 1.9 t/m³ | 5% | 27.5 | 50.0 | 20.3 |
+| compacted at rest, M = 100 MPa | — | 0.30 | 0.99 | 0.40 |
+| compacted at rest, M = 50.0 MPa | — | 0.60 | 2.0 | 0.80 |
+| compacted at rest, M = 20.0 MPa | — | 1.5 | 4.9 | 2.0 |
+
+**The fill must be compacted as it is placed (proposed),** or the side cells topped up through fill ports once spun up: loose, the slots add tens of mSv/yr where they face, more than the 20 mSv/yr limit. Settling unevenly moves the rim's first moment by ~3.18 cm × its mass even loose, within the ballast's 45 cm, and slows the spin by ~0.07%. The loads the fill puts on its cells grow with the spin to their finished values (the cross-section above).
+
+Not modelled: out of the ring's plane (the ring's buckling sideways, the two nets apart), the joints' stops and springs as hardware, the fill's flow and arching in its cells, the stack's attitude while at rest, the despun array.
+
 ## Adding a torus to a spinning stack: geometrically nonlinear
 
-**The baseline is simpler.** A child is built at rest: its hub, nets and every arc, the ring closed and its joints released, the lattice fitted, the rock and soil in, without spin load, so the partial-ring stages below don't arise; then the finished stack spins up slowly and the water goes in last, trimmed with ballast. The spin loads should then grow in their finished proportions (expected, not checked here); checked so far is only that the stack's whirl margin falls as it spins up (`reports/dynamics.md`). Still open for the baseline: the stationary assembly's equilibrium, the cables taking up tension and the sliding joints settling as the spin starts, the spin-up torque and angular-acceleration loads, and the fill's retention and settling. What follows is the harder option: a torus added to a living stack, which can't stop, so its arcs are hung at full spin. It checks selected stages of that sequence, not the whole process.
+**The baseline is simpler** (previous section): a child is built at rest and spun up finished, so the partial-ring stages below don't arise. What follows is the harder option: a torus added to a living stack, which can't stop, so its arcs are hung at full spin. It checks selected stages of that sequence, not the whole process.
 
 `structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible beams (corotational, one per anchor spacing, E A and E I of the hull and frames as a thin tube of the tube's radius), joined at the segment joints (locked, pinned or sliding: penalty springs); each chord a tension-only cable with its geometric stiffness, pretensioned slightly; the rim's and the chords' centrifugal loads following the parts as they move; the assembly's centre of mass and mean rotation held (it turns about its centre of mass); the spin stepped up with Newton iterations and line search. It reproduces the linear model on the shortest locked arcs (chords ~1.94× their finished tension, joints ~186 MN and ~6 GN·m at full spin) and the finished net (within 1% of the formula). Sequence studies: `structure_model/sequence.py`.
 

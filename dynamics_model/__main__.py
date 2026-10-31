@@ -213,8 +213,9 @@ def report(p):
         "share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio "
         "to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, "
         "so the margin only falls as the stack spins up: full spin, checked above, is the worst case for whirl. "
-        "Whirl only, at selected rates, the nets' stiffness scaled with the spin load; the spin-up's torque, "
-        "the cables taking up tension and the fill's settling are not modelled.",
+        "Whirl only, at selected rates, the nets' stiffness scaled with the spin load (their pretension at rest "
+        "left out, which only adds to it); the ring's own statics through the spin-up, its torque and the fill's "
+        "settling are in `reports/structure.md`.",
         table(["Torus", "Tori"] + [f"{f:.0%} of the spin" for f in SPINUP], spinup_rows),
         "**While a torus is hung** at the end of a spinning stack (the option for growing a living stack) (the stack keeps its spin), that torus a "
         "partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion "
