@@ -25,14 +25,14 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Structure | Steel hull, cable spokes of high-carbon drawn steel wire, nickel cladding (proposed, to discuss: carbonyl process, tangent-chord spoke net) |
 | Shield | ~5.5 m compartmentalised jacket of compacted rock (~11 t/m², mining tailings) carried by each torus, plus ~1 m soil/regolith fill under the floor; a double outer skin (thin meteoroid bumper over an empty ~1–2 m crawl space) for maintenance from inside |
 | Atmosphere | 70 kPa, 29% O₂ (sea-level O₂ partial pressure, ~39% less nitrogen) |
-| Interior light | Artificial overcast sky (sulfur plasma lamps); tori on staggered days (2 phases 12 h apart for a pair, 3 phases 8 h apart for 6); **seasonal sky** following the host asteroid's orbit, with no seasonal storage |
+| Interior light | Artificial overcast sky (white LEDs in a light box, made by the factory's semiconductor works; section 13); tori on staggered days (2 phases 12 h apart for a pair, 3 phases 8 h apart for 6); **seasonal sky** following the host asteroid's orbit, with no seasonal storage |
 | Climate | One per habitat (all its valleys alike, connected for migration), set by the solar array's size, the lighting, the orbit's seasons, the water in the air and the night-time cooling. First sites: temperate, North-Atlantic-like, mild wet winters (~6–8 °C) and cool summers (~16–19 °C); temperature set by the coolant loops, independent of light |
 | Heat | Coolant loops to radiators: the valleys' heat on the tori's spokes, in the drum between hub and tori, leaving through its two open ends and the gaps; the farm's heat on the farm rings' own spokes, in the open farm section |
 | Power | Despun solar array on a mast at one hub end, always facing the Sun, sized for the valley's sky, the other loads and the farm tiers lit, so that even locked to the spinning stack it keeps the habitat alive and fed; separate free-flying solar array for industry |
 | Materials | S-type asteroid (Fe-Ni grains for steel, silicate tailings for the shield) + small C-type asteroid (water, N, C, soil, P, K); M-types and comets optional; all bulk materials from these bodies |
 | Interior | A natural narrow valley, anywhere from an arid canyon to a fern gully, its climate set per habitat by the solar array's size, the lighting, the orbit's seasons, the water in the air and the night-time cooling; ≥ 50% wilderness, cliff dwellings behind extra soil |
 | Transport | Elevators in the spokes between hub and rim; a one-way antispinward train loop in a tube on the hub-facing side of each torus, joining the elevators; everything between 0 and 1 g |
-| Food | Primarily plant-based: a farm ring per torus at ~0.4 r in the stack's farm section, three tiers under sulfur lamps and light pipes (potatoes, wheat, soybeans, lentils, berries, flax, greens), the number of tiers lit setting the population; the valley's permaculture and food forest add fruit, nuts, corn, squash and beans; algae, gas-fermented bacterial protein, mushroom + larvae cycle and aquaponics fish as supplements and margins; animal options kept as backups (proposed, to discuss: flooded taro/rice terraces, B12 fermentation) |
+| Food | Primarily plant-based: a farm ring per torus at ~0.4 r in the stack's farm section, three tiers under blue + red LEDs (potatoes, wheat, soybeans, lentils, berries, flax, greens), the number of tiers lit setting the population; the valley's permaculture and food forest add fruit, nuts, corn, squash and beans; algae, gas-fermented bacterial protein, mushroom + larvae cycle and aquaponics fish as supplements and margins; animal options kept as backups (proposed, to discuss: flooded taro/rice terraces, B12 fermentation) |
 
 | Key numbers, per torus | 900 m / 60 s | 1.6 km / 80 s | 2.5 km / 100 s (candidate) |
 |---|---|---|---|
@@ -46,15 +46,15 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | **Total** | **~12.8 Mt** | **~41.5 Mt** | **~108 Mt** |
 | Mass per m² of floor | ~40 t | ~41 t | ~44 t |
 | Mined per torus (S-type, H-like host + C-type) | ~14 + ~5–7 Mt | ~44 + ~27 Mt | ~165 + ~100 Mt |
-| Valley lighting, daily average (sulfur lamps; ~15 mol/m²/day on the floor with the light-box ceiling) | ~53 MW | ~166 MW | ~410 MW |
+| Valley lighting, daily average (white LEDs; ~15 mol/m²/day on the floor with the light-box ceiling) | ~22 MW | ~68 MW | ~167 MW |
 | Farm ring at ~0.4 r: three tiers, crops per tier | ~9 ha | ~29 ha | ~70 ha |
 | People fed, 1 / 2 / 3 tiers lit (conservative yields) | ~1,000 / ~2,000 / ~3,050 | ~3,250 / ~6,500 / ~9,750 | ~7,900 / ~15,800 / ~23,700 |
 | Floor per person, 1 / 2 / 3 tiers lit | ~310 / ~155 / ~103 m² | ~310 / ~155 / ~103 m² | ~310 / ~155 / ~103 m² |
-| Farm lighting, per tier lit | ~32 MW | ~102 MW | ~247 MW |
-| Solar needed: valley + other loads, + per tier lit | ~57 + ~32 MW | ~180 + ~102 MW | ~440 + ~247 MW |
+| Farm lighting, per tier lit (blue + red LEDs) | ~11 MW | ~35 MW | ~86 MW |
+| Solar needed: valley + other loads, + per tier lit | ~26 + ~11 MW | ~84 + ~35 MW | ~204 + ~86 MW |
 | Plain rim solar, for comparison | ~34 MW | ~110 MW | ~270 MW |
-| Despun solar array at 1 AU (sized to keep the habitat alive and fed when locked): valley + per tier lit | ~0.27 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
-| Despun array with three tiers lit | ~0.71 km² | ~2.3 km² | ~5.6 km² |
+| Despun solar array at 1 AU (sized to keep the habitat alive and fed when locked): valley + per tier lit | ~0.12 + ~0.05 km² | ~0.39 + ~0.16 km² | ~0.94 + ~0.40 km² |
+| Despun array with three tiers lit | ~0.28 km² | ~0.87 km² | ~2.1 km² |
 
 | Stack of 900 m tori | Pair (A B) | Six (A A B B C C) |
 |---|---|---|
@@ -64,12 +64,12 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 | Main section length (10–40 m clear gaps between the envelopes) | ~160–220 m | ~480–660 m |
 | Whole stack with its farm section (50 m between sections, 10 m between farm rings) | ~330 m | ~900 m |
 | People fed, 1 / 2 / 3 tiers lit | ~2,000 / ~4,000 / ~6,100 | ~6,000 / ~12,000 / ~18,300 |
-| Constant valley lighting load (sulfur) | ~105 MW | ~315 MW |
-| Farm lighting, per tier lit | ~64 MW | ~190 MW |
-| Despun solar array at 1 AU: valley + per tier lit | ~0.53 + ~0.3 km² | ~1.6 + ~0.9 km² |
-| Heat with three tiers lit: main section (valleys) + farm section | ~115 + ~190 MW | ~345 + ~580 MW |
+| Constant valley lighting load (LEDs) | ~43 MW | ~130 MW |
+| Farm lighting, per tier lit | ~22 MW | ~67 MW |
+| Despun solar array at 1 AU: valley + per tier lit | ~0.24 + ~0.10 km² | ~0.73 + ~0.31 km² |
+| Heat with three tiers lit: main section (valleys) + farm section | ~53 + ~67 MW | ~159 + ~201 MW |
 | Main section: ideal limit of the drum's two open ends (black bodies at ~285 K) | ~1.6 GW | ~1.6 GW |
-| Ray-traced heat margins, main / farm section, three tiers lit (section 13) | ~5.8× / ~5.3× traced together (~11× / ~8× each alone) | ~2.4× / ~2.5× traced together (~3.9× / ~3.6× each alone) |
+| Ray-traced heat margins, main / farm section, three tiers lit (section 13) | ~14× / ~14× traced together (~24× / ~23× each alone) | ~5.7× / ~5.6× traced together (~8.8× / ~10× each alone) |
 
 ```
   sunlight ↓   (always perpendicular to the axis)
@@ -256,7 +256,7 @@ A compartment model of one torus's air with its farm ring (`ecology_model/`, `re
 | Scenario | CO₂ past 0.5 kPa (~5,000 ppm at sea level) | O₂ below 17 kPa | Food store (90 days) runs out | Oxygen to recover from CO₂, at peak |
 |---|---|---|---|---|
 | One farm tier dark | ~110 days | not within a year | not within a year | ~0.6 t/day (~0.2 MW) |
-| Two tiers dark (the pumps' passive fallback, section 13) | ~36 days | ~330 days | ~170 days | ~2.1 t/day (~0.6 MW) |
+| Two tiers dark (the passive fallback with sulfur lamps; with LEDs it carries every tier, section 13) | ~36 days | ~330 days | ~170 days | ~2.1 t/day (~0.6 MW) |
 | The whole farm dark | ~22 days | ~176 days | ~97 days | ~3.6 t/day (~1.0 MW) |
 | A burst of soil respiration (+1 µmol/m²/s, fading over a year) | — | — | — | none: the crops take it up |
 
@@ -559,8 +559,8 @@ Rock jacket and cable spokes (section 5c):
 | C-type per torus (sized by nitrogen) | ~5 Mt (~200 m) | ~27 Mt (~350 m) | ~100 Mt (~540 m) |
 | Tori per Ryugu-sized C-type (~450 Mt) | ~90 | ~17 | ~4.5, less than a six-stack |
 | S-type per torus | ~14 Mt, sized by the shield | ~44 Mt, shield and metal nearly balanced | ~165 Mt, sized by the metal (~28 Mt) if H-like; ~2× for an L host, ~4× for LL, unless iron comes from the silicates |
-| Lighting (sulfur, daily average): valley + per farm tier lit | ~53 + ~32 MW | ~166 + ~102 MW | ~410 + ~247 MW |
-| Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.27 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
+| Lighting (LEDs, daily average): valley + per farm tier lit | ~22 + ~11 MW | ~68 + ~35 MW | ~167 + ~86 MW |
+| Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.12 + ~0.05 km² | ~0.39 + ~0.16 km² | ~0.94 + ~0.40 km² |
 | Material mined per torus (H-like host) | ~18 Mt (1×) | ~71 Mt (~4×) | ~265 Mt (~15×) |
 
 **2.5 km (candidate, to decide):**
@@ -1032,7 +1032,7 @@ Electric power for the sky, as a 24 h average, depends strongly on the lamp effi
 | Shade-tolerant forest (a dull overcast summer day) | ~10 mol/m²/day | ~83 W/m² | ~39 W/m² | ~27 / ~12 MW | ~83 / ~39 MW |
 | Meadows, gardens, most fruiting plants (a bright overcast day) | ~20 mol/m²/day | ~165 W/m² | ~77 W/m² | ~53 / ~25 MW | ~166 / ~77 MW |
 
-**Ceiling losses and the power sizing.** The habitat is sized at ~53 MW of sulfur lighting per 900 m torus on daily average (~25 MW with LEDs), ~166 MW (~77 MW) at 1.6 km. With the ~50% ceiling losses first assumed, that gave ~10 mol/m²/day; with the light-box ceiling (~25% losses) the same power gives **~15 mol/m²/day**, a level suited to a mixed landscape rather than only shade-tolerant forest.
+**Ceiling losses and the power sizing.** The habitat is sized for **~15 mol/m²/day** on the floor, a level suited to a mixed landscape rather than only shade-tolerant forest: ~22 MW of white LED lighting per 900 m torus on daily average, ~68 MW at 1.6 km, with ~15% lost in the light box (~86% traced for LED strips). Sulfur lamps behind the same ceiling took ~53 MW and ~166 MW at the ~25% losses first estimated.
 
 Dawn, dusk and seasonal day length are schedule settings.
 
@@ -1047,7 +1047,7 @@ Dawn, dusk and seasonal day length are schedule settings.
 - **Grouped phases: A A B B C C.** Same-phase neighbours share one clock and can be joined by rim tunnels with no light-locks, forming three double valleys (~64 ha each at 900 m). Only two time boundaries remain (A–B and B–C, 8 h each); A and C, 16 h apart, never touch.
 - **The 8/8/8 schedule.** At any moment one third of the inhabitants work, one third have free time and one third sleep: the factory, docks and shared facilities run around the clock with nobody on a night shift.
 - **Farm rings keep their own schedule** (section 13, farm rings): their zones are staggered so that the farm's load is also constant around the clock, added to the valleys' constant load.
-- **Sulfur lamp dimming** has a limited range, so ramps may be made by switching lamp groups rather than a perfectly smooth fade (to check).
+- **Dimming:** LEDs dim smoothly over their whole range, so dawn and dusk ramps are a matter of the drivers' current (sulfur lamps, the fallback, dim only partly and would switch lamp groups).
 
 **Lamp technology:**
 
@@ -1089,7 +1089,7 @@ LEDs are the mainstream choice, adopted over sulfur lamps: the array has to be m
 
 ### Semiconductor works (adopted, 31 Oct 2026)
 
-Part of every factory, carried by every seed: it makes the array's cells, the LEDs and the power electronics. Per 900 m torus: ~280 t of wafer silicon (~30 t a year at a ~10-year generation, a small refinery next to Earth's plants of tens of kilotonnes a year), ~440 m² of LED wafer, ~5–10 m² of power-device wafer.
+Part of every factory, carried by every seed: it makes the array's cells, the LEDs and the power electronics. Per 900 m torus (six-stack at Eros, three tiers lit): ~280 t of wafer silicon (~30 t a year at a ~10-year generation, a small refinery next to Earth's plants of tens of kilotonnes a year), ~440 m² of LED wafer, ~5–10 m² of power-device wafer.
 
 | Step | Process | Local inputs | Status |
 |---|---|---|---|
@@ -1126,14 +1126,14 @@ Part of every factory, carried by every seed: it makes the array's cells, the LE
 
 ### Power
 
-- **Plain rims are not enough.** Panels on the rim, lit half of every rotation and averaging ~1/π of full sunlight, give ~34 MW (900 m) or ~110 MW (1.6 km) per torus, against ~57 MW / ~180 MW needed with sulfur lamps for the sky, ceiling losses and other loads, plus ~32 MW / ~102 MW per farm tier lit.
+- **Plain rims are not enough once the farm is lit.** Panels on the rim, lit half of every rotation and averaging ~1/π of full sunlight, give ~34 MW (900 m) or ~110 MW (1.6 km) per torus, against ~26 MW / ~84 MW needed with LEDs for the sky, ceiling losses and other loads, plus ~11 MW / ~35 MW per farm tier lit (~60 MW / ~190 MW with three tiers). With sulfur lamps the valley alone needed ~57 MW / ~180 MW.
 - **Despun solar array on the hub (adopted; replaces the capless solar cylinder, section 17.28).** A flat array on a mast on the spin axis, beyond one end of the stack, its plane containing the axis. Sunlight always arrives perpendicular to the axis, so one rotation about the axis keeps it facing the Sun: relative to the habitat it turns at the spin rate (1 rpm at 900 m, 0.75 rpm at 1.6 km), relative to the stars once a year.
   - **About three times the power per m² of PV:** a sun-facing panel makes ~340 W/m² at 1 AU (25% PV), the spinning cylinder ~108 W/m². This also cuts the silicon the semiconductor works must make by about two thirds.
   - **One light rotating interface:** a slow, almost unloaded bearing. On the axis the array adds no centrifugal load, and sunlight pushes on it with only ~4.6 N per km². A magnetic bearing (iron and copper) avoids lubricants (the usual space lubricant, MoS₂, needs molybdenum, a vitamin). Two bearings, either able to carry the array, and a replaceable drive. Unlike the rejected counter-rotating designs (sections 17.4–17.6), there is no pressurized seal, no traffic and no heavy load.
   - **Power crosses the joint without contact:** a rotary transformer (AC across the gap, ~98–99%, iron and copper), the principle that carries megawatts in brushless generator exciters. Slip rings and roll rings wear; the ISS's solar rotary joint suffered bearing-race damage in 2007.
   - **Survival if it fails.** With cells on both faces, a locked array turns with the stack and still averages 2/π ≈ 64% of its output (1/π with one-sided cells). **It is sized so that, locked, it still delivers the habitat's whole need**, enough to keep it alive and fed through winter: ~1.57× the bare need (for the valley alone, **half the former cylinder's PV area**), with ~1.57× the need while tracking (spare for the factory, brighter gardens or food exports). The farm tiers lit are part of that need (section 13, farm rings). A locked array's output pulses with each turn, so it needs ~30 s of buffering (capacitors, or a small flywheel).
-  - **Sizes at 1 AU** (constant sky; section 15 gives the seasonal sizing by orbit): for the valley and other loads ~0.27 km² per 900 m torus (against ~0.55 km² of cylinder) and ~0.85 km² per 1.6 km torus, plus ~0.15 km² / ~0.48 km² per farm tier lit, so ~0.71 km² / ~2.3 km² with three tiers lit. A 900 m pair needs ~0.53 km² for its valleys (for example ~300 m along the axis × ~1.8 km across) and ~1.4 km² with three tiers lit (~800 m × ~1.8 km); a 900 m six-stack ~1.6 km² (~4.3 km² with three tiers); a 1.6 km six-stack ~5 km² (~14 km²). Thin-film panels plus structure at ~3 kg/m² come to ~0.8 kt per 900 m torus for the valley (against ~1.6 kt for the cylinder), ~2.1 kt with three tiers lit.
-  - **It scales.** Its size is not tied to the stack's radius and pitch, so it simply grows further from the Sun (per 900 m torus at the survival sizing: ~0.65 km² at Mars and ~2 km² in the belt for the valley, plus ~0.35 / ~1.1 km² per farm tier lit). Only a sun-facing surface can concentrate: local thin-film mirrors can cut the PV area by the concentration ratio, and solar-thermal generators (Stirling or Brayton, ~25–35%) need no PV at all. This is what opens the outer system without nuclear (below).
+  - **Sizes at 1 AU** (constant sky, LEDs; section 15 gives the seasonal sizing by orbit): for the valley and other loads ~0.12 km² per 900 m torus and ~0.39 km² per 1.6 km torus, plus ~0.05 km² / ~0.16 km² per farm tier lit, so ~0.28 km² / ~0.87 km² with three tiers lit (with sulfur lamps: ~0.71 km² / ~2.3 km²). A 900 m pair needs ~0.24 km² for its valleys (for example ~200 m along the axis × ~1.2 km across) and ~0.55 km² with three tiers lit (~300 m × ~1.8 km); a 900 m six-stack ~0.73 km² (~1.7 km² with three tiers); a 1.6 km six-stack ~2.3 km² (~5.2 km²). Thin-film panels plus structure at ~3 kg/m² come to ~0.37 kt per 900 m torus for the valley, ~0.83 kt with three tiers lit.
+  - **It scales.** Its size is not tied to the stack's radius and pitch, so it simply grows further from the Sun (per 900 m torus at the survival sizing: ~0.28 km² at Mars and ~0.9 km² in the belt for the valley, plus ~0.12 / ~0.37 km² per farm tier lit). Only a sun-facing surface can concentrate: local thin-film mirrors can cut the PV area by the concentration ratio, and solar-thermal generators (Stirling or Brayton, ~25–35%) need no PV at all. This is what opens the outer system without nuclear (below).
   - **Placement.** The dock stays at the other end of the hub: ships can't dock at the despun mast without a rotating pressurized joint. The mast extends along the axis beyond the stack's end, so the stack doesn't shade the array. Seen along the axis the array is edge-on, blocking almost none of the radiator vent. Sunlight's push on a single array turns the spin axis by only ~0.002° a year, and since the push rotates with the Sun, it averages out to a tiny yearly wobble; the array's few kilotonnes add almost nothing to the transverse inertia.
   - **Maintenance** happens in microgravity on the array, reachable from the hub. Always facing the Sun, it has no thermal cycling (the cylinder had ~500,000 small swings a year). For major work the bearing is locked and the array keeps producing.
 - **Flat PV is the baseline; concentrators are noted as options** for the part of the array above the survival level, mainly further from the Sun. Per ~100 MW of electricity at 1 AU:
@@ -1171,19 +1171,19 @@ Sunlight falls with the square of the distance:
 
 - **Near Earth first (adopted starting point).** Near-Earth asteroids include all the needed types: S-types (the most common), C-types such as Bennu and Ryugu, and some M-types. Staying near 1 AU avoids the belt's ~7× loss of sunlight.
 - **Spreading outward needs more collecting area or another power source.** A belt habitat needs ~7× the solar area per torus; the despun array simply grows (its size isn't tied to the stack). Nuclear options were investigated and rejected for now under the sourcing rule (section 17.22).
-- **Concentrators on the despun array (now possible, to discuss).** A 900 m torus needs ~230 MW of sunlight for its valley's ~57 MW at 25%, ~620 MW with three farm tiers lit (×1.57 with the survival sizing). Mirror areas below are for the valley; with three tiers lit they are ~2.6× larger. Collecting it further out with sun-tracking thin-film mirrors (~10–20 g/m², aluminium and carbon) on the despun array's mast, focused onto a smaller PV area or a solar-thermal generator:
+- **Concentrators on the despun array (now possible, to discuss).** A 900 m torus needs ~105 MW of sunlight for its valley's ~26 MW at 25%, ~240 MW with three farm tiers lit (×1.57 with the survival sizing). Mirror areas below are for the valley; with three tiers lit they are ~2.3× larger. Collecting it further out with sun-tracking thin-film mirrors (~10–20 g/m², aluminium and carbon) on the despun array's mast, focused onto a smaller PV area or a solar-thermal generator:
 
 | Location | Sunlight | Mirror area per torus | Film mass |
 |---|---|---|---|
-| Asteroid belt (2.7 AU) | 0.14× | ~1.3 km² | ~15–25 t |
-| Jupiter (5.2 AU) | 0.037× | ~4.8 km² | ~50–100 t |
-| Saturn (9.5 AU) | 0.011× | ~16 km² | ~160–320 t |
+| Asteroid belt (2.7 AU) | 0.14× | ~0.6 km² | ~6–11 t |
+| Jupiter (5.2 AU) | 0.037× | ~2.1 km² | ~20–40 t |
+| Saturn (9.5 AU) | 0.011× | ~7 km² | ~70–140 t |
 
   The concentration ratio sets the PV area (~10–100 suns on cooled cells), and a solar-thermal generator (Stirling or Brayton) needs no PV at all. Mounted on the despun mast, the mirrors no longer depend on free-flying craft (the earlier version of this idea used free-flying mirrors focused on the spinning cylinder).
 
 ### Farm rings: electric light in three tiers (adopted)
 
-Each torus grows its staple food in a farm ring of its own, in the stack's farm section, lit by the same sulfur lamps and light pipes as the valley's sky and powered by the same despun solar array. This replaces the sun-fed rings lit by mirrors around the hub (section 17.29): there are no mirrors, no glass and no flicker, the gaps stay narrow (10–40 m), and the population grows with the array, whose size isn't tied to the stack's geometry.
+Each torus grows its staple food in a farm ring of its own, in the stack's farm section, lit by blue + red LEDs (the valley's sky uses white ones) and powered by the same despun solar array. This replaces the sun-fed rings lit by mirrors around the hub (section 17.29): there are no mirrors, no glass and no flicker, the gaps stay narrow (10–40 m), and the population grows with the array, whose size isn't tied to the stack's geometry.
 
 ```
         towards the hub ↑
@@ -1198,7 +1198,7 @@ Each torus grows its staple food in a farm ring of its own, in the stack's farm 
             ←── ~0.9 × tube width along the axis (~50 m at 900 m) ──→
         "down" ↓ outward: radiators on the farm spokes
 ```
-(section through the ring in its own plane; `≡` light pipes just above the canopy, `▒` crops; floors at ~0.39–0.40 g)
+(section through the ring in its own plane; `≡` LED strips just above the canopy, `▒` crops; floors at ~0.39–0.40 g)
 
 **Layout:**
 - **A farm section of its own (proposed, 28 Oct 2026).** The farm rings, one per torus, sit side by side on the shared hub beyond the tori (at the despun array's end, next to the largest power load), ~50 m from the last torus and ~10 m apart, each on its own spokes, at ~0.4 r: ~360 m at 900 m, ~640 m at 1.6 km, ~1,000 m at 2.5 km. Earlier they sat in each torus's plane, where the tori's chord spokes would have had to pass through them (section 12). Each section is modelled on its own, and their interaction checked last; the arrangement can be revisited later.
@@ -1210,7 +1210,7 @@ Each torus grows its staple food in a farm ring of its own, in the stack's farm 
 - **All three tiers are built with the torus** (the ring is cheap next to the torus); how many are lit is set by the despun array and decides the population (below).
 
 **Light, air and shielding:**
-- **The same lamps as the sky:** non-rotating sulfur bulbs fed by the central microwave sources (section 13, sulfur lighting), with light pipes running just above each tier's canopy. With the pipes close to the crops and white walls around them, ~85% of the lamps' light reaches the leaves (an estimate), against ~75% through the valley's light box. Traced, ~93% of the pipes' light reaches the crops, but only ~57% of the lamps' once the pipes' own losses count (above, light delivery traced).
+- **Blue + red LEDs** (~3.6 µmol/J, ~80% of the power on 660 nm red; section 13, LEDs) in strips just above each tier's canopy. With the strips close to the crops and white walls around them, ~95% of the light reaches the leaves (~96% traced; ~86% for the valley's light box). The sulfur light pipes first proposed delivered ~57% once the pipes' own losses counted (above, light delivery traced).
 - **Its own schedule:** each zone runs the day length its crop needs, and the zones are staggered so that the farm's load is constant around the clock, like the tori's days. Wheat, a long-day crop that grows best under long or continuous light, flowers here even in a pair, whose valleys never get more than 12 h days.
 - **Its own atmosphere (to decide):** plants need CO₂ and water, not 70 kPa, so a lower pressure lightens the shell; CO₂ enriched to ~1,000 ppm, as in NASA's growth chambers, whose yields the sizing uses. At the valleys' 70 kPa its air holds ~0.6 kt of N₂ per 900 m torus's ring (~7% more nitrogen, so ~7% more C-type), ~1.8 kt at 1.6 km (~4%); a lower pressure needs less. The farm makes most of the habitat's oxygen and takes up its CO₂, exchanged with the valleys' air through ducts along the hub. Transpired water is condensed as clean water.
 - **Light shielding:** crops tolerate deep-space cosmic-ray doses. People working there limit their time, as in any lightly shielded zone, and most routine work can be automated. Only the seed bank needs the full shield.
@@ -1257,12 +1257,11 @@ NASA's Biomass Production Chamber found edible yields "slightly lower than expec
 | Light on the crops | ~3,200 mol/day | ~1,900 mol/day |
 | Crop area at ~36 mol/m²/day (average over crops and day lengths) | ~89 m² | ~52 m² |
 | Food per m² of crops | ~26 kcal/day | ~45 kcal/day |
-| Electricity, sulfur lamps (~1.4 µmol/J, ~85% delivered; ~350 W per m² of crops) | **~31 kW** | ~18 kW |
-| With 915 MHz sources (~1.75 µmol/J) | ~25 kW | ~15 kW |
-| With LEDs (~3 µmol/J, a vitamin-dependent option) | ~15 kW | ~8.5 kW |
+| Electricity, blue + red LEDs (~3.6 µmol/J, ~95% delivered; ~120 W per m² of crops) | **~11 kW** | ~6.4 kW |
+| With sulfur lamps (~1.4 µmol/J, ~85% delivered, the fallback) | ~31 kW | ~18 kW |
 
 - **Light per person sets the power,** not the crop area: brighter light on fewer m² needs the same electricity. NASA's estimate of ~40–50 m² of crops for all of one person's food, under brighter light, matches the best-demonstrated column. Biosphere 2, under sunlight through glass, had ~2,500 m² of agriculture for 8 people (~300 m² each) and still grew only ~83% of their diet, with constant hunger in the first year.
-- The notes' earlier figure (~45 m² at ~40 mol/m²/day, ~1,800 mol per person) was the best-demonstrated case, and the ~5–10 kW per person quoted earlier was too low: even that case needs ~18 kW with sulfur lamps. With two or more tiers lit, food is the habitat's largest power use.
+- The notes' earlier figure (~45 m² at ~40 mol/m²/day, ~1,800 mol per person) was the best-demonstrated case, and the ~5–10 kW per person quoted earlier was too low with sulfur lamps (~18 kW even in that case); with LEDs it is ~6.4 kW. With two or more tiers lit, food is the habitat's largest power use.
 
 ### People fed, and the power behind them
 
@@ -1271,9 +1270,9 @@ NASA's Biomass Production Chamber found edible yields "slightly lower than expec
 | Tiers lit | 400 m (demonstration) | 900 m (32 ha of floor) | 1.6 km (100 ha) | 2.5 km (245 ha) |
 |---|---|---|---|---|
 | Crops per tier | ~1.8 ha | ~9.0 ha | ~29 ha | ~70 ha |
-| 1 | ~200 (~6.3 MW) | ~1,000 (~32 MW) | ~3,250 (~102 MW) | ~7,900 (~247 MW) |
-| 2 | ~400 (~13 MW) | ~2,000 (~64 MW) | ~6,500 (~204 MW) | ~15,800 (~495 MW) |
-| 3 | ~600 (~19 MW) | ~3,050 (~95 MW) | ~9,750 (~305 MW) | ~23,700 (~742 MW) |
+| 1 | ~200 (~2.2 MW) | ~1,000 (~11 MW) | ~3,250 (~35 MW) | ~7,900 (~86 MW) |
+| 2 | ~400 (~4.4 MW) | ~2,000 (~22 MW) | ~6,500 (~71 MW) | ~15,800 (~172 MW) |
+| 3 | ~600 (~6.6 MW) | ~3,050 (~33 MW) | ~9,750 (~106 MW) | ~23,700 (~258 MW) |
 
 **Floor per person and density.** The overall density counts the whole valley floor, including the ≥ 50% wilderness; people live on the other half, so the settled density is twice as high:
 
@@ -1289,16 +1288,16 @@ NASA's Biomass Production Chamber found edible yields "slightly lower than expec
 - **Three tiers** reach city density on the settled half, made more livable by the cliff dwellings and the open valley floor. It is the maximum, not a target.
 - **In a stack** (900 m): a pair feeds ~2,000 / ~4,000 / ~6,100 people with one, two or three tiers lit, a six-stack ~6,000 / ~12,000 / ~18,300; at 1.6 km a six-stack feeds ~19,500 / ~39,000 / ~58,500.
 
-**Power, array and heat per tier lit.** Each tier lit draws about as much power as half to two thirds of the valley's sky, so lighting all three roughly doubles to triples the habitat's power. In practice the array, not the ring, decides how many tiers are lit:
+**Power, array and heat per tier lit.** Each tier lit draws about half the valley's sky (blue + red LEDs are more efficient than the valley's white ones, and the tiers lose less light), so lighting all three a little more than doubles the habitat's power. In practice the array, not the ring, decides how many tiers are lit:
 
 | Per torus, at 1 AU | 900 m | 1.6 km | 2.5 km |
 |---|---|---|---|
-| Valley sky + other loads | ~57 MW | ~180 MW | ~440 MW |
-| + per farm tier lit | ~32 MW | ~102 MW | ~247 MW |
-| Total with 1 / 2 / 3 tiers lit | ~90 / ~122 / ~154 MW | ~282 / ~384 / ~486 MW | ~690 / ~935 / ~1,180 MW |
-| Despun array (survival sizing): valley + per tier | ~0.28 + ~0.15 km² | ~0.85 + ~0.48 km² | ~2.1 + ~1.16 km² |
-| Despun array with 1 / 2 / 3 tiers lit | ~0.41 / ~0.56 / ~0.71 km² | ~1.3 / ~1.8 / ~2.3 km² | ~3.3 / ~4.4 / ~5.6 km² |
-| Radiating surface at ~285 K (two-sided panels: half) | ~16 ha + ~8.5 ha per tier | ~48 + ~27 ha | ~117 + ~66 ha |
+| Valley sky + other loads | ~26 MW | ~84 MW | ~204 MW |
+| + per farm tier lit | ~11 MW | ~35 MW | ~86 MW |
+| Total with 1 / 2 / 3 tiers lit | ~38 / ~49 / ~60 MW | ~119 / ~154 / ~189 MW | ~290 / ~376 / ~462 MW |
+| Despun array (survival sizing): valley + per tier | ~0.12 + ~0.05 km² | ~0.39 + ~0.16 km² | ~0.94 + ~0.40 km² |
+| Despun array with 1 / 2 / 3 tiers lit | ~0.17 / ~0.23 / ~0.28 km² | ~0.55 / ~0.71 / ~0.87 km² | ~1.3 / ~1.7 / ~2.1 km² |
+| Radiating surface at ~285 K (two-sided panels: half) | ~7 ha + ~3 ha per tier | ~22 + ~9.4 ha | ~55 + ~23 ha |
 
 - **The survival rule covers the farm:** the array is sized so that, locked to the stack, it still lights the tiers that feed the population, and tracking it gives ~1.57× that, spare for the factory or for exporting food.
 - **Seasons:** the farm runs at full output all year, so its share of the array is sized at the host's aphelion (section 15); the perihelion surplus goes to industry. Growing more around perihelion and storing staples (grain, potatoes, dried legumes keep for a year) would save ~30–40% of the farm's array share; noted as an option, not factored in, since it needs brighter light at perihelion on the same tiers (to test).
@@ -1313,7 +1312,7 @@ NASA's Biomass Production Chamber found edible yields "slightly lower than expec
 | Valley ceiling diffuser (rolled patterned glass, ~4–6 mm, ~32 ha) | ~3–5 kt |
 | Light pipes for the valley ceiling (glass version, 2 mm walls) | ~4 kt (or ~0.5 kt as acrylic) |
 | Light pipes for the farm ring's three tiers | about as much again |
-| Quartz bulbs for the sulfur lamps | small |
+| Quartz bulbs for the sulfur lamps (the fallback), LED cover glass | small |
 | **Total** | **~5–13 kt, ~0.05–0.1% of the torus** |
 
 **Where from.** Window glass is ~72% silica, ~14% soda, ~10% lime, with very little iron. Stony asteroid silicates (olivine, pyroxene) are ~40% silica but rich in magnesium and iron; melted as they are, they crystallise or give dark green glass, so the silica is separated first:
@@ -1336,7 +1335,7 @@ Only ~12–25 kt of rock is processed for a torus's glass.
 
 Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps ~10¹⁴ J, about a day of a 1 GW furnace.
 
-**One silica line, three uses:** the valley's ceiling diffuser, the **quartz bulbs of the sulfur lamps**, and possibly the **light pipes**:
+**One silica line, three uses:** the valley's ceiling diffuser, the **quartz** for the semiconductor works (crucibles, bell jars) or the sulfur lamps' bulbs (the fallback), and possibly the **light pipes**:
 
 | Light pipe version | How it works | Mass for one 900 m torus's ceiling (the farm tiers need about as much again) |
 |---|---|---|
@@ -1351,7 +1350,7 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 
 - **The shield jacket is a near-perfect insulator.** For water, conduction resistance ≈ 7 m / 0.6 W/m·K ≈ 12 m²K/W, so pushing 100 W/m² through it would need a temperature difference of over 1,000 K; compacted crushed rock conducts similarly poorly.
 - **Everything that enters the habitat leaves through coolant loops** to the radiators: sky lighting, farm lighting, algae lighting, people, machines. The valleys' loops run passively, the farm's on pumps (below).
-- **Radiators along the spokes (adopted), one set per section (proposed).** Each section rejects its own heat: the main section the valleys' (sky, other loads), the farm section the farm tiers'. With three tiers lit the farm is ~60% of the heat (~96 of ~154 MW per 900 m torus), and none of it now passes through the tori's drum. Sunlight is always perpendicular to the axis, so panels facing along the axis are edge-on to it.
+- **Radiators along the spokes (adopted), one set per section (proposed).** Each section rejects its own heat: the main section the valleys' (sky, other loads), the farm section the farm tiers'. With three tiers lit the farm is ~56% of the heat (~33 of ~60 MW per 900 m torus), and none of it now passes through the tori's drum. Sunlight is always perpendicular to the axis, so panels facing along the axis are edge-on to it.
   - A passive loop needs radiators colder than the habitat, say ~285 K (~375 W/m²); warmer radiators would need heat pumps.
 - **Main section: the drum.** The tori enclose a wide, short drum of empty space between the hub and the rims. Its main openings are the two ends, facing along the axis, so no direct sunlight reaches the spokes: inside each torus plane the radiators are shaded by the rim tube, which spans the plane's thickness. The 10–40 m gaps also open the drum sideways; sunlight crossing a gap stays in the gap plane, outside the torus planes. The valleys' radiators sit on the tori's spokes from ~0.4 r out to the envelopes.
   - **Ideal limit:** if the drum were a black-body cavity at the radiators' temperature, heat would leave through the openings as if they were a radiator at that temperature. That is an upper bound, not a design figure: the panels are finite, not perfectly black, and see each other.
@@ -1367,30 +1366,30 @@ Energy is small: melting ~10 kt takes ~2–3 × 10¹³ J, the acid cycle perhaps
 
 | Stack | Valleys' heat (main section) | Ideal limit of the two end openings (~285 K) |
 |---|---|---|
-| 2 × 900 m | ~115 MW | ~1.6 GW (openings ~4.4 km²) |
-| 6 × 900 m | ~345 MW | ~1.6 GW |
-| 1.6 km tori | ~180 MW per torus | ~5.2 GW (openings ~14 km²) |
-| Break-even | ~29 tori, at any number of farm tiers lit | |
+| 2 × 900 m | ~53 MW | ~1.6 GW (openings ~4.4 km²) |
+| 6 × 900 m | ~159 MW | ~1.6 GW |
+| 1.6 km tori | ~84 MW per torus | ~5.2 GW (openings ~14 km²) |
+| Break-even | ~62 tori, at any number of farm tiers lit (~29 with sulfur lamps) | |
 
 - **Farm section: open.** No torus surrounds the farm rings, so their radiators, on the farm spokes from the rings out to ~1 r, see open space around them; only the neighbouring farm planes, the rings and the hub stand in the way.
 - **Preliminary radiative exchange, per section (`habitat_model/cavity.py`, `reports/thermal.md`).** Rays traced from the panels (emissivity ~0.9, as for AZ-93 white paint), with the hub, the farm rings and the tori's inner faces insulated (the rock jacket is a near-perfect insulator), so they re-radiate what they receive; each section on its own, with its ends open:
 
 | Stack, tiers lit | Main section: heat / margin, ends only / panels | Farm section: heat / margin / panels |
 |---|---|---|
-| 6 × 900 m, 1 tier | ~345 MW / 3.9× / ~59 ha | ~190 MW / 11× / ~30 ha |
-| 6 × 900 m, 2 tiers | ~345 MW / 3.9× / ~59 ha | ~385 MW / 5.3× / ~63 ha |
-| 6 × 900 m, 3 tiers | ~345 MW / 3.9× / ~59 ha | ~580 MW / 3.6× / ~100 ha |
-| 6 × 1.6 km, 3 tiers | ~1.1 GW / 3.9× / ~184 ha | ~1.8 GW / 3.4× / ~318 ha |
+| 6 × 900 m, 1 tier | ~159 MW / 8.8× / ~25 ha | ~67 MW / 31× / ~10 ha |
+| 6 × 900 m, 2 tiers | ~159 MW / 8.8× / ~25 ha | ~134 MW / 16× / ~21 ha |
+| 6 × 900 m, 3 tiers | ~159 MW / 8.8× / ~25 ha | ~201 MW / 10× / ~31 ha |
+| 6 × 1.6 km, 3 tiers | ~501 MW / 8.7× / ~79 ha | ~635 MW / 10× / ~100 ha |
 
-  (Panels: one face of two-sided panels; ideally ~51 ha for the main section and ~86 ha for the farm section of a 900 m six-stack with three tiers lit.) The drum rejects at most ~84% of its ideal limit (~1.4 GW at 900 m, ~4.4 GW at 1.6 km).
-  - **Together (the final check): the whole stack traced as one scene.** The farm radiators, out to ~1 r, span most of the drum's farm-end opening (the drum reaches ~840 m at 900 m), so they shade it: with them at full coverage the drum's panels lose ~40% of what escaped with the farm section left out. The tori's outer side in turn faces the farm section. Both sections run at the same temperature, so what one absorbs from the other it sends back, and each section's net output is its own emission times the share that escapes the whole stack. The two panel coverages are swept together (more farm panels shade the drum, more drum panels the farm section's near end): a 900 m six-stack with three tiers lit keeps **~2.4× (main) and ~2.5× (farm)** at once, ~2.6× / ~2.9× with two tiers, against ~1.3× when the farm rings sat in the tori's planes and all the heat went through the drum. (A first estimate looked only at the farm rings, not their radiators, and gave ~3.3× / ~2.6×; review of the pull request.)
-  - **So heat limits the stack again, just below stability:** traced together, the stack cools ~16–18 tori of 900 m with their farm rings (~16 with three tiers lit, also at 1.6 km), against ~22 (~25) for passive stability; six tori keep a wide margin. Each section on its own would cool ~28 tori (drum) and 40 rings or more, which is why the assembled check is the one that counts.
-  - **The farm radiators' reach matters most:** it is a guess (0.6–1.4 r). At 0.6 r a 900 m six-stack with three tiers lit is at the edge (~1.0× in the farm section, panels at full coverage), ~1.4× with two tiers; at 1.4 r ~2.8×–3.5×. The sensitivity sweep can't see it (no ray tracing there), so `reports/thermal.md` and `reports/sensitivity.md` sweep it on its own. Not yet modelled: sunlight through the gaps, the spokes and cables, the envelopes' rounded faces and real panel layouts (plan §6).
-  - **Natural circulation where the heat flows inward (heat rejection model, `thermal_model/`, `reports/heat_rejection.md`, plan §6).** Spin gravity points outward along the spokes, so warm coolant rises towards the hub and cooled coolant sinks back. The valleys sit at the rim and their radiators inboard, so their loops run without pumps: single-phase water, 10 K warmer leaving the valley, 12 loops per torus, ~0.45 m pipes at ~0.7 m/s driven by ~4 kPa of buoyancy at 900 m (~0.7 m at 1.6 km), ~1 kt of water per 900 m torus. **The farm's radiators sit outboard of the farm rings**, so their warm coolant would have to sink: pumped loops, ~0.2% of the farm's heat (~160 kW per 900 m farm ring). Radiators inboard of the farm rings would run passively, but there the rings enclose them: they cool a pair's farm (three tiers lit, ~1.4× margin) but only ~0.5–0.75× of a six-stack's, about one and a half tiers' heat. **Proposed: outboard pumped radiators, with a passive inboard set as the fallback** that keeps about one tier lit if the pumps stop, so food, not air or heat, is what a pump failure puts at risk (stores cover it).
+  (LEDs; with sulfur lamps the same stacks carried ~345 MW / 3.9× and ~580 MW / 3.6×. Panels: one face of two-sided panels, the least on the coverage grid; ideally ~23 ha for the main section and ~30 ha for the farm section of a 900 m six-stack with three tiers lit.) The drum rejects at most ~84% of its ideal limit (~1.4 GW at 900 m, ~4.4 GW at 1.6 km).
+  - **Together (the final check): the whole stack traced as one scene.** The farm radiators, out to ~1 r, span most of the drum's farm-end opening (the drum reaches ~840 m at 900 m), so they shade it: with them at full coverage the drum's panels lose ~40% of what escaped with the farm section left out. The tori's outer side in turn faces the farm section. Both sections run at the same temperature, so what one absorbs from the other it sends back, and each section's net output is its own emission times the share that escapes the whole stack. The two panel coverages are swept together (more farm panels shade the drum, more drum panels the farm section's near end): a 900 m six-stack with three tiers lit keeps **~5.7× (main) and ~5.6× (farm)** at once with LEDs, ~6.2× / ~6.2× with two tiers (with sulfur lamps: ~2.4× / ~2.5×, and ~1.3× when the farm rings sat in the tori's planes and all the heat went through the drum). (A first estimate looked only at the farm rings, not their radiators, and gave ~3.3× / ~2.6× with sulfur lamps; review of the pull request.)
+  - **With LEDs, heat no longer limits the stack:** traced together, the stack cools 40 tori of 900 m or 1.6 km with their farm rings or more (the search's limit), at any number of tiers lit, well beyond passive stability's ~22 (~25). With sulfur lamps it cooled only ~16–18, just below stability.
+  - **The farm radiators' reach matters most:** it is a guess (0.6–1.4 r). At 0.6 r a 900 m six-stack with three tiers lit still keeps ~2.9× in the farm section (~4× with two tiers); at 1.4 r ~6–9× (with sulfur lamps, 0.6 r was at the edge). The sensitivity sweep can't see it (no ray tracing there), so `reports/thermal.md` and `reports/sensitivity.md` sweep it on its own. Not yet modelled: sunlight through the gaps, the spokes and cables, the envelopes' rounded faces and real panel layouts (plan §6).
+  - **Natural circulation where the heat flows inward (heat rejection model, `thermal_model/`, `reports/heat_rejection.md`, plan §6).** Spin gravity points outward along the spokes, so warm coolant rises towards the hub and cooled coolant sinks back. The valleys sit at the rim and their radiators inboard, so their loops run without pumps: single-phase water, 10 K warmer leaving the valley, 12 loops per torus, ~0.34 m pipes at ~0.6 m/s driven by ~4 kPa of buoyancy at 900 m (~0.5 m at 1.6 km), ~0.5 kt of water per 900 m torus. **The farm's radiators sit outboard of the farm rings**, so their warm coolant would have to sink: pumped loops, ~0.3% of the farm's heat (~100 kW per 900 m farm ring). Radiators inboard of the farm rings run passively, though the rings enclose them; with LEDs they now carry a six-stack's whole farm (~1.4× with three tiers lit, ~2× with two; ~4× for a pair), where with sulfur lamps they managed only about one and a half tiers. **Baseline: outboard pumped radiators, with the passive inboard set as the fallback**, which now keeps every tier lit if the pumps stop; **inboard alone, with no pumps, is now possible** (to decide: ~1.4× against the 1.5× sought).
   - **Two-phase loops need throttling.** Ammonia (as on the ISS) would carry the heat in far smaller pipes, but the liquid returning outward from the radiators builds hundreds of metres of near-1 g head: at the rim it sits at ~1.9 MPa (900 m) and can't boil below ~48 °C, above the valley, unless throttled, or run through a turbine, just before the evaporator. Single-phase water avoids it, and water is local.
-  - **How far out the farm radiators must reach:** ~0.6 r for the stack to cool at all, ~0.75 r for 1.5× in both sections (six-stack, three tiers lit; ~0.6 r with two). The baseline ~1 r keeps ~2.5×.
-  - **Sunlight on the radiators** (sun rays marched through the stack, the tori as true tori): edge-on panels see sunlight only if the axis tilts from the orbit's pole. Below ~1.5° of tilt the tori shade the drum's panels completely, through the ends and the gaps alike. The open farm section takes ~1.3% of its heat per degree at 1 AU (white paint, absorptivity ~0.15; ×1.5–1.8 at the nearest candidates' perihelia, ×2 as the paint ages), so the axis needs holding only to a degree or two, trimmed as the orbit plane drifts over centuries.
-  - **Panels:** a 900 m torus needs ~10 ha of panels for its valley in a six-stack (~16 ha of radiating surface ideally), and its farm ring ~17 ha with three tiers lit, ~1.3 kt per torus in all at ~5 kg/m², if every panel radiated freely. Finite panels that see each other, with the farm radiators shading the drum's farm end, need ~2–3× that: **~27 ha for the valley and ~42 ha for the farm ring per 900 m torus** to keep 1.5× in both sections (~32 ha for the farm ring with two tiers; ~86 + ~130 ha at 1.6 km), ~3.5 kt per torus (heat rejection model). A torus spoke between ~0.4 r and the envelope offers ~2.7 ha (~480 m × 56 m), so a few spokes carry the valley's share. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
+  - **How far out the farm radiators must reach:** ~0.45–0.5 r keeps 1.5× in both sections (six-stack, three tiers lit, the least the sweep tries), against ~0.75 r with sulfur lamps. The baseline ~1 r keeps ~5.6×, so the farm spokes can be much shorter.
+  - **Sunlight on the radiators** (sun rays marched through the stack, the tori as true tori): edge-on panels see sunlight only if the axis tilts from the orbit's pole. Below ~1.5° of tilt the tori shade the drum's panels completely, through the ends and the gaps alike. The open farm section takes ~0.9% of its heat per degree at 1 AU (white paint, absorptivity ~0.15; ×1.5–1.8 at the nearest candidates' perihelia, ×2 as the paint ages), so the axis needs holding only to a degree or two, trimmed as the orbit plane drifts over centuries.
+  - **Panels:** a 900 m torus needs ~4 ha of panels for its valley in a six-stack (~7 ha of radiating surface ideally), and its farm ring ~5 ha with three tiers lit, if every panel radiated freely. Finite panels that see each other, with the farm radiators shading the drum's farm end, need more: **at most ~9 ha for the valley and ~11 ha for the farm ring per 900 m torus** to keep 1.5× in both sections (the coverage grid's smallest step, so fewer may do; ~29 + ~34 ha at 1.6 km), ~1 kt per torus at ~5 kg/m² (heat rejection model; with sulfur lamps ~27 + ~42 ha, ~3.5 kt). A torus spoke between ~0.4 r and the envelope offers ~2.7 ha (~480 m × 56 m), so a few spokes carry the valley's share. The coolant must not freeze in cold panels; ammonia (as on the ISS radiators) needs only small quantities.
   - A shared coolant loop across co-rotating tori keeps the drum's load steady whichever tori are lit; the farm's load is constant by design (its zones are staggered).
 - **Day and night cooling (adopted direction).** Each torus has its own heat exchangers on the shared radiator loops, so its cooling follows its own day and night. Colder nights cost almost no energy: over a full day the valley gains and loses the same heat either way; a colder night only moves more of it out at night, and in the morning the lamps' waste heat (~70–80% of their power, already in the coolant above the ceiling) can warm the valley instead of going straight to the radiators.
   - **Heat to move:** only the air and the top ~10 cm of soil follow the daily cycle, ~0.15–0.25 MJ per m² per °C. A ~5 °C swing (oceanic coast) means ~0.8–1.3 MJ/m² a night, ~6–9 MW over 12 h for a 900 m torus; a ~15 °C swing (arid canyon) ~2.3–3.8 MJ/m², ~17–28 MW, about the light the valley absorbs by day and well within the radiators' capacity.
@@ -1487,7 +1486,7 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 
 - **Energy:** ~30–200× the ~2 × 10¹⁶ J of processing that builds the pair.
 - **Propellant:** Itokawa holds only ~35 Mt in all, so mass drivers and solar-thermal rockets are out. Magnesium (~14% of chondritic rock, already a by-product of the glass line's acid leach) fits the sourcing rule, but ~4.5 Mt means processing ~30 Mt of rock, most of the asteroid.
-- **Hardware:** 10 GW at Itokawa's average sunlight is ~50 km² of panels (from the semiconductor works), ~90× the pair's own despun array at 1 AU; ~150–200 kt with the thrusters.
+- **Hardware:** 10 GW at Itokawa's average sunlight is ~50 km² of panels (from the semiconductor works), ~200× the pair's own despun array for its valleys at 1 AU; ~150–200 kt with the thrusters.
 - **A sail** needs no propellant but takes centuries and a film tens of km across. The thrust lies in the orbital plane, perpendicular to the spin axis, so the sail must be a separate spacecraft towing from both hub tips through small swivels; reflective strips pulsed on the spinning stack give far too little force.
 - **The thrust itself is easy:** ~10⁻⁵ m/s², and a ring of thrusters around each hub tip, each fired as it swings past the right direction (like the windings of a brushless motor), needs no despun parts.
 - **Moving the structure before adding the rock shield** (~3 Mt instead of ~25 Mt) only helps if shield rock is available at the destination, and then building there is simpler.
@@ -1586,7 +1585,7 @@ A model of the logistics (`logistics_model/`, `reports/logistics.md`): the water
 - **Ship water, not hydrogen (investigated).** Water is 89% oxygen by mass, and the S-type's silicates are ~40% oxygen, so the alternative is to split the water at the C-type (~20 MJ/kg), ship only its hydrogen and take the oxygen from the silicates by molten-oxide electrolysis (section 10; ~0.29 kg of oxygen per kg of iron, so ~3.1 kg of iron per kg of water). The hydrogen would travel as methane: storable at ~111 K, where hydrogen needs ~20 K, and its carbon replaces the organics shipped for the soil, so the cargo weighs the same as bare hydrogen (~48 instead of ~106 kt per 900 m torus). But the baseline host gets its metal as free metal and electrolyses nothing, so the oxygen costs the electrolysis (~10 MJ/kg of iron) and the furnace heat to melt the rock (~17 MJ/kg of iron), less the crushing its iron saves: ~6.4 PJ per 900 m torus. With electric thrusters that only just beats shipping the water (~12.5 against ~13.5 PJ). With mass drivers, water is far cheaper (~3.6 against ~8 PJ). **Methane pays only on a host that electrolyses its silicates for its iron anyway** (a small LL host, section 10): there the oxygen is a by-product and only the splitting is left (~2.9 against ~3.6 PJ by mass driver). Methane is also a fuel: burnt with local oxygen (methalox, ~3.6 km/s exhaust), it is a storable propellant for tugs and docking that needs no power where it is used, a reason to ship some anyway.
 - **Mass drivers drop shipping below processing:** with the factory at 1 GW per stack, the generation's energy floor goes from ~1.5 to ~0.9 years for a 900 m pair and ~19 to ~13 years for a 1.6 km six-stack (processing ~10 and ~56 PJ per torus, the rest shipping water). **Bigger stacks need more power per stack:** at 1 GW, energy alone holds a 1.6 km six-stack to ~13–19-year generations.
 - **The rates are modest by Earth's standards.** For a 10-year generation, each torus of a 900 m pair has its child mined at ~9 kt of S-type a day (~2% of the largest open-pit mines), its metal made at ~400 t a day (~1.5% of a large steelworks), ~3 kt of rock placed and ~1.4 kt of C-type baked a day, at ~75 MW on average; ~60 kt of cargo per usable Ryugu → Eros window on average (mean gap ~5.7 years, above), but ~210 kt stocked through the longest gap (2036–2056, ~20 years). A 1.6 km six-stack's lines handle ~5× that per torus, six tori at a time.
-- **Made locally:** ~99.2% of a child by mass comes from its host (rock, metal), ~0.8% from the C-type (nitrogen, organics, water), and ~0.0004% is imported vitamins (~50 t per 900 m torus of computing, sensors, catalysts and the like, a guess); the array's ~370 t of wafer silicon is made at the host (with sulfur's sizing; ~280 t with LEDs).
+- **Made locally:** ~99.2% of a child by mass comes from its host (rock, metal), ~0.8% from the C-type (nitrogen, organics, water), and ~0.0004% is imported vitamins (~50 t per 900 m torus of computing, sensors, catalysts and the like, a guess); the array's ~160 t of wafer silicon is made at the host (900 m pair at Eros; ~280 t per torus for a six-stack with three tiers lit).
 - **Ryugu's nitrogen sets the cluster's horizon.** Doubling every 10 years, a 900 m pair reaches Ryugu's ~89 tori in ~55 years; 1.6 km six-stacks reach its ~16 tori in ~14 years (~36 at 25-year generations). A second C-type partner, a lower pressure or better nitrogen recovery is needed early (section 15, phases).
 - **Open:** factory throughput against its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' mass and power (their solar arrays from the semiconductor works), failures and spares, low-thrust and multi-revolution trajectories, gravity assists, a dated shipping schedule (stock against off-window departures and their Δv), and the new C-type candidates' spectra.
 
@@ -1596,31 +1595,31 @@ The habitat adapts to its environment: the sky follows the host asteroid's seaso
 
 | Site | Sunlight at aphelion | 900 m valley, constant / seasonal sky | 900 m, + per farm tier lit | 1.6 km valley, constant / seasonal sky | 1.6 km, + per farm tier lit |
 |---|---|---|---|---|---|
-| 1 AU (reference) | 1× | 0.27 / 0.14 km² | 0.15 km² | 0.85 / 0.45 km² | 0.48 km² |
-| Apophis today | 0.83× | 0.32 / 0.17 km² | 0.18 km² | 1.0 / 0.55 km² | 0.57 km² |
-| Apophis after 2029 (approx.) | 0.58× | 0.46 / 0.25 km² | 0.26 km² | 1.5 / 0.8 km² | 0.82 km² |
-| Itokawa | 0.35× | 0.76 / 0.41 km² | 0.42 km² | 2.4 / 1.3 km² | 1.37 km² |
-| Eros | 0.32× | 0.84 / 0.46 km² | 0.47 km² | 2.65 / 1.45 km² | 1.51 km² |
-| Torifune | 0.63× | 0.42 / 0.23 km² | 0.23 km² | 1.35 / 0.71 km² | 0.76 km² |
+| 1 AU (reference) | 1× | 0.12 / 0.072 km² | 0.052 km² | 0.39 / 0.23 km² | 0.16 km² |
+| Apophis today | 0.83× | 0.15 / 0.086 km² | 0.062 km² | 0.46 / 0.27 km² | 0.20 km² |
+| Apophis after 2029 (approx.) | 0.58× | 0.21 / 0.12 km² | 0.089 km² | 0.66 / 0.39 km² | 0.28 km² |
+| Itokawa | 0.35× | 0.35 / 0.21 km² | 0.15 km² | 1.1 / 0.65 km² | 0.47 km² |
+| Eros | 0.32× | 0.39 / 0.23 km² | 0.16 km² | 1.2 / 0.72 km² | 0.52 km² |
+| Torifune | 0.63× | 0.19 / 0.11 km² | 0.081 km² | 0.61 / 0.36 km² | 0.26 km² |
 
-For example, a 900 m pair at Eros needs ~1.9 km² with one tier lit per torus and ~3.8 km² with three; a 1.6 km six-stack at Eros with two tiers lit needs ~27 km². With the seasonal sky halving the valley's share, food becomes the largest part of the array.
+For example, a 900 m pair at Eros needs ~0.78 km² with one tier lit per torus and ~1.4 km² with three; a 1.6 km six-stack at Eros with two tiers lit needs ~10.5 km² (with sulfur lamps: ~1.9 / ~3.8 / ~27 km²). With the seasonal sky halving the valley's share, food becomes the largest part of the array.
 
-Further reductions: the 915 MHz microwave sources (~20–25% less power), concentrating mirrors on the array, and a seasonal harvest with stored staples (~30–40% less array for the farm; an option, section 13). **Perihelion is the industrial season:** at Itokawa the array produces ~3× its winter output at perihelion, ~2.5× at Eros.
+Further reductions: LEDs nearer their ~4 µmol/J limit, concentrating mirrors on the array, and a seasonal harvest with stored staples (~30–40% less array for the farm; an option, section 13). **Perihelion is the industrial season:** at Itokawa the array produces ~3× its winter output at perihelion, ~2.5× at Eros.
 
 ### Climate and winter light
 
 - **Temperate, North-Atlantic-like on the first sites:** winter mean ~6–8 °C with occasional light frost (useful for plants that need chilling), summer ~16–19 °C; the rock jacket and soil give ocean-like thermal mass. Drizzle fits the overcast sky if the air is kept humid.
-- **Winter light without storage (900 m pair at Itokawa,** seasonal-sky array; the table is the survival case with the array locked, ~55 MW available for the lit valley in midwinter against ~110 MW in summer; the farm's share of the array is separate and keeps its tiers at full output):
+- **Winter light without storage (900 m pair at Itokawa,** seasonal-sky array; the table is the survival case with the array locked, ~26 MW available for the lit valleys in midwinter against ~53 MW in summer; the farm's share of the array is separate and keeps its tiers at full output):
 
-| Winter day length | Light per valley (sulfur, ~1.4 µmol/J) | With 915 MHz sources (~1.75 µmol/J) | Dark gaps for the factory | Same midwinter day length on Earth |
-|---|---|---|---|---|
-| 12 h | ~7.5 mol/m²/day | ~9.3 | none | Equator |
-| 10 h | ~6.3 | ~7.8 | 4 h | ~30°N |
-| **8.5 h** | **~5.3** | **~6.6** | **7 h** | **~48°N (Brittany, Paris)** |
-| 7 h | ~4.4 | ~5.4 | 10 h | ~56°N |
-| 6 h | ~3.8 | ~4.7 | 12 h | ~60°N |
+| Winter day length | Light per valley | Dark gaps for the factory | Same midwinter day length on Earth |
+|---|---|---|---|
+| 12 h | ~7.5 mol/m²/day | none | Equator |
+| 10 h | ~6.3 | 4 h | ~30°N |
+| **8.5 h** | **~5.3** | **7 h** | **~48°N (Brittany, Paris)** |
+| 7 h | ~4.4 | 10 h | ~56°N |
+| 6 h | ~3.8 | 12 h | ~60°N |
 
-  (With the light-box ceiling, ~25% losses. Summer reference: ~15 mol/m²/day over a 12 h day. Tracking normally, the array gives ~1.57× these figures, ~8.3 mol/m²/day at 8.5 h days with sulfur lamps.) The 8.5 h option is a little brighter than a cloudy north-western European December (~2–5 mol/m²/day outdoors); the schedule can dim it.
+  (The array is sized for the lamps, so these levels hold for any efficacy. Summer reference: ~15 mol/m²/day over a 12 h day. Tracking normally, the array gives ~1.57× these figures, ~8.3 mol/m²/day at 8.5 h days.) The 8.5 h option is a little brighter than a cloudy north-western European December (~2–5 mol/m²/day outdoors); the schedule can dim it.
 - **Pairs: Atlantic winters, equinox-length summers.** A pair's day never exceeds 12 h, so long-day plants (flowering only above ~13–14 h) won't flower in its valleys; day-neutral and short-day species are fine. (The farm ring sets its own day lengths, so long-day crops such as wheat grow there.) **Six-stacks allow 8–16 h days**, the natural home for long-day species: another reason to exchange species between habitats.
 - **Year length:** ~1.05 years (Torifune), ~1.2 (Apophis after 2029, Bennu), ~1.5 (Itokawa), ~1.76 (Eros). Species keyed to day length and temperature follow the longer cycle; tightly timed annual plants and insects may behave unexpectedly. Following the asteroid's year keeps sky and sunlight in step.
 - **Future tropical habitats:** an S-type on a near-circular orbit between Earth and Venus would give strong, steady sunlight and little seasonality, a tropical island group with its own species pool.
@@ -1668,7 +1667,7 @@ Further reductions: the 915 MHz microwave sources (~20–25% less power), concen
   - **Starchy calories from water (proposed, to discuss):** taro in flooded terraces (Hawaiian loʻi), rice, lotus root, water chestnut. Flooded terraces on the lower canyon walls add shielding mass too.
   - **Small permaculture areas** supplement the diet: with the food forest, ~7% of the working diet (fruit and nut trees, corn, squash and beans).
   - **Food forest and edible wilderness (low-density biospheres, with few farm tiers lit):** a food forest next to the permaculture. Near the villages, trees that give good timber or fruit and nuts are favoured (chestnut and walnut, for example, give both), and the rest of the wilderness stays edible as a backup (oaks, pines, cherries and hazels give acorns, pine nuts, fruit and hazelnuts; acorns need leaching to remove their tannins).
-  - **Farm rings, the staple diet:** three tiers in a farm ring per torus at ~0.4 r, in the stack's farm section, under sulfur lamps (section 13): potatoes, wheat, soybeans, lentils, berries, flax and greens, ~93% of a 2,500 kcal working diet. Each tier lit feeds ~1,000 people per 900 m torus conservatively (~3,250 at 1.6 km, ~7,900 at 2.5 km), for ~31 kW of electricity per person; a habitat lights as many tiers as its array allows, and a low-density one exports food:
+  - **Farm rings, the staple diet:** three tiers in a farm ring per torus at ~0.4 r, in the stack's farm section, under blue + red LEDs (section 13): potatoes, wheat, soybeans, lentils, berries, flax and greens, ~93% of a 2,500 kcal working diet. Each tier lit feeds ~1,000 people per 900 m torus conservatively (~3,250 at 1.6 km, ~7,900 at 2.5 km), for ~11 kW of electricity per person; a habitat lights as many tiers as its array allows, and a low-density one exports food:
     - at ~0.4 g (cheaper structure);
     - plants orient fine in low g;
     - crops tolerate deep-space cosmic-ray doses, so the rings can be lightly shielded;
@@ -2051,19 +2050,19 @@ Status of the gaps identified so far:
 | Iron for L and LL hosts | Preliminary design: free metal only (magnetic separation), mining more rock on large hosts. Molten-oxide electrolysis noted as a likely better option, not factored: anode life, energy and current efficiency at scale not yet public (industrial cell 2025, demonstration plant planned 2026). Itokawa and Apophis resolved by building 400 m demonstration pairs instead of 900 m pairs (section 15) |
 | Size | 900 m and 1.6 km shortlisted. **To decide:** 2.5 km / 100 s as a later candidate (section 8): structurally fine, limited by nitrogen (~100 Mt of C-type per torus) and slower replication |
 | Despun solar array | Adopted (section 13); ~2.6× larger with three farm tiers lit than for the valley alone. **Open:** bearing and drive redundancy, magnetic bearing design, a rotary transformer at 100 MW–GW scale, buffering the locked array's pulsing output, a second dock now that one hub end carries the array, concentrators for the outer system |
-| Heat rejection | Coolant loops to radiators on the spokes, one set per section (proposed): the valleys' in the tori's drum, venting through its ends and gaps; the farm's in the open farm section. Traced as one scene, a 900 m six-stack with three tiers lit keeps ~2.4× (main) / ~2.5× (farm); heat limits the stack to ~16–18 tori (~24 with no farm lit), just below stability. Heat rejection model (section 13): the valleys' loops run passively (water, ~0.45 m pipes); the farm's radiators, outboard, need pumps (~0.2% of its heat), with a passive inboard set keeping ~1 tier lit as fallback; ~27 + 42 ha of panels per 900 m torus at 1.5×; no direct sunlight on the drum's panels below ~1.5° of tilt; the valley swings ~2–11 K left to itself. **Open:** the spokes and cables in the ray tracing, the envelopes' rounded faces, freezing in cold panels at low load, panel and loop hardware |
+| Heat rejection | Coolant loops to radiators on the spokes, one set per section (proposed): the valleys' in the tori's drum, venting through its ends and gaps; the farm's in the open farm section. Traced as one scene with LEDs, a 900 m six-stack with three tiers lit keeps ~5.7× (main) / ~5.6× (farm); the stack cools 40 tori or more, so stability (~22) limits it again (with sulfur lamps heat limited it to ~16–18). Heat rejection model (section 13): the valleys' loops run passively (water, ~0.34 m pipes); the farm's radiators, outboard, need pumps (~0.3% of its heat), with a passive inboard set that now keeps every tier lit as fallback (inboard alone possible, ~1.4×, to decide); at most ~9 + ~11 ha of panels per 900 m torus at 1.5×; no direct sunlight on the drum's panels below ~1.5° of tilt; the valley swings ~2–11 K left to itself. **Open:** the spokes and cables in the ray tracing, the envelopes' rounded faces, freezing in cold panels at low load, panel and loop hardware |
 | Energy / replication time | With the rock shield, processing energy is ~2–6 months per 900 m torus at 1 GW; shipping the refined volatiles adds ~1.3× that from Ryugu to Eros (~13.5 PJ against ~10 PJ per 900 m torus). Mass-driver freighters at ~3 km/s cut shipping ~3.7× (section 15, logistics model); shipping only the hydrogen pays only where the host electrolyses its silicates anyway. At 10-year generations the rates are a few % of Earth's largest mines and steelworks. Dated windows on JPL Horizons' ephemerides: usable Ryugu → Eros windows on average every ~5.7 years but none in 2036–2056, so the C-type's products are stocked through ~20-year gaps (best 4.66 km/s in 2030–2060). **Open:** factory throughput against its own mass, the freighters, Ryugu's nitrogen limit (~55 years of doubling for 900 m pairs) |
-| Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under sulfur lamps costs ~31 kW of electricity per person with conservative yields (~18 kW at the best demonstrated), so each tier lit (~1,000 people per 900 m torus) needs ~32 MW and ~0.15 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under sulfur light at ~0.4 g; 915 MHz sources (~20% less power); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
+| Population vs. power | Chosen: electric farm rings of three tiers (section 13). Food under blue + red LEDs costs ~11 kW of electricity per person with conservative yields (~6.4 kW at the best demonstrated; ~31 kW under sulfur lamps), so each tier lit (~1,000 people per 900 m torus) needs ~11 MW and ~0.05 km² of array at 1 AU: the array, not the ring, sets the population. **Open:** yields of the chosen crops under blue + red light at ~0.4 g (some crops need a little green or far-red); the share of microbial food (gas-fermented bacteria, ~0.5 kW per person, ~35–60× less than crops, but mostly protein) |
 | Nitrogen | C-type sized by nitrogen again (~5 Mt per 900 m torus, ~27 Mt per 1.6 km torus at ~70% recovery); **open:** recovery from organics and ammonium salts |
 | Soil from C-type clays | **Open:** leaching nickel, chromium and salts (recovering the metals), microbial start-up |
 | Rock jacket details | Hull and frames checked by finite elements (section 12): ~0.28 Mt at 900 m with the chords anchored at the tube's sides; hung or vaulted ceiling cells within ~7% in mass. Radiation transport (section 5b): OLTARIS's ~10.3 t/m² of regolith for 20 mSv/yr at a sphere's centre stands (the stand-in model agrees for water but falls too fast in rock); near the walls about half that dose, ~7 mSv/yr behind 11 t/m²; **proposed: 10 t/m²** (~−10% mass per torus); a hydrogen-rich inner layer saves ~1.3 t/m² (OLTARIS, Janhunen). **Open:** a run in the tube's own geometry, the ceiling cells' choice (maintenance, leaks), buckling of the hub-facing half, ballast tanks, compaction method |
-| Light delivery | Chosen (artificial overcast sky, sulfur lamps, light pipes in a light box: magnesium oxide coating, graded diffuser; in the farm, light pipes just above each tier's crops). Traced (section 13, optics model): the light box passes ~82% of the pipes' light to the floor and a farm tier ~93% to the crops, but with the lamps' coupling into the pipes and the pipes' own losses (guesses) only ~50% / ~57% of the lamps' light arrives, against ~75% / ~85% assumed: ~50% more lighting power and array if it holds. **Proposed (31 Oct 2026): ~1 kW sulfur lamps straight in the light box, no pipes, fed by 915 MHz sector plants:** ~81% / ~89% delivered, ~130 MW per 900 m torus (against ~228 MW with the pipes as traced). **Open:** the luminaires' efficiency (a guess), bulbs and their maintenance in the ceiling's service space, waveguide losses, diffuser material |
+| Light delivery | Chosen (artificial overcast sky: white LED strips in a light box, magnesium oxide coating, graded diffuser; in the farm, blue + red LED strips just above each tier's crops): ~86% / ~96% traced, sized at ~85% / ~95% (31 Oct 2026). First design, sulfur lamps and light pipes, traced (section 13, optics model): the light box passes ~82% of the pipes' light to the floor and a farm tier ~93% to the crops, but with the lamps' coupling into the pipes and the pipes' own losses (guesses) only ~50% / ~57% of the lamps' light arrives, against ~75% / ~85% assumed: ~50% more lighting power and array if it holds. The sulfur fallback: ~1 kW lamps straight in the light box, no pipes, fed by 915 MHz sector plants, ~81% / ~89% delivered. **Open:** the LED fixtures' efficiency and the strips' albedo (estimates), diffuser material |
 | Habitat power balance | Architecture chosen (staggered tori, despun solar array at one hub end, sized so a locked array keeps the habitat alive; tracking it gives ~1.57× that, spare for the factory, brighter gardens or food exports; the farm tiers lit are part of the need, their share sized at aphelion, with a seasonal harvest and stored staples noted as an option); beamed power kept as a way to feed the hub factory from the industrial array (section 13) |
-| Lamps | **Adopted (31 Oct 2026): LEDs, white in the valley, blue + red in the farm**, made by the factory's semiconductor works with the array (~59 MW per 900 m torus, ~71 ha of array, section 13). Fallback: non-rotating sulfur bulbs, central 915 MHz sources, ~1 kW bulbs straight in the light box. **Open (LEDs):** indium for the red dies, 6N precursors, 5N alumina or GaN on silicon, YAG:Ce from ~2 ppm yttrium, drivers from local power devices; the sizing still uses sulfur's ~1.4 µmol/J (conservative). **Open (sulfur):** bulbs at kW scale and 915 MHz, source lifetime, waveguide losses and plant spacing, cathode materials |
+| Lamps | **Adopted (31 Oct 2026): LEDs, white in the valley, blue + red in the farm**, made by the factory's semiconductor works with the array (~59 MW per 900 m torus, ~71 ha of array, section 13). Fallback: non-rotating sulfur bulbs, central 915 MHz sources, ~1 kW bulbs straight in the light box. **Open (LEDs):** indium for the red dies, 6N precursors, 5N alumina or GaN on silicon, YAG:Ce from ~2 ppm yttrium, drivers from local power devices; LED efficacy and fixture losses (estimates). **Open (sulfur):** bulbs at kW scale and 915 MHz, source lifetime, waveguide losses and plant spacing, cathode materials |
 | Jacket thermal control | Resolved by the rock jacket; only water-filled parts must stay inside the warm envelope |
 | Spokes and cable net | Wire, net and spin-up checked (section 12): ~1 GPa is a safety factor of ~2 on 1,960 MPa bridge wire or more on thinner wire, from carbonyl-refined iron; the chord net weighs the same as radial spokes; a partial ring is hung in arcs of ≥ ~4θr, spinning at ≤ ~0.7 of the final rate (its chords carry twice their finished load), with joints locked while building (~1% of the hoop force, plus bending) and released after closure (provisional). **To decide:** the safety factor. Hull and frames checked by finite elements: the chords anchor at the tube's sides, in two nets (proposed). Hub held in the two nets by stabilising lines: ~21× its centrifugal pull at 900 m; the first arcs hung as two pairs at right angles; ~10% of the lines inclined for axial hold (proposed). **Open:** torque and docking loads through the lines, wire drawn from refined asteroid iron (Earth test) |
 | Stack stiffness | Flexible stack modelled (section 11): the nets alone leave a stack passively unstable; rim links between neighbouring tori and a trace of radial ties fix it (proposed), and the hub's wall sets the length: ~18 tori of 900 m (~14–17 of 1.6 km) with its whole mass budget, a few mm to ~1 cm for a six-stack. **Open:** the links' and ties' design, the hub's shear and joints; bending modes of the shared hub and rim links must stay well above the spin rate; the farm section nearly doubles the hub's length (~480 → ~900 m for a 900 m six-stack) |
-| Farm rings | Chosen (section 13): electric, three tiers ~2.5 m apart, one ring per torus at ~0.4 r, the same sulfur lamps and light pipes as the valley, built for the highest density, tiers lit as the array allows. **Proposed (28 Oct 2026):** in their own farm section on the shared hub, on their own spokes and radiators, rather than in the tori's planes, where the chord spokes would have to cross them; to revisit once each section is modelled. The sun-fed ring with hub mirrors is superseded (17.29). **Open:** crop trials (yields, dwarf varieties, ~0.4 g), the farm's atmosphere (pressure, CO₂, gas exchange with the valleys along the hub), shielding against workers' dose, heat at 2.5 m tier spacing (the pipes' layout traced: ~0.34–0.6 m apart, ~0.3–0.6 m above the canopy), automation, transport between valleys and farm through the hub |
+| Farm rings | Chosen (section 13): electric, three tiers ~2.5 m apart, one ring per torus at ~0.4 r, blue + red LED strips over the beds, built for the highest density, tiers lit as the array allows. **Proposed (28 Oct 2026):** in their own farm section on the shared hub, on their own spokes and radiators, rather than in the tori's planes, where the chord spokes would have to cross them; to revisit once each section is modelled. The sun-fed ring with hub mirrors is superseded (17.29). **Open:** crop trials (yields, dwarf varieties, ~0.4 g), the farm's atmosphere (pressure, CO₂, gas exchange with the valleys along the hub), shielding against workers' dose, heat at 2.5 m tier spacing (the LED strips' layout and heat over the canopy), automation, transport between valleys and farm through the hub |
 | Diet | Working diet proposed (section 13): ~93% from the farm, ~7% from the valley, ~100 g of protein a day. **Open:** fat only ~11% of calories (more soybeans, flax or nuts), vitamin B12 by fermentation, variety and acceptance, crop trials for lentils and flax under lamps |
 | Glass | Needed for the ceiling diffuser, the lamps' quartz bulbs and possibly the light pipes (the farm rings no longer need windows). **Open:** acid-leach silica process from chondritic silicates, rolled-glass forming, aluminium recovery for pipe linings |
 | Copper | **Open:** extraction line for dispersed copper, high-voltage distribution, aluminium or iron conductors |
@@ -2103,7 +2102,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 - Water (section 7): ponds and streams kept small, ~2% of the floor at ~1 m mean depth, ballast for 0.05% of the rim's mass, ~10 kg/m² of water in the vegetation (guesses); freighters: mass drivers at ~50% efficiency (a guess), electrothermal thrusters at ~6 km/s and ~35%, water split at ~20 MJ/kg, molten-oxide electrolysis at ~10 MJ of electricity and ~17 MJ of furnace heat per kg of iron.
 - Rotation comfort < 2 rpm; g tolerance unknown (0.15–1 g).
 - Spin-up exhaust velocity ~3 km/s for water thrusters.
-- Lamps ~1.4 µmol/J (sulfur plasma) or ~3 µmol/J (LED); ~25% of emitted light lost in the light-box ceiling (first assumed ~50%); ~85% of the light reaches the crops in the farm tiers (traced: ~50% / ~57% once the lamps' coupling into the pipes, ~85%, and the pipes' own losses, ~1% per reflection, are counted, both guesses; section 13); PV at 25% efficiency on the sun-facing despun array (the former spinning cylinder averaged ~1/π of full sunlight); a locked two-sided array averages 2/π; radiators at ~285 K for passive loops.
+- LEDs: ~3.0 µmol/J white in the valley, ~3.6 µmol/J blue + red in the farm (sulfur lamps, the fallback, ~1.4); ~15% of the light lost in the light-box ceiling and ~5% in a farm tier (traced ~86% / ~96% for LED strips; the sulfur light pipes delivered only ~50% / ~57%; section 13); PV at 25% efficiency on the sun-facing despun array (the former spinning cylinder averaged ~1/π of full sunlight); a locked two-sided array averages 2/π; radiators at ~285 K for passive loops.
 - Other habitat loads (life support, algae, hub) ~5 MW per 900 m torus, ~15 MW per 1.6 km torus (guess).
 - Population set by the farm tiers lit: a 2,500 kcal working diet, ~93% from the farm; conservative edible yields per mol of light (potato 0.37, wheat 0.18, soybean and lentils 0.15, berries 0.25, flax 0.07, lettuce 0.43 g/mol), plus ~10% for seedlings and turnaround; ~36 mol/m²/day on average on the crops; ~80% of each tier planted; so ~1,000 people per tier lit per 900 m torus.
 - Ryugu's measured abundances (close to CI) for the C-type; ordinary-chondrite falls for the S-type (H values for the major elements); iron-meteorite composition for the M-type.
@@ -2116,8 +2115,9 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **31 October 2026**
-- **The array and the lamps made locally (sections 2, 10, 13, 18):** a habitat that imports its solar cells can't replicate, so every factory, and every seed, gets a semiconductor works: 6N polysilicon (Siemens process, local chlorine and hydrogen), cells with copper contacts, LEDs, and power devices for the drivers; only computing and sensors are imported (~50 t per 900 m torus, ~0.0004%, instead of ~420 t with the array's silicon). With the works in place, **LEDs are adopted** (white in the valley, blue + red in the farm) over sulfur lamps, which need unproven non-rotating kW bulbs and sector plants; sulfur in the light box stays the fallback. LEDs halve the works' silicon (~280 t per torus against ~630 t). The sizing keeps ~1.4 µmol/J for now.
-- **LEDs from asteroid material (sections 10, 13, 18), first as a proposal:** white LEDs in the valley, blue + red over the crops (~3.6 µmol/J): ~59 MW per 900 m torus and ~71 ha of array against ~130 MW and ~158 ha for sulfur lamps in the box. A torus's LEDs take ~440 m² of epitaxial wafer, ~200 kg of gallium (mostly the red dies' GaAs substrates), ~3 kg of indium (the red layers; the tightest input), ~60 kg of yttrium for the phosphor and ~25 t of ammonia, each under 1% of the source bodies' content. The ~350 t of PV silicon they save is ~1,000× the mass of the finished dies, so LEDs cut the imports even made on Earth; a local LED fab (a few MOCVD reactors, contact lithography) is far smaller than a local PV line. Proposed as the lamps, sulfur in the light box as the fully local fallback; the sizing keeps ~1.4 µmol/J. The farm's lamps can now differ from the valley's (`farm_lamp_efficacy_umol_j`).
+- **Sized for LEDs (sections 0, 8, 13, 15, 18; every report):** the system model now runs on white LEDs in the valley (~3.0 µmol/J, ~85% through the light box) and blue + red in the farm (~3.6 µmol/J, ~95% on the crops), in place of sulfur lamps (~1.4 µmol/J, ~75% / ~85%). Per 900 m torus: the valley's sky ~22 MW (was ~53), a farm tier ~11 MW (~32), ~11 kW of electricity per person (~31); the despun array at 1 AU ~0.12 + ~0.05 km² per tier (~0.27 + ~0.15), ~0.28 km² with three tiers lit (~0.71); a six-stack's heat with three tiers ~360 MW (~930); the drum's break-even ~62 tori (~29). Traced as one scene, a 900 m six-stack with three tiers lit keeps ~5.7× / ~5.6× (main / farm, was ~2.4× / ~2.5×): heat no longer limits the stack (40 tori or more cooled), stability (~22) does again; the farm radiators need reach only ~0.5 r, panels drop to at most ~9 + ~11 ha per 900 m torus (~27 + ~42), and the passive inboard farm radiators now carry every tier (~1.4×), so a farm without pumps becomes possible (to decide). People fed don't change (the light on the crops sets them). Plain rim panels (~34 MW) would now cover a valley (~26 MW) but not its farm. The optics report keeps the sulfur light pipes' traces as the first design, sized at its own efficacy.
+- **The array and the lamps made locally (sections 2, 10, 13, 18):** a habitat that imports its solar cells can't replicate, so every factory, and every seed, gets a semiconductor works: 6N polysilicon (Siemens process, local chlorine and hydrogen), cells with copper contacts, LEDs, and power devices for the drivers; only computing and sensors are imported (~50 t per 900 m torus, ~0.0004%, instead of ~420 t with the array's silicon). With the works in place, **LEDs are adopted** (white in the valley, blue + red in the farm) over sulfur lamps, which need unproven non-rotating kW bulbs and sector plants; sulfur in the light box stays the fallback. LEDs halve the works' silicon (~280 t per torus against ~630 t).
+- **LEDs from asteroid material (sections 10, 13, 18), first as a proposal:** white LEDs in the valley, blue + red over the crops (~3.6 µmol/J): ~59 MW per 900 m torus and ~71 ha of array against ~130 MW and ~158 ha for sulfur lamps in the box. A torus's LEDs take ~440 m² of epitaxial wafer, ~200 kg of gallium (mostly the red dies' GaAs substrates), ~3 kg of indium (the red layers; the tightest input), ~60 kg of yttrium for the phosphor and ~25 t of ammonia, each under 1% of the source bodies' content. The ~350 t of PV silicon they save is ~1,000× the mass of the finished dies, so LEDs cut the imports even made on Earth; a local LED fab (a few MOCVD reactors, contact lithography) is far smaller than a local PV line. Proposed as the lamps, sulfur in the light box as the fully local fallback. The farm's lamps can now differ from the valley's (`farm_lamp_efficacy_umol_j`).
 - **Lighting architectures (sections 13, 18; plan §7):** the optics model's chain run for pipes shorter or more heavily loaded, ~1 kW sulfur lamps straight in the light box, 915 MHz sector plants or small magnetrons, and LEDs as a reference. Proposed: ~1 kW lamps in the light box, no pipes, fed by sector plants: ~81% / ~89% delivered, ~130 MW per 900 m torus against ~228 MW with the pipes as traced, ~158 ha of array against ~276, the radiators back to ~2.9×; ~4× as many bulbs to keep. The sizing's ~75% / ~85% stands.
 
 **30 October 2026**

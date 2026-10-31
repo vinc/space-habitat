@@ -1,6 +1,6 @@
 # Light pipes, light box and farm optics (plan §7)
 
-How much of the sulfur lamps' light reaches the valley's floor and the farm's crops, and how evenly: the prism light pipes, the valley's magnesium-oxide light box with its diffuser, and a farm tier's pipes over the crops. It uses the system model's assumptions and, for what the delivery would change, its power, array and radiative exchange.
+How much of the lamps' light (white LEDs adopted; sulfur lamps and light pipes traced as the first design) reaches the valley's floor and the farm's crops, and how evenly: the prism light pipes, the valley's magnesium-oxide light box with its diffuser, and a farm tier's pipes over the crops. It uses the system model's assumptions and, for what the delivery would change, its power, array and radiative exchange.
 
 ```bash
 python -m optics_model                          # full report (reports/optics.md), ~1 min

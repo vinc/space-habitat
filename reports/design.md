@@ -27,7 +27,7 @@
 | **Total** (excl. hub and factory) | **12.7 Mt** | **25.5 Mt** |
 | Per m² of floor | 40.1 t |  |
 | Farm ring: shell and growing systems / its spokes / its N₂ (at the farm's pressure) | 48.6 / 0.56 / 0.57 kt |  |
-| Despun array / radiator panels (ideal) | 0.875 / 0.598 kt |  |
+| Despun array / radiator panels (ideal) | 0.371 / 0.251 kt |  |
 | Spin-up propellant (water, if used) | 0.400 Mt |  |
 
 ## Materials and mining
@@ -48,18 +48,18 @@ Trace elements (demands mostly guesses from the notes; `--trace` for the table):
 
 |  | Per torus | Stack of 2 |
 |---|---|---|
-| Valley sky + other loads | 52.6 + 4.77 MW | 115 MW |
-| Farm lighting per tier lit | 32.1 MW | 64.2 MW |
-| **Total electricity** | **89.4 MW** | **179 MW** |
-| Despun array at 1 AU, constant sky | 0.413 km² | 0.826 km² |
-| Despun array at 1 AU (1.0× sunlight at aphelion, seasonal sky) | 0.292 km² | 0.583 km² |
+| Valley sky + other loads | 21.7 + 4.77 MW | 52.9 MW |
+| Farm lighting per tier lit | 11.2 MW | 22.3 MW |
+| **Total electricity** | **37.6 MW** | **75.2 MW** |
+| Despun array at 1 AU, constant sky | 0.174 km² | 0.347 km² |
+| Despun array at 1 AU (1.0× sunlight at aphelion, seasonal sky) | 0.124 km² | 0.247 km² |
 
 ## Food
 
 |  | Per torus | Stack of 2 |
 |---|---|---|
 | Light on the crops per person | 3,240 mol/day |  |
-| Crop area / electricity per person | 90.1 m² / 31.5 kW |  |
+| Crop area / electricity per person | 90.1 m² / 11.0 kW |  |
 | People per tier lit | 1,020 | 2,030 |
 | **People fed** | **1,020** | **2,030** |
 | Floor per person | 313 m² |  |
@@ -68,16 +68,16 @@ Trace elements (demands mostly guesses from the notes; `--trace` for the table):
 
 |  | Per torus | Stack of 2 |
 |---|---|---|
-| Main section (valleys and other loads) | 57.4 MW | 115 MW |
-| Farm section (tiers lit) | 32.1 MW | 64.2 MW |
+| Main section (valleys and other loads) | 26.4 MW | 52.9 MW |
+| Farm section (tiers lit) | 11.2 MW | 22.3 MW |
 | Main section: ideal limit of its two open ends, black bodies at ~285 K |  | 1.64 GW |
-| Main section: ideal margin / break-even (upper bounds) |  | 14× / 29 tori |
-| Ideal radiating surface, black body, lower bound (two-sided panels: half) | 23.9 ha | 47.8 ha |
+| Main section: ideal margin / break-even (upper bounds) |  | 31× / 62 tori |
+| Ideal radiating surface, black body, lower bound (two-sided panels: half) | 10.0 ha | 20.1 ha |
 
 Preliminary radiative exchange (ray tracing, emissivity 0.9), each section on its own:
-- main section (drum, ends only): rejects at most 1.23 GW (75% of its ideal limit), a margin of 11×; needs 17.5 ha of panels (5% of its radiator annuli), against 17.0 ha ideally.
-- farm section (open, radiators to 900 m): rejects at most 1.53 GW, a margin of 24×; needs 9.64 ha of panels (2% of its radiator annuli), against 9.53 ha ideally.
-- the whole stack, traced together: margins of 8.2× (main) and 8.5× (farm) at 100% / 35% panel coverage, so both sections can be cooled.
+- main section (drum, ends only): rejects at most 1.23 GW (75% of its ideal limit), a margin of 23×; needs 7.95 ha of panels (2% of its radiator annuli), against 7.85 ha ideally.
+- farm section (open, radiators to 900 m): rejects at most 1.53 GW, a margin of 69×; needs 3.35 ha of panels (1% of its radiator annuli), against 3.31 ha ideally.
+- the whole stack, traced together: margins of 18× (main) and 25× (farm) at 100% / 35% panel coverage, so both sections can be cooled.
 
 ## Stability (rigid stack)
 

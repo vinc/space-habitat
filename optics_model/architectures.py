@@ -10,9 +10,11 @@ light box or farm tier, the layout sized for the power its own delivery needs), 
   The reflector loses 1 − `luminaire_efficiency` of the light and sends back `luminaire_albedo` of what
   falls on it. Their heat is shed in the ceiling's service space (and above each tier) instead of at the
   hub's sources.
-- **LEDs:** strips in the light box and over the beds, white (`led_efficacy_umol_j`) throughout, or
-  white in the valley and blue + red over the crops (`led_farm_efficacy_umol_j`). What making them locally
-  takes is in `leds.py`.
+- **LEDs (adopted):** strips in the light box and over the beds, white (`lamp_efficacy_umol_j`) in the
+  valley and blue + red over the crops (`farm_lamp_efficacy_umol_j`), or white throughout. What making them
+  locally takes is in `leds.py`.
+
+The sulfur architectures (the fallback) run at `sulfur_efficacy_umol_j`, or the sector plants' efficacy.
 
 The rows of lamps are traced as continuous line sources, fair once the diffuser (or the canopy) is at least
 a lamp spacing away.
@@ -28,29 +30,30 @@ N = 100_000
 def options(p):
     """[(name, overrides, the pipe's own efficiency (None: the pipe model), what it is)]."""
     lamp_row = p.lamp_power_w / p.lamp_spacing_m
-    sector = p.sector_efficacy_umol_j * p.waveguide_efficiency
-    in_box = {"pipe_coupling": p.luminaire_efficiency, "pipe_albedo": p.luminaire_albedo, "pipe_diameter_m": 0.15,
+    sulfur = {"lamp_efficacy_umol_j": p.sulfur_efficacy_umol_j, "farm_lamp_efficacy_umol_j": 0}
+    sector = {"lamp_efficacy_umol_j": p.sector_efficacy_umol_j * p.waveguide_efficiency, "farm_lamp_efficacy_umol_j": 0}
+    in_box = {**sulfur, "pipe_coupling": p.luminaire_efficiency, "pipe_albedo": p.luminaire_albedo, "pipe_diameter_m": 0.15,
               "pipe_emit_arc_deg": 180.0, "pipe_w_per_m": lamp_row, "diffuser_gap_m": max(p.diffuser_gap_m, 1.5),
               "farm_pipe_gap_m": max(p.farm_pipe_gap_m, 0.8)}
-    led = {"lamp_efficacy_umol_j": p.led_efficacy_umol_j, "pipe_coupling": p.led_fixture_efficiency,
+    led = {"lamp_efficacy_umol_j": p.lamp_efficacy_umol_j, "farm_lamp_efficacy_umol_j": p.farm_lamp_efficacy_umol_j,
+           "pipe_coupling": p.led_fixture_efficiency,
            "pipe_albedo": 0.5, "pipe_diameter_m": 0.1, "pipe_w_per_m": p.led_w_per_m}
-    short_heavy = {"pipe_length_m": 20.0, "pipe_w_per_m": 600.0}
+    short_heavy = {**sulfur, "pipe_length_m": 20.0, "pipe_w_per_m": 600.0}
     return [
-        ("Pipes, 40 m at 300 W/m (as now)", {}, None, "pairs of ~6 kW lamps, small magnetrons"),
-        ("Pipes, 20 m", {"pipe_length_m": 20.0}, None, "pairs of ~3 kW lamps"),
-        ("Pipes at 600 W/m", {"pipe_w_per_m": 600.0}, None, "pairs of ~12 kW lamps per 40 m pipe"),
+        ("Pipes, 40 m at 300 W/m (as first proposed)", sulfur, None, "pairs of ~6 kW lamps, small magnetrons"),
+        ("Pipes, 20 m", {**sulfur, "pipe_length_m": 20.0}, None, "pairs of ~3 kW lamps"),
+        ("Pipes at 600 W/m", {**sulfur, "pipe_w_per_m": 600.0}, None, "pairs of ~12 kW lamps per 40 m pipe"),
         ("Pipes, 20 m at 600 W/m", short_heavy, None, "pairs of ~6 kW lamps per 20 m pipe"),
-        ("Pipes, 20 m at 600 W/m, 915 MHz plants", {**short_heavy, "lamp_efficacy_umol_j": sector}, None,
+        ("Pipes, 20 m at 600 W/m, 915 MHz plants", {**short_heavy, **sector}, None,
          "the same, fed by sector plants through waveguides"),
         (f"~{p.lamp_power_w / 1e3:g} kW lamps in the light box", in_box, 1.0,
          f"rows of lamps {p.lamp_spacing_m:g} m apart in reflectors, small magnetrons, a 1.5 m deep diffuser"),
         (f"~{p.lamp_power_w / 1e3:g} kW lamps in the light box, 915 MHz plants",
-         {**in_box, "lamp_efficacy_umol_j": sector}, 1.0, "the same, fed by sector plants through waveguides"),
-        ("LEDs, white throughout", led, 1.0,
-         f"strips at {p.led_w_per_m:g} W/m, {p.led_efficacy_umol_j:g} µmol/J"),
-        ("LEDs, white in the valley, blue + red in the farm",
-         {**led, "farm_lamp_efficacy_umol_j": p.led_farm_efficacy_umol_j}, 1.0,
-         f"the farm at {p.led_farm_efficacy_umol_j:g} µmol/J (magenta light, no phosphor)"),
+         {**in_box, **sector}, 1.0, "the same, fed by sector plants through waveguides"),
+        ("LEDs, white throughout", {**led, "farm_lamp_efficacy_umol_j": 0}, 1.0,
+         f"strips at {p.led_w_per_m:g} W/m, {p.lamp_efficacy_umol_j:g} µmol/J"),
+        ("LEDs, white in the valley, blue + red in the farm (adopted)", led, 1.0,
+         f"the farm at {p.farm_lamp_efficacy_umol_j:g} µmol/J (magenta light, no phosphor)"),
     ]
 
 
@@ -59,7 +62,7 @@ def bulbs(p, q, r, overrides, tiers=3):
     of bulbs: pipes take a lamp at each end, lamps in the box are `lamp_power_w` each, LEDs none counted."""
     pw = r["power"]
     installed = pw["valley_sky"] * 24 / q.valley_day_h + tiers * pw["farm_per_tier"] * 24 / q.farm_photoperiod_h
-    if "lamp_efficacy_umol_j" in overrides and overrides["lamp_efficacy_umol_j"] == p.led_efficacy_umol_j:
+    if overrides.get("lamp_efficacy_umol_j") not in (p.sulfur_efficacy_umol_j, p.sector_efficacy_umol_j * p.waveguide_efficiency):
         return installed, None
     size = p.lamp_power_w if overrides.get("pipe_coupling") == p.luminaire_efficiency else q.pipe_w_per_m * q.pipe_length_m / 2
     return installed, installed / size

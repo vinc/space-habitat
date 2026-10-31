@@ -29,7 +29,7 @@ def label(r):
 
 def layout_section(a, p, overrides):
     rows = layout.compare(p, LAYOUT_CASES, target=TARGET, grid=GRID)
-    out, per_torus, coverages = [], {}, {}
+    out, per_torus, coverages, inboard = [], {}, {}, {}
     for row in rows:
         case = next(c for c in LAYOUT_CASES if c[0] == row["label"])
         d = Design(radius_m=case[1], n_tori=case[2], tiers_lit=case[3])
@@ -42,6 +42,8 @@ def layout_section(a, p, overrides):
             if least:
                 per_torus[row["label"]] = [x / case[2] / HA for x in least["panel_area"]]
         passive = num(layout.passive_tiers(row, per_tier), 2) if row["layout"] == "inboard" else "—"
+        if row["layout"] == "inboard":
+            inboard[row["label"]] = (row["farm"], layout.passive_tiers(row, per_tier), least is not None)
         out.append([row["label"], row["layout"], f"{num(row['main'], 2)} / {num(row['farm'], 2)}",
                     f"{row['coverage'][0]:.0%} / {row['coverage'][1]:.0%}", area, passive])
     reach = []
@@ -61,12 +63,27 @@ def layout_section(a, p, overrides):
         "areas move in steps of ~25%).",
         table(["Stack, tiers lit", "Farm radiators", "Best margins, main / farm", "At coverage, main / farm",
                f"Least panels for {TARGET:g}× (ha), main / farm", "Tiers the passive set alone carries"], out),
-        "**Inboard radiators can't cool a six-stack's farm** (~0.5–0.75× at best): the farm rings enclose "
-        "them. Outboard, with pumps, is needed for two or three tiers lit; the inboard set is a passive "
-        "fallback that keeps about one tier lit if the pumps stop. A pair's farm cools passively.",
+        inboard_text(inboard),
         "**How far out the outboard radiators must reach** (× floor radius) for each margin, both sections:",
         table(["Stack, tiers lit", "Reach for 1×", f"Reach for {TARGET:g}×"], reach),
     ]
+
+
+def inboard_text(inboard):
+    """What the passive (inboard) farm radiators manage, from the six-stacks' rows."""
+    six = {k: v for k, v in inboard.items() if "six" in k}
+    worst = min(v[0] for v in six.values())
+    tiers = min(v[1] for v in six.values())
+    if all(v[2] for v in six.values()):
+        return (f"**Inboard radiators cool a six-stack's farm passively, at {TARGET:g}× or better** (~{num(worst, 2)}× "
+                "at worst): no pumps needed. Outboard radiators keep a wider margin.")
+    if worst >= 1.0:
+        return (f"**Inboard radiators cool a six-stack's farm passively, but below {TARGET:g}× in some cases** "
+                f"(~{num(worst, 2)}× at worst, ~{num(tiers, 2)} tiers' heat): no pumps needed with all tiers lit, "
+                "outboard pumped radiators for a full margin, the inboard set as their passive fallback.")
+    return (f"**Inboard radiators can't cool a six-stack's farm** (~{num(worst, 2)}× at worst): the farm rings "
+            "enclose them. Outboard, with pumps, is needed for all the tiers lit; the inboard set is a passive "
+            f"fallback that keeps about {num(tiers, 1)} tiers lit if the pumps stop. A pair's farm cools passively.")
 
 
 def capacity_section(p, per_torus):
@@ -77,11 +94,12 @@ def capacity_section(p, per_torus):
     return [
         "## How many tori the radiators can cool",
         "Most tori (with their farm rings) the assembled stack can cool, farm radiators outboard to 1 r, by "
-        "farm tiers lit (any margin above 1×):",
+        "farm tiers lit (any margin above 1×; the search stops at 40, beyond passive stability's ~22–25):",
         table(["Torus", "0 tiers lit", "1 tier", "2 tiers", "3 tiers"], rows),
         f"Panels per torus at {TARGET:g}× (one face, outboard farm radiators). Finite panels that see each "
         "other, and the farm radiators shading the drum's farm end, need ~2–3× the black-body area "
-        "(`reports/thermal.md`):",
+        f"(`reports/thermal.md`). Areas at the grid's smallest coverage step ({GRID[1]:.0%}) are an upper "
+        "bound: fewer panels may do.",
         table(["Stack, tiers lit", "Main section (valley)", "Farm section"], area_rows),
     ]
 
@@ -119,7 +137,7 @@ def sunlight_section(p, coverage, met):
 
 
 def coolant_section(p):
-    rows, two_phase = [], []
+    rows, two_phase, first = [], [], None
     for radius in (900, 1600):
         d = Design(radius_m=radius, n_tori=6, tiers_lit=3)
         r = evaluate(p, d)
@@ -138,6 +156,8 @@ def coolant_section(p):
                      f"{num(nat['inventory'] / 1e6, 2)} kt",
                      f"{num(h['farm_per_ring'] / MW)} MW", f"{num(pump['diameter'], 2)} m",
                      f"{num(pump['pump_power'] / 1e3)} kW ({pump['pump_power'] / h['farm_per_ring']:.2%})"])
+        if first is None:
+            first = (nat, pump, h, r["mass"]["water_needed"])
         for name, rho, sat in (("ammonia", coolant.AMMONIA["rho_l"], coolant.AMMONIA),
                                ("water", coolant.WATER["rho"], coolant.WATER_SAT)):
             x = coolant.two_phase_rim(omega, source, sink, rho, sat)
@@ -154,8 +174,9 @@ def coolant_section(p):
         table(["Torus", "Valley's heat", "Pipe (each loop)", "Speed", "Buoyancy head", "Water in the loops",
                "Farm ring's heat", "Pipe (each loop)", "Pumping"], rows),
         "**Main section: passive, as intended.** A few tenths of a kPa per kelvin of buoyancy, over hundreds of "
-        "metres of spin gravity, drive ~0.5 m pipes at under 1 m/s; the loops hold ~1 kt of water per 900 m "
-        "torus (~1.5% of its water budget, local). **Farm section: pumps** of ~0.2% of its heat.",
+        f"metres of spin gravity, drive ~{num(first[0]['diameter'], 1)} m pipes at under 1 m/s; the loops hold "
+        f"~{num(first[0]['inventory'] / 1e6, 1)} kt of water per 900 m torus (~{first[0]['inventory'] / first[3]:.1%} "
+        f"of its water budget, local). **Farm section: pumps** of ~{first[1]['pump_power'] / first[2]['farm_per_ring']:.1%} of its heat.",
         "**Two-phase loops need throttling.** An evaporating loop (ammonia, as on the ISS) would carry the heat "
         "in far smaller pipes, but the liquid returning outward from the radiators builds a column of "
         "hundreds of metres of near-1 g head: at the rim it is far above its saturation pressure and can't "

@@ -439,33 +439,35 @@ source = "§13, light-box ceiling sizing"
 status = "design"
 
 [power.ceiling_delivery]
-value = 0.75
-unit = "fraction"
-low = 0.65
-high = 0.80
-source = "§13, light box: ~20-30% ceiling losses (to verify, plan §6)"
-status = "estimate"
-
-[power.lamp_efficacy_umol_j]
-value = 1.4
-unit = "umol/J at the wall"
-low = 1.3
-high = 1.5
-source = "§13, sulfur lamps (Maclennan et al. 1994); 915 MHz sources would give ~1.75"
-status = "sourced"
-
-[power.farm_lamp_efficacy_umol_j]
-value = 0
-unit = "umol/J at the wall in the farm; 0: as the valley's lamps"
-source = "design: set by an architecture with different farm lamps (blue + red LEDs)"
-status = "design"
-
-[power.farm_delivery]
 value = 0.85
 unit = "fraction"
 low = 0.75
-high = 0.90
-source = "§13, light pipes just above the canopy (estimate)"
+high = 0.88
+source = "§13, LED strips in the light box: ~86% traced (optics_model; inputs guessed)"
+status = "estimate"
+
+[power.lamp_efficacy_umol_j]
+value = 3.0
+unit = "umol/J at the wall, white LEDs (the valley)"
+low = 2.7
+high = 3.4
+source = "§13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020); white alone lower"
+status = "estimate"
+
+[power.farm_lamp_efficacy_umol_j]
+value = 3.6
+unit = "umol/J at the wall, blue + red LEDs (the farm); 0: as the valley's lamps"
+low = 3.2
+high = 4.1
+source = "best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential"
+status = "estimate"
+
+[power.farm_delivery]
+value = 0.95
+unit = "fraction"
+low = 0.85
+high = 0.97
+source = "§13, LED strips just above the canopy: ~96% traced (optics_model; inputs guessed)"
 status = "estimate"
 
 [power.other_loads_w_m2]
@@ -1247,13 +1249,13 @@ high = 0.95
 source = "waveguide runs of a few hundred metres (guess)"
 status = "guess"
 
-[optics.led_efficacy_umol_j]
-value = 3.0
-unit = "umol/J at the wall, white LEDs"
-low = 2.7
-high = 3.5
-source = "§13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020)"
-status = "estimate"
+[optics.sulfur_efficacy_umol_j]
+value = 1.4
+unit = "umol/J at the wall, sulfur lamps on small magnetrons (the fallback)"
+low = 1.3
+high = 1.5
+source = "§13, sulfur lamps (Maclennan et al. 1994)"
+status = "sourced"
 
 [optics.led_fixture_efficiency]
 value = 0.95
@@ -1268,14 +1270,6 @@ value = 200
 unit = "W per m of LED strip"
 source = "design"
 status = "design"
-
-[optics.led_farm_efficacy_umol_j]
-value = 3.6
-unit = "umol/J at the wall, blue + red LEDs"
-low = 3.2
-high = 4.1
-source = "best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential"
-status = "estimate"
 
 [optics.led_farm_red_share]
 value = 0.8

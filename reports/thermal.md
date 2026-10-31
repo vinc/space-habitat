@@ -4,12 +4,12 @@ The **main section** (the tori) rejects the valleys' heat from radiators on the 
 
 | Stack, tiers lit | Main heat (MW) | Main, ideal margin | Main alone, ends only | Main alone, ends + gaps | Main alone, panels needed (ha) | Farm heat (MW) | Farm alone | Farm alone, panels needed (ha) | Assembled margins main / farm | Assembled coverage main / farm | Assembled limit (tori) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m pair, 3 tiers | 115 | 14 | 11 | 11 | 17.4 | 192 | 8.1 | 29.5 | 5.8 / 5.3 | 75% / 100% | 16 |
-| 900 m six, 1 tier | 344 | 4.8 | 4.1 | 4.3 | 58.0 | 192 | 11 | 30.0 | 2.9 / 4.3 | 100% / 20% | 18 |
-| 900 m six, 2 tiers | 344 | 4.8 | 4.1 | 4.3 | 58.0 | 385 | 5.4 | 62.6 | 2.6 / 2.9 | 100% / 35% | 18 |
-| 900 m six, 3 tiers | 344 | 4.8 | 4.1 | 4.3 | 58.0 | 577 | 3.6 | 100 | 2.4 / 2.5 | 100% / 75% | 16 |
-| 1.6 km six, 2 tiers | 1,090 | 4.8 | 4.0 | 4.2 | 184 | 1,220 | 5.3 | 198 | 2.6 / 2.8 | 100% / 35% | 18 |
-| 1.6 km six, 3 tiers | 1,090 | 4.8 | 4.0 | 4.2 | 184 | 1,820 | 3.5 | 318 | 2.3 / 2.4 | 100% / 75% | 16 |
+| 900 m pair, 3 tiers | 52.9 | 31 | 24 | 24 | 7.93 | 67.0 | 23 | 10.1 | 14 / 14 | 100% / 75% | ≥ 40 |
+| 900 m six, 1 tier | 159 | 10 | 8.8 | 9.4 | 25.0 | 67.0 | 31 | 10.3 | 7.3 / 7.6 | 100% / 10% | ≥ 40 |
+| 900 m six, 2 tiers | 159 | 10 | 8.8 | 9.4 | 25.0 | 134 | 16 | 20.6 | 6.2 / 6.2 | 75% / 20% | ≥ 40 |
+| 900 m six, 3 tiers | 159 | 10 | 8.8 | 9.4 | 25.0 | 201 | 10 | 31.4 | 5.7 / 5.6 | 100% / 35% | ≥ 40 |
+| 1.6 km six, 2 tiers | 501 | 10 | 8.7 | 9.1 | 78.8 | 423 | 15 | 65.2 | 6.2 / 6.0 | 75% / 20% | ≥ 40 |
+| 1.6 km six, 3 tiers | 501 | 10 | 8.7 | 9.1 | 78.8 | 635 | 10 | 99.5 | 5.5 / 5.5 | 75% / 35% | ≥ 40 |
 
 # Farm radiators' reach: `farm_radiator_outer_frac` across its range
 
@@ -17,13 +17,13 @@ The farm radiators' outer radius (guess, 0.60–1.4 of the floor radius) sets th
 
 | Stack, tiers lit | Reach (× floor radius) | Farm alone | Assembled farm margin | Assembled main margin | Assembled coverage main / farm | Cools both? |
 |---|---|---|---|---|---|---|
-| 900 m six, 2 tiers | 0.60 | 1.8 | 1.4 | 1.4 | 10% / 75% | yes |
-| 900 m six, 2 tiers | 0.80 | 3.5 | 2.5 | 2.5 | 35% / 100% | yes |
-| 900 m six, 2 tiers | 1.0 (default) | 5.5 | 2.9 | 2.6 | 75% / 35% | yes |
-| 900 m six, 2 tiers | 1.2 | 7.8 | 3.5 | 2.8 | 100% / 20% | yes |
-| 900 m six, 2 tiers | 1.4 | 11 | 3.2 | 3.2 | 50% / 10% | yes |
-| 900 m six, 3 tiers | 0.60 | 1.2 | 1.0 | 1.4 | 10% / 100% | yes |
-| 900 m six, 3 tiers | 0.80 | 2.3 | 1.7 | 1.9 | 20% / 100% | yes |
-| 900 m six, 3 tiers | 1.0 (default) | 3.7 | 2.5 | 2.4 | 75% / 75% | yes |
-| 900 m six, 3 tiers | 1.2 | 5.2 | 3.2 | 2.5 | 75% / 35% | yes |
-| 900 m six, 3 tiers | 1.4 | 7.0 | 3.5 | 2.8 | 75% / 20% | yes |
+| 900 m six, 2 tiers | 0.60 | 5.2 | 4.0 | 4.9 | 20% / 100% | yes |
+| 900 m six, 2 tiers | 0.80 | 10.0 | 6.5 | 6.3 | 75% / 75% | yes |
+| 900 m six, 2 tiers | 1.0 (default) | 16 | 6.2 | 6.3 | 50% / 20% | yes |
+| 900 m six, 2 tiers | 1.2 | 22 | 6.3 | 6.3 | 35% / 10% | yes |
+| 900 m six, 2 tiers | 1.4 | 30 | 9.3 | 6.9 | 50% / 10% | yes |
+| 900 m six, 3 tiers | 0.60 | 3.5 | 2.9 | 3.1 | 10% / 100% | yes |
+| 900 m six, 3 tiers | 0.80 | 6.6 | 4.7 | 5.5 | 35% / 100% | yes |
+| 900 m six, 3 tiers | 1.0 (default) | 11 | 5.6 | 5.7 | 100% / 35% | yes |
+| 900 m six, 3 tiers | 1.2 | 15 | 6.8 | 6.2 | 100% / 20% | yes |
+| 900 m six, 3 tiers | 1.4 | 20 | 6.2 | 6.9 | 75% / 10% | yes |

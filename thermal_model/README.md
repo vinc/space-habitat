@@ -26,11 +26,11 @@ python -m thermal_model --set solar_absorptivity=0.3
 
 ## Findings
 
-- **Farm radiators:** outboard (pumped) keeps ~2.4–2.5× in both sections of a six-stack with three tiers lit; inboard (passive) only ~0.5–0.75× in the farm section, about one tier (a pair's farm cools passively). Proposed: outboard, with an inboard passive fallback.
-- **Reach:** ~0.6 r for 1×, ~0.75 r for 1.5× (six-stack, three tiers lit).
-- **Capacity:** ~24 / 18 / 18 / 16 tori with 0 / 1 / 2 / 3 tiers lit, at 900 m and 1.6 km.
-- **Panels at 1.5×:** ~27 ha (valley) + ~42 ha (farm) per 900 m torus in a six-stack, ~2–3× the black-body area.
-- **Sunlight:** none on the drum's panels below ~1.5° of axis tilt; the open farm section ~1.3% of its heat per degree at 1 AU.
-- **Loops:** passive water loops of ~0.45 m per 900 m torus (12 loops, ~0.7 m/s, ~1 kt of water); farm pumps ~0.2% of its heat; two-phase ammonia would need throttling at the rim (~1.9 MPa, boiling only above ~48 °C).
+- **Farm radiators (LEDs):** outboard (pumped) keeps ~5.7× / ~6.1× (main / farm) in a six-stack with three tiers lit; inboard (passive) ~1.4× in the farm section, enough for every tier (~2× with two tiers, ~4× for a pair). Baseline: outboard, with the inboard passive set as fallback; inboard alone now possible. (With sulfur lamps: ~2.4–2.5×, inboard only ~0.5–0.75×.)
+- **Reach:** ~0.45–0.5 r for 1.5× (six-stack, three tiers lit; ~0.75 r with sulfur lamps).
+- **Capacity:** 40 tori or more (the search's limit) at any tiers lit, at 900 m and 1.6 km: stability (~22–25), not heat, limits the stack (~16–24 with sulfur lamps).
+- **Panels at 1.5×:** at most ~9 ha (valley) + ~11 ha (farm) per 900 m torus in a six-stack (the grid's smallest step; ~27 + ~42 ha with sulfur lamps).
+- **Sunlight:** none on the drum's panels below ~1.5° of axis tilt; the open farm section ~0.9% of its heat per degree at 1 AU.
+- **Loops:** passive water loops of ~0.34 m per 900 m torus (12 loops, ~0.6 m/s, ~0.5 kt of water); farm pumps ~0.3% of its heat; two-phase ammonia would need throttling at the rim (~1.9 MPa, boiling only above ~48 °C).
 - **Valley swing:** ~2–4 K (wet) to ~4–11 K (dry) left to itself; wider swings need scheduled cooling.
 - **Not modelled:** the spokes and cables, the envelopes' rounded inner faces, the radiators' tubes, freezing in cold panels at low load, reflected sunlight, the despun array's shadow, air movement in the valley.

@@ -58,10 +58,10 @@
 | `c_water_wt` | 0.06400 | wt fraction | 0.05000–0.08000 | sourced | §10, 0.71 wt% H at Bennu's surface (Praet et al. 2021) |
 | `c_carbon_wt` | 0.04500 | wt fraction | 0.04000–0.05000 | sourced | §10, Bennu samples |
 | `valley_light_mol` | 15.00 | mol/m2/day on the floor | fixed | design | §13, light-box ceiling sizing |
-| `ceiling_delivery` | 0.7500 | fraction | 0.6500–0.8000 | estimate | §13, light box: ~20-30% ceiling losses (to verify, plan §6) |
-| `lamp_efficacy_umol_j` | 1.400 | umol/J at the wall | 1.300–1.500 | sourced | §13, sulfur lamps (Maclennan et al. 1994); 915 MHz sources would give ~1.75 |
-| `farm_lamp_efficacy_umol_j` | 0 | umol/J at the wall in the farm; 0: as the valley's lamps | fixed | design | design: set by an architecture with different farm lamps (blue + red LEDs) |
-| `farm_delivery` | 0.8500 | fraction | 0.7500–0.9000 | estimate | §13, light pipes just above the canopy (estimate) |
+| `ceiling_delivery` | 0.8500 | fraction | 0.7500–0.8800 | estimate | §13, LED strips in the light box: ~86% traced (optics_model; inputs guessed) |
+| `lamp_efficacy_umol_j` | 3.000 | umol/J at the wall, white LEDs (the valley) | 2.700–3.400 | estimate | §13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020); white alone lower |
+| `farm_lamp_efficacy_umol_j` | 3.600 | umol/J at the wall, blue + red LEDs (the farm); 0: as the valley's lamps | 3.200–4.100 | estimate | best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential |
+| `farm_delivery` | 0.9500 | fraction | 0.8500–0.9700 | estimate | §13, LED strips just above the canopy: ~96% traced (optics_model; inputs guessed) |
 | `other_loads_w_m2` | 15.00 | W per m2 of floor | 10.00–25.00 | guess | §19, ~5 MW per 900 m torus, ~15 MW per 1.6 km torus (guess) |
 | `pv_efficiency` | 0.2500 | fraction | 0.1800–0.2800 | estimate | §13, 25% assumed; ~18-22% in the concentrator comparison |
 | `solar_constant_w_m2` | 1,361 | W/m2 at 1 AU | fixed | sourced | standard value |
@@ -163,10 +163,9 @@
 | `lamp_spacing_m` | 1.500 | m between lamps along a row | fixed | design | design |
 | `sector_efficacy_umol_j` | 1.750 | umol/J at the wall, sulfur bulbs behind 915 MHz sector plants | 1.600–1.800 | estimate | §13: Fusion's bulbs >2 umol per J of microwaves, behind ~85% sources: ~1.7-1.8 |
 | `waveguide_efficiency` | 0.9000 | share of a sector plant's microwaves reaching the bulbs | 0.8000–0.9500 | guess | waveguide runs of a few hundred metres (guess) |
-| `led_efficacy_umol_j` | 3.000 | umol/J at the wall, white LEDs | 2.700–3.500 | estimate | §13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020) |
+| `sulfur_efficacy_umol_j` | 1.400 | umol/J at the wall, sulfur lamps on small magnetrons (the fallback) | 1.300–1.500 | sourced | §13, sulfur lamps (Maclennan et al. 1994) |
 | `led_fixture_efficiency` | 0.9500 | share of the LEDs' light leaving the fixture | 0.9000–0.9700 | estimate | estimate |
 | `led_w_per_m` | 200.0 | W per m of LED strip | fixed | design | design |
-| `led_farm_efficacy_umol_j` | 3.600 | umol/J at the wall, blue + red LEDs | 3.200–4.100 | estimate | best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential |
 | `led_farm_red_share` | 0.8000 | share of the farm LEDs' electricity driving red (660 nm) dies | 0.7000–0.9000 | guess | ~10-20% blue photons for crops (guess) |
 | `led_die_w_mm2` | 0.3000 | W of electricity per mm2 of LED die | 0.1500–1.000 | estimate | mid-power dies driven gently for efficacy (~0.2-0.5 W on ~1 mm2) to high-power at ~1 W/mm2 (estimate) |
 | `led_wafer_yield` | 0.7000 | share of the epitaxial wafer ending as working dies | 0.5000–0.8500 | guess | edge exclusion, streets and binning (guess) |

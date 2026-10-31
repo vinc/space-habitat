@@ -8,6 +8,9 @@ from optics_model import pipe, scenes
 from optics_model.trace import Scene, lambertian, trace
 
 P = params(load())
+# The sulfur light-pipe design first proposed, which the pipe and light-box traces describe.
+from optics_model.__main__ import FIRST_SIZING  # noqa: E402
+PS = params(load(), lamp_efficacy_umol_j=P.sulfur_efficacy_umol_j, **FIRST_SIZING)
 
 
 class TestPipe(unittest.TestCase):
@@ -78,8 +81,8 @@ class TestTrace(unittest.TestCase):
         self.assertAlmostEqual(sum(r["absorbed"].values()), 1.0, places=9)
 
     def test_diffuser_blends_the_stripes(self):
-        close = scenes.light_box(P, gap=0.1, n=100_000)["glow_ratio"]
-        far = scenes.light_box(P, gap=0.75, n=100_000)["glow_ratio"]
+        close = scenes.light_box(PS, gap=0.1, n=100_000)["glow_ratio"]
+        far = scenes.light_box(PS, gap=0.75, n=100_000)["glow_ratio"]
         self.assertGreater(close, 1.5)
         self.assertLess(far, 1.2)
 
@@ -155,7 +158,7 @@ class TestArchitectures(unittest.TestCase):
         _, q_small = self.run_option(self.names[5])
         _, q_sector = self.run_option(self.names[6])
         self.assertAlmostEqual(q_sector.lamp_efficacy_umol_j, P.sector_efficacy_umol_j * P.waveguide_efficiency)
-        self.assertAlmostEqual(q_small.lamp_efficacy_umol_j, P.lamp_efficacy_umol_j)
+        self.assertAlmostEqual(q_small.lamp_efficacy_umol_j, P.sulfur_efficacy_umol_j)
         _, r_small = self.a.system(q_small)
         _, r_sector = self.a.system(q_sector)
         self.assertLess(r_sector["power"]["total"], r_small["power"]["total"])
@@ -178,7 +181,7 @@ class TestArchitectures(unittest.TestCase):
         _, qm = self.run_option(self.names[8])
         rw, rm = self.a.system(qw)[1]["power"], self.a.system(qm)[1]["power"]
         self.assertAlmostEqual(rm["valley_sky"], rw["valley_sky"])
-        self.assertAlmostEqual(rm["farm_per_tier"] / rw["farm_per_tier"], P.led_efficacy_umol_j / P.led_farm_efficacy_umol_j)
+        self.assertAlmostEqual(rm["farm_per_tier"] / rw["farm_per_tier"], P.lamp_efficacy_umol_j / P.farm_lamp_efficacy_umol_j)
 
 
 class TestLeds(unittest.TestCase):
@@ -187,19 +190,20 @@ class TestLeds(unittest.TestCase):
         from optics_model import architectures, leds
         cls.leds = leds
         opts = architectures.options(P)
-        cls.white = architectures.system(architectures.evaluate_option(P, opts[7][1], 1.0, n=20_000)[1])
+        cls.qw = architectures.evaluate_option(P, opts[7][1], 1.0, n=20_000)[1]
+        cls.white = architectures.system(cls.qw)
         cls.mixed = architectures.system(architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1])
         cls.qm = architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1]
 
     def test_die_area_follows_the_power(self):
         r = self.white[1]
-        b = self.leds.budget(P, r)
+        b = self.leds.budget(self.qw, r)
         self.assertEqual(b["die_m2"]["red"], 0.0)
         self.assertAlmostEqual(b["die_m2"]["blue"] * 1e6 * P.led_die_w_mm2, b["valley_w"] + b["farm_w"])
         self.assertAlmostEqual(b["phosphor"], (b["valley_w"] + b["farm_w"]) * P.led_phosphor_g_w / 1e3)
 
     def test_red_dies_bring_indium_and_arsenic(self):
-        bw = self.leds.budget(P, self.white[1])
+        bw = self.leds.budget(self.qw, self.white[1])
         bm = self.leds.budget(self.qm, self.mixed[1])
         self.assertAlmostEqual(bm["red_w"], P.led_farm_red_share * bm["farm_w"])
         self.assertGreater(bm["use"]["In"], 10 * bw["use"]["In"])
@@ -207,6 +211,8 @@ class TestLeds(unittest.TestCase):
         self.assertLess(bm["phosphor"], bw["phosphor"])
         # Gallium in the film over the reactor's utilization; indium enters below its own fed amount.
         self.assertAlmostEqual(bw["fed"]["Ga"], bw["film"]["Ga"] / P.mocvd_utilization)
+        # The adopted lamps are the blue + red option.
+        self.assertEqual(self.qm.farm_lamp_efficacy_umol_j, P.farm_lamp_efficacy_umol_j)
         self.assertLess(bm["use"]["In"], 0.05 * self.leds.contained(self.mixed[1], "In"))
 
 

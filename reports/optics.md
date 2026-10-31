@@ -1,6 +1,6 @@
-# Light pipes, the light box and the farm's tiers
+# Light pipes, the light box, the farm's tiers and LEDs
 
-Plan §7 (`optics_model/`): how much of the sulfur lamps' light the prism light pipes carry, the valley's magnesium-oxide light box and diffuser pass to the floor, and a farm tier's pipes put on the crops, and how evenly. Most inputs are estimates or guesses (`reports/assumptions.md`).
+Plan §7 (`optics_model/`): how much of the lamps' light reaches the valley's floor through its magnesium-oxide light box and diffuser, and the crops in a farm tier, and how evenly. The first sections trace the design first proposed, sulfur lamps feeding prism light pipes (sized at 1.40 µmol/J and an assumed 75% / 85%); the architectures that followed, and the LEDs now adopted (sized at 85% / 95%), come after. Most inputs are estimates or guesses (`reports/assumptions.md`).
 
 ## From lamp to leaf
 
@@ -14,7 +14,7 @@ The share of the sulfur lamps' light that reaches the valley's floor and the far
 | Through the light box to the floor / onto the crops | 82% | 93% |
 | **Lamp to floor / crops** | **50%** | **57%** |
 | … with the layout sized for the assumed deliveries (0.91 m, 5 a bed) | 53% | 59% |
-| Assumed until now (`ceiling_delivery`, `farm_delivery`) | 75% | 85% |
+| Assumed by the first sizing | 75% | 85% |
 
 The light box and the tiers do as well as the notes expected, or better: ~82% of the pipes' light reaches the valley's floor (the notes: ~75–85%), ~93% the crops (more with the pipes farther apart, below). But the notes' figures counted only the ceiling: getting the lamps' light into the pipes and out along them costs another ~39%, which the sizing left out. Most of the chain's inputs are guesses (the coupling, the film's loss, the extractor); they need measuring on real pipes and lamps (plan §8). If the lamps' efficacy (~1.4 µmol/J) was measured out of their own reflector, part of the coupling is already in it.
 
@@ -107,7 +107,7 @@ Each input at its low and high, the rest as configured and the layout held as co
 
 ## What it would mean
 
-The system model with the traced chain (valley 50%, farm 57%) in place of the assumed 75% and 85%: a six-stack at Eros, three tiers lit, and the assembled stack's radiative exchange (`habitat_model/cavity.py`, farm radiators outboard, 4,000 rays). People per tier don't change (the light on the crops sets them); everything that scales with the lamps does. The configured deliveries are left as they are until the chain's guesses are measured.
+The system model with the traced chain (valley 50%, farm 57%) in place of the assumed 75% and 85%: a six-stack at Eros, three tiers lit, and the assembled stack's radiative exchange (`habitat_model/cavity.py`, farm radiators outboard, 4,000 rays). People per tier don't change (the light on the crops sets them); everything that scales with the lamps does. The pipes' guesses would need measuring; the LEDs, adopted since, avoid the pipes altogether (below).
 
 | Torus |  | Assumed | Traced | Change |
 |---|---|---|---|---|
@@ -128,21 +128,21 @@ The radiators still reach 1.5× with every panel in place, but need about twice 
 
 ## Lighting architectures
 
-What the pipes cost and what could replace them (`optics_model/architectures.py`): the same chain, each layout sized for the power its own delivery needs, then the system model and the assembled stack's radiators (900 m six-stack at Eros, three tiers lit). Small magnetrons give 1.40 µmol/J (the configured value); 915 MHz sector plants 1.75 µmol/J less 10.0% in waveguides (notes §13). Lamps straight in the light box: ~1 kW bulbs in reflectors that keep 88% of the light and send back 60% of what returns to them, in rows behind a 1.5 m deep diffuser, and ~0.8 m above the canopy in the farm.
+What the pipes cost and what could replace them (`optics_model/architectures.py`): the same chain, each layout sized for the power its own delivery needs, then the system model and the assembled stack's radiators (900 m six-stack at Eros, three tiers lit). Small magnetrons give 1.40 µmol/J; 915 MHz sector plants 1.75 µmol/J less 10.0% in waveguides (notes §13). Lamps straight in the light box: ~1 kW bulbs in reflectors that keep 88% of the light and send back 60% of what returns to them, in rows behind a 1.5 m deep diffuser, and ~0.8 m above the canopy in the farm.
 
-| Architecture | To the floor | To the crops | µmol/J at the wall | Electricity per torus | Array | Radiators' best margin | Panels for 1.5× | Bulbs |  |
+| Architecture | To the floor | To the crops | µmol/J at the wall (valley / farm) | Electricity per torus | Array | Radiators' best margin | Panels for 1.5× | Bulbs |  |
 |---|---|---|---|---|---|---|---|---|---|
-| Pipes, 40 m at 300 W/m (as now) | 50% | 57% | 1.40 | 228 MW | 276 ha | 1.7× | 169 ha | ~62.4 k | pairs of ~6 kW lamps, small magnetrons |
-| Pipes, 20 m | 54% | 62% | 1.40 | 210 MW | 255 ha | 1.8× | 169 ha | ~115 k | pairs of ~3 kW lamps |
-| Pipes at 600 W/m | 55% | 62% | 1.40 | 210 MW | 255 ha | 1.8× | 169 ha | ~28.7 k | pairs of ~12 kW lamps per 40 m pipe |
+| Pipes, 40 m at 300 W/m (as first proposed) | 50% | 57% | 1.40 | 228 MW | 276 ha | 1.7× | 169 ha | ~62.5 k | pairs of ~6 kW lamps, small magnetrons |
+| Pipes, 20 m | 54% | 62% | 1.40 | 211 MW | 255 ha | 1.8× | 169 ha | ~115 k | pairs of ~3 kW lamps |
+| Pipes at 600 W/m | 55% | 62% | 1.40 | 210 MW | 255 ha | 1.8× | 169 ha | ~28.6 k | pairs of ~12 kW lamps per 40 m pipe |
 | Pipes, 20 m at 600 W/m | 59% | 66% | 1.40 | 197 MW | 239 ha | 1.9× | 137 ha | ~53.6 k | pairs of ~6 kW lamps per 20 m pipe |
-| Pipes, 20 m at 600 W/m, 915 MHz plants | 59% | 66% | 1.57 | 175 MW | 213 ha | 2.2× | 110 ha | ~47.5 k | the same, fed by sector plants through waveguides |
+| Pipes, 20 m at 600 W/m, 915 MHz plants | 59% | 66% | 1.57 | 175 MW | 213 ha | 2.2× | 110 ha | ~47.4 k | the same, fed by sector plants through waveguides |
 | ~1 kW lamps in the light box | 81% | 89% | 1.40 | 146 MW | 177 ha | 2.6× | 78.2 ha | ~236 k | rows of lamps 1.5 m apart in reflectors, small magnetrons, a 1.5 m deep diffuser |
 | ~1 kW lamps in the light box, 915 MHz plants | 81% | 89% | 1.57 | 130 MW | 158 ha | 2.9× | 78.2 ha | ~209 k | the same, fed by sector plants through waveguides |
-| LEDs, white throughout | 86% | 96% | 3.00 | 65.8 MW | 80.6 ha | 5.7× | 39.1 ha | — | strips at 200 W/m, 3 µmol/J |
-| LEDs, white in the valley, blue + red in the farm | 86% | 96% | 3.00 | 59.2 MW | 71.0 ha | 5.8× | 39.1 ha | — | the farm at 3.6 µmol/J (magenta light, no phosphor) |
+| LEDs, white throughout | 86% | 96% | 3.00 | 65.7 MW | 80.6 ha | 5.7× | 39.1 ha | — | strips at 200 W/m, 3 µmol/J |
+| LEDs, white in the valley, blue + red in the farm (adopted) | 86% | 96% | 3.00 / 3.60 | 59.1 MW | 70.9 ha | 5.8× | 39.1 ha | — | the farm at 3.6 µmol/J (magenta light, no phosphor) |
 
-**Lamps straight in the light box beat every pipe**: ~36% less electricity than the pipes as now, and a little less than the sizing's assumed ~75% / ~85% (they deliver more: no coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants ~11% of the power either way (their gain in efficacy, less the waveguides'). LEDs need well under half again (below).
+**Lamps straight in the light box beat every pipe**: ~36% less electricity than the pipes as first proposed, and more than that design's assumed ~75% / ~85% (they deliver more: no coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants ~11% of the power either way (their gain in efficacy, less the waveguides'). LEDs, adopted, need well under half again (below); the light box and the tiers are as traced for the pipes, with strips in place of pipes.
 
 The price of lamps in the box: ~3.8× as many bulbs as the pipes' lamps, spread through the ceiling's service space and above each tier, with their heat shed there rather than at the hub (both reachable by the coolant loops, notes §13), and each one maintained from above the ceiling. Fed by sector plants, the sources stay few (~100 kW each) and only the electrodeless bulbs are many; with small magnetrons every bulb has one, ~10,000–20,000 hours each.
 
@@ -153,14 +153,14 @@ The price of lamps in the box: ~3.8× as many bulbs as the pipes' lamps, spread 
 
 ## LEDs from asteroid material
 
-White LEDs in the valley (blue InGaN dies under YAG:Ce phosphor), blue + red over the crops (InGaN and 660 nm AlGaInP, 80% of the farm's power on red), at 3.00 and 3.60 µmol/J (`optics_model/leds.py`). Installed for the noon peak and the tiers while lit: 42.9 MW in the valley, 49.5 MW in the farm; at 0.30 W/mm² that is 176 m² of blue die and 132 m² of red, ~440 m² of epitaxial wafer at 70% yield (white throughout: 487 m²). Each lasts ~11.4 years in the valley, ~8.56 in the farm: ~10% replaced a year.
+White LEDs in the valley (blue InGaN dies under YAG:Ce phosphor), blue + red over the crops (InGaN and 660 nm AlGaInP, 80% of the farm's power on red), at 3.00 and 3.60 µmol/J (`optics_model/leds.py`). Installed for the noon peak and the tiers while lit: 42.8 MW in the valley, 49.5 MW in the farm; at 0.30 W/mm² that is 176 m² of blue die and 132 m² of red, ~439 m² of epitaxial wafer at 70% yield (white throughout: 486 m²). Each lasts ~11.4 years in the valley, ~8.56 in the farm: ~10% replaced a year.
 
 | Element (kg per torus) | White throughout | White + blue/red | In the source bodies | Share of it needed (white + blue/red) |
 |---|---|---|---|---|
 | Ga | 50 kg | 200 kg | ~231 t | 0.08% |
 | In | 0.17 kg | 3.3 kg | ~0.459 t | 0.73% |
 | As | — | 180 kg | ~61.1 t | 0.30% |
-| Y | 130 kg | 57 kg | ~73.2 t | 0.08% |
+| Y | 130 kg | 56 kg | ~73.2 t | 0.08% |
 | Ce | 4.3 kg | 1.8 kg | ~32.6 t | 0.01% |
 | Al | 740 kg | 370 kg | plentiful | — |
 | N | 10 kg | 5.2 kg | plentiful | — |
@@ -180,6 +180,6 @@ Gallium is fed at 25% utilization (the rest leaves in the exhaust, recoverable);
 | Packaging | lead frames or chip-on-board, encapsulant, heat spreaders | copper or steel boards, phosphor in glass (local glass) instead of silicone, copper bond wire | ✓ |
 | Drivers | constant-current converters, ~100 kW–1 MW per sector feeding long series strings | power transistors and diodes from the semiconductor works' silicon (or GaN from the LED reactors), film capacitors, ferrite and copper magnetics, analog or simple bipolar control | ✓ (a 1980s power-device process) |
 
-**LEDs halve the semiconductor works' silicon.** The array is made at the host (notes §2, §13), by the works that can also make the LEDs and their drivers. Blue + red LEDs need {num(r['power']['array_site'] / 1e4)} ha of array against 158 ha for the proposed sulfur lamps in the box: ~349 t less wafer silicon per torus at 0.400 kg/m². Until a new site's works runs, importing the finished dies and phosphor instead costs ~339 kg per torus (dies thinned to 150 µm), and ~10% of that a year: ~1,030× less than the silicon saved, and still ~252× with 30 years of replacements. Making the dies locally is a small fab: one MOCVD reactor growing ~0.1 m² every ~5 h makes ~150 m² a year, so a torus's ~440 m² takes a few reactor-years, and micron-scale LEDs need none of a chip fab's steppers.
+**LEDs halve the semiconductor works' silicon.** The array is made at the host (notes §2, §13), by the works that can also make the LEDs and their drivers. Blue + red LEDs need 70.9 ha of array against 158 ha for sulfur lamps in the box (the fallback): ~349 t less wafer silicon per torus at 0.400 kg/m². Until a new site's works runs, importing the finished dies and phosphor instead costs ~338 kg per torus (dies thinned to 150 µm), and ~10% of that a year: ~1,030× less than the silicon saved, and still ~252× with 30 years of replacements. Making the dies locally is a small fab: one MOCVD reactor growing ~0.1 m² every ~5 h makes ~150 m² a year, so a torus's ~439 m² takes a few reactor-years, and micron-scale LEDs need none of a chip fab's steppers.
 
 Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a row (traced as line sources), and the waveguides' layout.

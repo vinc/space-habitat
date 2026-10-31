@@ -201,15 +201,21 @@ class TestFarmSection(unittest.TestCase):
 
     def test_short_farm_radiators_leave_no_margin(self):
         # Within the declared range, the farm radiators' reach decides whether the stack can be cooled:
-        # at 0.6 r the six-stack with three tiers is at the edge.
+        # at 0.6 r the six-stack with three tiers was at the edge with sulfur lamps; with LEDs it keeps 1.5×.
         d = Design(radius_m=900, n_tori=6, tiers_lit=3)
         out = {}
-        for frac in (0.6, 1.4):
-            p = params(load(), farm_radiator_outer_frac=frac)
-            r = evaluate(p, d)
-            out[frac] = cavity.check_assembled(p, d, r["geometry"], r["heat"], n_rays=4000)
-        self.assertLess(out[0.6]["margin"], 1.2)
-        self.assertGreater(out[1.4]["margin"], 2 * out[0.6]["margin"])
+        for lamps, (lamp, farm) in {"sulfur": (1.4, 0), "led": (None, None)}.items():
+            for frac in (0.6, 1.4):
+                over = {"farm_radiator_outer_frac": frac}
+                if lamp:
+                    over.update(lamp_efficacy_umol_j=lamp, farm_lamp_efficacy_umol_j=farm, ceiling_delivery=0.75,
+                                farm_delivery=0.85)
+                p = params(load(), **over)
+                r = evaluate(p, d)
+                out[lamps, frac] = cavity.check_assembled(p, d, r["geometry"], r["heat"], n_rays=4000)
+        self.assertLess(out["sulfur", 0.6]["margin"], 1.2)
+        self.assertGreater(out["sulfur", 1.4]["margin"], 2 * out["sulfur", 0.6]["margin"])
+        self.assertGreater(out["led", 0.6]["margin"], 1.5)
 
 
 class TestStatsJson(unittest.TestCase):
