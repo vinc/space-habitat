@@ -129,6 +129,20 @@ The stack's margin with one gap unlinked: a torus just closed next to the stack,
 | 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
 | 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 50 of 974 (5.1%) |
 
+**While a torus is hung** at the end of a spinning stack (the stack keeps its spin), that torus a partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion to its chords) and by the temporary radial lines to its arcs' single-laced anchors (`structure_model/sequence.py`), and linked to its neighbour by the lattice's bays alongside its arcs (in proportion), or not. Lowest forward whirl over the spin:
+
+| Torus | Tori | Share of the ring hung | Unlinked, no radial lines | Unlinked, radial lines | Linked as hung, no radial lines | Linked as hung, radial lines |
+|---|---|---|---|---|---|---|
+| 900 m | 2 | 25% | 0.568 | 1.31 | 1.23 | 1.99 |
+| 900 m | 2 | 50% | 0.533 | 1.10 | 1.48 | 1.99 |
+| 900 m | 2 | 95% | 0.521 | 0.943 | 1.77 | 1.99 |
+| 900 m | 6 | 25% | 0.707 | 1.10 | 1.32 | 1.88 |
+| 900 m | 6 | 50% | 0.651 | 0.954 | 1.43 | 1.87 |
+| 900 m | 6 | 95% | 0.590 | 0.803 | 1.57 | 1.87 |
+| 1.6 km | 6 | 25% | 0.639 | 0.944 | 1.04 | 1.83 |
+| 1.6 km | 6 | 50% | 0.589 | 0.846 | 1.12 | 1.84 |
+| 1.6 km | 6 | 95% | 0.536 | 0.731 | 1.24 | 1.84 |
+
 ## Fittings and tunnels
 
 Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane: at the tube's side, where the gap is, the jacket's depth runs along the axis), as wide as the jacket is deep, loaded in its own plane both tangentially and axially, its weak direction radial: sized with the lattice for stiffness (the struts take half the bay's compliance, the two fittings the rest) and strength (safety factor 2), and in series with the struts in every result above. A post bending as a cantilever through the jacket would be far too soft: sized for strength alone, its compliance would cut a 900 m six-stack's margin below 1. A tunnel (4.00 m radius) crosses each gap on an expansion joint taking the rims' relative motions (the imposed motions above and the lattice's own give under the largest load), holding its pressure thrust inside itself (pressure-balanced), with at most 1% of the lattice's sideways stiffness (more would make the stiffness differ by direction). Without a joint, a tube fixed at both rims (3 cm wall) has ~7–20% of the lattice's stiffness, at one angle, and is bent by a rim's growth.
@@ -153,4 +167,4 @@ Load cycles over 100 years (`dynamics_model/fatigue.py`): rim trains (one cycle 
 | 1.6 km | 6 | hub wall | 1.8 | 29 | 0 |
 | 1.6 km | 6 | stabilising lines | 8.7 | 65 | 0 |
 
-Not modelled: the elevator, pipe and power shafts, the lattice's erection on a partial ring (before a torus closes), the fittings' local details in the jacket, the bellows' own design.
+Not modelled: the elevator, pipe and power shafts, the fittings' local details in the jacket, the bellows' own design.
