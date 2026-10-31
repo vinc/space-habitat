@@ -6,6 +6,7 @@ The water per torus by use and where it comes from, the transfers and propulsion
 python -m logistics_model                         # full report (reports/logistics.md), ~2 min
 python -m logistics_model.ephemeris --fetch       # refresh JPL Horizons' ephemerides and SBDB elements (network)
 python -m logistics_model.catalogue --fetch       # refresh the C-type candidates and their Δv (network, ~10 min)
+python -m logistics_model.networks --report       # saved host–supplier network study (offline)
 python -m logistics_model --set lake_floor_frac=0.05
 ```
 
@@ -16,6 +17,7 @@ python -m logistics_model --set lake_floor_frac=0.05
 | `ephemeris.py` | JPL Horizons' state vectors (2027–2077, every 10 days) and the Small-Body Database's elements: fetched, stored in `data/`, interpolated (cubic Hermite) |
 | `windows.py` | dated launch windows: the best flight for each departure date, its dips refined, how often usable ones recur |
 | `catalogue.py` | C-type candidates from the Small-Body Database (C complex or dark), their phase-free Δv to the hosts, stored in `data/` |
+| `networks.py`, `network_report.py` | compare silicate hosts with several suppliers, dated opportunities, sunlight and resource uncertainty; [study and reproduction commands](../reports/asteroid-networks.md), [evidence audit](../reports/asteroid-evidence.md) |
 | `propulsion.py` | energy and propellant per kg delivered by engine: electric thrusters, electrothermal on water, an energy-optimal mass driver on the C-type's baked residue |
 | `flows.py` | what a child torus is made of by source, the rates a parent's lines sustain for a given generation, the cluster's growth until its C-type runs out |
 | `__main__.py` | the report |
@@ -33,7 +35,7 @@ python -m logistics_model --set lake_floor_frac=0.05
 
 - **Water per torus** ~0.066 / 0.22 / 0.56 Mt at 900 m / 1.6 km / 2.5 km, about 60% soil moisture and a fifth ballast; the C-type sized by nitrogen holds ~5–12× that.
 - **The notes' best-phase Δv reproduced** within ~0.1 km/s; **dated, on Horizons' ephemerides**, the notes' values hold within ~0.1 km/s (Ryugu → Eros 4.66 km/s in 2031, best 4.52 in 2061); usable windows on average every ~2–7 years but clustered, with gaps of up to ~20 years (Ryugu → Eros, 2036–2056): ~60 kt of cargo per window on average per 900 m torus at 10-year generations, ~210 kt to stock through the longest gap.
-- **Better C-type partners (proposed: spectra first):** 1999 XX262 for Eros (~3.6 km/s phase-free, ~4.0 dated, ~1.5 km, usable windows on average every ~2.3 years, longest gap ~16; −16% shipping for a 1.6 km six-stack), 2001 WT1 for Itokawa and Torifune (~3.9 / ~3.0 km/s dated, against Ryugu's 6.3 / 7.7). 1999 XX262 is already a B/Ch type in published spectra (hydrated carbonaceous, like Bennu); 2001 WT1 has only near-infrared colours and needs a spectrum.
+- **Better C-type partners (proposed: spectra first):** 1999 XX262 for Eros (~3.6 km/s phase-free, ~4.0 dated, ~1.5 km, usable windows on average every ~2.3 years, longest gap ~16; −16% shipping for a 1.6 km six-stack), 2001 WT1 for Itokawa and Torifune (~3.9 / ~3.0 km/s dated, against Ryugu's 6.3 / 7.7). 1999 XX262 has B spectra and a tentative Ch feature in a reanalysis of the same 2014 spectrum, not independent hydration confirmation; its diameter has substantial thermal-model uncertainty. Neither candidate has a measured recoverable-nitrogen inventory. See the [evidence audit](../reports/asteroid-evidence.md).
 - **Mass-driver freighters (proposed):** at ~2.9 km/s on the C-type's baked residue, ~3.7× less electricity than electric thrusters at 30 km/s, and ~8× the thrust per watt; the lead holds down to ~13% efficiency.
 - **Ship water, not hydrogen:** shipping only the hydrogen (as methane, ~48 instead of ~106 kt per 900 m torus) needs the oxygen from the silicates; charged for the electrolysis and furnace heat (~6.4 PJ), it only just beats water by electric thrusters (~12.5 against ~13.5 PJ) and loses by mass driver (~8 against ~3.6 PJ). It pays only on a host that electrolyses its silicates for iron anyway. Methane stays useful as a storable fuel.
 - **The generation's energy floor** at 1 GW per stack, water by mass driver: ~1.5 → ~0.9 years for a 900 m pair, ~19 → ~13 years for a 1.6 km six-stack.
