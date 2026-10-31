@@ -124,3 +124,23 @@ def imposed(p, geo, nets, hub_dt=20.0, rim_dt=4.0, strut_dt=100.0):
         "radial": radial, "hoop_strain": radial / radius, "hoop_stress": E * radial / radius,
         "closing": closing, "closing_force": k_axial_nets * closing,
     }
+
+
+def converged(p, d, k_design, tie_frac=0.0, iterations=20):
+    """The lattice sized for k_design and for the link force its own stack takes under the largest
+    imbalance (the ballast tanks' whole capacity untrimmed), iterated until the struts agree: sizing
+    by buckling stiffens the lattice, which changes the force. Returns (lattice, stack, info,
+    imbalance) on the finished lattice."""
+    from . import disturbances as ds
+    s, info = st.build(p, d, rim_link=k_design, tie_frac=tie_frac)
+    geo, mass_e = info["geometry"], p.ballast_frac * info["mass"]["rim"]
+    force, area = ds.imbalance(s, geo, mass_e)["link"], None
+    for _ in range(iterations):
+        lat = lattice(geo, k_design, p.steel_density, force=force)
+        s, info = st.build(p, d, rim_link=lat["k_lat"], tie_frac=tie_frac, link_tilt=lat["tilt"])
+        unbalanced = ds.imbalance(s, geo, mass_e)
+        if area is not None and abs(lat["area"] / area - 1) < 1e-4:
+            break
+        area, force = lat["area"], unbalanced["link"]
+    lat = lattice(geo, k_design, p.steel_density, force=unbalanced["link"])
+    return lat, s, info, unbalanced

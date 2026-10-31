@@ -162,6 +162,17 @@ class TestLinks(unittest.TestCase):
         self.assertGreater(ratio, 0.97 * rigid)
         self.assertGreater(ratio, 1.2)
 
+    def test_lattice_sized_on_its_own_stack(self):
+        # The struts are sized for the force the finished lattice's stack takes: resizing for it
+        # changes nothing.
+        d = Design(radius_m=900, n_tori=2)
+        k, _ = lk.design_stiffness(self.p, d, tie_frac=1e-4)
+        lat, s, info, unbalanced = lk.converged(self.p, d, k, tie_frac=1e-4)
+        self.assertAlmostEqual(s.links[0][2], lat["k_lat"], delta=1e-3 * lat["k_lat"])
+        again = ds.imbalance(s, info["geometry"], self.p.ballast_frac * info["mass"]["rim"])
+        resized = lk.lattice(info["geometry"], k, self.p.steel_density, force=again["link"])
+        self.assertAlmostEqual(resized["area"] / lat["area"], 1, delta=1e-3)
+
     def test_struts_hold_the_largest_force(self):
         force = 5e7
         lat = lk.lattice(self.geo, 1e9, 7900, force=force)
@@ -205,6 +216,13 @@ class TestDisturbances(unittest.TestCase):
         arm = ds.centre_of_mass(self.s) - self.s.hub_nodes[0]
         self.assertAlmostEqual(res["axis_turn"], ds.SHIP_MASS * ds.SHIP_MISS * arm / h)
         self.assertIsNotNone(res["decay_hours"])
+
+    def test_compensated_bearing_leaves_no_torque_on_the_stack(self):
+        res = ds.bearing(self.s, self.info["array_mass"], 1e6, friction=1e4)
+        self.assertEqual(res["net_torque"], 0.0)
+        self.assertAlmostEqual(res["power"], 1e4 * self.s.omega)
+        # Uncompensated, the stack gives up only the array's share of the spin: tiny.
+        self.assertLess(res["spin_share"], 1e-3)
 
     def test_sunlight_sums_to_zero_over_an_eccentric_orbit(self):
         # Integrate (a / d)^2 times the Sun's direction over time on a Kepler orbit: it closes, and

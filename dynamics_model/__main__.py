@@ -155,14 +155,17 @@ def report(p):
         f"{num(ds.ARRAY_PUSH)} its absorbed value, the mast {num(ds.MAST)} m beyond the stack) and on the rims "
         "edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun "
         "and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the "
-        "axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing: "
-        "friction drags the spin down at Q/H; the budget is the torque that costs 1% of the spin a century, "
-        "and the drive's power at it.",
+        "axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing "
+        f"(friction Q = {num(ds.BEARING_FRICTION / 1e3)} kN·m, a guess): its friction and the drive holding the "
+        "array facing the Sun both act between array and hub, and the drive must cancel the friction on the "
+        "array, so its reaction cancels the friction on the hub. Compensated, the stack keeps its spin and the "
+        "friction only costs the drive's power, Qω, as heat. Uncompensated (drive off, or the bearing seized), "
+        "friction drags the array up to the spin, and the stack gives up the array's share of the spin once.",
         table(["Torus", "Tori", "Sunlight torque (N·m)", "Axis drift (°/yr, if it didn't turn)",
-               "Yearly wobble at 1 AU (°)", "On Eros's orbit (°)", "Bearing friction for 1%/century (kN·m)",
-               "Drive power at it (kW)"], slow_rows),
+               "Yearly wobble at 1 AU (°)", "On Eros's orbit (°)", "Drive power against the friction (kW)",
+               "Drive off: array at the spin in (h)", "Spin given up then"], slow_rows),
         "**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack "
-        "destabilises it; it only sets how fast a disturbance dies out (×1/e in hours at 1%, ten times longer "
+        "destabilises it; it only sets how fast a disturbance dies out (×1/e in hours to days at 1%, ten times longer "
         "at 0.1%). Nothing has to be added for it.",
         "Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional "
         "motion, the ties' and lattice's joints and how they are built into the construction sequence, a tunnel "
@@ -183,9 +186,9 @@ def links_and_disturbances(p):
         label = [size_label(r), str(n)]
         tilt = lk.compare_tilt(p, d, k, tie_frac=TIES)
         link_rows.append(label + [f"{k:.1e}", num(tilt["default"], 3), num(tilt["none"], 3), num(tilt["lattice"], 3)])
-        unbalanced = ds.imbalance(s, geo, p.ballast_frac * mass["rim"])
-        lat = lk.lattice(geo, k, p.steel_density, force=unbalanced["link"])
-        s_lat, _ = st.build(p, d, rim_link=lat["k_lat"], tie_frac=TIES, link_tilt=lat["tilt"])
+        # The finished lattice: struts sized for the force its own stack takes, iterated to agree; the
+        # disturbances below run on it.
+        lat, s_lat, info_lat, unbalanced = lk.converged(p, d, k, tie_frac=TIES)
         bare = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"])[0].forward_ratio()
         ties = None if bare >= TARGET else st.required(p, d, "tie_frac", target=TARGET, low=1e-7, high=0.1,
                                                          rim_link=lat["k_lat"], link_tilt=lat["tilt"])
@@ -200,8 +203,8 @@ def links_and_disturbances(p):
                                  f"{num(im['axial_mismatch'] * 100, 2)} cm, {num(im['axial_force'] / 1e6, 2)} MN",
                                  f"{num(im['radial'] * 100, 2)} cm, hoop {num(im['hoop_stress'] / 1e6, 2)} MPa",
                                  f"gap closes {num(im['closing'] * 100, 2)} cm, {num(im['closing_force'] / 1e6, 2)} MN"])
-        train = ds.rim_train(s, geo, speed=20.0)
-        dock = ds.docking(s)
+        train = ds.rim_train(s_lat, geo, speed=20.0)
+        dock = ds.docking(s_lat)
         dist_rows.append(label + [
             f"{num(train['link'] / 1e6, 2)} MN", f"{num(train['torus'] * 1000, 2)} mm",
             f"{num(unbalanced['link'] / 1e6, 2)} MN", f"{num(unbalanced['torus'] * 100, 2)} cm",
@@ -209,11 +212,13 @@ def links_and_disturbances(p):
             f"{num(dock['link'] / 1e6, 2)} MN", f"{num(math.degrees(dock['axis_turn']), 2)}°",
             f"{num(dock['decay_hours'], 2)} h" if dock["decay_hours"] else "—"])
         array = res["power"]["array_site"] * n
-        sun, eros = ds.sunlight(s, geo, array, n), ds.sunlight(s, geo, array, n, a_au=1.458, e=0.2227)
-        brg = ds.bearing(s)
+        sun = ds.sunlight(s_lat, geo, array, n)
+        eros = ds.sunlight(s_lat, geo, array, n, a_au=1.458, e=0.2227)
+        brg = ds.bearing(s_lat, info_lat["array_mass"], array)
         slow_rows.append(label + [num(sun["torque"], 2), num(math.degrees(sun["rate"] * ds.YEAR), 2),
                                   num(math.degrees(sun["wobble"]), 2), num(math.degrees(eros["wobble"]), 2),
-                                  num(brg["torque"] / 1e3, 2), num(brg["power"] / 1e3, 2)])
+                                  num(brg["power"] / 1e3, 2), num(brg["spin_up_hours"], 2),
+                                  f"{brg['spin_share']:.1e}"])
     return link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows
 
 

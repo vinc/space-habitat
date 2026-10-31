@@ -18,9 +18,13 @@ links and nets, and how they die out.
   1 / d^2 Kepler's second law makes it sum to zero over an orbit, eccentric or not: the axis
   only wobbles, by up to 2 tau_a a^2 / (h H) (tau_a at the orbit's semi-major axis a, h its
   specific angular momentum).
-- The despun array's bearing: its friction torque Q drags the stack's spin down at Q / H; the
-  array's drive spends Q w to hold it facing the Sun. Given as a budget (the torque that costs 1%
-  of the spin a century), the friction being unknown.
+- The despun array's bearing: its friction Q acts between array and hub (on the hub against the
+  spin, on the array with it). The drive holding the array facing the Sun acts between the same
+  two bodies and must cancel Q on the array, so its reaction cancels Q on the hub: compensated, no
+  torque is left on the stack, which keeps its spin; the friction only costs the drive's power,
+  Q w, as heat. Uncompensated (the drive off, or the bearing seized), friction drags the array up
+  to the stack's spin in J_a w / Q, the stack giving up the array's share, J_a / (J + J_a), once:
+  the array's own inertia about the axis is all there is to exchange.
 
 Damping: with every forward mode above the spin, no amount of dissipation turning with the stack
 destabilises it; dissipation only sets how fast a disturbance dies out (the damped solve's decay
@@ -46,6 +50,7 @@ TRAIN_SPEEDS = (5.0, 10.0, 20.0, 44.0)
 SHIP_MASS = 1e7                # kg, a 10 kt freighter (guess)
 SHIP_MISS = 0.1                # m/s, its lateral miss at contact (guess; spacecraft dock at ~0.03-0.1)
 MAST = 100.0                   # m, the array's mast beyond the stack's end (guess)
+BEARING_FRICTION = 1e4         # N m, the despun array's bearing friction (guess; "almost unloaded")
 
 
 def angular_momentum(s):
@@ -101,8 +106,10 @@ def docking(s, ship=SHIP_MASS, miss=SHIP_MISS, damping=0.01, spins=40, samples=1
     peaks = {key: max(loads(s, qi)[key] for qi in q) for key in ("link", "net", "torus")}
     h, _ = angular_momentum(s)
     arm = centre_of_mass(s) - s.hub_nodes[0]
-    _, growth = s.modes(damping=damping)
-    decaying = growth[growth < -st_floor(s)]
+    freq, growth = s.modes(damping=damping)
+    # The vibrations only: the rigid tilt (lambda ~ 0) is the axis's lasting turn, not a nutation.
+    vibrating = np.abs(freq) > 1e-3 * s.omega
+    decaying = growth[vibrating & (growth < -st_floor(s))]
     slowest = float(-decaying.max()) if len(decaying) else None
     return {"impulse": impulse, "axis_turn": impulse * arm / h, **peaks,
             "decay_hours": (1 / slowest / 3600) if slowest else None}
@@ -142,9 +149,17 @@ def sunlight(s, geo, array_area, n_tori, a_au=1.0, e=0.0):
             "rim_force": p * RIM_PUSH * rim_area, "arm_array": z_array - zc, "arm_rims": rim_z - zc}
 
 
-def bearing(s, spin_loss=0.01, span=CENTURY):
-    """Friction budget for the despun array's bearing: the torque that costs `spin_loss` of the spin
-    over `span`, and the drive's power at that torque."""
-    h, _ = angular_momentum(s)
-    torque = spin_loss * h / span
-    return {"torque": torque, "power": torque * s.omega, "h": h}
+def array_polar(array_mass, array_area):
+    """The despun array's inertia about the spin axis: a flat square facing the Sun, the axis in
+    its plane through its middle (m s^2 / 12)."""
+    return array_mass * array_area / 12
+
+
+def bearing(s, array_mass, array_area, friction=BEARING_FRICTION):
+    """The despun array's bearing and drive (friction Q, N m): compensated by the drive, no torque on
+    the stack and a power Q w; uncompensated, the time for friction to drag the array up to the
+    spin, and the share of the stack's spin it then takes, once."""
+    _, polar = angular_momentum(s)
+    j_a = array_polar(array_mass, array_area)
+    return {"friction": friction, "net_torque": 0.0, "power": friction * s.omega,
+            "spin_up_hours": j_a * s.omega / friction / 3600, "spin_share": j_a / (polar + j_a), "j_array": j_a}

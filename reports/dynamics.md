@@ -62,10 +62,10 @@ A ring of X-braced bays across each gap at the envelopes' closest approach (r �
 
 | Torus | Tori | Bays | Strut (cm², diameter) | Set by | Mass per gap (t) | Share of a torus | Gap blocked | Forward whirl / spin | Ties needed for 1.2 |
 |---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 548 | 47 (17 cm) | buckling | 580 | 0.005% | 4.9% | 1.81 | none |
-| 900 m | 6 | 548 | 59 (19 cm) | buckling | 720 | 0.006% | 5.5% | 1.61 | none |
-| 1.6 km | 2 | 974 | 63 (20 cm) | buckling | 1,400 | 0.003% | 5.7% | 1.57 | none |
-| 1.6 km | 6 | 974 | 80 (23 cm) | buckling | 1,700 | 0.004% | 6.4% | 1.28 | 0.001% (550 t) |
+| 900 m | 2 | 548 | 45 (17 cm) | buckling | 550 | 0.004% | 4.8% | 1.81 | none |
+| 900 m | 6 | 548 | 58 (19 cm) | buckling | 710 | 0.006% | 5.5% | 1.61 | none |
+| 1.6 km | 2 | 974 | 60 (20 cm) | buckling | 1,300 | 0.003% | 5.5% | 1.57 | none |
+| 1.6 km | 6 | 974 | 77 (22 cm) | buckling | 1,700 | 0.004% | 6.3% | 1.28 | 0.001% (550 t) |
 
 **Imposed motions** between neighbours. Along the axis the lattice is far stiffer than the nets (`structure_model/hub.py`, inclined lines included), so the tori follow the lattice and the nets take the difference.
 
@@ -80,20 +80,20 @@ The stack with the lattice and ties above (`dynamics_model/disturbances.py`). Ri
 
 | Torus | Tori | Train at 20 m/s: link force | Train: torus moves | Imbalance: link force | Imbalance: torus moves | Imbalance: dock moves | Docking: link force (peak) | Docking: axis turned | Docking: decay (×1/e) |
 |---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 0.15 MN | 1.7 mm | 34 MN | 23 cm | 15 cm | 0.11 MN | 0.0000022° | 5.3 h |
-| 900 m | 6 | 0.24 MN | 0.61 mm | 53 MN | 8.3 cm | 3.1 cm | 0.23 MN | 0.0000022° | 1.7 h |
-| 1.6 km | 2 | 0.18 MN | 0.95 mm | 110 MN | 39 cm | 20 cm | 0.076 MN | 0.00000045° | 21 h |
-| 1.6 km | 6 | 0.29 MN | 0.34 mm | 170 MN | 14 cm | 1.4 cm | 0.15 MN | 0.00000044° | 5.9 h |
+| 900 m | 2 | 0.14 MN | 1.6 mm | 31 MN | 20 cm | 18 cm | 0.18 MN | 0.0000022° | 6.2 h |
+| 900 m | 6 | 0.24 MN | 0.58 mm | 52 MN | 7.8 cm | 4.1 cm | 0.46 MN | 0.0000022° | 2.1 h |
+| 1.6 km | 2 | 0.17 MN | 0.87 mm | 97 MN | 34 cm | 27 cm | 0.077 MN | 0.00000045° | 52 h |
+| 1.6 km | 6 | 0.28 MN | 0.31 mm | 160 MN | 12 cm | 3.8 cm | 0.65 MN | 0.00000044° | 14 h |
 
-**Slow torques.** Sunlight on the despun array (pushed ×1.30 its absorbed value, the mast 100 m beyond the stack) and on the rims edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing: friction drags the spin down at Q/H; the budget is the torque that costs 1% of the spin a century, and the drive's power at it.
+**Slow torques.** Sunlight on the despun array (pushed ×1.30 its absorbed value, the mast 100 m beyond the stack) and on the rims edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing (friction Q = 10.0 kN·m, a guess): its friction and the drive holding the array facing the Sun both act between array and hub, and the drive must cancel the friction on the array, so its reaction cancels the friction on the hub. Compensated, the stack keeps its spin and the friction only costs the drive's power, Qω, as heat. Uncompensated (drive off, or the bearing seized), friction drags the array up to the spin, and the stack gives up the array's share of the spin once.
 
-| Torus | Tori | Sunlight torque (N·m) | Axis drift (°/yr, if it didn't turn) | Yearly wobble at 1 AU (°) | On Eros's orbit (°) | Bearing friction for 1%/century (kN·m) | Drive power at it (kW) |
-|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 620 | 0.00052 | 0.00016 | 0.00014 | 6.9 | 0.72 |
-| 900 m | 6 | 4,000 | 0.0011 | 0.00036 | 0.00030 | 21 | 2.2 |
-| 1.6 km | 2 | 2,600 | 0.00029 | 0.000091 | 0.000078 | 53 | 4.1 |
-| 1.6 km | 6 | 19,000 | 0.00069 | 0.00022 | 0.00019 | 160 | 12 |
+| Torus | Tori | Sunlight torque (N·m) | Axis drift (°/yr, if it didn't turn) | Yearly wobble at 1 AU (°) | On Eros's orbit (°) | Drive power against the friction (kW) | Drive off: array at the spin in (h) | Spin given up then |
+|---|---|---|---|---|---|---|---|---|
+| 900 m | 2 | 620 | 0.00052 | 0.00016 | 0.00014 | 1.0 | 53 | 8.8e-07 |
+| 900 m | 6 | 4,000 | 0.0011 | 0.00036 | 0.00030 | 1.0 | 480 | 2.7e-06 |
+| 1.6 km | 2 | 2,600 | 0.00029 | 0.000091 | 0.000078 | 0.79 | 400 | 8.6e-07 |
+| 1.6 km | 6 | 19,000 | 0.00069 | 0.00022 | 0.00019 | 0.79 | 3,600 | 2.6e-06 |
 
-**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack destabilises it; it only sets how fast a disturbance dies out (×1/e in hours at 1%, ten times longer at 0.1%). Nothing has to be added for it.
+**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack destabilises it; it only sets how fast a disturbance dies out (×1/e in hours to days at 1%, ten times longer at 0.1%). Nothing has to be added for it.
 
 Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the ties' and lattice's joints and how they are built into the construction sequence, a tunnel (one stiff link at one angle makes the stiffness differ by direction; it stays clear of trouble while the lattice's even stiffness dominates), fatigue.
