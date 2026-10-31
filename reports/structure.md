@@ -108,14 +108,16 @@ As drawn: the joints open at ~0.32 of the spin; every chord's tension on the way
 
 **The joints need a spring along the rim.** With joints that only slide, the segments' positions along the rim are barely held: the chords are nearly diametral, so segments sliding in odd harmonics hardly stretch them, and a 2% scatter in the rim's mass slides segments by up to ~1–2 m at a fifth of the spin (and the solution doesn't converge). A spring of ~10⁸ N/m in each joint holds them to the gaps above for a few MPa along the hull; ~10⁷ N/m is too soft to settle, ~10⁹ N/m puts ~30 MPa in the hull. The joints travel ~0.15–0.4 m each by full spin (and ~2 cm more each as the chords creep, ~0.5 m per chord at 900 m: the wire, above).
 
-### The hub at rest
+### The hub's stabilising lines, from rest to full spin
 
-No spin load: the chords hold the hub sideways by their pretension alone (2T/L at the share shown), and the stabilising lines, nearly rigid next to them, keep their installed pull-in, so their preload falls in proportion. Load: a 10 kt ship docking at 0.1 m/s over 10 s.
+The lines (section on the hub, below) as fixed-length, tension-only lines from the hub's surface to the chords' tangent points, in series with chords whose tension and bow grow with the spin. A chord bows away from the axis by its own spin load over its tension: nothing at rest, the finished bow from where the joints open (its tension grows from its at-rest share, linearly while the joints bear, then with the spin). A line cut to a fixed length is stretched by the chord's free movement outward less what its pull draws the chord in: P = k_s (bow + d0), k_s the line and chord in series at the current tension and spin, d0 the pull-in it is installed with at rest, enough to stay taut (1.5× the swing) under a 10 kt ship docking at 0.1 m/s over 10 s. **So a fixed line holds back the whole bow,** and the lines sized for the finished net (its service preload, a few kN) would be overloaded; sized for it, with their stiffness and pull iterated. Window: the gap around the hub at rest / at full spin with the chords drawn in (finished sizing's, bowed). Margin: the hub's lateral stiffness over its divergence, the least through the spin-up (finished). The lines' pull loads the hub's shell outward all round each net's plane: a ring frame there, at the plate stress.
 
-| Torus | Chords' tension at rest | Lateral stiffness at rest (MN/m) | Finished (MN/m) | Lines' preload at rest (N) | Docking offset (cm) | Window gap (m) | Hub's period (s) |
-|---|---|---|---|---|---|---|---|
-| 900 m | 2.6% | 1.8 | 64.4 | 140 | 5.46 | 8.41 | 79.2 |
-| 1.6 km | 2.0% | 2.4 | 113 | 311 | 4.01 | 18.2 | 154 |
+| Torus | Chords at rest | Finished bow (m) | Fixed lines at the finished sizing: peak / allowable | Line area sized for the bow (mm²) | Line pull at rest / full spin | Window, rest / full (m) | Lateral stiffness, rest / full (MN/m) | Least margin | Docking offset at rest (cm) | Hub's period at rest (s) | Lines' mass (t) | Hub ring frames, per net; both nets |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 900 m | 2.7% | 2.3 | 1.7× | 283 (1.7×) | 265 N / 280 kN | 6.1 / 6.0 (8.4) | 1.8 / 65.5 | 21 (21) | 5.39 | 78.7 | 15.4 (12.7) | 25.2 MN; 506 t |
+| 1.6 km | 2.0% | 7.4 | 1.7× | 859 (1.7×) | 149 N / 848 kN | 11 / 11 (18) | 2.4 / 115 | 13 (13) | 3.98 | 153 | 147 (144) | 136 MN; 4,850 t |
+
+**Lines installed snug at rest and sized for the bow (proposed)** keep every line taut and the hub held from rest to full spin, its margin never below the finished one; they cost ~1.7× the finished sizing's area but are shorter (the window narrower by the bow), so only a little more mass, plus a ring frame in the hub at each net. The alternative, lines paid out by the bow as the spin grows (winches, locked at full spin), keeps the finished sizing and window but adds machinery that must work during the spin-up.
 
 ### The spin-up's torque
 
@@ -139,18 +141,18 @@ The spin-up's cost, for the angular momentum of a torus with its hub and farm ri
 
 ### The fill as gravity grows
 
-The rock and soil are placed at rest, in compartments. Loose, they settle by their porosity as the spin grows; compacted to their final density at rest, only by their elastic compression under their own weight at full spin. The jacket (5.5 m, 2 t/m³ finished, ~43% porosity on ~3.5 t/m³ chondrite grains) settles through its thickness on the floor and ceiling, harmlessly (the mass on each ray stays the same); but at the tube's two sides its cells' columns run along the radius, a cell high (10 m), and a settled cell leaves a slot at its top through the jacket's whole thickness. A slot h high in a wall t thick lets through, unshielded, ~h/4t of the directions seen from the valley at its height, both side walls together twice that: the dose added there, against the jacket's (OLTARIS's free space less its 11 t/m²), is rough.
+The rock and soil are placed at rest, in the jacket's cells, whose volume is fixed (5.5 m of jacket, 2 t/m³ finished, ~43% porosity on ~3.5 t/m³ chondrite grains). **Filled loose, a cell holds less rock than the design:** the shield is short of its 11 t/m² everywhere, floor and ceiling included, and settling keeps that mass without restoring it (review of #18). Dose at a sphere's centre behind what is installed, OLTARIS's regolith curve (the design's at 11 t/m²: 14.5 mSv/yr). Loose fill also settles by its porosity as the spin grows: through the jacket's thickness on the floor and ceiling, but at the tube's two sides its cells' columns run along the radius, a cell high (10 m), and a settled cell leaves a slot at its top through the jacket's whole thickness. A slot h high in a wall t thick lets through, unshielded, ~h/4t of the directions seen from the valley at its height, both side walls together twice that: the dose it adds there, against the jacket left around it, is rough. Compacted to its final density as placed, the fill holds the design's mass and settles only by its elastic compression under its own weight at full spin. Top-up: the rock that loose cells lack, per 900 m torus, to be added to every cell.
 
-| Fill placed | Settling strain | Settling through the jacket (cm) | Slot at the sides (cm) | Dose added at the slots' height (mSv/yr) |
-|---|---|---|---|---|
-| loose, 1.6 t/m³ | 20% | 110 | 200 | 81.4 |
-| loose, 1.75 t/m³ | 12% | 68.8 | 125 | 50.9 |
-| loose, 1.9 t/m³ | 5% | 27.5 | 50.0 | 20.3 |
-| compacted at rest, M = 100 MPa | — | 0.30 | 0.99 | 0.40 |
-| compacted at rest, M = 50.0 MPa | — | 0.60 | 2.0 | 0.80 |
-| compacted at rest, M = 20.0 MPa | — | 1.5 | 4.9 | 2.0 |
+| Fill placed | Shield installed (t/m²) | Dose behind it (mSv/yr) | Settling strain | Settling through the jacket (cm) | Slot at the sides (cm) | Added at the slots' height (mSv/yr) | Top-up to the design (Mt) |
+|---|---|---|---|---|---|---|---|
+| loose, 1.6 t/m³ | 8.80 | 37.8 | 20% | 110 | 200 | 77.1 | 2.2 |
+| loose, 1.75 t/m³ | 9.62 | 26.7 | 12% | 68.8 | 125 | 49.5 | 1.4 |
+| loose, 1.9 t/m³ | 10.4 | 18.6 | 5% | 27.5 | 50.0 | 20.2 | 0.55 |
+| compacted at rest, M = 100 MPa | 11.0 | 14.5 | — | 0.30 | 0.99 | 0.40 | — |
+| compacted at rest, M = 50.0 MPa | 11.0 | 14.5 | — | 0.60 | 2.0 | 0.80 | — |
+| compacted at rest, M = 20.0 MPa | 11.0 | 14.5 | — | 1.5 | 4.9 | 2.0 | — |
 
-**The fill must be compacted as it is placed (proposed),** or the side cells topped up through fill ports once spun up: loose, the slots add tens of mSv/yr where they face, more than the 20 mSv/yr limit. Settling unevenly moves the rim's first moment by ~3.18 cm × its mass even loose, within the ballast's 45 cm, and slows the spin by ~0.07%. The loads the fill puts on its cells grow with the spin to their finished values (the cross-section above).
+**The fill must be compacted as it is placed (proposed).** Loose, the shield is short everywhere (~19–38 mSv/yr behind it, against the design's ~15) and the slots add tens of mSv/yr where they face; making it good would take topping up every cell, not only the sides, with ~0.55–2.2 Mt of rock per 900 m torus, after spin-up and through fill ports. Settling unevenly moves the rim's first moment by ~3.18 cm × its mass even loose, within the ballast's 45 cm, and slows the spin by ~0.07%. The loads the fill puts on its cells grow with the spin to their finished values (the cross-section above).
 
 Not modelled: out of the ring's plane (the ring's buckling sideways, the two nets apart), the joints' stops and springs as hardware, the fill's flow and arching in its cells, the stack's attitude while at rest, the despun array.
 

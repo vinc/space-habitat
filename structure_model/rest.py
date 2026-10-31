@@ -19,13 +19,16 @@ geometrically nonlinear model (nonlinear.py), and estimates what the ring model 
    hardly resist the segments sliding in odd harmonics), so a 2% scatter in the rim's mass slides
    segments by metres; a light spring in each joint (SLIDE_SPRING) holds them for a few MPa in the
    hull.
-3. The hub at rest: held in its window by the chords' pretension alone (no spin load).
+3. The hub's stabilising lines from rest to full spin: fixed-length, tension-only, in series with
+   chords whose tension and bow grow with the spin (the bow is nil at rest): a line installed snug
+   at rest holds back the whole bow and is sized for it (review of #18).
 4. The spin-up torque: the angular acceleration's loads on the rims, the farm rings on their radial
    spokes, the hub through its laced lines and the lattice, set against the spin load; the spin-up's
    propellant, energy and time; the water added last.
-5. The fill: the rock and soil, placed at rest in compartments, settle as gravity grows. Loose fill
-   settles by its porosity; at the tube's sides that leaves a slot through the jacket at the top of
-   every cell, which the radiation sees.
+5. The fill: the rock and soil, placed at rest in compartments, settle as gravity grows. Cells
+   filled loose hold less rock than the design (their volume is fixed), short everywhere until
+   topped up; the loose fill settles by its porosity, and at the tube's sides that also leaves a
+   slot through the jacket at the top of every cell, which the radiation sees.
 """
 
 import math
@@ -199,21 +202,113 @@ def thermal(p, r, swing=THERMAL_SWING):
 
 
 # -- the hub at rest -------------------------------------------------------------------------------------
-def hub_at_rest(p, r, share):
-    """The hub held in its window at rest. With no spin load, the chords resist sideways pulls by
-    their pretension alone (2T/L, `share` of their finished tension), and the stabilising lines,
-    nearly rigid next to them, keep the pull-in they were installed with, so their preload falls in
-    proportion too. Load: a ship docking at the hub."""
+def take_up(p, r):
+    """How the chords' tension grows from rest, as a share of the finished tension: s0 at rest, then
+    linearly while the joints bear (the hoop's compression falling) to lambda_open, where it is gone,
+    then with the spin load. From the ring as drawn at rest and at a low spin (both joints closed)."""
+    m, info = model(p, r, scatter=False)
+    om = info["geometry"]["omega"]
+    C, load_ref = m._setup(om)
+    u0 = m._newton(np.zeros(m.ndof), 0.0, C, load_ref, max_iter=80)
+    s0 = summary(m, info, u0, 0.0)
+    low = 0.02
+    u1 = m._newton(u0, low * om ** 2, C, load_ref, max_iter=80)
+    s1 = summary(m, info, u1, low)
+    c0, c1 = s0["joint_compression"], s1["joint_compression"]
+    lam_open = low * c0 / (c0 - c1)
+    te = info["net"]["tension_end"]
+    return {"s0": float(s0["T"].mean()) / te, "lam_open": lam_open}
+
+
+def tension_share(lam, s0, lam_open):
+    """The chords' tension as a share of the finished, at lambda (see take_up)."""
+    if lam >= lam_open:
+        return lam
+    return s0 + (lam_open - s0) * lam / lam_open
+
+
+LAMBDAS = tuple(np.linspace(0.0, 1.0, 101))
+
+
+def lines(p, r, lambdas=LAMBDAS):
+    """The hub's stabilising lines through the spin-up, as fixed-length tension-only lines in series
+    with their chords (structure_model.hub; review of #18).
+
+    A chord passes the hub at c = 1.1 h and bows away from the axis under its own spin load,
+    b = rho w^2 c L^2 / (2 sigma): b goes as lambda / share (load over tension), nothing at rest,
+    the finished bow from where the joints open. A line from the hub's surface to the chord's tangent
+    point, cut to a fixed length, is stretched by whatever the chord's free position moves out, less
+    what its pull draws the chord in: P = k_s (b + d0), k_s the line and chord in series (the chord's
+    k = 2 T beta cot(beta L) at its current tension and spin), d0 the pull-in it is installed with at
+    rest. d0 keeps every line taut at rest under a docking ship (TAUT_MARGIN x its swing). So a
+    fixed line holds back the whole bow: at full spin it pulls ~k_s b, far above the finished
+    sizing's service preload, and the line is sized for it (the area, its stiffness and the pull
+    iterated). Alternative: lines paid out by the bow during the spin-up (winches), then locked."""
     res = evaluate(p, Design(radius_m=r, n_tori=1))
-    h = hub_model.compute(p, res["geometry"], res["mass"])
-    k_chord = share * h["k_chord_string"]
-    k = hub_model.N_NETS * h["net"]["n_chords"] * hub_model.series(k_chord, h["k_line"]) / 2
+    g = res["geometry"]
+    h = hub_model.compute(p, g, res["mass"])
+    tu = take_up(p, r)
+    om, sigma, rho = g["omega"], p.wire_stress_mpa * 1e6, p.steel_density
+    net = h["net"]
+    n = net["n_chords"]
+    n_lines = hub_model.N_NETS * n
+    mu_chord = rho * net["wire_area_uniform"] / hub_model.N_NETS
+    gap_rest = net["tangent_radius"] - g["hub_radius"]           # no bow at rest
     dock = SHIP_MASS * SHIP_CLOSING / BUFFER
+    swing_rest = 2 * dock / n_lines
+    swing_full = h["service_swing"]
     mu = h["reduced_mass"]
-    return {"k_rest": k, "k_finished": h["k_torus"], "dock_force": dock,
-            "dock_offset": dock * h["torus_mass"] / (h["torus_mass"] + h["hub_mass"]) / k,
-            "gap": h["gap"], "preload": share * h["service_preload"],
-            "period_s": 2 * math.pi * math.sqrt(mu / k)}
+
+    def k_chord(lam):
+        share = tension_share(lam, tu["s0"], tu["lam_open"])
+        return hub_model.chord_stiffness(share * h["tension"], net["half_length"], mu_chord, om * math.sqrt(lam))
+
+    def bow(lam):
+        share = tension_share(lam, tu["s0"], tu["lam_open"])
+        return net["bow"] * lam / share
+
+    def run(area):
+        k_line = hub_model.E_WIRE * area / gap_rest
+        ks = [hub_model.series(k_chord(x), k_line) for x in lambdas]
+        d0 = hub_model.TAUT_MARGIN * swing_rest / ks[0]
+        pull = [k * (bow(x) + d0) for k, x in zip(ks, lambdas)]
+        return k_line, ks, d0, pull
+
+    # Fixed lines at the finished sizing (hub.compute), installed snug at rest.
+    _, ks_f, d0_f, pull_f = run(h["line_area"])
+    as_sized = (pull_f[-1] + swing_full) / (h["line_area"] * sigma)
+    # Sized for the bow they hold back.
+    area = h["line_area"]
+    for _ in range(100):
+        k_line, ks, d0, pull = run(area)
+        new = max(max(pull) + swing_full, max(pull[0] + swing_rest, 0.0)) / sigma
+        if abs(new - area) <= 1e-9 * new:
+            break
+        area = max(new, h["line_area"])
+    k_line, ks, d0, pull = run(area)
+    K = [hub_model.N_NETS * n * k / 2 for k in ks]
+    margins = [K[i] / (mu * om ** 2 * x) for i, x in enumerate(lambdas) if x > 0]
+    kc_full = k_chord(1.0)
+    return {
+        "s0": tu["s0"], "lam_open": tu["lam_open"], "bow": net["bow"], "gap_rest": gap_rest,
+        "gap_finished": h["gap"], "as_sized_ratio": as_sized, "area_finished": h["line_area"],
+        "area": area, "pull_full": pull[-1], "pull_rest": pull[0], "d0": d0,
+        "service_preload": h["service_preload"],
+        "taut": min(pull) > max(swing_rest, 0.0),
+        # The chord drawn in by the line at full spin: the window left around the hub.
+        "pull_in_full": pull[-1] / kc_full, "gap_full": gap_rest + net["bow"] - pull[-1] / kc_full,
+        "k_rest": K[0], "k_full": K[-1], "k_finished": h["k_torus"], "margin_min": min(margins),
+        "margin_finished": h["margin"],
+        "dock_offset": dock * h["torus_mass"] / (h["torus_mass"] + h["hub_mass"]) / K[0],
+        "period_s": 2 * math.pi * math.sqrt(mu / K[0]),
+        "mass": n_lines * area * gap_rest * rho, "mass_finished": h["line_mass"],
+        # The lines pull the hub's shell outward all round each net's plane: a ring frame there carries
+        # the hoop force N P / (2 pi), sized at the plate stress (tube_section's).
+        "hub_ring_force": n * pull[-1] / (2 * math.pi),
+        "hub_ring_mass": hub_model.N_NETS * 2 * math.pi * g["hub_radius"] * (n * pull[-1] / (2 * math.pi))
+                         / (p.plate_stress_mpa * 1e6) * rho,
+        "lambdas": list(lambdas), "pull": pull,
+    }
 
 
 # -- torque ------------------------------------------------------------------------------------------------
@@ -278,13 +373,18 @@ def farm_twist(t, share):
 def fill(p, r, cell=None):
     """The rock jacket's and the fill's settling as the spin grows, placed loose or compacted at rest.
 
-    Loose: settles by its porosity, 1 - rho_loose / rho_final. Compacted to its final density at rest:
-    only its elastic compression under its own weight at full spin, rho g H^2 / (2 M) over a column H.
+    The jacket's cells have a fixed volume. Filled loose to rho_loose, they hold only rho_loose /
+    rho_final of the design's rock (review of #18): settling keeps that mass but can't restore it, so
+    the shield is short by that share everywhere, until the cells are topped up (all of them, not
+    only the sides) with the missing rock. Settling of loose fill: 1 - rho_loose / rho_final.
+    Compacted to its final density as placed: the design's mass, settling only by its elastic
+    compression under its own weight at full spin, rho g H^2 / (2 M) over a column H.
+
     The jacket's thickness lies along the radius on the floor and the ceiling, but at the tube's two
-    sides it lies across it, and each cell's column runs along the radius, a cell high: a settled side
-    cell leaves a slot at its top through the jacket's whole thickness. Seen from the valley at its
-    height, a slot h high through a wall t thick lets straight through about h / (4 t) of all directions
-    (a band h / t of elevation over the wall's half of the azimuth)."""
+    sides it lies across it, and each cell's column runs along the radius, a cell high: a settled
+    side cell also leaves a slot at its top through the jacket's whole thickness. Seen from the
+    valley at its height, a slot h high through a wall t thick lets straight through about h / (4 t)
+    of all directions (a band h / t of elevation over the wall's half of the azimuth)."""
     from radiation_model import reference
     res = evaluate(p, Design(radius_m=r, n_tori=1))
     g, m = res["geometry"], res["mass"]
@@ -292,21 +392,27 @@ def fill(p, r, cell=None):
     t = g["jacket"]
     cell = cell or p.cell_size_m
     accel = g["accel"]
+    curve = "Lunar regolith (OLTARIS's)"
+    design_dose = float(reference.table2(curve, p.shield_areal_t_m2))
     loose = {}
     for name, rho0 in zip(("low", "mid", "high"), LOOSE_DENSITY):
         strain = 1 - rho0 / p.rock_density
         slot = strain * cell
+        areal = p.shield_areal_t_m2 * rho0 / p.rock_density
         loose[name] = {"density": rho0, "strain": strain, "floor_settle": strain * t, "slot": slot,
-                       "open_share": slot / (4 * t)}
+                       "open_share": slot / (4 * t), "areal": areal,
+                       "jacket_dose": float(reference.table2(curve, areal)),
+                       "top_up": strain * m["shield"]}
     compacted = {}
     for name, mod in zip(("stiff", "mid", "soft"), reversed(FILL_MODULUS)):
         slot = rho * accel * cell ** 2 / (2 * mod)
         compacted[name] = {"modulus": mod, "slot": slot, "open_share": slot / (4 * t),
-                           "floor_settle": rho * accel * t ** 2 / (2 * mod)}
-    shielded = reference.table2("Lunar regolith (OLTARIS's)", p.shield_areal_t_m2)
-    excess = reference.FREE_SPACE - float(shielded)           # mSv/yr through a slot, against the jacket
+                           "floor_settle": rho * accel * t ** 2 / (2 * mod), "areal": p.shield_areal_t_m2,
+                           "jacket_dose": design_dose, "top_up": 0.0}
     for d in list(loose.values()) + list(compacted.values()):
-        d["dose"] = d["open_share"] * excess * 2                # both side walls, at the slots' height
+        # Through the slots, both side walls at their height, against the jacket left around them.
+        d["slot_dose"] = d["open_share"] * 2 * (reference.FREE_SPACE - d["jacket_dose"])
+        d["dose"] = d["jacket_dose"] + d["slot_dose"]
     # Imbalance: the rock moves out by half its settlement; a share of that differs around the ring.
     mid = loose["mid"]
     shift = SETTLE_NONUNIFORM * mid["floor_settle"] / 2
@@ -314,7 +420,7 @@ def fill(p, r, cell=None):
     first_moment = rock_share * shift / 2                     # the first harmonic of a random variation (rough)
     ballast = p.ballast_frac * r
     porosity_final = 1 - p.rock_density / GRAIN_DENSITY
-    return {"loose": loose, "compacted": compacted, "jacket": t, "cell": cell, "excess_dose": excess,
+    return {"loose": loose, "compacted": compacted, "jacket": t, "cell": cell, "design_dose": design_dose,
             "porosity_final": porosity_final, "porosity_loose": [1 - d / GRAIN_DENSITY for d in LOOSE_DENSITY],
-            "first_moment": first_moment, "ballast": ballast,
+            "first_moment": first_moment, "ballast": ballast, "shield_mass": m["shield"],
             "spin_drop": 2 * rock_share * mid["floor_settle"] / 2 / r}
