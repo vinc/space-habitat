@@ -124,6 +124,15 @@ class TestHungTorus(unittest.TestCase):
         self.assertLess(unlinked, 1.0)
         self.assertGreater(linked, 1.2)
 
+    def test_spin_up_from_rest_is_worst_at_full_spin(self):
+        from dynamics_model import links as lk
+        p = params(load())
+        for r in (900, 1600):
+            margins = lk.spinup(p, Design(radius_m=r, n_tori=6), fractions=(0.1, 0.5, 1.0))
+            values = [margins[f] for f in (0.1, 0.5, 1.0)]
+            self.assertTrue(all(a >= b - 1e-6 for a, b in zip(values, values[1:])))
+            self.assertGreater(values[-1], 1.2)
+
     def test_radial_lines_counted_from_the_arcs(self):
         # Near closure the gaps are shorter than an end zone and fewer anchors are single-laced than
         # eight full end zones would give (review of #16).

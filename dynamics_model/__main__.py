@@ -22,6 +22,7 @@ CASES = ((900, 2), (900, 6), (1600, 2), (1600, 6))
 RIM_LINK = 1e11            # N/m between neighbouring tori's rims, for the stack-length study
 TIES = 1e-4                # share of the torus's mass in radial ties, for the stack-length study
 DAMPING = 0.01             # dissipation turning with the stack, for the damped check
+SPINUP = (0.1, 0.25, 0.5, 0.75, 1.0)   # shares of the spin rate, for the stack spun up from rest
 HUNG_SHARES = (0.25, 0.5, 0.95)  # shares of a ring hung, for the stack's stability while a torus is built
 TARGET = 1.2               # lowest forward whirl over the spin: §11's 20% margin
 
@@ -83,7 +84,7 @@ def report(p):
                             num(budget * 100), num(best, 3)])
     shell_cm = p.hub_shell_m * 100
     link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows = links_and_disturbances(p)
-    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows = details(p)
+    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows, spinup_rows = details(p)
     return "\n\n".join([
         "# Stack dynamics: whirl modes and passive stability",
         "The stack as one flexible spinning body (`dynamics_model/stack.py`): the shared hub as a thin-walled beam "
@@ -208,7 +209,12 @@ def report(p):
         "The share of a gap's bays (spread evenly) that restores 1.2.",
         table(["Torus", "Tori", "All linked", "End gap unlinked", "Worst gap unlinked", "Grows ×e (1% damping)",
                "Bays needed in that gap"], build_rows),
-        "**While a torus is hung** at the end of a spinning stack (the stack keeps its spin), that torus a "
+        "**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each "
+        "share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio "
+        "to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, "
+        "so the margin only falls as the stack spins up: full spin, checked above, is the worst case.",
+        table(["Torus", "Tori"] + [f"{f:.0%} of the spin" for f in SPINUP], spinup_rows),
+        "**While a torus is hung** at the end of a spinning stack (the option for growing a living stack) (the stack keeps its spin), that torus a "
         "partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion "
         "to its chords) and by the temporary radial lines to its arcs' single-laced anchors "
         "(`structure_model/sequence.py`), and linked to its neighbour by the lattice's bays alongside its arcs "
@@ -246,7 +252,7 @@ def report(p):
 
 def details(p):
     from structure_model import hub as hub_model
-    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows = [], [], [], [], [], []
+    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows, spinup_rows = [], [], [], [], [], [], []
     for r, n in CASES:
         d = Design(radius_m=r, n_tori=n)
         label = [size_label(r), str(n)]
@@ -274,6 +280,8 @@ def details(p):
                                    f"{num(c['worst'], 3)} (gap {c['worst_gap'] + 1})",
                                    f"{num(c['e_folding_hours'], 2)} h" if c["e_folding_hours"] else "—",
                                    f"{c['bays']} of {lat['bays']} ({c['share']:.1%})" if c["share"] else "—"])
+        spun = lk.spinup(p, d, SPINUP, tie_frac=TIES, k_design=k)
+        spinup_rows.append(label + [num(spun[f], 3) for f in SPINUP])
         if n == 6 or r == 900:
             for share in HUNG_SHARES:
                 cells = [num(lk.building_torus(p, d, share, link=link, radial_lines=rad, tie_frac=TIES,
@@ -295,7 +303,7 @@ def details(p):
             for part in fa.DETAIL:
                 fatigue_rows.append(label + [part, num(f["largest"][part] / 1e6, 2), num(f["cutoff"][part] / 1e6, 2),
                                              num(f["damage"][part], 2)])
-    return hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows
+    return hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows, hung_rows, spinup_rows
 
 
 def links_and_disturbances(p):

@@ -129,7 +129,16 @@ The stack's margin with one gap unlinked: a torus just closed next to the stack,
 | 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
 | 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 50 of 974 (5.1%) |
 
-**While a torus is hung** at the end of a spinning stack (the stack keeps its spin), that torus a partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion to its chords) and by the temporary radial lines to its arcs' single-laced anchors (`structure_model/sequence.py`), and linked to its neighbour by the lattice's bays alongside its arcs (in proportion), or not. Lowest forward whirl over the spin:
+**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, so the margin only falls as the stack spins up: full spin, checked above, is the worst case.
+
+| Torus | Tori | 10% of the spin | 25% of the spin | 50% of the spin | 75% of the spin | 100% of the spin |
+|---|---|---|---|---|---|---|
+| 900 m | 2 | 1.99 | 1.99 | 1.98 | 1.94 | 1.80 |
+| 900 m | 6 | 1.90 | 1.89 | 1.87 | 1.76 | 1.58 |
+| 1.6 km | 2 | 1.99 | 1.99 | 1.88 | 1.66 | 1.56 |
+| 1.6 km | 6 | 1.91 | 1.90 | 1.67 | 1.40 | 1.25 |
+
+**While a torus is hung** at the end of a spinning stack (the option for growing a living stack) (the stack keeps its spin), that torus a partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion to its chords) and by the temporary radial lines to its arcs' single-laced anchors (`structure_model/sequence.py`), and linked to its neighbour by the lattice's bays alongside its arcs (in proportion), or not. Lowest forward whirl over the spin:
 
 | Torus | Tori | Share of the ring hung | Unlinked, no radial lines | Unlinked, radial lines | Linked as hung, no radial lines | Linked as hung, radial lines |
 |---|---|---|---|---|---|---|

@@ -171,7 +171,13 @@ def sequence_section(p):
                   f"allowable; {num(c['released']['path_peak'], 3)}× at worst on the way)."
                   if c["released"]["resolved"] else "**not reached**."))
     return "\n\n".join([
-        "## The spin-up sequence: geometrically nonlinear",
+        "## Adding a torus to a spinning stack: geometrically nonlinear",
+        "**The baseline is simpler.** A child is built at rest: its hub, nets and every arc, the ring closed and "
+        "its joints released, the lattice fitted, the rock and soil in, all without spin load, so nothing is "
+        "stressed; then the finished stack spins up slowly, every spin load growing as the spin squared in its "
+        "finished proportions, never past the finished state (the stack's margin only falls as it spins up, "
+        "`reports/dynamics.md`), and the water goes in last, trimmed with ballast. What follows is the harder "
+        "case: a torus added to a living stack, which can't stop, so its arcs are hung at full spin."
         "`structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible "
         "beams (corotational, one per anchor spacing, E A and E I of the hull and frames as a thin tube of the "
         "tube's radius), joined at the segment joints (locked, pinned or sliding: penalty springs); each chord a "
