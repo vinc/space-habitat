@@ -68,6 +68,71 @@ A stage is **resolved** only if the taut set converges, every segment balances (
 
 Rigid segments make this a crude model: even resolved stages settle the force balance, not the construction sequence, and the joint moments of the longer locked arcs depend on the segments' real flexibility.
 
+## The spin-up sequence: geometrically nonlinear
+
+`structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible beams (corotational, one per anchor spacing, E A and E I of the hull and frames as a thin tube of the tube's radius), joined at the segment joints (locked, pinned or sliding: penalty springs); each chord a tension-only cable with its geometric stiffness, pretensioned slightly; the rim's and the chords' centrifugal loads following the parts as they move; the assembly's centre of mass and mean rotation held (it turns about its centre of mass); the spin stepped up with Newton iterations and line search. It reproduces the linear model on the shortest locked arcs (chords ~1.94× their finished tension, joints ~186 MN and ~6 GN·m at full spin) and the finished net (within 1% of the formula). Sequence studies: `structure_model/sequence.py`.
+
+**Joints.** The shortest and longer arcs held at 0.7 of the spin with locked joints, then released step by step, each from the last equilibrium, towards pinned or sliding joints.
+
+| Arcs (× the shortest) | Released to | Locked | Released |
+|---|---|---|---|
+| 1.00× (271 m) | pinned | 0.93× the allowable, 2.8 GN·m in the joints | held, but rotations 0.70 rad, 39.1 m, chords 1.2× the allowable |
+| 1.00× (271 m) | sliding | 0.93× the allowable, 2.8 GN·m in the joints | **no equilibrium** below 1e-06 of the locked moment stiffness |
+| 1.50× (411 m) | pinned | 0.76× the allowable, 34 GN·m in the joints | **no equilibrium** below 1e-06 of the locked moment stiffness |
+| 1.50× (411 m) | sliding | 0.76× the allowable, 34 GN·m in the joints | **no equilibrium** below 1e-06 of the locked moment stiffness |
+| 3.00× (812 m) | pinned | 0.88× the allowable, 27 GN·m in the joints | **no equilibrium** below 1e-06 of the locked moment stiffness |
+| 3.00× (812 m) | sliding | 0.88× the allowable, 27 GN·m in the joints | **no equilibrium** below 1e-06 of the locked moment stiffness |
+
+**Flexible arcs, locked, nothing temporary.** The spin each stage reaches with every chord within its allowable, against the linear rigid-segment model's, and the hull's bending.
+
+| Torus | Arcs | Spin limit (chords) | Linear, rigid segments | Chords at full spin (× finished) | Hull bending at full spin (MPa) | At the spin limit (MPa) | Joint tension (MN) | Joint moment (GN·m) |
+|---|---|---|---|---|---|---|---|---|
+| 900 m | 1.00× | 0.73 | 0.71 | 1.9 | 75.8 | 39.7 | 186 | 5.7 |
+| 900 m | 1.50× | 0.80 | 0.83 | 1.6 | 760 | 490 | 222 | 69 |
+| 900 m | 3.00× | 0.75 | 0.92 | 1.8 | 592 | 329 | 205 | 56 |
+| 1.6 km | 1.00× | 0.72 | — | 2.0 | 5.82 | 3.00 | 573 | 2.0 |
+| 1.6 km | 1.50× | 0.79 | — | 1.6 | 1,040 | 652 | 733 | 360 |
+| 1.6 km | 3.00× | 0.73 | — | 1.9 | 754 | 400 | 665 | 260 |
+
+With flexible segments, longer arcs don't relieve the chords: the single-laced end zones load theirs to ~1.8× whatever the arc's length, and the arcs bend the hull far past its ~300 MPa plate stress. A torus added to a spinning stack is hung at full spin, so it needs temporary support:
+
+Every chord and line at its peak: tension over area plus its own spin load (a chord's at mid-chord; a radial line's, conservatively, all of it, at its hub end).
+
+| Torus | Arcs | Temporary support | Reached | Peak chord stress (MPa, × allowable) | Peak radial-line stress (MPa, × allowable) | Hull bending (MPa) | Joint tension (MN) | Temporary steel (kt) |
+|---|---|---|---|---|---|---|---|---|
+| 900 m | 1.50× | none | full spin | 1,550 (1.55×) | — | 760 | 222 | — |
+| 900 m | 1.50× | cables doubled at the single-laced anchors | full spin | 857 (0.857×) | — | 693 | 212 | 80 |
+| 900 m | 1.50× | radial lines, a chord's area | full spin | 994 (0.994×) | 1,060 (1.06×) | 10.7 | 103 | 37 |
+| 900 m | 1.50× | proposed: radial lines 1.15×, end cables 1.05× | full spin | 930 (0.930×) | 985 (0.985×) | 53.8 | 96.1 | 47 |
+| 900 m | 3.00× | none | full spin | 1,800 (1.80×) | — | 592 | 205 | — |
+| 900 m | 3.00× | cables doubled at the single-laced anchors | full spin | 915 (0.915×) | — | 329 | 198 | 80 |
+| 900 m | 3.00× | radial lines, a chord's area | full spin | 1,010 (1.01×) | 1,050 (1.05×) | 23.3 | 108 | 37 |
+| 900 m | 3.00× | proposed: radial lines 1.15×, end cables 1.05× | full spin | 1,010 (1.01×) | 991 (0.991×) | 29.2 | 103 | 47 |
+| 1.6 km | 1.50× | none | full spin | 1,600 (1.60×) | — | 1,040 | 733 | — |
+| 1.6 km | 1.50× | cables doubled at the single-laced anchors | full spin | 890 (0.890×) | — | 984 | 748 | 460 |
+| 1.6 km | 1.50× | radial lines, a chord's area | full spin | 996 (0.996×) | 1,060 (1.06×) | 4.97 | 362 | 220 |
+| 1.6 km | 1.50× | proposed: radial lines 1.15×, end cables 1.05× | full spin | 931 (0.931×) | 986 (0.986×) | 55.2 | 346 | 270 |
+| 1.6 km | 3.00× | none | full spin | 1,880 (1.88×) | — | 754 | 665 | — |
+| 1.6 km | 3.00× | cables doubled at the single-laced anchors | full spin | 948 (0.948×) | — | 465 | 691 | 460 |
+| 1.6 km | 3.00× | radial lines, a chord's area | full spin | 1,000 (1.00×) | 1,050 (1.05×) | 25.8 | 371 | 220 |
+| 1.6 km | 3.00× | proposed: radial lines 1.15×, end cables 1.05× | full spin | 1,010 (1.01×) | 995 (0.995×) | 27.9 | 363 | 270 |
+
+Doubling the cables at the single-laced anchors keeps the chords within their allowable but leaves the hull bending. Temporary radial lines from the hub to those anchors (pulling straight in, nothing along the rim) take the bending away; at a chord's area they are themselves ~5% over at their hub end, thicker they stiffen the ends and bend the hull again. Proposed: lines of 1.15× a chord's area and a 1.05× sleeve on the end-zone cables. The chords are sized to their allowable in the finished net (here at ~1.007× it, from the anchors' discrete positions), so wherever a stage loads them past their finished tension (the mid-arc chords by ~1%) they are past it too at full spin; the worst step is the release after closure (below, ~7%): building at ~0.97 of the spin for it, or a lower safety factor while building, covers it. The hub carries the two arcs' pull across its diameter.
+
+**Growing to closure at full spin** (one opposite pair; two pairs at right angles behave the same, each arc at least the shortest, with twice the lines), with the proposed support:
+
+| Torus | Each arc | Reached | Peak chord stress (MPa, × allowable) | Peak radial-line stress | Spin within every allowable | Hull bending (MPa) | Joint tension (MN, share of hoop) | Joint moment (GN·m) | Pull across the hub (GN) | Radial lines | Their steel (kt) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 900 m | 283 m (10% of a half ring) | full spin | 899 (0.899×) | 958 (0.958×) | 1.00 | 5.74 | 91.0 (0.5%) | 0.35 | 3.0 | 52 | 45 |
+| 900 m | 848 m (30% of a half ring) | full spin | 1,010 (1.01×) | 990 (0.990×) | 0.993 | 26.9 | 105 (0.6%) | 2.5 | 3.0 | 52 | 47 |
+| 900 m | 1,700 m (60% of a half ring) | full spin | 1,010 (1.01×) | 990 (0.990×) | 0.996 | 33.0 | 108 (0.6%) | 3.1 | 3.0 | 52 | 47 |
+| 900 m | 2,690 m (95% of a half ring) | full spin | 1,010 (1.01×) | 990 (0.990×) | 0.996 | 33.3 | 108 (0.6%) | 3.1 | 3.0 | 52 | 47 |
+| 1.6 km | 503 m (10% of a half ring) | full spin | 906 (0.906×) | 963 (0.963×) | 1.00 | 1.78 | 291 (0.5%) | 0.50 | 9.5 | 96 | 260 |
+| 1.6 km | 1,510 m (30% of a half ring) | full spin | 1,010 (1.01×) | 995 (0.995×) | 0.995 | 25.9 | 366 (0.6%) | 9.2 | 9.4 | 96 | 270 |
+| 1.6 km | 3,020 m (60% of a half ring) | full spin | 1,010 (1.01×) | 995 (0.995×) | 0.997 | 32.2 | 373 (0.7%) | 11 | 9.5 | 96 | 270 |
+
+**Closure (900 m, full spin).** Closed with every joint locked, the hull becomes a hoop: ~705 MPa along it, the chords at ~0.75× their finished tension. Made instead with its two closure joints sliding, the ring never becomes a hoop: the hull at ~2.07 MPa along it and ~64.3 MPa in bending, the chords at 0.93–1.1× their finished tension (peak 1.06× the allowable), every anchor now double-laced (the radial lines can go). Then every joint is released to sliding, step by step from the last equilibrium: the finished net, chords at 1.00–1.01× the formula (peak 1.01× the allowable; 1.07× at worst on the way).
+
 ## Imbalance: one arc 1% heavier than its partner
 
 The stack spins freely about its centre of mass, so a mismatch moves the spin axis away from the assembly's geometric centre: an estimate of that offset only. The hub and the net move together, so this is not a loss of clearance between them; their relative motion needs the stabilising lines' stiffness (still open). Hub, dock and factory taken as 25% of the torus steel.
