@@ -209,14 +209,18 @@ def report(p):
                "Bays needed in that gap"], build_rows),
         "## Fittings and tunnels",
         "Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and "
-        "crawl space by a post (a cantilever tube, D/t 20, safety factor 2 on yield) under the largest bay "
-        f"shear. A tunnel ({num(jt.TUNNEL_RADIUS)} m radius) crosses each gap on an expansion joint taking "
+        "crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane), "
+        "as wide as the jacket is deep, loaded in its own plane: sized with the lattice for stiffness (the "
+        "struts take half the bay's compliance, the two fittings the rest) and strength (safety factor 2), and "
+        "in series with the struts in every result above. A post bending as a cantilever through the jacket "
+        "would be far too soft: sized for strength alone, its compliance would cut a 900 m six-stack's margin "
+        f"below 1. A tunnel ({num(jt.TUNNEL_RADIUS)} m radius) crosses each gap on an expansion joint taking "
         "the rims' relative motions (the imposed motions above and the lattice's own give under the largest "
         f"load), holding its pressure thrust inside itself (pressure-balanced), with at most {jt.ANISOTROPY:.0%} "
         "of the lattice's sideways stiffness (more would make the stiffness differ by direction). Without a "
-        "joint, a tube fixed at both rims (3 cm wall) is as stiff as a tenth of the lattice and is bent by a "
+        "joint, a tube fixed at both rims (3 cm wall) has ~7–20% of the lattice's stiffness, at one angle, and is bent by a "
         "rim's growth.",
-        table(["Torus", "Tori", "Post (diameter, mass per gap)", "Joint: radial", "Axial", "Tangential",
+        table(["Torus", "Tori", "Fitting webs (thickness, mass per gap, their sideways stiffness)", "Joint: radial", "Axial", "Tangential",
                "Pressure thrust", "Joint's sideways stiffness at most", "Rigid tube: stiffness, stress"], fit_rows),
         "## Fatigue",
         f"Load cycles over {num(fa.LIFE)} years (`dynamics_model/fatigue.py`): rim trains (one cycle per lap, "
@@ -261,11 +265,12 @@ def details(p):
                                    f"{num(c['worst'], 3)} (gap {c['worst_gap'] + 1})",
                                    f"{num(c['e_folding_hours'], 2)} h" if c["e_folding_hours"] else "—",
                                    f"{c['bays']} of {lat['bays']} ({c['share']:.1%})" if c["share"] else "—"])
-        fit = jt.fittings(geo, lat, unbalanced["link"], p.steel_density, n)
+        fit = jt.fittings(lat)
         im = lk.imposed(p, geo, hub_model.compute(p, geo, info["mass"]))
         tun = jt.tunnel(geo, lat, im, unbalanced["link"])
         fit_rows.append(label + [
-            f"{num(fit['diameter'] * 100, 2)} cm, {num(fit['per_gap'] / 1e3, 2)} t",
+            f"{num(fit['thickness'] * 1000, 2)} mm ({fit['set_by']}), {num(fit['per_gap'] / 1e3, 2)} t, "
+            f"{fit['k_lat']:.1e} N/m",
             f"±{num(tun['radial'] * 100, 2)} cm", f"±{num(tun['axial'] * 100, 2)} cm",
             f"±{num(tun['tangential'] * 1000, 2)} mm", f"{num(tun['thrust'] / 1e6, 2)} MN",
             f"{tun['max_lateral_k']:.1e} N/m",

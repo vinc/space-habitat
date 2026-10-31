@@ -63,7 +63,7 @@ A ring of X-braced bays across each gap at the envelopes' closest approach (r �
 | Torus | Tori | Bays | Strut (cm², diameter) | Set by | Mass per gap (t) | Share of a torus | Gap blocked | Forward whirl / spin | Ties needed for 1.2 |
 |---|---|---|---|---|---|---|---|---|---|
 | 900 m | 2 | 548 | 45 (17 cm) | buckling | 550 | 0.004% | 4.8% | 1.80 | none |
-| 900 m | 6 | 548 | 58 (19 cm) | buckling | 710 | 0.006% | 5.5% | 1.59 | none |
+| 900 m | 6 | 548 | 59 (19 cm) | buckling | 720 | 0.006% | 5.5% | 1.58 | none |
 | 1.6 km | 2 | 974 | 60 (20 cm) | buckling | 1,300 | 0.003% | 5.5% | 1.56 | none |
 | 1.6 km | 6 | 974 | 78 (22 cm) | buckling | 1,700 | 0.004% | 6.3% | 1.25 | 0.004% (1,700 t) |
 
@@ -80,10 +80,10 @@ The stack with the lattice and ties above (`dynamics_model/disturbances.py`). Ri
 
 | Torus | Tori | Train at 20 m/s: link force | Train: torus moves | Imbalance: link force | Imbalance: torus moves | Imbalance: dock moves | Docking: link force (peak) | Docking: axis turned | Docking: decay (×1/e) |
 |---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 0.14 MN | 1.6 mm | 31 MN | 20 cm | 18 cm | 0.18 MN | 0.0000022° | 6.5 h |
-| 900 m | 6 | 0.24 MN | 0.58 mm | 52 MN | 7.8 cm | 4.1 cm | 0.49 MN | 0.0000022° | 2.5 h |
-| 1.6 km | 2 | 0.17 MN | 0.87 mm | 97 MN | 34 cm | 27 cm | 0.074 MN | 0.00000045° | 54 h |
-| 1.6 km | 6 | 0.28 MN | 0.31 mm | 160 MN | 12 cm | 3.3 cm | 0.58 MN | 0.00000044° | 15 h |
+| 900 m | 2 | 0.15 MN | 1.6 mm | 31 MN | 20 cm | 18 cm | 0.18 MN | 0.0000022° | 6.5 h |
+| 900 m | 6 | 0.24 MN | 0.59 mm | 52 MN | 7.9 cm | 3.7 cm | 0.30 MN | 0.0000022° | 2.3 h |
+| 1.6 km | 2 | 0.17 MN | 0.87 mm | 97 MN | 34 cm | 27 cm | 0.085 MN | 0.00000045° | 53 h |
+| 1.6 km | 6 | 0.28 MN | 0.31 mm | 160 MN | 12 cm | 2.6 cm | 0.47 MN | 0.00000044° | 13 h |
 
 **Slow torques.** Sunlight on the despun array (pushed ×1.30 its absorbed value, the mast 100 m beyond the stack) and on the rims edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing (friction Q = 10.0 kN·m, a guess): its friction and the drive holding the array facing the Sun both act between array and hub, and the drive must cancel the friction on the array, so its reaction cancels the friction on the hub. Compensated, the stack keeps its spin and the friction only costs the drive's power, Qω, as heat. Uncompensated (drive off, or the bearing seized), friction drags the array up to the spin, and the stack gives up the array's share of the spin once.
 
@@ -102,10 +102,10 @@ The hub is a short, wide tube (radius ~60 m), so its shear flexibility counts: e
 
 | Torus | Tori | Margin, no shear | With shear | Joint needed (N·m/rad) | One pitch of hub (EI/p) | Bolted flange | Margin with flanges | Flange: preload / load |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 1.81 | 1.80 | 2.5e+12 | 3.5e+13 | 5.8e+15 | 1.80 | 388× |
-| 900 m | 6 | 1.61 | 1.59 | 1.5e+14 | 3.5e+13 | 5.8e+15 | 1.59 | 96.1× |
-| 1.6 km | 2 | 1.57 | 1.56 | 8.7e+12 | 1.3e+14 | 3.2e+16 | 1.56 | 197× |
-| 1.6 km | 6 | 1.28 | 1.25 | 5.8e+14 | 1.3e+14 | 3.2e+16 | 1.25 | 29.2× |
+| 900 m | 2 | 1.80 | 1.80 | 2.5e+12 | 3.5e+13 | 5.8e+15 | 1.80 | 387× |
+| 900 m | 6 | 1.61 | 1.58 | 1.4e+14 | 3.5e+13 | 5.8e+15 | 1.58 | 92.2× |
+| 1.6 km | 2 | 1.57 | 1.56 | 8.7e+12 | 1.3e+14 | 3.2e+16 | 1.56 | 196× |
+| 1.6 km | 6 | 1.28 | 1.25 | 5.8e+14 | 1.3e+14 | 3.2e+16 | 1.25 | 28.0× |
 
 ## Along and about the axis
 
@@ -114,7 +114,7 @@ Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to t
 | Torus | Tori | Axial near the spin, as built | Torsion near the spin, as built | Farm spokes crossed | Lines laced | Extra steel (t per stack) | Axial: lowest above the band | Torsion: lowest above the band | Torsion below the band | Docking: largest force | Braking: torque on a lattice |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 900 m | 2 | 1.05–1.09 | 1.28 | 15% | 0.07% | 2.3 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 41 MN·m |
-| 900 m | 6 | 1.05–1.09 | 1.28 | 15% | 0.07% | 7.1 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 66 MN·m |
+| 900 m | 6 | 1.05–1.09 | 1.28 | 15% | 0.07% | 7.1 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 67 MN·m |
 | 1.6 km | 2 | 1.04–1.09 | 1.05 | 30% | 0.22% | 27 | 1.40 | 1.40 | 0.34, 0.45 | 0.22 MN | 74 MN·m |
 | 1.6 km | 6 | 1.04–1.09 | 1.05 | 32% | 0.22% | 83 | 1.40 | 1.40 | 0.34, 0.45 | 0.25 MN | 120 MN·m |
 
@@ -124,21 +124,21 @@ The stack's margin with one gap unlinked: a torus just closed next to the stack,
 
 | Torus | Tori | All linked | End gap unlinked | Worst gap unlinked | Grows ×e (1% damping) | Bays needed in that gap |
 |---|---|---|---|---|---|---|
-| 900 m | 2 | 1.80 | 0.521 | 0.521 (gap 1) | 2.3 h | 4 of 548 (0.6%) |
-| 900 m | 6 | 1.59 | 0.586 | 0.398 (gap 3) | 2.3 h | 10 of 548 (1.7%) |
-| 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 5 of 974 (0.5%) |
-| 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 31 of 974 (3.2%) |
+| 900 m | 2 | 1.80 | 0.521 | 0.521 (gap 1) | 2.3 h | 5 of 548 (0.8%) |
+| 900 m | 6 | 1.58 | 0.585 | 0.398 (gap 3) | 2.3 h | 15 of 548 (2.6%) |
+| 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
+| 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 50 of 974 (5.1%) |
 
 ## Fittings and tunnels
 
-Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and crawl space by a post (a cantilever tube, D/t 20, safety factor 2 on yield) under the largest bay shear. A tunnel (4.00 m radius) crosses each gap on an expansion joint taking the rims' relative motions (the imposed motions above and the lattice's own give under the largest load), holding its pressure thrust inside itself (pressure-balanced), with at most 1% of the lattice's sideways stiffness (more would make the stiffness differ by direction). Without a joint, a tube fixed at both rims (3 cm wall) is as stiff as a tenth of the lattice and is bent by a rim's growth.
+Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane), as wide as the jacket is deep, loaded in its own plane: sized with the lattice for stiffness (the struts take half the bay's compliance, the two fittings the rest) and strength (safety factor 2), and in series with the struts in every result above. A post bending as a cantilever through the jacket would be far too soft: sized for strength alone, its compliance would cut a 900 m six-stack's margin below 1. A tunnel (4.00 m radius) crosses each gap on an expansion joint taking the rims' relative motions (the imposed motions above and the lattice's own give under the largest load), holding its pressure thrust inside itself (pressure-balanced), with at most 1% of the lattice's sideways stiffness (more would make the stiffness differ by direction). Without a joint, a tube fixed at both rims (3 cm wall) has ~7–20% of the lattice's stiffness, at one angle, and is bent by a rim's growth.
 
-| Torus | Tori | Post (diameter, mass per gap) | Joint: radial | Axial | Tangential | Pressure thrust | Joint's sideways stiffness at most | Rigid tube: stiffness, stress |
+| Torus | Tori | Fitting webs (thickness, mass per gap, their sideways stiffness) | Joint: radial | Axial | Tangential | Pressure thrust | Joint's sideways stiffness at most | Rigid tube: stiffness, stress |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 49 cm, 2,300 t | ±4.4 cm | ±2.4 cm | ±1.8 mm | 3.5 MN | 1.7e+08 N/m | 2.4e+09 N/m, 340 MPa |
-| 900 m | 6 | 58 cm, 3,200 t | ±4.4 cm | ±2.4 cm | ±2.3 mm | 3.5 MN | 2.3e+08 N/m | 2.4e+09 N/m, 340 MPa |
-| 1.6 km | 2 | 59 cm, 5,800 t | ±7.7 cm | ±2.4 cm | ±2.4 mm | 3.5 MN | 4.1e+08 N/m | 2.4e+09 N/m, 600 MPa |
-| 1.6 km | 6 | 70 cm, 8,300 t | ±7.7 cm | ±2.4 cm | ±3.0 mm | 3.5 MN | 5.3e+08 N/m | 2.4e+09 N/m, 600 MPa |
+| 900 m | 2 | 9.8 mm (buckling), 4,200 t, 3.8e+10 N/m | ±4.4 cm | ±2.4 cm | ±2.6 mm | 3.5 MN | 1.2e+08 N/m | 2.4e+09 N/m, 340 MPa |
+| 900 m | 6 | 12 mm (buckling), 4,900 t, 4.5e+10 N/m | ±4.5 cm | ±2.4 cm | ±3.5 mm | 3.5 MN | 1.5e+08 N/m | 2.4e+09 N/m, 340 MPa |
+| 1.6 km | 2 | 12 mm (buckling), 8,900 t, 8.1e+10 N/m | ±7.8 cm | ±2.4 cm | ±3.6 mm | 3.5 MN | 2.7e+08 N/m | 2.4e+09 N/m, 600 MPa |
+| 1.6 km | 6 | 14 mm (buckling), 11,000 t, 9.6e+10 N/m | ±7.9 cm | ±2.4 cm | ±4.8 mm | 3.5 MN | 3.4e+08 N/m | 2.4e+09 N/m, 600 MPa |
 
 ## Fatigue
 
@@ -147,10 +147,10 @@ Load cycles over 100 years (`dynamics_model/fatigue.py`): rim trains (one cycle 
 | Torus | Tori | Part | Largest range ×1.35 (MPa) | Cut-off (MPa) | Damage (Miner) |
 |---|---|---|---|---|---|
 | 900 m | 6 | lattice struts | 13 | 29 | 0 |
-| 900 m | 6 | hub wall | 0.51 | 29 | 0 |
+| 900 m | 6 | hub wall | 0.54 | 29 | 0 |
 | 900 m | 6 | stabilising lines | 9.6 | 65 | 0 |
 | 1.6 km | 6 | lattice struts | 13 | 29 | 0 |
-| 1.6 km | 6 | hub wall | 1.7 | 29 | 0 |
-| 1.6 km | 6 | stabilising lines | 8.3 | 65 | 0 |
+| 1.6 km | 6 | hub wall | 1.8 | 29 | 0 |
+| 1.6 km | 6 | stabilising lines | 8.7 | 65 | 0 |
 
 Not modelled: the elevator, pipe and power shafts, the lattice's erection on a partial ring (before a torus closes), the fittings' local details in the jacket, the bellows' own design.

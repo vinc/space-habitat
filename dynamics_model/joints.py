@@ -7,9 +7,10 @@ tunnels' across the gaps.
   bolted flange ring of radius h, bolts of axial stiffness k_b every s along it, gives
   k = (k_b / s) pi h^3, as long as the bolts' preload keeps the flanges closed under the hub's
   largest moment (line load M / (pi h^2)).
-- The lattice's struts meet the tori at fittings on the envelope, at every bay corner, carried to
-  the hull through the jacket and crawl space by a post (a cantilever tube, D/t 20): the bay's
-  shear at its tip.
+- The lattice's struts meet the tori at fittings on the envelope, carried to the hull through the
+  jacket and crawl space by shear webs in the bay's tangential-axial plane, sized with the lattice
+  for stiffness and strength and in series with its struts (links.lattice). A post bending as a
+  cantilever would be far too soft: ~N k_post / 4 sideways, below the stiffness the stack needs.
 - A tunnel crosses each gap. Joined rigidly it would be a stiff link at one angle (stiffness
   differing by direction) and would be bent by the rims' relative motion; so it gets an expansion
   joint taking the relative motions between the rims (radial, axial, tangential), stiff enough for
@@ -30,7 +31,6 @@ BOLT_AREA = 817e-6             # m^2, M36 stress area
 BOLT_GRIP = 0.2                # m, two flanges
 BOLT_SPACING = 0.1             # m
 BOLT_PRELOAD = 0.7 * 640e6 * 817e-6     # N, 70% of grade 8.8 proof load
-POST_D_OVER_T = 20.0
 TUNNEL_RADIUS = 4.0            # m (guess: a walking and service tunnel)
 PRESSURE = 70e3                # Pa
 ANISOTROPY = 0.01              # largest share of the lattice's stiffness one tunnel may add
@@ -76,18 +76,12 @@ def hub_joint(p, d, k_design, tie_frac=1e-4, knee=KNEE):
             "preload_line": BOLT_PRELOAD / BOLT_SPACING, "opening_margin": BOLT_PRELOAD / BOLT_SPACING / line_load}
 
 
-def fittings(geo, lat, force, steel_density, n_tori):
-    """Posts carrying the lattice's bay shear from the envelope to the hull, through the jacket and
-    crawl space: one at every bay corner on each side of a gap."""
-    length = geo["envelope_radius"] - geo["tube_radius"]
-    shear = 2 * force / lat["bays"]                  # the largest bay shear, at sin(theta) = 1
-    moment = shear * length
-    # Thin tube: Z = pi D^2 t / 4 = pi D^3 / (4 D/t); M SF = Z yield.
-    diameter = (4 * POST_D_OVER_T * moment * lk.SAFETY / (math.pi * lk.YIELD)) ** (1 / 3)
-    area = math.pi * diameter ** 2 / POST_D_OVER_T
-    post = area * length * steel_density
-    return {"length": length, "shear": shear, "moment": moment, "diameter": diameter, "post_mass": post,
-            "per_gap": 2 * lat["bays"] * post}
+def fittings(lat):
+    """The lattice's fittings (sized with it, links.lattice): shear webs through the jacket and
+    crawl space, one at each strut end, in series with the struts."""
+    return {"depth": lat["web_depth"], "width": lat["web_width"], "thickness": lat["web_thickness"],
+            "set_by": lat["web_set_by"], "per_gap": lat["web_mass"], "k": lat["k_fitting"],
+            "k_lat": lat["k_fittings_lat"], "motion": lat["fitting_motion"]}
 
 
 def tunnel(geo, lat, imposed, unbalanced_link):

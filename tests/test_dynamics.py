@@ -141,8 +141,38 @@ class TestLinks(unittest.TestCase):
             length = math.hypot(w + sign * u, h)
             tension = lk.E * a / length0 * (length - length0)
             force += tension * sign * (w / length0)
-        k_bay = 2 * lat["k_lat"] / lat["bays"]
+        k_bay = 2 * lat["k_struts_lat"] / lat["bays"]
         self.assertAlmostEqual(force / u, k_bay, delta=1e-3 * k_bay)
+
+    def test_lattice_stiffnesses_agree(self):
+        # Struts and fittings in series, the finished lattice at least as stiff as asked, and its
+        # torsion from the same tangential stiffness: N k_t R^2 = 2 k_lat R^2.
+        for k, force in ((1e9, 0.0), (1e10, 5e7), (3e10, 1.6e8)):
+            lat = lk.lattice(self.geo, k, 7900, force=force)
+            self.assertAlmostEqual(1 / lat["k_lat"], 1 / lat["k_struts_lat"] + 1 / lat["k_fittings_lat"],
+                                   delta=1e-9 / lat["k_lat"])
+            self.assertGreaterEqual(lat["k_lat"], k * (1 - 1e-9))
+            self.assertAlmostEqual(lat["k_torsion"] / (2 * lat["k_lat"] * lat["radius"] ** 2), 1, places=9)
+
+    def test_a_cantilever_post_would_be_too_soft(self):
+        # The review's check: a 7 m post (D/t 20) sized for strength under a 900 m six-stack's largest
+        # bay shear gives N k_post / 4 sideways, below the stiffness the stack needs.
+        p, d = self.p, Design(radius_m=900, n_tori=6)
+        k, _ = lk.design_stiffness(p, d, tie_frac=1e-4)
+        lat = lk.lattice(self.geo, k, p.steel_density, force=5e7)
+        length = lk.fitting_depth(self.geo)
+        diameter = (4 * 20 * lat["shear"] * length * lk.SAFETY / (math.pi * lk.YIELD)) ** (1 / 3)
+        k_post = 3 * lk.E * math.pi * diameter ** 4 / (8 * 20) / length ** 3
+        self.assertLess(lat["bays"] * k_post / 4, k)
+        self.assertGreater(lat["k_fittings_lat"], 2 * k)
+
+    def test_web_stiffness(self):
+        # A deep plate in its own plane: bending and shear in series, linear in its thickness.
+        tangential, axial = lk.web_stiffness(7.0, 7.0)
+        bending = 7.0 ** 3 / (3 * lk.E * 7.0 ** 3 / 12)
+        shear = 7.0 / (lk.WEB_KAPPA * st.G * 7.0)
+        self.assertAlmostEqual(tangential, 1 / (bending + shear))
+        self.assertAlmostEqual(axial, lk.E)
 
     def test_tangential_links_give_the_same_stiffness_every_way(self):
         # N >= 3 links stiff only tangentially: sum of k sin^2 = N k / 2 in every direction.
