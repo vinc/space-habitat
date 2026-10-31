@@ -7,6 +7,8 @@ python -m logistics_model                         # full report (reports/logisti
 python -m logistics_model.ephemeris --fetch       # refresh JPL Horizons' ephemerides and SBDB elements (network)
 python -m logistics_model.catalogue --fetch       # refresh the C-type candidates and their Δv (network, ~10 min)
 python -m logistics_model.networks --report       # saved host–supplier network study (offline)
+python -m logistics_model.shipping_study --solve --report  # finite thrust + reusable fleets (offline; minutes)
+python -m logistics_model.shipping_study --report  # reproduce saved shipping results
 python -m logistics_model.networks --refresh-vectors --windows --report  # replace all network ephemerides and recalculate (network)
 python -m logistics_model --set lake_floor_frac=0.05
 ```
@@ -19,6 +21,7 @@ python -m logistics_model --set lake_floor_frac=0.05
 | `windows.py` | dated launch windows: the best flight for each departure date, its dips refined, how often usable ones recur |
 | `catalogue.py` | C-type candidates from the Small-Body Database (C complex or dark), their phase-free Δv to the hosts, stored in `data/` |
 | `networks.py`, `network_report.py` | compare silicate hosts with several suppliers, dated opportunities, sunlight and resource uncertainty; [study and reproduction commands](../reports/asteroid-networks.md), [evidence audit](../reports/asteroid-evidence.md) |
+| `low_thrust.py`, `shipping.py`, `shipping_study.py` | variable-mass finite-thrust trajectories with independent verification, local refuelling, empty returns, integer fleet schedules and construction stocks; [assumptions and limitations](../reports/shipping-schedule.md); requires SciPy |
 | `propulsion.py` | energy and propellant per kg delivered by engine: electric thrusters, electrothermal on water, an energy-optimal mass driver on the C-type's baked residue |
 | `flows.py` | what a child torus is made of by source, the rates a parent's lines sustain for a given generation, the cluster's growth until its C-type runs out |
 | `__main__.py` | the report |

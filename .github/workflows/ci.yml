@@ -34,6 +34,7 @@ jobs:
           python -m structure_model > /dev/null
           python -m dynamics_model > /dev/null
           python -m logistics_model > /dev/null
+          python -m logistics_model.shipping_study --report > /dev/null
           python -m ecology_model > /dev/null
           python -m optics_model > /dev/null
           python -m radiation_model > /dev/null
