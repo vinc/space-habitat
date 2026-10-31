@@ -45,4 +45,55 @@ With rim links (1e+11 N/m) and a trace of ties (0.01%), long stacks are limited 
 | 1.6 km | 18 | 4,080 | 1.43 | 0.381 | **not enough** | 123 | 1.11 |
 | 1.6 km | 22 | 4,980 | 1.25 | 0.280 | **not enough** | 123 | 0.946 |
 
-Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the rim links' and ties' preload and details, and disturbances (docking, rim trains, ballast transfers, the array's bearing, sunlight pressure).
+## Rim links: what they must resist
+
+Lowest forward whirl over the spin with the links' tilt stiffness as taken above (k r²/2), with none, and with a lattice's (below), at the design stiffness and with the trace of ties. Only the links' sideways stiffness matters: they need not be stiff along the axis. And since sideways motion of two rims is radial at some angles and tangential at others, links stiff only tangentially, spread evenly around the rim (any three or more), give the same sideways stiffness in every direction: they can be compliant radially, free of the rims' differential growth (`dynamics_model/links.py`).
+
+| Torus | Tori | Design stiffness (N/m) | Tilt k r²/2 | No tilt stiffness | Lattice's tilt |
+|---|---|---|---|---|---|
+| 900 m | 2 | 7.3e+08 | 1.77 | 1.77 | 1.77 |
+| 900 m | 6 | 8.7e+09 | 1.59 | 1.59 | 1.59 |
+| 1.6 km | 2 | 9.7e+08 | 1.54 | 1.54 | 1.54 |
+| 1.6 km | 6 | 1.0e+10 | 1.26 | 1.26 | 1.26 |
+
+## The lattice
+
+A ring of X-braced bays across each gap at the envelopes' closest approach (r − a), diagonals at 45°, pinned tubular struts (D/t 20.0, no preload: struts, not cables, which would pull the tori together along the axis, where only the nets hold them). Stiff in shear and along the axis in its own surface, compliant radially (the struts bend out of it). Design stiffness: 98% of the margin rigid links would give (stiffer buys almost nothing; the nets and the hub's bending set the rest), with 0.01% ties. Struts sized for that stiffness, and for the largest link force below (the ballast tanks' whole capacity untrimmed) at a safety factor of 2.00 on buckling and on 350 MPa yield, at least 2.00 cm².
+
+| Torus | Tori | Bays | Strut (cm², diameter) | Set by | Mass per gap (t) | Share of a torus | Gap blocked | Forward whirl / spin | Ties needed for 1.2 |
+|---|---|---|---|---|---|---|---|---|---|
+| 900 m | 2 | 548 | 47 (17 cm) | buckling | 580 | 0.005% | 4.9% | 1.81 | none |
+| 900 m | 6 | 548 | 59 (19 cm) | buckling | 720 | 0.006% | 5.5% | 1.61 | none |
+| 1.6 km | 2 | 974 | 63 (20 cm) | buckling | 1,400 | 0.003% | 5.7% | 1.57 | none |
+| 1.6 km | 6 | 974 | 80 (23 cm) | buckling | 1,700 | 0.004% | 6.4% | 1.28 | 0.001% (550 t) |
+
+**Imposed motions** between neighbours. Along the axis the lattice is far stiffer than the nets (`structure_model/hub.py`, inclined lines included), so the tori follow the lattice and the nets take the difference.
+
+| Torus | Hub 20 K warmer over a pitch | One rim 4 K warmer | Struts 100 K colder |
+|---|---|---|---|
+| 900 m | 1.9 cm, 0.23 MN | 4.2 cm, hoop 9.6 MPa | gap closes 2.4 cm, 0.28 MN |
+| 1.6 km | 3.0 cm, 0.63 MN | 7.4 cm, hoop 9.6 MPa | gap closes 2.4 cm, 0.51 MN |
+
+## Disturbances
+
+The stack with the lattice and ties above (`dynamics_model/disturbances.py`). Rim train: one 50.0 t train antispinward in the first torus, a load whirling at ω − v/R, below the spin, where a passively stable stack has no forward modes. Imbalance: the ballast tanks' whole capacity untrimmed (0.05% of the rim's mass at the first torus's rim), fixed in the rotating frame. Docking: a 10.0 kt ship missing by 0.100 m/s sideways at the dock, followed for 40 turns with 1% damping. Link force: the sideways force across one gap; torus: the largest torus's motion off the stack's axis.
+
+| Torus | Tori | Train at 20 m/s: link force | Train: torus moves | Imbalance: link force | Imbalance: torus moves | Imbalance: dock moves | Docking: link force (peak) | Docking: axis turned | Docking: decay (×1/e) |
+|---|---|---|---|---|---|---|---|---|---|
+| 900 m | 2 | 0.15 MN | 1.7 mm | 34 MN | 23 cm | 15 cm | 0.11 MN | 0.0000022° | 5.3 h |
+| 900 m | 6 | 0.24 MN | 0.61 mm | 53 MN | 8.3 cm | 3.1 cm | 0.23 MN | 0.0000022° | 1.7 h |
+| 1.6 km | 2 | 0.18 MN | 0.95 mm | 110 MN | 39 cm | 20 cm | 0.076 MN | 0.00000045° | 21 h |
+| 1.6 km | 6 | 0.29 MN | 0.34 mm | 170 MN | 14 cm | 1.4 cm | 0.15 MN | 0.00000044° | 5.9 h |
+
+**Slow torques.** Sunlight on the despun array (pushed ×1.30 its absorbed value, the mast 100 m beyond the stack) and on the rims edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing: friction drags the spin down at Q/H; the budget is the torque that costs 1% of the spin a century, and the drive's power at it.
+
+| Torus | Tori | Sunlight torque (N·m) | Axis drift (°/yr, if it didn't turn) | Yearly wobble at 1 AU (°) | On Eros's orbit (°) | Bearing friction for 1%/century (kN·m) | Drive power at it (kW) |
+|---|---|---|---|---|---|---|---|
+| 900 m | 2 | 620 | 0.00052 | 0.00016 | 0.00014 | 6.9 | 0.72 |
+| 900 m | 6 | 4,000 | 0.0011 | 0.00036 | 0.00030 | 21 | 2.2 |
+| 1.6 km | 2 | 2,600 | 0.00029 | 0.000091 | 0.000078 | 53 | 4.1 |
+| 1.6 km | 6 | 19,000 | 0.00069 | 0.00022 | 0.00019 | 160 | 12 |
+
+**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack destabilises it; it only sets how fast a disturbance dies out (×1/e in hours at 1%, ten times longer at 0.1%). Nothing has to be added for it.
+
+Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the ties' and lattice's joints and how they are built into the construction sequence, a tunnel (one stiff link at one angle makes the stiffness differ by direction; it stays clear of trouble while the lattice's even stiffness dominates), fatigue.

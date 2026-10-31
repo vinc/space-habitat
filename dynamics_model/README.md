@@ -4,12 +4,14 @@ Whirl modes of the flexible spinning stack and its passive stability. It uses th
 
 ```bash
 python -m dynamics_model                        # full report (reports/dynamics.md)
-python -m dynamics_model --set hub_shell_m=0.05
+python -m dynamics_model --set hub_shell_m=0.05 --set ballast_frac=0.001
 ```
 
 | File | Contents |
 |---|---|
 | `stack.py` | the stack's bodies, hub beam and springs; whirl modes (gyroscopic, inertial frame), damped modes with dissipation turning with the stack, the rigid J/I_t, the fixes (rim links, radial ties) and the bisection for what each needs |
+| `links.py` | what the rim links must resist (sideways shear only), the X-braced rim lattice that does it, and the motions imposed between neighbours |
+| `disturbances.py` | rim trains, imbalance, docking, sunlight pressure and the array's bearing: steady responses, impulses through the damped modes, slow torques |
 | `__main__.py` | the report |
 
 ## Model
@@ -27,4 +29,8 @@ python -m dynamics_model --set hub_shell_m=0.05
   - **Radial ties** from the hub to each torus, stiff along their length and carrying no spin load. Alone they need ~0.2% of a torus's mass for a pair, ~1.7–2.8% for a six-stack.
   - **Together** (1e11 N/m links and 0.01% ties): lowest forward whirl ~1.8 / 1.6 × the spin at 900 m (pair / six), ~1.6 / 1.3 at 1.6 km, stable in the damped solve.
 - **Long stacks are limited by the hub bending** with the farm section at its end. The wall needed for a margin of 1.2 is ~0.4 cm (6 tori), ~3 cm (10), ~12 cm (14) and ~63 cm (18) at 900 m, against ~65 cm if the hub's whole mass budget went into its wall. At 1.6 km it is ~1 / 10 / 53 cm for 6 / 10 / 14 tori. So the flexible limit is ~18 tori of 900 m and ~14–17 of 1.6 km, against §11's rigid 22 and 25.
-- **Not modelled:** the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the rim links' and ties' preload and details, and the disturbances (docking, rim trains, ballast transfers, the array's bearing, sunlight pressure).
+- **The rim links need only sideways stiffness.** Their tilt stiffness (stiffness along the axis) moves the margin by under 1%, and links stiff only tangentially, spread evenly around the rim (three or more), give the same sideways stiffness every way, so they can be compliant radially. Proposed: an X-braced lattice of pinned struts across each gap, no preload, designed for 98% of the margin rigid links give (~0.7–1 × 10¹⁰ N/m), sized by buckling under the untrimmed ballast: ~0.6–0.7 kt per gap at 900 m, ~1.4–1.7 kt at 1.6 km (~0.005% of a torus), ~5–6% of the gap covered. With it the ties are needed only for 1.6 km six-stacks (~0.001%). Imposed motions (the hub 20 K warmer, struts 100 K colder, a rim 4 K warmer) cost ~0.2–0.6 MN and ~10 MPa: along the axis the nets give way, not the lattice.
+- **Disturbances are small.** Rim trains whirl below the spin, where the stack has no forward modes (~0.2 MN, mm). The ballast tanks' whole capacity untrimmed moves the tori ~8–39 cm and loads a lattice with 34–170 MN (its design load). A 10 kt ship missing the dock by 0.1 m/s turns the axis ~2 × 10⁻⁶°; the nutation dies out in hours at 1% damping. Sunlight on the array sums to zero over every orbit (Kepler's second law), leaving a yearly wobble under 0.0004°. The array's bearing may drag at ~7–160 kN·m for 1% of the spin a century.
+- **Damping:** none needs adding; with every forward mode above the spin, dissipation only sets how fast a disturbance dies out.
+- **Checks (disturbances, links):** a body on a spring under a whirling load and after a kick; a lattice bay's stiffness from its struts' geometry; tangential links isotropic; a train at the rim's speed pulls on nothing, and the response falls monotonically below the spin; an imbalance shifts the stack about its centre of mass; sunlight's push over a Kepler orbit closes and its excursion matches the wobble formula.
+- **Not modelled:** the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional motion, the lattice's joints and how it is built into the construction sequence, the tunnels' compliant joints, fatigue.
