@@ -282,7 +282,8 @@ def generation_section(p):
         c = flows.composition(p, res)
         comp_rows.append([name, f"{num(c['built'] / MT)} Mt", f"{c['local_share']:.2%}",
                           f"{num(c['shipped'] / KT)} kt ({c['shipped'] / c['built']:.2%})",
-                          f"{num(c['vitamins'] / 1e3)} t ({c['vitamins'] / c['built']:.3%})"])
+                          f"{num(c['vitamins'] / 1e3)} t ({c['vitamins'] / c['built']:.4%})",
+                          f"{num(c['pv_silicon'] / 1e3)} t"])
         rep = res["replication"]
         # The cheapest consistent combination of route and freighter.
         (route, engine), v = min(water.supply(p, d, res).items(), key=lambda kv: kv[1]["total"])
@@ -307,9 +308,11 @@ def generation_section(p):
         "A parent stack builds a child stack torus by torus, so a cluster doubles once per generation. "
         "**What a child is made of**, per torus (the torus, its share of the hub and factory metal, its farm "
         "ring and its array), by source: the host's rock and metal, the C-type's shipped products, and "
-        f"imported vitamins (the array's silicon at {num(p.pv_silicon_kg_m2)} kg/m², and ~{num(p.other_vitamins_t)} t "
-        "of electronics, dopants, catalysts and the like per 900 m torus, a guess).",
-        table(["Stack (per torus)", "Built", "From the host", "Shipped from the C-type", "Vitamins"], comp_rows),
+        f"imported vitamins (~{num(p.other_vitamins_t)} t of computing, sensors, catalysts and the like per 900 m "
+        "torus, a guess). The array is made at the host: its wafer silicon "
+        f"({num(p.pv_silicon_kg_m2)} kg/m²) is what the factory's semiconductor works must refine (notes §13).",
+        table(["Stack (per torus)", "Built", "From the host", "Shipped from the C-type", "Vitamins",
+               "PV silicon made at the host"], comp_rows),
         f"**Energy floor on the generation**, with the factory at {num(Design().factory_power_gw)} GW per stack: "
         "processing and shipping as in the system model (water route, electric thrusters), then the cheapest "
         f"combination of route and freighter above ({'; '.join(best_names)}).",
@@ -345,7 +348,7 @@ def report(p):
         *generation_section(p),
         "Not modelled: factory throughput as a function of its own mass (how fast a factory copies itself), "
         "people and training, seed transfers to new sites, the freighters' own mass and power (their solar "
-        "arrays are silicon, a vitamin), failures and spares, low-thrust and multi-revolution transfers, and gravity "
+        "arrays from the same semiconductor works), failures and spares, low-thrust and multi-revolution transfers, and gravity "
         "assists.",
     ]
     return "\n\n".join(parts) + "\n"

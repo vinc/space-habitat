@@ -22,7 +22,7 @@ def compute(p, d, geo):
     crop_area = mol / p.crop_light_mol
     people_per_tier = geo["crop_area_per_tier"] * p.crop_light_mol / mol
     people = d.tiers_lit * people_per_tier
-    lamp = p.lamp_efficacy_umol_j * 1e-6
+    lamp = (p.farm_lamp_efficacy_umol_j or p.lamp_efficacy_umol_j) * p.lamp_maintained_output * 1e-6
     return {
         "mol_per_crop": per_crop,
         "mol_per_person": mol,

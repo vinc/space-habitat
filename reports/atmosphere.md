@@ -18,11 +18,11 @@ From a torus in balance, uncontrolled for a year: days until the valleys' CO2 pa
 | Torus | Scenario | CO2 limit after | O2 limit after | Peak CO2 | Lowest O2 | Food store (90 days) runs out after | Recovery needed at peak |
 |---|---|---|---|---|---|---|---|
 | 900 m | One farm tier dark | 113 days | never (1 yr) | 1,020 Pa | 19.3 kPa | never (36 days left) | 0.57 t/day (0.17 MW) |
-| 900 m | Two tiers dark (the pumps' passive fallback) | 36 days | 330 days | 3,370 Pa | 16.7 kPa | 169 days | 2.1 t/day (0.60 MW) |
+| 900 m | Two tiers dark | 36 days | 330 days | 3,370 Pa | 16.7 kPa | 169 days | 2.1 t/day (0.60 MW) |
 | 900 m | The whole farm dark | 22 days | 176 days | 5,910 Pa | 13.9 kPa | 97 days | 3.6 t/day (1.0 MW) |
 | 900 m | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 256 Pa | 20.1 kPa | never (179 days left) | 0 t/day (0 MW) |
 | 1.6 km | One farm tier dark | 193 days | never (1 yr) | 710 Pa | 19.6 kPa | never (30 days left) | 1.7 t/day (0.50 MW) |
-| 1.6 km | Two tiers dark (the pumps' passive fallback) | 60 days | never (1 yr) | 2,040 Pa | 18.2 kPa | 167 days | 6.4 t/day (1.9 MW) |
+| 1.6 km | Two tiers dark | 60 days | never (1 yr) | 2,040 Pa | 18.2 kPa | 167 days | 6.4 t/day (1.9 MW) |
 | 1.6 km | The whole farm dark | 36 days | 320 days | 3,490 Pa | 16.6 kPa | 97 days | 11 t/day (3.2 MW) |
 | 1.6 km | Soil burst, +1 µmol/m²/s fading over 1 yr | never (1 yr) | never (1 yr) | 251 Pa | 20.1 kPa | never (176 days left) | 0 t/day (0 MW) |
 

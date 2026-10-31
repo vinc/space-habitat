@@ -439,27 +439,49 @@ source = "§13, light-box ceiling sizing"
 status = "design"
 
 [power.ceiling_delivery]
-value = 0.75
-unit = "fraction"
-low = 0.65
-high = 0.80
-source = "§13, light box: ~20-30% ceiling losses (to verify, plan §6)"
+value = 0.9
+unit = "fraction of the light leaving the fixtures"
+low = 0.8
+high = 0.92
+source = "§13, LED strips in the light box: ~90% traced from the fixtures' output (optics_model; inputs guessed)"
 status = "estimate"
 
 [power.lamp_efficacy_umol_j]
-value = 1.4
-unit = "umol/J at the wall"
-low = 1.3
-high = 1.5
-source = "§13, sulfur lamps (Maclennan et al. 1994); 915 MHz sources would give ~1.75"
-status = "sourced"
+value = 3.0
+unit = "umol/J at the wall, white LEDs (the valley), new, measured at the fixture's output (optics, driver and heat included)"
+low = 2.7
+high = 3.4
+source = "§13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020); white alone lower"
+status = "estimate"
 
-[power.farm_delivery]
+[power.farm_lamp_efficacy_umol_j]
+value = 3.6
+unit = "umol/J at the wall, blue + red LEDs (the farm), new, at the fixture's output; 0: as the valley's lamps"
+low = 3.2
+high = 4.1
+source = "best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential"
+status = "estimate"
+
+
+[power.lamp_maintained_output]
 value = 0.85
-unit = "fraction"
-low = 0.75
-high = 0.90
-source = "§13, light pipes just above the canopy (estimate)"
+unit = "fleet-average output over the lamps' life, share of the initial (constant-light drive)"
+low = 0.8
+high = 0.95
+source = "LEDs replaced at L70 one by one (staggered): output falls ~linearly from 1 to 0.7, so the drive rises to hold the light and the fleet averages ~(1 + 0.7) / 2 (estimate)"
+status = "estimate"
+
+[power.lamp_end_of_life_output]
+value = 0.7
+unit = "output at replacement, share of the initial: the installed capacity holds the light down to it"
+source = "design: replacement at L70 (led_life_h)"
+status = "design"
+[power.farm_delivery]
+value = 1.0
+unit = "fraction of the light leaving the fixtures, counted as absorbed / canopy absorptance"
+low = 0.9
+high = 1.02
+source = "§13, LED strips just above the canopy: ~102% traced from the fixtures' output (white walls send the canopy's reflection back; optics_model; inputs guessed)"
 status = "estimate"
 
 [power.other_loads_w_m2]
@@ -1195,6 +1217,120 @@ unit = "hours a zone is lit, on average"
 low = 12
 high = 20
 source = "§13, day lengths by crop (estimate)"
+status = "estimate"
+
+[optics.luminaire_efficiency]
+value = 0.88
+unit = "share of a lamp's light leaving its reflector"
+low = 0.8
+high = 0.93
+source = "a ~1 kW sulfur lamp in a small specular reflector (guess)"
+status = "guess"
+
+[optics.luminaire_albedo]
+value = 0.6
+unit = "share of the light falling on a lamp and reflector that it sends back"
+low = 0.4
+high = 0.8
+source = "guess"
+status = "guess"
+
+[optics.lamp_power_w]
+value = 1000
+unit = "W per lamp, lamps straight in the light box"
+source = "§13, ~1 kW sulfur lamps"
+status = "design"
+
+[optics.lamp_spacing_m]
+value = 1.5
+unit = "m between lamps along a row"
+source = "design"
+status = "design"
+
+[optics.sector_efficacy_umol_j]
+value = 1.75
+unit = "umol/J at the wall, sulfur bulbs behind 915 MHz sector plants"
+low = 1.6
+high = 1.8
+source = "§13: Fusion's bulbs >2 umol per J of microwaves, behind ~85% sources: ~1.7-1.8"
+status = "estimate"
+
+[optics.waveguide_efficiency]
+value = 0.9
+unit = "share of a sector plant's microwaves reaching the bulbs"
+low = 0.8
+high = 0.95
+source = "waveguide runs of a few hundred metres (guess)"
+status = "guess"
+
+[optics.sulfur_efficacy_umol_j]
+value = 1.4
+unit = "umol/J at the wall, sulfur lamps on small magnetrons (the fallback)"
+low = 1.3
+high = 1.5
+source = "§13, sulfur lamps (Maclennan et al. 1994)"
+status = "sourced"
+
+[optics.led_w_per_m]
+value = 200
+unit = "W per m of LED strip"
+source = "design"
+status = "design"
+
+[optics.led_farm_red_share]
+value = 0.8
+unit = "share of the farm LEDs' electricity driving red (660 nm) dies"
+low = 0.7
+high = 0.9
+source = "~10-20% blue photons for crops (guess)"
+status = "guess"
+
+[optics.led_die_w_mm2]
+value = 0.3
+unit = "W of electricity per mm2 of LED die"
+low = 0.15
+high = 1.0
+source = "mid-power dies driven gently for efficacy (~0.2-0.5 W on ~1 mm2) to high-power at ~1 W/mm2 (estimate)"
+status = "estimate"
+
+[optics.led_wafer_yield]
+value = 0.7
+unit = "share of the epitaxial wafer ending as working dies"
+low = 0.5
+high = 0.85
+source = "edge exclusion, streets and binning (guess)"
+status = "guess"
+
+[optics.mocvd_utilization]
+value = 0.25
+unit = "share of the gallium fed to the reactor ending in the film"
+low = 0.15
+high = 0.4
+source = "~25% for conventional MOCVD (Atomic Precision Systems, NCCAVS 2019, a vendor comparison)"
+status = "estimate"
+
+[optics.mocvd_ammonia_kg_m2]
+value = 100
+unit = "kg of ammonia per m2 of GaN wafer grown"
+low = 50
+high = 200
+source = "~50 slpm for ~5 h a run (NCCAVS 2019) over a ~0.1 m2 batch (estimate)"
+status = "estimate"
+
+[optics.led_phosphor_g_w]
+value = 0.003
+unit = "g of YAG:Ce phosphor per W of white LED"
+low = 0.0015
+high = 0.006
+source = "a few mg per mid-power package (guess)"
+status = "guess"
+
+[optics.led_life_h]
+value = 50000
+unit = "hours to 70% output"
+low = 30000
+high = 100000
+source = "§13 (L70 ratings, not yet sourced)"
 status = "estimate"
 
 # --- Radiation transport (plan §3) -------------------------------------------

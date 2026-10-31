@@ -62,7 +62,7 @@ def key_numbers(p):
     row("Mass per m² of floor", lambda r, x: f"{num(x[1]['mass']['per_floor'] / 1e3)} t")
     row("S-type mined per torus, H / L / LL host", lambda r, x: " / ".join(f"{num(s_type[r][c], 2)}" for c in ("H", "L", "LL")) + " Mt")
     row("C-type per torus (sized by nitrogen)", lambda r, x: f"{num(x[1]['materials']['c_type'] / MT, 2)} Mt")
-    row("Valley lighting, daily average (sulfur)", lambda r, x: f"{num(x[1]['power']['valley_sky'] / MW)} MW")
+    row("Valley lighting, daily average (LEDs)", lambda r, x: f"{num(x[1]['power']['valley_sky'] / MW)} MW")
     row("Farm ring at ~0.4 r: crops per tier", lambda r, x: f"{num(x[1]['geometry']['crop_area_per_tier'] / HA, 2)} ha")
     row("People fed, 1 / 2 / 3 tiers lit", lambda r, x: _tiers(lambda t: num(x[t]['food']['people'], 2)))
     row("Floor per person, 1 / 2 / 3 tiers lit", lambda r, x: _tiers(lambda t: num(x[t]['food']['floor_per_person'])) + " m²")
@@ -94,7 +94,7 @@ def stack_numbers(p, radius_m=900):
         lambda n, x: f"{num(x[1]['geometry']['main_length'])}–{num(wide[n]['geometry']['main_length'])} m")
     row("Whole stack with its farm section (10 m gaps)", lambda n, x: f"{num(x[1]['geometry']['stack_length'])} m")
     row("People fed, 1 / 2 / 3 tiers lit", lambda n, x: _tiers(lambda t: num(n * x[t]['food']['people'], 2)))
-    row("Constant valley lighting load (sulfur)", lambda n, x: f"{num(n * x[1]['power']['valley_sky'] / MW)} MW")
+    row("Constant valley lighting load (LEDs)", lambda n, x: f"{num(n * x[1]['power']['valley_sky'] / MW)} MW")
     row("Farm lighting, per tier lit", lambda n, x: f"{num(n * x[1]['power']['farm_per_tier'] / MW)} MW")
     row("Despun array at 1 AU: valley + per tier lit",
         lambda n, x: f"{num(n * x[1]['power']['array_1au_valley'] / KM2, 2)} + {num(n * x[1]['power']['array_1au_per_tier'] / KM2, 2)} km²")

@@ -1,6 +1,6 @@
 # Light pipes, light box and farm optics (plan §7)
 
-How much of the sulfur lamps' light reaches the valley's floor and the farm's crops, and how evenly: the prism light pipes, the valley's magnesium-oxide light box with its diffuser, and a farm tier's pipes over the crops. It uses the system model's assumptions and, for what the delivery would change, its power, array and radiative exchange.
+How much of the lamps' light (white LEDs adopted; sulfur lamps and light pipes traced as the first design) reaches the valley's floor and the farm's crops, and how evenly: the prism light pipes, the valley's magnesium-oxide light box with its diffuser, and a farm tier's pipes over the crops. It uses the system model's assumptions and, for what the delivery would change, its power, array and radiative exchange.
 
 ```bash
 python -m optics_model                          # full report (reports/optics.md), ~1 min
@@ -11,6 +11,8 @@ python -m optics_model --set film_loss_per_reflection=0.005
 |---|---|
 | `pipe.py` | a prism light pipe fed from both ends: ray classes along the pipe, the film's loss, a graded extractor for an even glow, the far ends |
 | `trace.py` | Monte Carlo ray tracing in a cross-section, periodic sideways: segments and circles, diffuse reflection and transmission |
+| `architectures.py` | the same chain for other lighting architectures: shorter or heavier pipes, ~1 kW lamps straight in the light box, 915 MHz sector plants, LEDs (white throughout, or blue + red in the farm); bulb counts |
+| `leds.py` | what a torus's LEDs take: die and wafer area, gallium, indium, arsenic, yttrium, ammonia against the source bodies; the fab step by step |
 | `scenes.py` | the light box and a farm tier traced across the pipes; the pipe spacing from the lamps' power; the whole chain from lamp to floor and crops |
 | `__main__.py` | the report |
 
@@ -27,4 +29,6 @@ python -m optics_model --set film_loss_per_reflection=0.005
 - **The light box works as proposed:** ~82% of the pipes' light reaches the floor (the notes' ~75–85%); the diffuser blends the stripes ~0.5 m below the pipes; the closer the pipes, the more of the returned light they take back (~87% at ~0.9 m apart, ~75% at 0.35 m).
 - **A farm tier puts ~93% of the pipes' light on the crops** (~99% with four pipes a bed instead of seven), within ~15% across a bed with the pipes ~0.6 m above the canopy.
 - **The pipes cost what the sizing left out:** ~85% into the pipe and ~72% out of a 40 m pipe (guesses). With the pipes laid out for the power that then needs (`scenes.converged`: ~0.6 m apart in the valley, seven over a farm bed), ~50% of the lamps' light reaches the valley and ~57% the crops, against the ~75% and ~85% assumed. If that holds: ~50% more lighting power and array, and ~2–3× the radiator panels for 1.5×. The configured deliveries are left as they are until a lamp on a pipe is measured (plan §8).
-- **Not modelled:** the light box's ends and the cliffs' edges, the pipes' ends and joints, the spectrum, angular scattering by real diffusers and film, dust and ageing, the canopy as a volume, the ceiling's grading, lamps straight in the light box.
+- **Lighting architectures** (`architectures.py`): pipes shorter (20 m) or more heavily loaded (600 W/m) recover part of the loss (~197 MW per 900 m torus at both); **~1 kW sulfur lamps straight in the light box, no pipes**, deliver ~80% / ~89% and need ~174 MW on small magnetrons, ~152 MW on 915 MHz sector plants (the fallback), against ~275 MW for the pipes as first proposed; LEDs (adopted), traced from the fixtures' output, ~73 MW white throughout, ~66 MW with blue + red in the farm. Every lamp's ageing is allowed for (~85% of its initial output on average). The sulfur lamps take ~4× as many bulbs, in the ceiling's service space.
+- **LEDs from asteroid material** (`leds.py`, adopted): dies sized to hold the light until the LEDs fade to 70%, ~600 m² of epitaxial wafer per 900 m torus, ~270 kg of gallium, ~4.5 kg of indium (the red dies), ~80 kg of yttrium, each about 1% or less of the source bodies' content; the ~430 t of PV silicon they save is ~900× the finished dies' mass.
+- **Not modelled:** the light box's ends and the cliffs' edges, the pipes' ends and joints, the spectrum, angular scattering by real diffusers and film, dust, the canopy as a volume, the ceiling's grading, the lamps' discreteness along a row, the waveguides' layout.

@@ -38,6 +38,6 @@ python -m logistics_model --set lake_floor_frac=0.05
 - **Ship water, not hydrogen:** shipping only the hydrogen (as methane, ~48 instead of ~106 kt per 900 m torus) needs the oxygen from the silicates; charged for the electrolysis and furnace heat (~6.4 PJ), it only just beats water by electric thrusters (~12.5 against ~13.5 PJ) and loses by mass driver (~8 against ~3.6 PJ). It pays only on a host that electrolyses its silicates for iron anyway. Methane stays useful as a storable fuel.
 - **The generation's energy floor** at 1 GW per stack, water by mass driver: ~1.5 → ~0.9 years for a 900 m pair, ~19 → ~13 years for a 1.6 km six-stack.
 - **Rates:** at 10-year generations, ~9 kt of S-type and ~400 t of metal a day per 900 m torus, ~2% of Earth's largest mines and steelworks.
-- **Made locally:** ~99.2% from the host, ~0.8% from the C-type, ~0.003% vitamins.
+- **Made locally:** ~99.2% from the host, ~0.8% from the C-type, ~0.0004% vitamins (computing, sensors, catalysts); the array's silicon is made at the host.
 - **Ryugu's nitrogen** caps a 900 m cluster after ~55 years of doubling every 10 years, a 1.6 km one after ~14.
 - **Not modelled:** factory throughput against its own mass, people and training, seed transfers to new sites, the freighters' own mass and power, failures and spares, low-thrust and multi-revolution trajectories, gravity assists.

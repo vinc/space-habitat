@@ -13,13 +13,16 @@ from habitat_model.report import num, table
 
 from thermal_model import layout
 
-from . import pipe, scenes
+from . import architectures, leds, pipe, scenes
 
 N = 200_000          # rays for the main traces
 N_SWEEP = 80_000     # rays for the sweeps (stripes resolved to ~±3%)
 SWEPT = ("pipe_coupling", "film_loss_per_reflection", "extractor_efficiency", "pipe_end_return", "pipe_albedo",
          "mgo_reflectance", "diffuser_transmittance", "diffuser_absorptance", "floor_albedo",
          "canopy_reflectance", "aisle_reflectance", "canopy_height_m")
+# The sulfur light-pipe design first proposed, with the deliveries its sizing assumed: the pipe, light-box
+# and farm-tier sections trace it (the light box and the tiers carry over to the LEDs).
+FIRST_SIZING = {"ceiling_delivery": 0.75, "farm_delivery": 0.85, "farm_lamp_efficacy_umol_j": 0}
 PIPE_INPUTS = {"film_loss_per_reflection", "extractor_efficiency", "pipe_end_return"}
 
 
@@ -39,7 +42,7 @@ def chain_section(p, d, first):
         ["**Lamp to floor / crops**", f"**{pct(d['valley'])}**", f"**{pct(d['farm'])}**"],
         [f"… with the layout sized for the assumed deliveries ({num(first['box']['pitch'], 2)} m, "
          f"{first['tier']['pipes']} a bed)", pct(first["valley"]), pct(first["farm"])],
-        ["Assumed until now (`ceiling_delivery`, `farm_delivery`)", pct(p.ceiling_delivery), pct(p.farm_delivery)],
+        ["Assumed by the first sizing", pct(p.ceiling_delivery), pct(p.farm_delivery)],
     ]
     return [
         "## From lamp to leaf",
@@ -225,8 +228,8 @@ def impact_section(p, d):
         f"the assumed {pct(p.ceiling_delivery)} and {pct(p.farm_delivery)}: a six-stack at Eros, three tiers lit, "
         "and the assembled stack's radiative exchange (`habitat_model/cavity.py`, farm radiators outboard, "
         "4,000 rays). People per tier don't change (the light on the crops sets them); everything that scales "
-        "with the lamps does. The configured deliveries are left as they are until the chain's guesses are "
-        "measured.",
+        "with the lamps does. The pipes' guesses would need "
+        "measuring; the LEDs, adopted since, avoid the pipes altogether (below).",
         table(["Torus", "", "Assumed", "Traced", "Change"], rows),
         "The radiators still reach 1.5× with every panel in place, but need about twice the panel area or "
         "more (on the 1.5× search's coverage grid): a panel's output falls as coverage rises and the panels "
@@ -234,26 +237,154 @@ def impact_section(p, d):
     ]
 
 
+def architecture_section(p):
+    rows, results = [], {}
+    for name, over, pipe_eff, what in architectures.options(p):
+        d, q = architectures.evaluate_option(p, over, pipe_eff)
+        des, r = architectures.system(q)
+        check = layout._check(q, des, "outboard", 4000)
+        least = layout.smallest(check["points"], 1.5)
+        installed, count = architectures.bulbs(p, q, r, over)
+        results[name] = (d, q, r, count)
+        rows.append([name, pct(d["valley"]), pct(d["farm"]),
+                     f"{num(q.lamp_efficacy_umol_j, 3)}" + (f" / {num(q.farm_lamp_efficacy_umol_j, 3)}"
+                                                          if q.farm_lamp_efficacy_umol_j else ""),
+                     f"{num(r['power']['total'] / 1e6)} MW", f"{num(r['power']['array_site'] / 1e4)} ha",
+                     f"{num(check['margin'], 2)}×",
+                     f"{num(sum(least['panel_area']) / des.n_tori / 1e4)} ha" if least else "out of reach",
+                     f"~{num(count / 1e3)} k" if count else "—", what])
+    sens = []
+    lamp_name = architectures.options(p)[5]
+    for name in ("luminaire_efficiency", "luminaire_albedo"):
+        a = load()[name]
+        cells = []
+        for v in (a.low, a.high):
+            q0 = params(load(), **{**vars(p), name: v})
+            opt = [o for o in architectures.options(q0) if o[0] == lamp_name[0]][0]
+            d, q = architectures.evaluate_option(q0, opt[1], opt[2])
+            cells.append(architectures.system(q)[1]["power"]["total"] / 1e6)
+        sens.append([f"`{name}`", f"{num(a.low, 2)} – {num(a.high, 2)}", f"{num(cells[0])} – {num(cells[1])} MW"])
+    names = [o[0] for o in architectures.options(p)]
+    base = results[names[0]][2]["power"]["total"]
+    lamps = results[lamp_name[0]][2]["power"]["total"]
+    sector_gain = 1 - results[names[6]][2]["power"]["total"] / lamps
+    bulb_ratio = results[lamp_name[0]][3] / results[names[0]][3]
+    return results, [
+        "## Lighting architectures",
+        "What the pipes cost and what could replace them (`optics_model/architectures.py`): the same chain, "
+        "each layout sized for the power its own delivery needs, then the system model and the assembled "
+        "stack's radiators (900 m six-stack at Eros, three tiers lit). Small magnetrons give "
+        f"{num(p.sulfur_efficacy_umol_j, 3)} µmol/J; 915 MHz sector plants "
+        f"{num(p.sector_efficacy_umol_j, 3)} µmol/J less {pct(1 - p.waveguide_efficiency)} in waveguides "
+        "(notes §13). Lamps straight in the light box: ~1 kW bulbs in reflectors that keep "
+        f"{pct(p.luminaire_efficiency)} of the light and send back {pct(p.luminaire_albedo)} of what returns to "
+        "them, in rows behind a 1.5 m deep diffuser, and ~0.8 m above the canopy in the farm.",
+        table(["Architecture", "To the floor", "To the crops", "µmol/J at the wall (valley / farm)", "Electricity per torus",
+               "Array", "Radiators' best margin", "Panels for 1.5×", "Bulbs", ""], rows),
+        f"**Lamps straight in the light box beat every pipe**: ~{pct((base - lamps) / base)} less electricity than "
+        "the pipes as first proposed, and more than that design's assumed ~75% / ~85% (they deliver more: no "
+        "coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than "
+        "rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants "
+        f"~{pct(sector_gain)} of the power either way (their gain in efficacy, less the waveguides'). LEDs, adopted, need well under half again (below); the light box and the tiers "
+        "are as traced for the pipes, with strips in place of pipes.",
+        f"The price of lamps in the box: ~{num(bulb_ratio, 2)}× as many bulbs as the pipes' lamps, spread through the ceiling's service space and "
+        "above each tier, with their heat shed there rather than at the hub (both reachable by the coolant "
+        "loops, notes §13), and each one maintained from above the ceiling. Fed by sector plants, the sources "
+        "stay few (~100 kW each) and only the electrodeless bulbs are many; with small magnetrons every bulb "
+        "has one, ~10,000–20,000 hours each.",
+        table(["Lamps in the box: input", "Range", "Electricity per torus"], sens),
+    ]
+
+
+def led_section(p, results):
+    names = [o[0] for o in architectures.options(p)]
+    lamps, white, mixed = (results[n] for n in (names[6], names[7], names[8]))
+    rows, budgets = [], {}
+    for name, (_, q, r, _) in ((names[7], white), (names[8], mixed)):
+        b = leds.budget(q, r)
+        budgets[name] = (b, r)
+    els = ("Ga", "In", "As", "Y", "Ce", "Al", "N")
+    for el in els:
+        cells = []
+        for name in (names[7], names[8]):
+            b, r = budgets[name]
+            cells.append(f"{num(b['use'].get(el, 0.0), 2)} kg" if b["use"].get(el, 0.0) else "—")
+        c = leds.contained(mixed[2], el) if el in leds.EXTRA_PPM or el in ("Ga",) else None
+        need = budgets[names[8]][0]["use"].get(el, 0.0)
+        rows.append([el, *cells, f"~{num(c / 1e3)} t" if c else "plentiful",
+                     f"{need / c:.2%}" if c and need else "—"])
+    b, r = budgets[names[8]]
+    bw, _ = budgets[names[7]]
+    silicon = (lamps[2]["power"]["array_site"] - r["power"]["array_site"]) * p.pv_silicon_kg_m2
+    wafers = sum(b["wafer_m2"].values())
+    chain = [list(c) for c in leds.CHAIN]
+    return [
+        "## LEDs from asteroid material",
+        "White LEDs in the valley (blue InGaN dies under YAG:Ce phosphor), blue + red over the crops (InGaN "
+        f"and 660 nm AlGaInP, {pct(p.led_farm_red_share)} of the farm's power on red), at "
+        f"{num(p.lamp_efficacy_umol_j, 3)} and {num(p.farm_lamp_efficacy_umol_j, 3)} µmol/J "
+        "(`optics_model/leds.py`), both measured at the fixtures' output. Installed for the noon peak and the tiers "
+        f"while lit, and to hold the light until the LEDs fade to {pct(p.lamp_end_of_life_output)} and are replaced "
+        f"(~{num(p.lamp_maintained_output / p.lamp_end_of_life_output, 2)}× the average draw, at "
+        f"{pct(p.lamp_maintained_output)} of the initial efficacy over their life): "
+        f"{num(b['valley_w'] / 1e6)} MW in the valley, {num(b['farm_w'] / 1e6)} MW in the farm; at "
+        f"{num(p.led_die_w_mm2, 2)} W/mm² that is {num(b['die_m2']['blue'])} m² of blue die and "
+        f"{num(b['die_m2']['red'])} m² of red, ~{num(wafers)} m² of epitaxial wafer at "
+        f"{pct(p.led_wafer_yield)} yield (white throughout: {num(sum(bw['wafer_m2'].values()))} m²). Each lasts "
+        f"~{num(b['life_yr']['valley'])} years in the valley, ~{num(b['life_yr']['farm'])} in the farm: "
+        f"~{pct(b['replaced_per_yr'])} replaced a year.",
+        table(["Element (kg per torus)", "White throughout", "White + blue/red", "In the source bodies",
+               "Share of it needed (white + blue/red)"], rows),
+        f"Gallium is fed at {pct(p.mocvd_utilization)} utilization (the rest leaves in the exhaust, "
+        "recoverable); the red dies' GaAs substrates, etched away, take most of it and all the arsenic. "
+        "Indium is the tight one: grams in the blue wells, kilograms in the red layers (half their group III), "
+        "against a few hundred kilograms in the source bodies at ~2–78 ppb, so it comes back from spent dies and "
+        "the reactors' exhaust, and only the losses are new. Ammonia: "
+        f"~{num(b['ammonia'] / 1e3)} t per torus's wafers ({num(p.mocvd_ammonia_kg_m2)} kg/m²), against "
+        "~8 kt of nitrogen recovered from the C-type, and mostly recoverable.",
+        table(["Step", "Needs", "From", "Status"], chain),
+        f"**LEDs halve the semiconductor works' silicon.** The array is made at the host (notes §2, §13), by the "
+        "works that can also make the LEDs and their drivers. "
+        f"Blue + red LEDs need {num(r['power']['array_site'] / 1e4)} ha "
+        f"of array against {num(lamps[2]['power']['array_site'] / 1e4)} ha for sulfur lamps in the "
+        f"box (the fallback): ~{num(silicon / 1e3)} t less wafer silicon per torus at {num(p.pv_silicon_kg_m2)} kg/m². "
+        f"Until a new site's works runs, importing the finished dies and phosphor instead costs ~{num(b['dies_imported'])} kg per torus "
+        f"(dies thinned to {num(leds.DIE_THINNED_M * 1e6)} µm), and ~{pct(b['replaced_per_yr'])} of that a year: "
+        f"~{num(silicon / b['dies_imported'])}× less than the silicon saved, and still "
+        f"~{num(silicon / (b['dies_imported'] * (1 + 30 * b['replaced_per_yr'])))}× with 30 years of "
+        "replacements. Making the dies locally is a small fab: one MOCVD reactor growing ~0.1 m² "
+        f"every ~5 h makes ~150 m² a year, so a torus's ~{num(wafers)} m² takes a few reactor-years, and "
+        "micron-scale LEDs need none of a chip fab's steppers.",
+    ]
+
+
 def report(p):
-    first = scenes.delivery(p, n=N)
-    d = scenes.converged(p, n=N, pipe_result=first["pipe"])
+    ps = params(load(), **{**vars(p), "lamp_efficacy_umol_j": p.sulfur_efficacy_umol_j, **FIRST_SIZING})
+    first = scenes.delivery(ps, n=N)
+    d = scenes.converged(ps, n=N, pipe_result=first["pipe"])
+    results, arch = architecture_section(p)
     parts = [
-        "# Light pipes, the light box and the farm's tiers",
-        "Plan §7 (`optics_model/`): how much of the sulfur lamps' light the prism light pipes carry, the "
-        "valley's magnesium-oxide light box and diffuser pass to the floor, and a farm tier's pipes put on the "
-        "crops, and how evenly. Most inputs are estimates or guesses (`reports/assumptions.md`).",
-        *chain_section(p, d, first),
-        *pipe_section(p),
-        *box_section(p, d),
-        *farm_section(p, d),
-        *sensitivity_section(p, d),
-        *impact_section(p, d),
+        "# Light pipes, the light box, the farm's tiers and LEDs",
+        "Plan §7 (`optics_model/`): how much of the lamps' light reaches the valley's floor through its "
+        "magnesium-oxide light box and diffuser, and the crops in a farm tier, and how evenly. The first "
+        "sections trace the design first proposed, sulfur lamps feeding prism light pipes (sized at "
+        f"{num(p.sulfur_efficacy_umol_j, 3)} µmol/J and an assumed {pct(FIRST_SIZING['ceiling_delivery'])} / "
+        f"{pct(FIRST_SIZING['farm_delivery'])}); the architectures that followed, and the LEDs now adopted "
+        f"(sized at {pct(p.ceiling_delivery)} / {pct(p.farm_delivery)}), come after. Most inputs are estimates "
+        "or guesses (`reports/assumptions.md`).",
+        *chain_section(ps, d, first),
+        *pipe_section(ps),
+        *box_section(ps, d),
+        *farm_section(ps, d),
+        *sensitivity_section(ps, d),
+        *impact_section(ps, d),
+        *arch,
+        *led_section(p, results),
         "Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley "
         "loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), "
-        "angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a "
-        "volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), and lamps "
-        "placed straight in the light box without pipes (an option if the pipes' losses hold up: smaller "
-        "lamps, ~1 kW, behind the diffuser).",
+        "angular (not diffuse) scattering by real diffusers and prism film, dust (the lamps' ageing is in the sizing), the canopy as a "
+        "volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a "
+        "row (traced as line sources), and the waveguides' layout.",
     ]
     return "\n\n".join(parts) + "\n"
 

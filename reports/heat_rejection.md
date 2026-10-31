@@ -8,58 +8,58 @@ Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the ba
 
 | Stack, tiers lit | Farm radiators | Best margins, main / farm | At coverage, main / farm | Least panels for 1.5× (ha), main / farm | Tiers the passive set alone carries |
 |---|---|---|---|---|---|
-| 900 m pair, 3 tiers | outboard | 5.9 / 5.2 | 75% / 100% | 35.8 / 63.5 | — |
-| 900 m pair, 3 tiers | inboard | 1.9 / 1.4 | 10% / 100% | **not reached** | 4.1 |
-| 900 m six, 2 tiers | outboard | 2.7 / 2.8 | 100% / 35% | 161 / 191 | — |
-| 900 m six, 2 tiers | inboard | 0.88 / 0.74 | 5% / 75% | **not reached** | 1.5 |
-| 900 m six, 3 tiers | outboard | 2.5 / 2.5 | 100% / 100% | 161 / 254 | — |
-| 900 m six, 3 tiers | inboard | 0.88 / 0.49 | 5% / 75% | **not reached** | 1.5 |
-| 1.6 km six, 3 tiers | outboard | 2.5 / 2.4 | 100% / 100% | 514 / 807 | — |
-| 1.6 km six, 3 tiers | inboard | 0.89 / 0.48 | 5% / 100% | **not reached** | 1.4 |
+| 900 m pair, 3 tiers | outboard | 13 / 13 | 100% / 100% | 17.9 / 21.2 | — |
+| 900 m pair, 3 tiers | inboard | 3.8 / 3.5 | 10% / 100% | 17.9 / 19.8 | 11 |
+| 900 m six, 2 tiers | outboard | 6.0 / 6.2 | 100% / 25% | 53.8 / 63.5 | — |
+| 900 m six, 2 tiers | inboard | 3.1 / 1.8 | 10% / 100% | 53.8 / 83.0 | 3.5 |
+| 900 m six, 3 tiers | outboard | 5.3 / 5.5 | 100% / 50% | 53.8 / 63.5 | — |
+| 900 m six, 3 tiers | inboard | 1.7 / 1.3 | 5% / 75% | **not reached** | 3.8 |
+| 1.6 km six, 3 tiers | outboard | 5.3 / 5.3 | 100% / 50% | 171 / 202 | — |
+| 1.6 km six, 3 tiers | inboard | 1.8 / 1.2 | 5% / 100% | **not reached** | 3.7 |
 
-**Inboard radiators can't cool a six-stack's farm** (~0.5–0.75× at best): the farm rings enclose them. Outboard, with pumps, is needed for two or three tiers lit; the inboard set is a passive fallback that keeps about one tier lit if the pumps stop. A pair's farm cools passively.
+**Inboard radiators cool a six-stack's farm passively, but below 1.5× in some cases** (~1.2× at worst, ~3.5 tiers' heat): no pumps needed with all tiers lit, outboard pumped radiators for a full margin, the inboard set as their passive fallback.
 
 **How far out the outboard radiators must reach** (× floor radius) for each margin, both sections:
 
 | Stack, tiers lit | Reach for 1× | Reach for 1.5× |
 |---|---|---|
-| 900 m six, 3 tiers | 0.59 | 0.75 |
-| 1.6 km six, 3 tiers | 0.61 | 0.78 |
-| 900 m six, 2 tiers | 0.52 | 0.61 |
+| 900 m six, 3 tiers | 0.45 | 0.49 |
+| 1.6 km six, 3 tiers | 0.46 | 0.50 |
+| 900 m six, 2 tiers | 0.45 | 0.45 |
 
 ## How many tori the radiators can cool
 
-Most tori (with their farm rings) the assembled stack can cool, farm radiators outboard to 1 r, by farm tiers lit (any margin above 1×):
+Most tori (with their farm rings) the assembled stack can cool, farm radiators outboard to 1 r, by farm tiers lit (any margin above 1×; the search stops at 40, beyond passive stability's ~22–25):
 
 | Torus | 0 tiers lit | 1 tier | 2 tiers | 3 tiers |
 |---|---|---|---|---|
-| 900 m | 24 | 18 | 18 | 16 |
-| 1.6 km | 24 | 18 | 18 | 16 |
+| 900 m | 40 | 40 | 40 | 40 |
+| 1.6 km | 40 | 40 | 40 | 40 |
 
-Panels per torus at 1.5× (one face, outboard farm radiators). Finite panels that see each other, and the farm radiators shading the drum's farm end, need ~2–3× the black-body area (`reports/thermal.md`):
+Panels per torus at 1.5× (one face, outboard farm radiators). Finite panels that see each other, and the farm radiators shading the drum's farm end, need ~2–3× the black-body area (`reports/thermal.md`). Areas at the grid's smallest coverage step (5%) are an upper bound: fewer panels may do.
 
 | Stack, tiers lit | Main section (valley) | Farm section |
 |---|---|---|
-| 900 m pair, 3 tiers | 18 ha | 32 ha |
-| 900 m six, 2 tiers | 27 ha | 32 ha |
-| 900 m six, 3 tiers | 27 ha | 42 ha |
-| 1.6 km six, 3 tiers | 86 ha | 130 ha |
+| 900 m pair, 3 tiers | 9.0 ha | 11 ha |
+| 900 m six, 2 tiers | 9.0 ha | 11 ha |
+| 900 m six, 3 tiers | 9.0 ha | 11 ha |
+| 1.6 km six, 3 tiers | 29 ha | 34 ha |
 
 ## Sunlight on the radiators
 
-The axis points at the orbit's pole (notes §11), so sunlight arrives edge-on to the panels. A tilt lets it fall on one face of each, unless the tori (as true tori), the hub or the farm rings shade them. Sun rays marched through a 900 m six-stack (`thermal_model/sunlight.py`), panels at 15% / 20% coverage (main / farm, the least panels for 1.5×), solar absorptivity 0.15 (white paint), at 1 AU; as a share of each section's heat (three tiers lit). 0.27° is the Sun's own radius, the least tilt any panel sees.
+The axis points at the orbit's pole (notes §11), so sunlight arrives edge-on to the panels. A tilt lets it fall on one face of each, unless the tori (as true tori), the hub or the farm rings shade them. Sun rays marched through a 900 m six-stack (`thermal_model/sunlight.py`), panels at 5% / 5% coverage (main / farm, the least panels for 1.5×), solar absorptivity 0.15 (white paint), at 1 AU; as a share of each section's heat (three tiers lit). 0.27° is the Sun's own radius, the least tilt any panel sees.
 
 | Axis tilt from the pole | Main section (drum) | Farm section (open) |
 |---|---|---|
-| 0.27° | 0 MW (0.0%) | 2.0 MW (0.3%) |
-| 0.5° | 0 MW (0.0%) | 3.6 MW (0.6%) |
-| 1° | 0 MW (0.0%) | 7.3 MW (1.3%) |
-| 1.5° | 1.1 MW (0.3%) | 11 MW (1.9%) |
-| 2° | 1.9 MW (0.6%) | 15 MW (2.5%) |
-| 3° | 2.5 MW (0.7%) | 21 MW (3.7%) |
-| 5° | 6.8 MW (2.0%) | 33 MW (5.7%) |
+| 0.27° | 0 MW (0.0%) | 0.49 MW (0.2%) |
+| 0.5° | 0 MW (0.0%) | 0.91 MW (0.4%) |
+| 1° | 0 MW (0.0%) | 1.8 MW (0.8%) |
+| 1.5° | 0.36 MW (0.2%) | 2.7 MW (1.2%) |
+| 2° | 0.64 MW (0.4%) | 3.6 MW (1.6%) |
+| 3° | 0.84 MW (0.5%) | 5.4 MW (2.4%) |
+| 5° | 2.3 MW (1.3%) | 8.7 MW (3.9%) |
 
-The drum's panels see no direct sunlight below ~1.5° of tilt: the tori shade them, through the ends and through the gaps alike. The open farm section takes ~1.3% of its heat per degree of tilt at 1 AU, up to ×1.5–1.8 at the nearest candidates' perihelia and ×2 as the paint ages towards ~0.3: **a few degrees cost a few percent**, so the axis needs holding only roughly (within ~1–2°), trimmed as the orbit plane drifts over centuries.
+The drum's panels see no direct sunlight below ~1.5° of tilt: the tori shade them, through the ends and through the gaps alike. The open farm section takes ~0.8% of its heat per degree of tilt at 1 AU, up to ×1.5–1.8 at the nearest candidates' perihelia and ×2 as the paint ages towards ~0.3: **a few degrees cost a few percent**, so the axis needs holding only roughly (within ~1–2°), trimmed as the orbit plane drifts over centuries.
 
 ## Coolant loops
 
@@ -67,10 +67,10 @@ Single-phase water, 10 K warmer leaving the heat source, 12 loops per torus or f
 
 | Torus | Valley's heat | Pipe (each loop) | Speed | Buoyancy head | Water in the loops | Farm ring's heat | Pipe (each loop) | Pumping |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 57.4 MW | 0.45 m | 0.72 m/s | 4.2 kPa | 0.92 kt | 96.2 MW | 0.35 m | 159 kW (0.17%) |
-| 1.6 km | 181 MW | 0.69 m | 0.96 m/s | 7.4 kPa | 3.8 kt | 304 MW | 0.62 m | 482 kW (0.16%) |
+| 900 m | 28.8 MW | 0.35 m | 0.61 m/s | 4.2 kPa | 0.55 kt | 37.4 MW | 0.22 m | 105 kW (0.28%) |
+| 1.6 km | 91.1 MW | 0.53 m | 0.81 m/s | 7.4 kPa | 2.3 kt | 118 MW | 0.39 m | 310 kW (0.26%) |
 
-**Main section: passive, as intended.** A few tenths of a kPa per kelvin of buoyancy, over hundreds of metres of spin gravity, drive ~0.5 m pipes at under 1 m/s; the loops hold ~1 kt of water per 900 m torus (~1.5% of its water budget, local). **Farm section: pumps** of ~0.2% of its heat.
+**Main section: passive, as intended.** A few tenths of a kPa per kelvin of buoyancy, over hundreds of metres of spin gravity, drive ~0.3 m pipes at under 1 m/s; the loops hold ~0.5 kt of water per 900 m torus (~0.8% of its water budget, local). **Farm section: pumps** of ~0.3% of its heat.
 
 **Two-phase loops need throttling.** An evaporating loop (ammonia, as on the ISS) would carry the heat in far smaller pipes, but the liquid returning outward from the radiators builds a column of hundreds of metres of near-1 g head: at the rim it is far above its saturation pressure and can't boil at the valley's temperature unless throttled (or run through a turbine) just before the evaporator.
 

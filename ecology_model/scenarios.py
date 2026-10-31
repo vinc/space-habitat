@@ -10,7 +10,7 @@ from dataclasses import replace
 
 from .closed import DAY, M_O2, R_GAS, YEAR, config, first_crossing, mature, run, steady_valley_co2
 
-FAILURES = (("One farm tier dark", 2 / 3), ("Two tiers dark (the pumps' passive fallback)", 1 / 3),
+FAILURES = (("One farm tier dark", 2 / 3), ("Two tiers dark", 1 / 3),
             ("The whole farm dark", 0.0))
 
 

@@ -8,6 +8,9 @@ from optics_model import pipe, scenes
 from optics_model.trace import Scene, lambertian, trace
 
 P = params(load())
+# The sulfur light-pipe design first proposed, which the pipe and light-box traces describe.
+from optics_model.__main__ import FIRST_SIZING  # noqa: E402
+PS = params(load(), lamp_efficacy_umol_j=P.sulfur_efficacy_umol_j, **FIRST_SIZING)
 
 
 class TestPipe(unittest.TestCase):
@@ -78,8 +81,8 @@ class TestTrace(unittest.TestCase):
         self.assertAlmostEqual(sum(r["absorbed"].values()), 1.0, places=9)
 
     def test_diffuser_blends_the_stripes(self):
-        close = scenes.light_box(P, gap=0.1, n=100_000)["glow_ratio"]
-        far = scenes.light_box(P, gap=0.75, n=100_000)["glow_ratio"]
+        close = scenes.light_box(PS, gap=0.1, n=100_000)["glow_ratio"]
+        far = scenes.light_box(PS, gap=0.75, n=100_000)["glow_ratio"]
         self.assertGreater(close, 1.5)
         self.assertLess(far, 1.2)
 
@@ -121,6 +124,110 @@ class TestDelivery(unittest.TestCase):
         first = scenes.delivery(P, n=50_000, pipe_result=pr)
         self.assertLess(d["box"]["pitch"], first["box"]["pitch"])
         self.assertLess(d["valley"], first["valley"])
+
+
+class TestArchitectures(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from optics_model import architectures
+        cls.a = architectures
+        cls.opts = {o[0]: o for o in architectures.options(P)}
+        cls.names = list(cls.opts)
+
+    def run_option(self, name, n=30_000):
+        _, over, eff, _ = self.opts[name]
+        return self.a.evaluate_option(P, over, eff, n=n)
+
+    def test_lamps_in_the_box_beat_the_pipes(self):
+        pipes, _ = self.run_option(self.names[0])
+        lamps, _ = self.run_option(self.names[5])
+        self.assertGreater(lamps["valley"], pipes["valley"] + 0.2)
+        self.assertGreater(lamps["farm"], pipes["farm"] + 0.2)
+        # No pipe in the chain: the luminaire's efficiency is the whole coupling.
+        self.assertAlmostEqual(lamps["lamp_to_pipe_out"], P.luminaire_efficiency)
+
+    def test_shorter_and_heavier_pipes_help(self):
+        base, _ = self.run_option(self.names[0])
+        short, _ = self.run_option(self.names[1])
+        heavy, _ = self.run_option(self.names[2])
+        self.assertGreater(short["valley"], base["valley"])
+        self.assertGreater(heavy["valley"], base["valley"])
+        self.assertGreater(heavy["box"]["pitch"], base["box"]["pitch"])
+
+    def test_sector_plants_raise_the_efficacy_only(self):
+        _, q_small = self.run_option(self.names[5])
+        _, q_sector = self.run_option(self.names[6])
+        self.assertAlmostEqual(q_sector.lamp_efficacy_umol_j, P.sector_efficacy_umol_j * P.waveguide_efficiency)
+        self.assertAlmostEqual(q_small.lamp_efficacy_umol_j, P.sulfur_efficacy_umol_j)
+        _, r_small = self.a.system(q_small)
+        _, r_sector = self.a.system(q_sector)
+        self.assertLess(r_sector["power"]["total"], r_small["power"]["total"])
+
+    def test_bulb_count(self):
+        name = self.names[5]
+        d, q = self.run_option(name)
+        _, r = self.a.system(q)
+        installed, count = self.a.bulbs(P, q, r, self.opts[name][1])
+        self.assertAlmostEqual(count, installed / P.lamp_power_w)
+        pw = r["power"]
+        self.assertAlmostEqual(installed, pw["valley_sky"] * 24 / P.valley_day_h
+                               + 3 * pw["farm_per_tier"] * 24 / P.farm_photoperiod_h)
+        led = self.names[7]
+        _, ql = self.run_option(led)
+        self.assertIsNone(self.a.bulbs(P, ql, self.a.system(ql)[1], self.opts[led][1])[1])
+
+    def test_blue_red_farm_lowers_only_the_farm(self):
+        _, qw = self.run_option(self.names[7])
+        _, qm = self.run_option(self.names[8])
+        rw, rm = self.a.system(qw)[1]["power"], self.a.system(qm)[1]["power"]
+        self.assertAlmostEqual(rm["valley_sky"], rw["valley_sky"])
+        self.assertAlmostEqual(rm["farm_per_tier"] / rw["farm_per_tier"], P.lamp_efficacy_umol_j / P.farm_lamp_efficacy_umol_j)
+
+
+class TestLeds(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from optics_model import architectures, leds
+        cls.leds = leds
+        opts = architectures.options(P)
+        cls.qw = architectures.evaluate_option(P, opts[7][1], 1.0, n=20_000)[1]
+        cls.white = architectures.system(cls.qw)
+        cls.mixed = architectures.system(architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1])
+        cls.qm = architectures.evaluate_option(P, opts[8][1], 1.0, n=20_000)[1]
+
+    def test_dies_hold_the_light_to_the_end_of_life(self):
+        r = self.mixed[1]
+        valley, farm = self.leds.installed(self.qm, r, 3)
+        aged = P.lamp_maintained_output / P.lamp_end_of_life_output
+        self.assertGreater(aged, 1.0)
+        self.assertAlmostEqual(valley, r["power"]["valley_sky"] * 24 / P.valley_day_h * aged)
+        self.assertAlmostEqual(farm, 3 * r["power"]["farm_per_tier"] * 24 / P.farm_photoperiod_h * aged)
+
+    def test_led_fixture_loss_counted_once(self):
+        # The efficacy is measured at the fixture's output: nothing more is lost before the light box.
+        from optics_model import architectures
+        for name, over, _, _ in architectures.options(P)[7:]:
+            self.assertEqual(over["pipe_coupling"], 1.0, msg=name)
+
+    def test_die_area_follows_the_power(self):
+        r = self.white[1]
+        b = self.leds.budget(self.qw, r)
+        self.assertEqual(b["die_m2"]["red"], 0.0)
+        self.assertAlmostEqual(b["die_m2"]["blue"] * 1e6 * P.led_die_w_mm2, b["valley_w"] + b["farm_w"])
+        self.assertAlmostEqual(b["phosphor"], (b["valley_w"] + b["farm_w"]) * P.led_phosphor_g_w / 1e3)
+
+    def test_red_dies_bring_indium_and_arsenic(self):
+        bw = self.leds.budget(self.qw, self.white[1])
+        bm = self.leds.budget(self.qm, self.mixed[1])
+        self.assertAlmostEqual(bm["red_w"], P.led_farm_red_share * bm["farm_w"])
+        self.assertGreater(bm["use"]["In"], 10 * bw["use"]["In"])
+        self.assertGreater(bm["use"]["As"], 0.0)
+        self.assertLess(bm["phosphor"], bw["phosphor"])
+        # Gallium in the film over the reactor's utilization; indium enters below its own fed amount.
+        self.assertAlmostEqual(bw["fed"]["Ga"], bw["film"]["Ga"] / P.mocvd_utilization)
+        # The adopted lamps are the blue + red option.
+        self.assertEqual(self.qm.farm_lamp_efficacy_umol_j, P.farm_lamp_efficacy_umol_j)
+        self.assertLess(bm["use"]["In"], 0.05 * self.leds.contained(self.mixed[1], "In"))
 
 
 if __name__ == "__main__":

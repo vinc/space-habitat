@@ -123,12 +123,12 @@ Efficiencies are estimates or guesses (mass driver 50%, range 30–80%); the mas
 
 ## A generation
 
-A parent stack builds a child stack torus by torus, so a cluster doubles once per generation. **What a child is made of**, per torus (the torus, its share of the hub and factory metal, its farm ring and its array), by source: the host's rock and metal, the C-type's shipped products, and imported vitamins (the array's silicon at 0.400 kg/m², and ~50.0 t of electronics, dopants, catalysts and the like per 900 m torus, a guess).
+A parent stack builds a child stack torus by torus, so a cluster doubles once per generation. **What a child is made of**, per torus (the torus, its share of the hub and factory metal, its farm ring and its array), by source: the host's rock and metal, the C-type's shipped products, and imported vitamins (~50.0 t of computing, sensors, catalysts and the like per 900 m torus, a guess). The array is made at the host: its wafer silicon (0.400 kg/m²) is what the factory's semiconductor works must refine (notes §13).
 
-| Stack (per torus) | Built | From the host | Shipped from the C-type | Vitamins |
-|---|---|---|---|---|
-| 900 m pair | 13.1 Mt | 99.19% | 106 kt (0.81%) | 420 t (0.003%) |
-| 1.6 km six-stack | 43.0 Mt | 99.15% | 363 kt (0.85%) | 1,330 t (0.003%) |
+| Stack (per torus) | Built | From the host | Shipped from the C-type | Vitamins | PV silicon made at the host |
+|---|---|---|---|---|---|
+| 900 m pair | 13.1 Mt | 99.19% | 106 kt (0.81%) | 50.0 t (0.0004%) | 172 t |
+| 1.6 km six-stack | 43.0 Mt | 99.15% | 363 kt (0.85%) | 158 t (0.0004%) | 542 t |
 
 **Energy floor on the generation**, with the factory at 1.00 GW per stack: processing and shipping as in the system model (water route, electric thrusters), then the cheapest combination of route and freighter above (900 m pair: water by mass driver; 1.6 km six-stack: water by mass driver).
 
@@ -155,4 +155,4 @@ A parent stack builds a child stack torus by torus, so a cluster doubles once pe
 | 1.6 km six-stack | 10 yr | 192 | 6,144 | 16 | 14 |
 | 1.6 km six-stack | 25 yr | 24 | 96 | 16 | 36 |
 
-Not modelled: factory throughput as a function of its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' own mass and power (their solar arrays are silicon, a vitamin), failures and spares, low-thrust and multi-revolution transfers, and gravity assists.
+Not modelled: factory throughput as a function of its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' own mass and power (their solar arrays from the same semiconductor works), failures and spares, low-thrust and multi-revolution transfers, and gravity assists.

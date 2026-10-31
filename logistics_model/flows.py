@@ -22,12 +22,16 @@ STEELWORKS_KG_DAY = 1e10 / 365.25
 
 def composition(p, r):
     """What a torus is made of, by source (kg): the host's rock and metal, the C-type's shipped products,
-    imported vitamins. The torus with its share of the hub and factory metal, its farm ring and its array."""
+    imported vitamins. The torus with its share of the hub and factory metal, its farm ring and its array.
+    The array's wafer silicon is made at the host (notes §2, §13) and counted with it; `pv_silicon` is
+    what the semiconductor works must turn out."""
     m, mat, rep, pw = r["mass"], r["materials"], r["replication"], r["power"]
     built = m["total"] + m["steel"] * p.hub_factory_metal_frac + m["farm_total"] + pw["array_site_mass"]
-    vitamins = pw["array_site"] * p.pv_silicon_kg_m2 + p.other_vitamins_t * 1e3 * r["geometry"]["floor_area"] / REFERENCE_FLOOR_900
+    pv_silicon = pw["array_site"] * p.pv_silicon_kg_m2
+    vitamins = p.other_vitamins_t * 1e3 * r["geometry"]["floor_area"] / REFERENCE_FLOOR_900
     shipped = rep["shipped"]
     return {"built": built, "host": built - shipped - vitamins, "shipped": shipped, "vitamins": vitamins,
+            "pv_silicon": pv_silicon,
             "local_share": (built - shipped - vitamins) / built, "asteroid_share": (built - vitamins) / built}
 
 
