@@ -209,8 +209,9 @@ def report(p):
                "Bays needed in that gap"], build_rows),
         "## Fittings and tunnels",
         "Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and "
-        "crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane), "
-        "as wide as the jacket is deep, loaded in its own plane: sized with the lattice for stiffness (the "
+        "crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane: at "
+        "the tube's side, where the gap is, the jacket's depth runs along the axis), as wide as the jacket is "
+        "deep, loaded in its own plane both tangentially and axially, its weak direction radial: sized with the lattice for stiffness (the "
         "struts take half the bay's compliance, the two fittings the rest) and strength (safety factor 2), and "
         "in series with the struts in every result above. A post bending as a cantilever through the jacket "
         "would be far too soft: sized for strength alone, its compliance would cut a 900 m six-stack's margin "

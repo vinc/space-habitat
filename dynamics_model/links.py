@@ -53,19 +53,26 @@ WEB_BUCKLING_K = 9.34          # shear buckling coefficient of a square plate, s
 
 
 def link_radius(geo):
+    """The lattice's radius: the tube's centre (r - a). Neighbouring envelopes come closest there,
+    at the tubes' flat sides facing each other along the habitat's axis (the gap is axial: pitch =
+    2 x envelope radius + gap)."""
     return geo["radius"] - geo["tube_radius"]
 
 
 def fitting_depth(geo):
-    """How far a fitting reaches from the envelope to the hull, through the jacket and crawl space."""
+    """How far a fitting reaches from the envelope to the hull, through the jacket and crawl space.
+    At the tube's side, where the lattice is, that depth runs along the habitat's axis."""
     return geo["envelope_radius"] - geo["tube_radius"]
 
 
 def web_stiffness(depth, width):
-    """A fitting's shear web per metre of thickness: a plate `depth` long (from the envelope to the
-    hull) and `width` wide (tangentially), loaded tangentially at its envelope end, in its own plane:
-    bending and shear in series, k = t / (L^3 / (3 E w^3 / 12) + L / (kappa G w)); and along its
-    length (the axis), E w t / L."""
+    """A fitting's shear web per metre of thickness. At the tube's side the jacket's depth runs along
+    the habitat's axis, so the web spans `depth` along the axis (from the envelope to the hull) and is
+    `width` wide tangentially: it lies in the tangential-axial plane, its normal radial. Both loads
+    the lattice gives it are in that plane: tangential, at its envelope end (bending and shear in
+    series, k = t / (L^3 / (3 E w^3 / 12) + L / (kappa G w))), and axial, along its span (E w t / L).
+    Its weak direction, out of its plane, is the habitat's radial one, where the lattice is meant to
+    give way."""
     tangential = 1 / (depth ** 3 / (3 * E * width ** 3 / 12) + depth / (WEB_KAPPA * st.G * width))
     return tangential, E * width / depth
 

@@ -166,6 +166,14 @@ class TestLinks(unittest.TestCase):
         self.assertLess(lat["bays"] * k_post / 4, k)
         self.assertGreater(lat["k_fittings_lat"], 2 * k)
 
+    def test_the_gap_and_the_webs_span_run_along_the_axis(self):
+        # Neighbouring envelopes are one pitch apart along the axis, so the gap is axial, and at the
+        # tube's side (the lattice's radius r - a) the jacket's depth runs along the axis too.
+        geo = self.geo
+        self.assertAlmostEqual(geo["pitch"], 2 * geo["envelope_radius"] + geo["gap"])
+        self.assertAlmostEqual(lk.link_radius(geo), geo["radius"] - geo["tube_radius"])
+        self.assertAlmostEqual(lk.fitting_depth(geo), geo["envelope_radius"] - geo["tube_radius"])
+
     def test_web_stiffness(self):
         # A deep plate in its own plane: bending and shear in series, linear in its thickness.
         tangential, axial = lk.web_stiffness(7.0, 7.0)
