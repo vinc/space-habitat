@@ -33,8 +33,11 @@ Forced and transient motion (disturbances.py): a load whirling at lambda in the 
 F exp(i lambda t), gives Q = (K - lambda^2 M + lambda w G)^-1 F; an impulse is followed through the
 modes of the damped first-order system.
 
-Not modelled: the hub's shear and its joints to the dock and array mast, the elevator, pipe and
-power shafts, axial and torsional motion (they don't couple to the spin).
+The hub's elements are Timoshenko beams (shear, kappa G A, by default), and its segment joints
+rotational springs folded into an element's flexibility (build's joint_k). Axial and torsional
+motion, which don't couple to the spin, are in axial_torsion.py.
+
+Not modelled: the hub's joints to the dock and array mast, the elevator, pipe and power shafts.
 """
 
 import math
@@ -68,6 +71,25 @@ class Stack:
     omega: float
     point_masses: dict = field(default_factory=dict)   # node index -> mass (not spinning)
     links: list = field(default_factory=list)          # (body i, body j, lateral k, tilt k) between bodies
+    ga: object = None              # shear stiffness kappa G A (float or per element); None: no shear
+    hinges: dict = field(default_factory=dict)         # element index -> rotational stiffness of a joint at its first node
+
+    def element_stiffness(self, e):
+        """The hub element e's stiffness, from its flexibility as a cantilever from its first node:
+        bending, shear (Timoshenko, when ga is set) and a joint's rotational spring k at its first
+        node (relative rotation (P L + M) / k at the tip's lever arm L), K = B^T F^-1 B."""
+        length = self.hub_nodes[e + 1] - self.hub_nodes[e]
+        ei = self.ei
+        ga = self.ga[e] if np.ndim(self.ga) else self.ga
+        flex = np.array([[length ** 3 / (3 * ei), length ** 2 / (2 * ei)],
+                         [length ** 2 / (2 * ei), length / ei]])
+        if ga:
+            flex[0, 0] += length / ga
+        k_joint = self.hinges.get(e)
+        if k_joint:
+            flex += np.array([[length ** 2, length], [length, 1.0]]) / k_joint
+        b = np.array([[-1.0, -length, 1.0, 0.0], [0.0, -1.0, 0.0, 1.0]])
+        return b.T @ np.linalg.inv(flex) @ b
 
     def matrices(self):
         """M, G, K over the hub's (displacement, slope) per node, then each body's (displacement, slope)."""
@@ -80,12 +102,7 @@ class Stack:
         for node, mass in self.point_masses.items():
             m[2 * node] += mass
         for e in range(n - 1):
-            length = self.hub_nodes[e + 1] - self.hub_nodes[e]
-            ke = self.ei / length ** 3 * np.array([
-                [12, 6 * length, -12, 6 * length],
-                [6 * length, 4 * length ** 2, -6 * length, 2 * length ** 2],
-                [-12, -6 * length, 12, -6 * length],
-                [6 * length, 2 * length ** 2, -6 * length, 4 * length ** 2]])
+            ke = self.element_stiffness(e)
             dofs = [2 * e, 2 * e + 1, 2 * e + 2, 2 * e + 3]
             k[np.ix_(dofs, dofs)] += ke
         for b, body in enumerate(self.bodies):
@@ -229,12 +246,20 @@ def tie_plane_stiffness(geo, torus_mass, tie_frac, density):
     return E * area / (2 * length), length
 
 
-def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim_link=None, link_tilt=None):
+SHEAR_KAPPA = 0.5             # shear coefficient of a thin-walled circular tube
+G = 77e9
+
+
+def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim_link=None, link_tilt=None,
+          shear=True, joint_k=None, links_skip=()):
     """The stack of design d: tori, their farm rings, the hub and the despun array.
 
     tie_frac: radial ties from the hub to each torus (share of its mass); rim_link: lateral
     stiffness of links between neighbouring tori's rims (N/m), None for none; link_tilt: their
-    tilt stiffness (N m/rad), by default k r^2 / 2 (the links' spread around the rim)."""
+    tilt stiffness (N m/rad), by default k r^2 / 2 (the links' spread around the rim).
+    shear: the hub's shear flexibility (Timoshenko); joint_k: rotational stiffness (N m/rad) of
+    joints in the hub between its segments, one at every gap between tori and farm rings, None for
+    a continuous hub; links_skip: gaps (0 = between tori 1 and 2) left unlinked."""
     from habitat_model import evaluate
     from structure_model import hub as hub_model
 
@@ -266,6 +291,11 @@ def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim
         marks += [z for z, _ in planes]
 
     # Hub nodes at every attachment, and in between at most `element` apart.
+    joints = []
+    if joint_k:
+        joints = [k * pitch for k in range(1, n)] + [geo["main_length"] + geo["farm_section_gap"] / 2]
+        joints += [start + k * fp for k in range(1, n)]
+        marks += joints
     marks = sorted(set(round(x, 6) for x in marks))
     nodes = [marks[0]]
     for a, b in zip(marks, marks[1:]):
@@ -286,12 +316,15 @@ def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim
         # Neighbouring tori joined at their rims, spread evenly around them: lateral k, and tilt
         # k r^2 / 2 about the link's mid-plane.
         tilt = rim_link * r * r / 2 if link_tilt is None else link_tilt
-        links = [(i, i + 1, rim_link, tilt) for i in range(n - 1)]
+        links = [(i, i + 1, rim_link, tilt) for i in range(n - 1) if i not in links_skip]
+    ga = SHEAR_KAPPA * G * 2 * math.pi * h * t if shear else None
+    hinges = {int(np.argmin(np.abs(nodes[:-1] - z))): joint_k for z in joints}
     stack = Stack(nodes, hub_mass, hub_polar, hub_transverse, E * math.pi * h ** 3 * t, bodies, w,
-                  {len(nodes) - 1: array}, links)
+                  {len(nodes) - 1: array}, links, ga, hinges)
     info = {"geometry": geo, "mass": mass, "nets": nets, "k_farm_plane": k_farm, "k_tie_plane": k_tie,
             "tie_length": tie_length, "tie_mass": tie_frac * mass["total"], "hub_line_mass": line,
-            "hub_shell_mass": shell, "hub_share": share, "array_mass": array, "hub_shell_m": t}
+            "hub_shell_mass": shell, "hub_share": share, "array_mass": array, "hub_shell_m": t,
+            "joints": joints}
     return stack, info
 
 

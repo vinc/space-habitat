@@ -6,7 +6,10 @@ import unittest
 import numpy as np
 
 from habitat_model import Design, evaluate, load, params
+from dynamics_model import axial_torsion as at
 from dynamics_model import disturbances as ds
+from dynamics_model import fatigue as fa
+from dynamics_model import joints as jt
 from dynamics_model import links as lk
 from dynamics_model import stack as st
 from dynamics_model.__main__ import GROWTH_FLOOR
@@ -240,6 +243,97 @@ class TestDisturbances(unittest.TestCase):
         h = math.sqrt(ds.GM_SUN * a * (1 - e * e))
         self.assertLess(abs(path[-1]) / (2 * a * a / h), 1e-3)
         self.assertAlmostEqual(np.abs(path - path[0]).max() / (2 * a * a / h), 1, delta=1e-3)
+
+
+def two_node(length, ei, ga=None, hinge=None):
+    nodes = np.array([0.0, length])
+    return st.Stack(nodes, np.ones(2), np.ones(2), np.ones(2), ei, [], 0.1, ga=ga,
+                    hinges={0: hinge} if hinge else {})
+
+
+class TestHubElement(unittest.TestCase):
+    def tip(self, s):
+        # Clamp the first node: the tip's flexibility under a tip force.
+        k = s.element_stiffness(0)[2:, 2:]
+        return np.linalg.inv(k)[0, 0]
+
+    def test_euler_bernoulli_cantilever(self):
+        self.assertAlmostEqual(self.tip(two_node(20.0, 1e12)) / (20.0 ** 3 / 3e12), 1, places=9)
+
+    def test_shear_adds_l_over_ga(self):
+        flex = self.tip(two_node(20.0, 1e12, ga=1e9))
+        self.assertAlmostEqual(flex / (20.0 ** 3 / 3e12 + 20.0 / 1e9), 1, places=9)
+
+    def test_joint_adds_l2_over_k(self):
+        flex = self.tip(two_node(20.0, 1e12, hinge=1e10))
+        self.assertAlmostEqual(flex / (20.0 ** 3 / 3e12 + 20.0 ** 2 / 1e10), 1, places=9)
+
+    def test_stiff_joints_leave_the_margin(self):
+        p = params(load())
+        d = Design(radius_m=900, n_tori=6)
+        base = st.build(p, d, rim_link=5e10, tie_frac=1e-4)[0].forward_ratio()
+        stiff = st.build(p, d, rim_link=5e10, tie_frac=1e-4, joint_k=1e18)[0].forward_ratio()
+        soft = st.build(p, d, rim_link=5e10, tie_frac=1e-4, joint_k=1e12)[0].forward_ratio()
+        self.assertAlmostEqual(stiff / base, 1, places=4)
+        self.assertLess(soft, 0.6 * base)
+
+    def test_shear_lowers_the_margin_a_little(self):
+        p = params(load())
+        d = Design(radius_m=1600, n_tori=6)
+        bending = st.build(p, d, rim_link=5e10, tie_frac=1e-4, shear=False)[0].forward_ratio()
+        both = st.build(p, d, rim_link=5e10, tie_frac=1e-4)[0].forward_ratio()
+        self.assertLess(both, bending)
+        self.assertGreater(both, 0.95 * bending)
+
+
+class TestDetails(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.p = params(load())
+        cls.d = Design(radius_m=900, n_tori=2)
+        cls.k, _ = lk.design_stiffness(cls.p, cls.d, tie_frac=1e-4)
+
+    def test_flange_is_far_stiffer_than_needed(self):
+        j = jt.hub_joint(self.p, self.d, self.k, tie_frac=1e-4)
+        self.assertGreater(j["flange"], 10 * j["needed"])
+        self.assertGreater(j["opening_margin"], 10)
+        h = evaluate(self.p, self.d)["geometry"]["hub_radius"]
+        self.assertAlmostEqual(j["flange"], st.E * jt.BOLT_AREA / jt.BOLT_GRIP / jt.BOLT_SPACING * math.pi * h ** 3)
+
+    def test_lacing_lifts_the_axial_and_torsional_modes(self):
+        a = at.study(self.p, self.d, self.k, tie_frac=1e-4)
+        self.assertLess(a["axial_bare"], 1.2)
+        self.assertLess(a["torsion_bare"], 1.0)
+        self.assertGreaterEqual(a["axial_lowest"], at.TARGET * 0.999)
+        self.assertGreaterEqual(a["torsion_lowest"], at.TARGET * 0.999)
+
+    def test_a_farm_ring_bounces_on_its_spokes_tension(self):
+        # Two planes of radial spokes, each T / L along the axis: w^2 = 2 T / (L m), T = m w^2 r_f / 2
+        # less the spokes' own share, so about w sqrt(r_f / L).
+        res = evaluate(self.p, self.d)
+        geo, mass = res["geometry"], res["mass"]
+        spokes = at.farm_spokes(geo, mass)
+        natural = math.sqrt(2 * spokes["axial"] / mass["farm_total"]) / geo["omega"]
+        estimate = math.sqrt(geo["farm_radius"] / (geo["farm_radius"] - geo["hub_radius"]))
+        self.assertAlmostEqual(natural / estimate, 1, delta=0.02)
+
+    def test_an_unlinked_gap_loses_the_margin_and_a_few_bays_restore_it(self):
+        c = lk.construction(self.p, self.d, self.k, tie_frac=1e-4)
+        self.assertLess(c["worst"], 1.0)
+        self.assertGreater(c["e_folding_hours"], 0)
+        self.assertLess(c["share"], 0.1)
+
+    def test_fatigue_curve(self):
+        detail = 71e6
+        d_d = fa.D_RATIO * detail
+        self.assertAlmostEqual(fa.endurance(detail, detail), 2e6)
+        self.assertAlmostEqual(fa.endurance(detail, d_d * 1.000001) / 5e6, 1, delta=1e-4)
+        self.assertAlmostEqual(fa.endurance(detail, fa.L_RATIO * d_d * 1.000001) / 1e8, 1, delta=1e-4)
+        self.assertEqual(fa.endurance(detail, 0.5 * d_d), math.inf)
+
+    def test_no_fatigue_damage(self):
+        f = fa.study(self.p, self.d, self.k, tie_frac=1e-4)
+        self.assertTrue(all(v == 0 for v in f["damage"].values()))
 
 
 if __name__ == "__main__":

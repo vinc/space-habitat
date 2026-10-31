@@ -144,3 +144,47 @@ def converged(p, d, k_design, tie_frac=0.0, iterations=20):
         area, force = lat["area"], unbalanced["link"]
     lat = lattice(geo, k_design, p.steel_density, force=unbalanced["link"])
     return lat, s, info, unbalanced
+
+
+def construction(p, d, k_design, tie_frac=0.0, target=1.2):
+    """Building and losing lattices: the stack's margin with one gap left unlinked (a torus just
+    closed next to the stack, or a lattice lost), the worst gap, and the share of a gap's bays
+    that must be in place (spread evenly around it) to restore `target`."""
+    lat, s, info, _ = converged(p, d, k_design, tie_frac=tie_frac)
+    n = d.n_tori
+    full = s.forward_ratio()
+    missing = {}
+    for gap in range(n - 1):
+        missing[gap] = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac,
+                                links_skip=(gap,))[0].forward_ratio()
+    worst = min(missing, key=missing.get) if missing else None
+
+    def with_share(gap, share):
+        stack, _ = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac)
+        stack.links = [(i, j, kl * (share if i == gap else 1.0), kt * (share if i == gap else 1.0))
+                       for i, j, kl, kt in stack.links]
+        return stack.forward_ratio()
+
+    share = None
+    if worst is not None:
+        if with_share(worst, 1.0) >= target:
+            lo, hi = 1e-6, 1.0
+            if with_share(worst, lo) >= target:
+                hi = lo
+            else:
+                for _ in range(40):
+                    mid = math.sqrt(lo * hi)
+                    lo, hi = (lo, mid) if with_share(worst, mid) >= target else (mid, hi)
+                    if hi / lo < 1.01:
+                        break
+            share = hi
+    end = missing.get(n - 2)
+    growth = None
+    if worst is not None:
+        _, g = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac,
+                        links_skip=(worst,))[0].modes(damping=0.01)
+        growth = float(g.max())
+    return {"full": full, "missing": missing, "worst_gap": worst, "growth": growth,
+            "e_folding_hours": (1 / growth / 3600) if growth and growth > 0 else None,
+            "worst": missing[worst] if worst is not None else None, "end_gap": end,
+            "share": share, "bays": math.ceil(share * lat["bays"]) if share else None, "lattice": lat}
