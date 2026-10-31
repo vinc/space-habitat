@@ -262,11 +262,10 @@ def building_torus(p, d, share, link=True, radial_lines=True, tie_frac=1e-4, k_d
     `share` of its rim in two opposite pairs of arcs at right angles (so its transverse inertia is
     half its polar one, as for a ring), held on the hub by its nets (their stiffness in proportion to
     its chords), by the temporary radial lines from the hub to its arcs' single-laced anchors
-    (structure_model.nonlinear: N / 2 E A / L sideways, if radial_lines) and, if link, by the rim
+    (structure_model.nonlinear and sequence.SUPPORT: N / 2 E A / L sideways, N counted from the arcs'
+    own geometry, if radial_lines) and, if link, by the rim
     lattice's bays alongside its arcs (in proportion). Returns the stack's lowest forward whirl over
-    the spin."""
-    from habitat_model import evaluate
-    from structure_model import cable_net
+    the spin, the lines' stiffness and their number."""
     if k_design is None:
         k_design, _ = design_stiffness(p, d, tie_frac=tie_frac)
     lat, s, info, _ = converged(p, d, k_design, tie_frac=tie_frac)
@@ -274,15 +273,21 @@ def building_torus(p, d, share, link=True, radial_lines=True, tie_frac=1e-4, k_d
     r = geo["radius"]
     last = d.n_tori - 1
     body = s.bodies[last]
-    k_lines = 0.0
+    k_lines, n_single = 0.0, 0
     if radial_lines:
-        net = cable_net.compute(r, mass["rim"], geo["omega"], geo["hub_radius"], p.wire_stress_mpa * 1e6,
-                                p.steel_density)
-        n_single = 4 * 2 * round(2 * net["theta"] * r / net["anchor_spacing"])   # 4 arcs, 2 end zones each
-        k_lines = n_single / 2 * E * net["wire_area_uniform"] / (r - geo["hub_radius"])
+        # The single-laced anchors of the very arcs being hung (two pairs at right angles), counted from
+        # the construction model's own geometry, and the proposed lines' area there.
+        from structure_model import nonlinear as nl
+        from structure_model import sequence
+        model, built = nl.for_design(
+            p, r, arcs_fn=lambda n, net: nl.opposite_pairs(n, max(1, round(share * n / 4)), pairs=2),
+            **sequence.SUPPORT)
+        n_single = len(model.radials)
+        length = r - geo["hub_radius"]
+        k_lines = n_single / 2 * E * model.radial_area / length
     m_part = share * body.mass
     springs = [(z, k * share + k_lines / len(body.springs)) for z, k in body.springs]
     s.bodies[last] = st.Body(body.name, m_part, share * body.polar, share * body.transverse, body.z, springs)
     s.links = [(i, j, kl * (share if link else 0.0), kt * (share if link else 0.0)) if j == last else (i, j, kl, kt)
                for i, j, kl, kt in s.links]
-    return s.forward_ratio(), k_lines
+    return s.forward_ratio(), k_lines, n_single

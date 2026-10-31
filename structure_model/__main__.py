@@ -143,12 +143,16 @@ def sequence_section(p):
                           num(row["joint_tension"] / 1e6), num(row["joint_moment"] / 1e9, 2)])
     support_rows = [[size_label(row["r"]), f"{num(row['factor'])}×", row["kind"],
                      "full spin" if row["reached"] >= 1 else f"{num(row['reached'], 2)} of the spin",
-                     f"{mpa(row['stress'])} ({num(row['stress'] / row['sigma'], 2)}×)", mpa(row["hull"]),
+                     f"{mpa(row['stress'])} ({num(row['stress'] / row['sigma'], 3)}×)",
+                     f"{mpa(row['line_stress'])} ({num(row['line_stress'] / row['sigma'], 3)}×)" if row["line_stress"]
+                     else "—", mpa(row["hull"]),
                      num(row["joint_tension"] / 1e6), num(row["extra"] / 1e6, 2) if row["extra"] else "—"]
                     for row in sequence.support_study(p)]
     growth_rows = [[size_label(row["r"]), f"{num(row['arc'])} m ({row['share']:.0%} of a half ring)",
                     "full spin" if row["reached"] >= 1 else f"{num(row['reached'], 2)}",
-                    mpa(row["stress"]), mpa(row["hull"]),
+                    f"{mpa(row['stress'])} ({num(row['stress'] / row['sigma'], 3)}×)",
+                    f"{mpa(row['line_stress'])} ({num(row['line_stress'] / row['sigma'], 3)}×)",
+                    num(row["spin_within"], 3), mpa(row["hull"]),
                     f"{num(row['joint_tension'] / 1e6)} ({row['joint_tension'] / row['hoop']:.1%})",
                     num(row["joint_moment"] / 1e9, 2), num(row["hub_pull"] / 1e9, 2), str(row["lines"]),
                     num(row["extra"] / 1e6, 2)] for row in sequence.growth_study(p)]
@@ -159,11 +163,13 @@ def sequence_section(p):
                f"hoop: the hull at ~{mpa(c['closure_sliding']['hull_axial'])} MPa along it and "
                f"~{mpa(c['closure_sliding']['hull_bending'])} MPa in bending, the chords at "
                f"{num(c['closure_sliding']['tension_min'], 2)}–{num(c['closure_sliding']['tension_max'], 2)}× their "
-               "finished tension, every anchor now double-laced (the radial lines can go). Then every joint is "
-               "released to sliding, step by step from the last equilibrium: "
+               f"finished tension (peak {num(c['closure_sliding']['peak'], 3)}× the allowable), every anchor now "
+               "double-laced (the radial lines can go). Then every joint is released to sliding, step by step from "
+               "the last equilibrium: "
                + (f"the finished net, chords at {num(c['released']['tension_min'], 3)}–"
-                  f"{num(c['released']['tension_max'], 3)}× the formula." if c["released"]["resolved"]
-                  else "**not reached**."))
+                  f"{num(c['released']['tension_max'], 3)}× the formula (peak {num(c['released']['peak'], 3)}× the "
+                  f"allowable; {num(c['released']['path_peak'], 3)}× at worst on the way)."
+                  if c["released"]["resolved"] else "**not reached**."))
     return "\n\n".join([
         "## The spin-up sequence: geometrically nonlinear",
         "`structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible "
@@ -186,15 +192,24 @@ def sequence_section(p):
         f"With flexible segments, longer arcs don't relieve the chords: the single-laced end zones load theirs "
         f"to ~1.8× whatever the arc's length, and the arcs bend the hull far past its ~{mpa(sequence.HULL_STRESS)} MPa "
         "plate stress. A torus added to a spinning stack is hung at full spin, so it needs temporary support:",
+        "Every chord and line at its peak: tension over area plus its own spin load (a chord's at mid-chord; "
+        "a radial line's, conservatively, all of it, at its hub end).",
         table(["Torus", "Arcs", "Temporary support", "Reached", "Peak chord stress (MPa, × allowable)",
-               "Hull bending (MPa)", "Joint tension (MN)", "Temporary steel (kt)"], support_rows),
+               "Peak radial-line stress (MPa, × allowable)", "Hull bending (MPa)", "Joint tension (MN)",
+               "Temporary steel (kt)"], support_rows),
         "Doubling the cables at the single-laced anchors keeps the chords within their allowable but leaves "
-        "the hull bending. Temporary radial lines from the hub to those anchors (each a chord's area, pulling "
-        "straight in, nothing along the rim) take both away: the chords within the allowable, the hull's "
-        "bending a few tens of MPa. The hub carries the two arcs' pull across its diameter.",
+        "the hull bending. Temporary radial lines from the hub to those anchors (pulling straight in, nothing "
+        "along the rim) take the bending away; at a chord's area they are themselves ~5% over at their hub "
+        "end, thicker they stiffen the ends and bend the hull again. Proposed: lines of 1.15× a chord's area "
+        "and a 1.05× sleeve on the end-zone cables. The chords are sized to their allowable in the finished "
+        "net (here at ~1.007× it, from the anchors' discrete positions), so wherever a stage loads them past "
+        "their finished tension (the mid-arc chords by ~1%) they are past it too at full spin; the worst step "
+        "is the release after closure (below, ~7%): building at ~0.97 of the spin for it, or a lower safety "
+        "factor while building, covers it. The hub carries the two arcs' pull across its diameter.",
         "**Growing to closure at full spin** (one opposite pair; two pairs at right angles behave the same, each "
-        "arc at least the shortest, with twice the lines), radial lines at the single-laced anchors:",
-        table(["Torus", "Each arc", "Reached", "Peak chord stress (MPa)", "Hull bending (MPa)",
+        "arc at least the shortest, with twice the lines), with the proposed support:",
+        table(["Torus", "Each arc", "Reached", "Peak chord stress (MPa, × allowable)",
+               "Peak radial-line stress", "Spin within every allowable", "Hull bending (MPa)",
                "Joint tension (MN, share of hoop)", "Joint moment (GN·m)", "Pull across the hub (GN)",
                "Radial lines", "Their steel (kt)"], growth_rows),
         closure,

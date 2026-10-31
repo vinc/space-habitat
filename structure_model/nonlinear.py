@@ -133,6 +133,10 @@ class Model:
                 self.radials.append((hub, node, l0 / (1 + PRESTRAIN), hub_radius))
             self.extra_cable_mass += len(self.radials) * radial_lines * chord_area * density * (r - hub_radius)
         self.radial_ea = E * radial_lines * chord_area
+        self.radial_area = radial_lines * chord_area
+        self.radial_mu = density * radial_lines * chord_area
+        self.density = density
+        self.hub_radius = hub_radius
 
         # Joint stiffness: far stiffer than a rim element.
         le = r * step
@@ -227,6 +231,13 @@ class Model:
             k_ax = self.radial_ea / l0 if stretch > 0 else 0.0
             K[np.ix_(dofs, dofs)] += k_ax * np.outer(ev, ev) + (t / dist) * np.outer(zt, zt)
             out.setdefault("R", []).append(t)
+            # The line's own spin load, lumped half at each end from its current mid-point (as the chords').
+            w = self.radial_mu * l0 * lam_w2 / 4
+            mid = x[hub] + h * e + x[node]
+            for end in (hub, node):
+                R[[3 * end, 3 * end + 1]] -= w * mid
+                for other in (hub, node):
+                    K[np.ix_([3 * end, 3 * end + 1], [3 * other, 3 * other + 1])] -= w * np.eye(2)
         if self.radials:
             hub = self.radials[0][0]
             K[3 * hub + 2, 3 * hub + 2] += self.rim_ei / self.r      # the hub's rotation: no load, held
@@ -345,7 +356,8 @@ class Model:
         return (float((tensions / self.chord_areas).max()) if len(tensions) else 0.0) + self_load
 
     def spin_limit(self, omega, sigma, steps=8):
-        """Largest share of the spin at which every chord stays within sigma (the stage held with its
+        """Largest share of the spin at which every chord (and temporary line) stays within sigma, at
+        its peak (the stage held with its
         joints as they are), by continuation and interpolation; with the equilibrium there."""
         C, load_ref = self._setup(omega)
         u = np.zeros(self.ndof)
@@ -360,7 +372,8 @@ class Model:
                     return {"limit": math.sqrt(lam), "by": "equilibrium lost", "state": self.report(u, lam, omega, False)}
                 continue
             _, _, out = self.assemble(trial, nxt * omega ** 2)
-            stress = self.peak_stress(np.array(out["T"]), math.sqrt(nxt) * omega)
+            stress = max(self.peak_stress(np.array(out["T"]), math.sqrt(nxt) * omega),
+                         self.line_peak_stress(np.array(out.get("R", [])), math.sqrt(nxt) * omega))
             if stress >= sigma:
                 # Interpolate in lambda between the last two states (stress ~ linear in lambda).
                 l0, s0 = prev
@@ -387,6 +400,7 @@ class Model:
         kt0, kn0, kr0 = self.k_joint
         last, released = first, None
         w2 = target ** 2 * omega ** 2
+        path_peak = first["peak_stress"]
         for f in factors:
             self.k_joint = (kt0 * (f if to == "sliding" else 1.0), kn0, kr0 * f)
             trial = self._newton(u, w2, C, load_ref, max_iter=80)
@@ -394,16 +408,33 @@ class Model:
                 break
             u, released = trial, f
             last = self.report(u, target ** 2, omega, True)
+            path_peak = max(path_peak, last["peak_stress"])
         self.k_joint = (kt0, kn0, kr0)
         out = dict(last)
+        out["path_peak_stress"] = path_peak
         out.update({"released": released, "resolved": released is not None and released <= RELEASED,
                     "locked": first})
         return out
 
+    def line_peak_stress(self, line_tensions, omega_now):
+        """Largest stress in the temporary radial lines: the elastic tension over the area plus, taken
+        conservatively, the whole of the line's own spin load, rho w^2 (r^2 - h^2) / 2 (the tension at
+        its hub end)."""
+        if not len(line_tensions):
+            return 0.0
+        self_load = self.density * omega_now ** 2 * (self.r ** 2 - self.hub_radius ** 2) / 2
+        return float(np.max(line_tensions)) / self.radial_area + self_load
+
     def report(self, u, lam, omega, resolved):
         R, K, out = self.assemble(u, lam * omega ** 2)
         T = np.array(out["T"])
+        lines = np.array(out.get("R", []))
+        w_now = math.sqrt(lam) * omega
         return {
+            "peak_stress": self.peak_stress(T, w_now),
+            "line_tension_max": float(lines.max()) if len(lines) else 0.0,
+            "line_peak_stress": self.line_peak_stress(lines, w_now),
+            "hub_pull": float(lines.sum()) / 2 if len(lines) else 0.0,
             "reached": math.sqrt(lam), "resolved": resolved, "u": u,
             "tensions": T, "tension_max": float(T.max()) if len(T) else 0.0,
             "stress_max": float((T / self.chord_areas).max()) if len(T) else 0.0,
