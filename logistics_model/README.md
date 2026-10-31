@@ -7,6 +7,7 @@ python -m logistics_model                         # full report (reports/logisti
 python -m logistics_model.ephemeris --fetch       # refresh JPL Horizons' ephemerides and SBDB elements (network)
 python -m logistics_model.catalogue --fetch       # refresh the C-type candidates and their Δv (network, ~10 min)
 python -m logistics_model.networks --report       # saved host–supplier network study (offline)
+python -m logistics_model.networks --refresh-vectors --windows --report  # replace all network ephemerides and recalculate (network)
 python -m logistics_model --set lake_floor_frac=0.05
 ```
 
@@ -23,6 +24,8 @@ python -m logistics_model --set lake_floor_frac=0.05
 | `__main__.py` | the report |
 
 ## Model
+
+For network ephemerides, `--fetch-vectors` resumes missing bodies and preserves cached acquisition dates; `--refresh-vectors` fetches every selected body again, including the reference bodies. Screening caches validate hashes of their host/supplier inputs, and dated routes validate an ephemeris hash. The report rejects stale results. Network resource scenarios use separate sample-based nitrogen values for Bennu and Ryugu; the broader habitat model's generic composition proxy is unchanged.
 
 - **Water** (`habitat_model.mass`): soil moisture, ponds and streams (share of floor × mean depth, `lake_floor_frac` and `lake_depth_m`: kept small, water access for the biosphere within the 1 m fill; a guess), the water electrolysed for the O₂, ballast (`ballast_frac`: an unbalanced mass e M at the rim, trimmed by water spread as A (1 − cos) around it; its first moment is only half its mass times the radius, so 2 e M of water), and the vegetation's water. Spin-up with water thrusters is an option, as before.
 - **Supply routes:** the cargo always carries the N₂ and the organics. Shipping only the hydrogen needs ~0.89 kg of local oxygen per kg of water. Molten-oxide electrolysis (notes §10) frees ~0.29 kg of oxygen per kg of iron. The baseline host gets its metal as free metal and electrolyses nothing, so all that iron is charged: `moe_mj_kg_fe` of electricity and `moe_heat_mj_kg_fe` of furnace heat, less the crushing of the free-metal rock it replaces. `supply()` pairs every route with both freighters. Splitting the water at the C-type costs `electrolysis_mj_kg_water`. Methane's carbon counts against the organics.

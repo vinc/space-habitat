@@ -7,6 +7,7 @@ explicit (--fetch); --screen and --report use snapshots. See reports/asteroid-ne
 import argparse
 import concurrent.futures
 import csv
+import hashlib
 import io
 import json
 import math
@@ -37,6 +38,32 @@ ALIASES = {"433": "Eros", "25143": "Itokawa", "98943": "Torifune", "65803": "Did
 # silicate candidates; their metallic yield needs separate verification.
 HOST_TYPES = {"S", "Sa", "Sk", "Sl", "Sq", "Sr", "Sv", "S(IV)", "Q", "L", "Ld", "K"}
 REFERENCE_IDS = {"433", "25143", "98943", "65803", "99942"}
+
+# Sample measurements, not bounds on every part of either asteroid.
+# Bennu: Glavin et al. (2025); Ryugu: Yokoyama et al. (2025), Table 1,
+# 1454 ± 17 micrograms/g (reported 2 sigma).
+SAMPLED_NITROGEN = {
+    "101955": (.0023, .0024, .0025),
+    "162173": (.001437, .001454, .001471),
+}
+
+
+def content_hash(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def screen_input_hash(hosts, suppliers):
+    return content_hash({"hosts": hosts["hosts"], "suppliers": suppliers["candidates"]})
+
+
+def require_current_screen(screen):
+    hosts = json.loads(HOST_DATA.read_text())
+    if not hosts.get("complete") or screen.get("input_hash") != screen_input_hash(hosts, catalogue.load()):
+        raise ValueError("screen inputs changed or are incomplete; rerun --screen --spectral")
+
+
+def vector_hash():
+    return hashlib.sha256(NETWORK_VECTORS.read_bytes()).hexdigest()
 
 
 def get_json(url, query):
@@ -143,6 +170,17 @@ def supplier_capacity(body, nitrogen_wt, recovery, density=1190, diameter_factor
     return min(by_n, by_water)
 
 
+def supplier_scenarios(key, body, radius=900):
+    """Lower positive/base/higher scenarios; sample and recovery uncertainty differ."""
+    if key in SAMPLED_NITROGEN:
+        low, base, high = SAMPLED_NITROGEN[key]
+        return tuple(supplier_capacity(body, n, recovery, radius=radius)
+                     for n, recovery in ((low, .5), (base, .7), (high, .9)))
+    return (supplier_capacity(body, .0005, .5, 1000, .8, radius),
+            supplier_capacity(body, .0024, .7, radius=radius),
+            supplier_capacity(body, .0025, .9, 1600, 1.2, radius))
+
+
 def host_mass(body):
     """Prefer a measured GM, otherwise show the explicit 2 t/m³ proxy."""
     physical=body["physical_parameters"]
@@ -211,12 +249,13 @@ def screen_hosts(refine_count=6):
     suppliers = catalogue.load()
     saved = dict(transfers.ELEMENTS)
     out = {"host_snapshot": hosts["fetched"], "supplier_snapshot": suppliers["fetched"],
+           "input_hash": screen_input_hash(hosts, suppliers),
            "method": "prograde, zero-revolution, two-impulse; independent phases; coarse30/refine15/best10",
            "settings": {"coarse_deg": 30, "coarse_tof_days": [60,720,60],
                         "second_pass_count": 18, "refine_count": refine_count}, "hosts": {}}
     if SCREEN_DATA.exists():
         previous=json.loads(SCREEN_DATA.read_text())
-        if all(previous.get(k)==out[k] for k in ("host_snapshot","supplier_snapshot","settings")):
+        if all(previous.get(k)==out[k] for k in ("input_hash","method","settings")):
             out["hosts"]=previous["hosts"]
     try:
         for host_id, host in hosts["hosts"].items():
@@ -252,6 +291,7 @@ def refine_spectral_candidates():
     hosts=json.loads(HOST_DATA.read_text())["hosts"]
     candidates=catalogue.load()["candidates"]
     screen=json.loads(SCREEN_DATA.read_text())
+    require_current_screen(screen)
     c_types=set(catalogue.C_COMPLEX_BUS)|set(catalogue.C_COMPLEX_THOLEN)
     spectral=[k for k,c in candidates.items() if any(t in c_types for t in c["spec"].split("/"))]
     saved=dict(transfers.ELEMENTS)
@@ -277,6 +317,7 @@ def dated_pairs(screen):
     The third candidate adds redundancy; no unobserved supplier is treated as proven.
     """
     pairs = []
+    require_current_screen(screen)
     hosts=json.loads(HOST_DATA.read_text())["hosts"]
     selected=set(DATED_HOSTS)|set(pareto_front(hosts,screen))
     for h in sorted(selected,key=int):
@@ -289,35 +330,51 @@ def dated_pairs(screen):
     return pairs
 
 
-def fetch_network_vectors():
+def fetch_network_vectors(refresh=False):
+    """Resume missing bodies, or refresh every selected body from Horizons explicitly."""
     screen = json.loads(SCREEN_DATA.read_text())
     bodies = sorted(set(k for pair in dated_pairs(screen) for k in pair))
     base = np.load(VECTORS)
     arrays = {"jd": base["jd"]}
     cached=np.load(NETWORK_VECTORS) if NETWORK_VECTORS.exists() else None
+    cached_meta=json.loads(str(cached["meta"])) if cached is not None else {}
+    base_meta=json.loads(str(base["meta"]))
+    # A complete cache is a snapshot: resuming must not give it a new fetch date.
+    if (not refresh and cached is not None and cached_meta.get("complete")
+            and set(cached.files)-{"jd", "meta"} == set(bodies)
+            and np.array_equal(cached["jd"], arrays["jd"])):
+        return
     missing=[]
+    sources={}
     for key in bodies:
         alias = ALIASES.get(key, key)
-        if alias in base.files:
-            arrays[key] = base[alias]
-        elif cached is not None and key in cached.files and np.array_equal(cached["jd"],arrays["jd"]):
+        if not refresh and cached is not None and key in cached.files and np.array_equal(cached["jd"],arrays["jd"]):
             arrays[key]=cached[key]
+            if alias in base.files and np.array_equal(arrays[key],base[alias]):
+                fallback={"fetched": base_meta.get("fetched"), "source": base_meta.get("source")}
+            else:
+                fallback={"fetched": None, "snapshot_fetched": cached_meta.get("fetched"),
+                          "source": cached_meta.get("source")}
+            sources[key]=cached_meta.get("body_sources",{}).get(key,fallback)
+        elif not refresh and alias in base.files:
+            arrays[key] = base[alias]
+            sources[key]={"fetched": base_meta.get("fetched"), "source": base_meta.get("source")}
         else:
             missing.append(key)
     def one(key):
         # Quote the entire Horizons command, including designations with spaces.
-        command = f"'{key};'" if key.isdigit() else f"'DES={key};'"
+        command = "'399'" if key == "Earth" else f"'{key};'" if key.isdigit() else f"'DES={key};'"
         for attempt in range(3):
             try:
                 return key,fetch_vectors(command)
             except OSError:
                 if attempt==2:
                     raise
-    metadata={"fetched": date.today().isoformat(),
-        "source": "NASA/JPL Horizons API, plus existing 2026-10-30 reference vectors",
+    metadata={"fetched": cached_meta.get("fetched", base_meta.get("fetched")),
+        "source": "NASA/JPL Horizons API; per-body acquisition dates in body_sources",
         "frame": "heliocentric, ecliptic and mean equinox of J2000", "units": "km, km/s",
         "start": "2027-01-01", "stop": "2077-01-01", "step_days": 10,
-        "aliases": ALIASES,"complete":False}
+        "aliases": ALIASES,"body_sources":sources,"complete":False}
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
         futures=[pool.submit(one,key) for key in missing]
         for future in concurrent.futures.as_completed(futures):
@@ -325,6 +382,8 @@ def fetch_network_vectors():
             if not np.array_equal(rows[:,0], arrays["jd"]):
                 raise ValueError(f"{key}: Horizons dates differ from reference vectors")
             arrays[key] = rows[:,1:]
+            sources[key]={"fetched": date.today().isoformat(), "source": "NASA/JPL Horizons API"}
+            metadata["fetched"]=date.today().isoformat()
             print("vectors", key, flush=True)
             arrays["meta"]=np.array(json.dumps(metadata))
             np.savez_compressed(NETWORK_VECTORS,**arrays)
@@ -400,12 +459,14 @@ def compute_dated():
         raise ValueError("network ephemeris fetch is incomplete")
     start,end = jd_of(2028),jd_of(2072)
     out={"start_jd":start,"end_jd":end,"fetched_vectors":eph.meta,
+         "vector_hash":vector_hash(),
          "method":"5-day departures; 60–900-day flights in 10-day steps; batched bounded refinement; zero revolution",
          "service_limit_m_s":6000,"pairs":{}}
     if WINDOW_DATA.exists():
         previous=json.loads(WINDOW_DATA.read_text())
-        if all(previous.get(k)==out[k] for k in ("start_jd","end_jd","method","fetched_vectors")):
-            out["pairs"]=previous["pairs"]
+        if all(previous.get(k)==out[k] for k in ("start_jd","end_jd","method","vector_hash","service_limit_m_s")):
+            expected={o+"->"+h for o,h in dated_pairs(screen)}
+            out["pairs"]={k:v for k,v in previous["pairs"].items() if k in expected}
     for origin,target in dated_pairs(screen):
         if origin+"->"+target in out["pairs"]:
             continue
@@ -514,7 +575,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fetch", action="store_true")
     ap.add_argument("--screen", action="store_true")
-    ap.add_argument("--fetch-vectors", action="store_true")
+    ap.add_argument("--fetch-vectors", action="store_true", help="resume the saved ephemeris, fetching missing bodies")
+    ap.add_argument("--refresh-vectors", action="store_true", help="fetch every selected body again from Horizons")
     ap.add_argument("--windows", action="store_true")
     ap.add_argument("--fetch-evidence", action="store_true")
     ap.add_argument("--spectral", action="store_true")
@@ -527,8 +589,8 @@ def main(argv=None):
         screen_hosts()
     if args.spectral:
         refine_spectral_candidates()
-    if args.fetch_vectors:
-        fetch_network_vectors()
+    if args.fetch_vectors or args.refresh_vectors:
+        fetch_network_vectors(refresh=args.refresh_vectors)
     if args.windows:
         compute_dated()
     if args.fetch_evidence:

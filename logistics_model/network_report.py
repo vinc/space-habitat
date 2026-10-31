@@ -47,6 +47,8 @@ def generate():
     if set(screen["hosts"])!=set(hosts):
         raise ValueError("screen incomplete")
     dated=json.loads(networks.WINDOW_DATA.read_text())
+    if dated.get("vector_hash") != networks.vector_hash():
+        raise ValueError("ephemeris changed; rerun --windows before generating the report")
     expected={o+"->"+h for o,h in networks.dated_pairs(screen)}
     if set(dated["pairs"])!=expected:
         raise ValueError("dated search incomplete or selection changed; rerun --windows")
@@ -147,13 +149,18 @@ def generate():
     lines += ["", "## Resource sensitivity", "",
         "For unmeasured suppliers the evidence-based lower bound is **zero useful nitrogen**. "
         "The positive cases below are deliberately illustrative, not confidence intervals or measured ore grades. "
-        "The base case borrows the existing model's 0.24 wt% N and 70% recovery; it does not assign those values "
+        "For unvisited suppliers the base case borrows the existing model's 0.24 wt% N and 70% recovery; it does not assign those values "
         "as observations of other asteroids. Carbonaceous taxonomy and hydration do not establish nitrogen abundance.", "",
         "For unvisited bodies the lower positive scenario uses 0.8× diameter, 1.0 t/m³, 0.05 wt% N and 50% recovery; "
         "the higher uses 1.2× diameter, 1.6 t/m³, 0.25 wt% N and 90% recovery. Both retain the model's "
         "6.4 wt% available-water assumption and enforce the smaller of N and water capacity. These water assumptions "
-        "also need validation. For Bennu/Ryugu, diameter and density stay fixed and only N (0.23–0.25 wt%) and "
-        "recovery (50–90%) vary. Extracting soil organics/other nutrients, excavation accessibility and maintaining "
+        "also need validation. For Bennu/Ryugu, diameter and density stay fixed. Bennu uses 0.23 / 0.24 / 0.25 wt% N "
+        "(Glavin et al. 2025); Ryugu uses 0.1437 / 0.1454 / 0.1471 wt% N (Yokoyama et al. 2025, Table 1). "
+        "The Ryugu interval is the published ±2σ uncertainty on the sample-based mean, not a bound on the whole asteroid. "
+        "Both bodies use 50 / 70 / 90% industrial recovery, an assumption separate from the sample measurements. "
+        "Ryugu's base capacity is consequently ~54 small tori rather than ~89 under the common Bennu-like proxy. "
+        "The wider habitat model retains that common proxy; only this network comparison uses body-specific N. "
+        "Extracting soil organics/other nutrients, excavation accessibility and maintaining "
         "a residual asteroid are outside this capacity calculation.", "",
         "| Supplier | Catalogue D km | Evidence | 900 m tori: lower positive / base / higher | 1.6 km tori: lower positive / base / higher |",
         "|---|---:|---|---:|---:|"]
@@ -161,13 +168,7 @@ def generate():
     for k in used:
         b=candidates[k];caps=[]
         for radius in (900,1600):
-            if k in ("101955","162173"):
-                low=networks.supplier_capacity(b,.0023,.5,radius=radius)
-                high=networks.supplier_capacity(b,.0025,.9,radius=radius)
-            else:
-                low=networks.supplier_capacity(b,.0005,.5,1000,.8,radius)
-                high=networks.supplier_capacity(b,.0025,.9,1600,1.2,radius)
-            base=networks.supplier_capacity(b,.0024,.7,radius=radius)
+            low,base,high=networks.supplier_scenarios(k,b,radius)
             caps.append(f"{low:.1f} / {base:.1f} / {high:.1f}")
         lines.append(f"| {b['name']} | {b['diameter_km']:.3g} | {evidence_class(k,b,audit)} | {caps[0]} | {caps[1]} |")
     lines += ["", "These are alternative allocations of the same supplier, not cumulative counts of 900 m and 1.6 km tori. "
@@ -205,14 +206,20 @@ def generate():
         "python -m logistics_model.networks --windows",
         "python -m logistics_model.networks --verify",
         "python -m logistics_model.networks --report", "python -m unittest tests.test_networks tests.test_logistics", "```", "",
-        "Only --fetch, --fetch-vectors, --fetch-evidence and --verify need network access. The dated selection is the "
+        "Use --fetch-vectors to resume missing bodies without changing the acquisition dates of cached data. "
+        "Use --refresh-vectors to fetch every selected body again, then --windows to recompute routes. "
+        "Screen caches are matched to hashes of their host/supplier inputs, and dated windows to a hash of the ephemeris bytes. "
+        "The report rejects stale inputs/results. Only --fetch, --fetch-vectors, --refresh-vectors, --fetch-evidence and --verify "
+        "need network access. The dated selection is the "
         "central-estimate Pareto front plus the named reference/comparison hosts, each with its three lowest refined "
         "costs, best screened spectral C-complex supplier, Ryugu, Bennu and Earth. Snapshots contain the exact selection "
         "and results. Start a fresh --screen by removing `network_screen.json`; an interrupted run resumes its saved hosts.", "",
         "Sources: [JPL SBDB query API](https://ssd-api.jpl.nasa.gov/doc/sbdb_query.html), "
         "[SBDB object API](https://ssd-api.jpl.nasa.gov/doc/sbdb.html), "
         "[Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html), "
-        "[SsODNet](https://ssp.imcce.fr/webservices/ssodnet/). The complete habitat demand comes from the "
+        "[SsODNet](https://ssp.imcce.fr/webservices/ssodnet/). "
+        "Sample N sources: [Glavin et al. 2025](https://doi.org/10.1038/s41550-024-02472-9), "
+        "[Yokoyama et al. 2025, Table 1](https://doi.org/10.2343/geochemj.GJ25002). The complete habitat demand comes from the "
         "current checked-in `habitat_model/assumptions.toml`; all resource assumptions remain provisional.", ""]
     REPORT.write_text("\n".join(lines))
     return REPORT
