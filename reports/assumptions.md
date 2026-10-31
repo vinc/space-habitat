@@ -60,6 +60,7 @@
 | `valley_light_mol` | 15.00 | mol/m2/day on the floor | fixed | design | §13, light-box ceiling sizing |
 | `ceiling_delivery` | 0.7500 | fraction | 0.6500–0.8000 | estimate | §13, light box: ~20-30% ceiling losses (to verify, plan §6) |
 | `lamp_efficacy_umol_j` | 1.400 | umol/J at the wall | 1.300–1.500 | sourced | §13, sulfur lamps (Maclennan et al. 1994); 915 MHz sources would give ~1.75 |
+| `farm_lamp_efficacy_umol_j` | 0 | umol/J at the wall in the farm; 0: as the valley's lamps | fixed | design | design: set by an architecture with different farm lamps (blue + red LEDs) |
 | `farm_delivery` | 0.8500 | fraction | 0.7500–0.9000 | estimate | §13, light pipes just above the canopy (estimate) |
 | `other_loads_w_m2` | 15.00 | W per m2 of floor | 10.00–25.00 | guess | §19, ~5 MW per 900 m torus, ~15 MW per 1.6 km torus (guess) |
 | `pv_efficiency` | 0.2500 | fraction | 0.1800–0.2800 | estimate | §13, 25% assumed; ~18-22% in the concentrator comparison |
@@ -165,6 +166,14 @@
 | `led_efficacy_umol_j` | 3.000 | umol/J at the wall, white LEDs | 2.700–3.500 | estimate | §13: ~3.4 umol/J (white + red) at the best (Kusuma et al. 2020) |
 | `led_fixture_efficiency` | 0.9500 | share of the LEDs' light leaving the fixture | 0.9000–0.9700 | estimate | estimate |
 | `led_w_per_m` | 200.0 | W per m of LED strip | fixed | design | design |
+| `led_farm_efficacy_umol_j` | 3.600 | umol/J at the wall, blue + red LEDs | 3.200–4.100 | estimate | best fixtures ~3.7 (DLC list, 2022) to 4.1 (Hortilux NXTLED, claimed); Kusuma et al. 2020: ~4.1 potential |
+| `led_farm_red_share` | 0.8000 | share of the farm LEDs' electricity driving red (660 nm) dies | 0.7000–0.9000 | guess | ~10-20% blue photons for crops (guess) |
+| `led_die_w_mm2` | 0.3000 | W of electricity per mm2 of LED die | 0.1500–1.000 | estimate | mid-power dies driven gently for efficacy (~0.2-0.5 W on ~1 mm2) to high-power at ~1 W/mm2 (estimate) |
+| `led_wafer_yield` | 0.7000 | share of the epitaxial wafer ending as working dies | 0.5000–0.8500 | guess | edge exclusion, streets and binning (guess) |
+| `mocvd_utilization` | 0.2500 | share of the gallium fed to the reactor ending in the film | 0.1500–0.4000 | estimate | ~25% for conventional MOCVD (Atomic Precision Systems, NCCAVS 2019, a vendor comparison) |
+| `mocvd_ammonia_kg_m2` | 100.0 | kg of ammonia per m2 of GaN wafer grown | 50.00–200.0 | estimate | ~50 slpm for ~5 h a run (NCCAVS 2019) over a ~0.1 m2 batch (estimate) |
+| `led_phosphor_g_w` | 0.003000 | g of YAG:Ce phosphor per W of white LED | 0.001500–0.006000 | guess | a few mg per mid-power package (guess) |
+| `led_life_h` | 50,000 | hours to 70% output | 30,000–100,000 | estimate | §13 (L70 ratings, not yet sourced) |
 | `dose_limit_msv_yr` | 20.00 | mSv per year, dose equivalent | fixed | design | §5b, Globus & Strout (2017): the general population's limit, at solar minimum |
 | `solar_min_phi_mv` | 300.0 | MV, force-field modulation potential | 250.0–450.0 | estimate | deep solar minimum (2009-2010) in the Usoskin et al. (2005) convention, recalled |
 | `solar_max_phi_mv` | 1,000 | MV, force-field modulation potential | fixed | estimate | solar maximum, recalled |

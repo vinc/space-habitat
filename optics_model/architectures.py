@@ -10,8 +10,9 @@ light box or farm tier, the layout sized for the power its own delivery needs), 
   The reflector loses 1 − `luminaire_efficiency` of the light and sends back `luminaire_albedo` of what
   falls on it. Their heat is shed in the ceiling's service space (and above each tier) instead of at the
   hub's sources.
-- **LEDs (a reference):** strips in the light box and over the beds at `led_efficacy_umol_j`; the
-  semiconductors are vitamins (notes §10, §13).
+- **LEDs:** strips in the light box and over the beds, white (`led_efficacy_umol_j`) throughout, or
+  white in the valley and blue + red over the crops (`led_farm_efficacy_umol_j`). What making them locally
+  takes is in `leds.py`.
 
 The rows of lamps are traced as continuous line sources, fair once the diffuser (or the canopy) is at least
 a lamp spacing away.
@@ -31,6 +32,8 @@ def options(p):
     in_box = {"pipe_coupling": p.luminaire_efficiency, "pipe_albedo": p.luminaire_albedo, "pipe_diameter_m": 0.15,
               "pipe_emit_arc_deg": 180.0, "pipe_w_per_m": lamp_row, "diffuser_gap_m": max(p.diffuser_gap_m, 1.5),
               "farm_pipe_gap_m": max(p.farm_pipe_gap_m, 0.8)}
+    led = {"lamp_efficacy_umol_j": p.led_efficacy_umol_j, "pipe_coupling": p.led_fixture_efficiency,
+           "pipe_albedo": 0.5, "pipe_diameter_m": 0.1, "pipe_w_per_m": p.led_w_per_m}
     short_heavy = {"pipe_length_m": 20.0, "pipe_w_per_m": 600.0}
     return [
         ("Pipes, 40 m at 300 W/m (as now)", {}, None, "pairs of ~6 kW lamps, small magnetrons"),
@@ -43,10 +46,11 @@ def options(p):
          f"rows of lamps {p.lamp_spacing_m:g} m apart in reflectors, small magnetrons, a 1.5 m deep diffuser"),
         (f"~{p.lamp_power_w / 1e3:g} kW lamps in the light box, 915 MHz plants",
          {**in_box, "lamp_efficacy_umol_j": sector}, 1.0, "the same, fed by sector plants through waveguides"),
-        ("LEDs (reference)",
-         {"lamp_efficacy_umol_j": p.led_efficacy_umol_j, "pipe_coupling": p.led_fixture_efficiency,
-          "pipe_albedo": 0.5, "pipe_diameter_m": 0.1, "pipe_w_per_m": p.led_w_per_m}, 1.0,
-         f"strips at {p.led_w_per_m:g} W/m, {p.led_efficacy_umol_j:g} µmol/J; semiconductors are vitamins"),
+        ("LEDs, white throughout", led, 1.0,
+         f"strips at {p.led_w_per_m:g} W/m, {p.led_efficacy_umol_j:g} µmol/J"),
+        ("LEDs, white in the valley, blue + red in the farm",
+         {**led, "farm_lamp_efficacy_umol_j": p.led_farm_efficacy_umol_j}, 1.0,
+         f"the farm at {p.led_farm_efficacy_umol_j:g} µmol/J (magenta light, no phosphor)"),
     ]
 
 

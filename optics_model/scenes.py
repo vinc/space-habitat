@@ -17,6 +17,8 @@ import math
 import numpy as np
 
 from . import pipe
+from habitat_model.power import farm_efficacy
+
 from .trace import Scene, emit_from_circle, trace
 
 DAY = 86400.0
@@ -29,7 +31,7 @@ def valley_peak_w_m2(p):
 
 def farm_peak_w_m2(p):
     """Electricity per m² of bed while it is lit (W/m²), at the configured delivery."""
-    return p.crop_light_mol / (p.farm_photoperiod_h * 3600) / (p.lamp_efficacy_umol_j * 1e-6) / p.farm_delivery
+    return p.crop_light_mol / (p.farm_photoperiod_h * 3600) / (farm_efficacy(p) * 1e-6) / p.farm_delivery
 
 
 def valley_pitch(p):

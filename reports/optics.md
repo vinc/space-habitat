@@ -139,9 +139,10 @@ What the pipes cost and what could replace them (`optics_model/architectures.py`
 | Pipes, 20 m at 600 W/m, 915 MHz plants | 59% | 66% | 1.57 | 175 MW | 213 ha | 2.2× | 110 ha | ~47.5 k | the same, fed by sector plants through waveguides |
 | ~1 kW lamps in the light box | 81% | 89% | 1.40 | 146 MW | 177 ha | 2.6× | 78.2 ha | ~236 k | rows of lamps 1.5 m apart in reflectors, small magnetrons, a 1.5 m deep diffuser |
 | ~1 kW lamps in the light box, 915 MHz plants | 81% | 89% | 1.57 | 130 MW | 158 ha | 2.9× | 78.2 ha | ~209 k | the same, fed by sector plants through waveguides |
-| LEDs (reference) | 86% | 96% | 3.00 | 65.8 MW | 80.6 ha | 5.7× | 39.1 ha | — | strips at 200 W/m, 3 µmol/J; semiconductors are vitamins |
+| LEDs, white throughout | 86% | 96% | 3.00 | 65.8 MW | 80.6 ha | 5.7× | 39.1 ha | — | strips at 200 W/m, 3 µmol/J |
+| LEDs, white in the valley, blue + red in the farm | 86% | 96% | 3.00 | 59.2 MW | 71.0 ha | 5.8× | 39.1 ha | — | the farm at 3.6 µmol/J (magenta light, no phosphor) |
 
-**Lamps straight in the light box beat every pipe**: ~36% less electricity than the pipes as now, and a little less than the sizing's assumed ~75% / ~85% (they deliver more: no coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants ~11% of the power either way (their gain in efficacy, less the waveguides'). LEDs need well under half again, but their semiconductors are vitamins (notes §10, §13).
+**Lamps straight in the light box beat every pipe**: ~36% less electricity than the pipes as now, and a little less than the sizing's assumed ~75% / ~85% (they deliver more: no coupling into a pipe, nothing guided over tens of metres, and the reflectors take back less than rows of pipes). Shorter or more heavily loaded pipes recover part of the gap; 915 MHz plants ~11% of the power either way (their gain in efficacy, less the waveguides'). LEDs need well under half again (below).
 
 The price of lamps in the box: ~3.8× as many bulbs as the pipes' lamps, spread through the ceiling's service space and above each tier, with their heat shed there rather than at the hub (both reachable by the coolant loops, notes §13), and each one maintained from above the ceiling. Fed by sector plants, the sources stay few (~100 kW each) and only the electrodeless bulbs are many; with small magnetrons every bulb has one, ~10,000–20,000 hours each.
 
@@ -149,5 +150,36 @@ The price of lamps in the box: ~3.8× as many bulbs as the pipes' lamps, spread 
 |---|---|---|
 | `luminaire_efficiency` | 0.80 – 0.93 | 160 – 138 MW |
 | `luminaire_albedo` | 0.40 – 0.80 | 149 – 143 MW |
+
+## LEDs from asteroid material
+
+White LEDs in the valley (blue InGaN dies under YAG:Ce phosphor), blue + red over the crops (InGaN and 660 nm AlGaInP, 80% of the farm's power on red), at 3.00 and 3.60 µmol/J (`optics_model/leds.py`). Installed for the noon peak and the tiers while lit: 42.9 MW in the valley, 49.5 MW in the farm; at 0.30 W/mm² that is 176 m² of blue die and 132 m² of red, ~440 m² of epitaxial wafer at 70% yield (white throughout: 487 m²). Each lasts ~11.4 years in the valley, ~8.56 in the farm: ~10% replaced a year.
+
+| Element (kg per torus) | White throughout | White + blue/red | In the source bodies | Share of it needed (white + blue/red) |
+|---|---|---|---|---|
+| Ga | 50 kg | 200 kg | ~231 t | 0.08% |
+| In | 0.17 kg | 3.3 kg | ~0.459 t | 0.73% |
+| As | — | 180 kg | ~61.1 t | 0.30% |
+| Y | 130 kg | 57 kg | ~73.2 t | 0.08% |
+| Ce | 4.3 kg | 1.8 kg | ~32.6 t | 0.01% |
+| Al | 740 kg | 370 kg | plentiful | — |
+| N | 10 kg | 5.2 kg | plentiful | — |
+
+Gallium is fed at 25% utilization (the rest leaves in the exhaust, recoverable); the red dies' GaAs substrates, etched away, take most of it and all the arsenic. Indium is the tight one: grams in the blue wells, kilograms in the red layers (half their group III), against a few hundred kilograms in the source bodies at ~2–78 ppb, so it comes back from spent dies and the reactors' exhaust, and only the losses are new. Ammonia: ~25.1 t per torus's wafers (100 kg/m²), against ~8 kt of nitrogen recovered from the C-type, and mostly recoverable.
+
+| Step | Needs | From | Status |
+|---|---|---|---|
+| Gallium | 6N–7N metal, kilograms | ~5–10 ppm in the rock, with the aluminium in the silicates and clays; a by-product of the leach line, then electrowinning and zone refining | ⚠ recovery at ~10 ppm |
+| Indium | grams (blue) to kilograms (red AlGaInP) | ~2 ppb (S-type) to ~78 ppb (C-type): the scarcest input, from the leach line's zinc and copper streams | ⚠ / ✗ for red |
+| Precursors | trimethylgallium, -indium, -aluminium; 7N ammonia; silane, Cp₂Mg; phosphine (red) | metals + methyl chloride (methanol + HCl, C-type carbon and chlorine); Haber–Bosch ammonia from the C-type's nitrogen; distillation to 6N | ✓ chemistry, ⚠ purity |
+| Substrates | sapphire wafers (blue), GaAs (red) | 5N alumina from the silicates' plagioclase, Kyropoulos growth (~2,050 °C), sawn and polished; or GaN on silicon, from a semiconductor-silicon line (the one local PV would need) | ⚠ |
+| Epitaxy | MOCVD reactors: steel chamber, SiC-coated graphite susceptor, ~1,050 °C, ~100 mbar | steel, carbon, silicon carbide: all local; the controls are electronics (vitamins) | ✓ |
+| Patterning | ~5–7 mask layers at micron scale: contact or proximity lithography, no steppers | chromium-on-quartz masks, novolac resists (phenol, formaldehyde), chlorine plasma etching | ✓ |
+| Contacts | p-contact and current spreading (ITO, or Ni/Ag), n-contact (Ti/Al) | ITO needs indium again: a thin nickel–silver or ZnO:Al instead; titanium, nickel, aluminium local | ⚠ |
+| Phosphor (valley) | YAG:Ce, ~0.1–0.4 t per torus | yttrium ~2 ppm, cerium ~1 ppm: rare-earth separation by solvent extraction, at kilogram scale a lab process | ⚠ |
+| Packaging | lead frames or chip-on-board, encapsulant, heat spreaders | copper or steel boards, phosphor in glass (local glass) instead of silicone, copper bond wire | ✓ |
+| Drivers | constant-current supplies, ~1 per kW | silicon or GaN power transistors, capacitors, ferrite inductors: electronics, the same vitamin as the rest of the habitat's | ✗ vitamin |
+
+**The trade against the array's silicon.** Blue + red LEDs need 71.0 ha of array against 158 ha for the proposed sulfur lamps in the box: ~349 t less imported silicon per torus at 0.400 kg/m². Importing the finished dies and phosphor instead costs ~339 kg per torus (dies thinned to 150 µm), and ~10% of that a year: ~1,030× less than the silicon saved, and still ~252× with 30 years of replacements. Making the dies locally is a small fab: one MOCVD reactor growing ~0.1 m² every ~5 h makes ~150 m² a year, so a torus's ~440 m² takes a few reactor-years, and micron-scale LEDs need none of a chip fab's steppers. What stays imported is the drivers' electronics, the same vitamin as the rest of the habitat's.
 
 Not modelled: the light box's ends and the cliffs' edges (a ~1 m deep box along a ~56 m wide valley loses a little at its sides), the pipes' ends and joints, the sulfur lamp's spectrum (PAR only), angular (not diffuse) scattering by real diffusers and prism film, dust and ageing, the canopy as a volume (leaves at many heights), the ceiling's grading brighter overhead (notes §13), the lamps' discreteness along a row (traced as line sources), and the waveguides' layout.

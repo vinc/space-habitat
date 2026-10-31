@@ -187,7 +187,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - buffer and control needs: the air holds ~5 years of O₂; a ~1 MW CO₂-to-O₂ recovery plant per 900 m torus holds the whole farm going dark (proposed); a new torus's imported organics need ~8 MW at first unless composted first (~1.4 MW, proposed)
   - open: water and humidity, trace gases, the nitrogen cycle, daily swings, the controls' failures; the algae (not yet in the model)
 
-**Status:** done. The closed atmosphere holds with a modest recovery plant; the startup soil is the hard case. The light box and the farm tiers deliver what the notes expected of them, but the light pipes' own losses, left out of the sizing, could cost ~50% more lighting power; ~1 kW sulfur lamps straight in the light box (no pipes, fed by 915 MHz sector plants) avoid them, at ~81% / ~89% delivered and ~130 MW per 900 m torus (proposed, `optics_model/architectures.py`): the sizing's ~75% / ~85% stands.
+**Status:** done. The closed atmosphere holds with a modest recovery plant; the startup soil is the hard case. The light box and the farm tiers deliver what the notes expected of them, but the light pipes' own losses, left out of the sizing, could cost ~50% more lighting power; ~1 kW sulfur lamps straight in the light box (no pipes, fed by 915 MHz sector plants) avoid them, at ~81% / ~89% delivered and ~130 MW per 900 m torus (`optics_model/architectures.py`): the sizing's ~75% / ~85% stands. LEDs (white in the valley, blue + red in the farm) take ~59 MW and ~71 ha of array, saving ~350 t of imported PV silicon per torus against ~0.34 t of dies; their materials are under 1% of the source bodies' content, indium for the red the tightest (proposed, `optics_model/leds.py`); sulfur lamps in the box are the fully local fallback.
 
 ---
 
@@ -196,6 +196,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] **C-type baking (top of the ranking):** nitrogen recovery and energy per kg from CI-like meteorite or simulant. Recovery (50–90%) moves the C-type per torus by −22% to +40%; baking energy (1–2 MJ/kg) moves the processing energy by ±28%. Lab data, not a model, settles both.
 - [ ] Growth-chamber trials of the working diet under sulfur lamps (CO₂ ~1,000 ppm, 2.5 m tiers), especially lentils and flax, whose yields are estimates
 - [ ] Non-rotating sulfur bulb at kW scale, fed by a 915 MHz source
+- [ ] LED materials from asteroid simulant: gallium and indium recovered from a chondrite leach liquor, YAG:Ce from its rare earths, a GaN film grown from the recovered gallium
 - [ ] A ~1 kW sulfur lamp in a reflector behind a diffuser, the proposed light box (its luminaire efficiency moves the power ~−5% / +10%); a lamp on a prism light pipe only if pipes come back (coupling, loss per metre, extractor: ±5–8 points each, `reports/optics.md`)
 - [ ] Wire drawing from carbonyl-refined meteoritic iron, and from the as-separated metal for comparison (the wire's strength sets the spoke mass, section 2)
 - [ ] Magnetic separation of free metal from L and LL chondrite material (meteorites or simulant)
