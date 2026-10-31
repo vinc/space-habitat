@@ -17,6 +17,17 @@ and whether any load excites them at their own frequency.
 
 Loads: a ship's axial impulse at the dock; a rim train braking (its tangential force at the rim,
 on one torus). Modes from K v = w_n^2 M v, the rigid motions (sliding, turning together) removed.
+
+Requirement: no mode near the spin, within a factor BAND of it either way, where once-per-turn
+loads (the despun array's bearing running slightly off true, the one interface turning against
+the stack) would pump it. Modes well below or above are left alone.
+- The farm rings bounce along the axis at ~w sqrt(r_f / L) (their spokes' tension, whatever their
+  size), just above the spin: a share of their spokes crossed between the two planes (front plane
+  at the hub to back plane at the ring, alternately, like a bicycle wheel's) lifts it.
+- The hub twists between the tori's nets and the farm spokes at ~1.05-1.3x the spin: a small share
+  of the tori's stabilising lines laced tangentially lifts it. The farm rings' own twist on their
+  spokes (~w sqrt(h / L), ~0.45x) and the farm section with the hub against the tori (~0.2-0.44x)
+  stay well below the spin.
 """
 
 import math
@@ -34,19 +45,17 @@ BUFFER = 10.0                  # s, a ship's docking impulse spread by the dock'
 def farm_spokes(geo, mass, laced=0.0):
     """A farm ring's spokes, per plane: their total tension, and the stiffness along and about the
     axis. Radial spokes resist both only by their tension (geometric: T / L, and T h r_f / L);
-    a share `laced` of them crossed like the tori's lacing, each running from one plane's hub end to
-    the other plane's rim end (inclined gamma along the axis) and leaving the hub tangentially
-    (inclined beta, sin beta = h / r_f), adds E A / L sin^2 gamma along the axis and
-    E A / L sin^2 beta r_f^2 about it."""
+    a share `laced` of them crossed between the planes, each running from one plane's hub end to
+    the other plane's rim end (inclined gamma along the axis, still radial seen along it), adds
+    E A / L sin^2 gamma along the axis and nothing about it."""
     h, rf = geo["hub_radius"], geo["farm_radius"]
     length = rf - h
     tension = (mass["farm_total"] - mass["farm_spokes"]) * geo["omega"] ** 2 * rf / 2
     area = mass["farm_spokes"] / (STEEL_DENSITY * length) / 2
     ea_l = st.E * area / length
     sin_g2 = geo["farm_width"] ** 2 / (geo["farm_width"] ** 2 + length ** 2)
-    sin_b2 = (h / rf) ** 2
     return {"tension": tension, "axial": tension / length + laced * ea_l * sin_g2,
-            "torsion": tension * h * rf / length + laced * ea_l * sin_b2 * rf ** 2}
+            "torsion": tension * h * rf / length}
 
 
 NET_LACING_ANGLE = math.radians(45)   # stabilising lines laced tangentially, from the radial
@@ -159,30 +168,33 @@ def _bisect(f, target):
     return hi
 
 
-def laced_needed(s, info, lattice, kind, target=1.5, nets_laced=0.0):
-    """Share of the farm spokes to lace for the lowest mode to reach `target` times the spin."""
-    return _bisect(lambda x: lowest(s, info, lattice, kind, x, nets_laced), target)
+BAND = 1.4                     # no axial or torsional mode between 1/BAND and BAND times the spin
 
 
-TARGET = 1.4                   # lowest axial and torsional mode over the spin: clear of once-per-turn loads
+def near_spin(w_ratio, band=BAND):
+    return [float(x) for x in w_ratio if 1 / band < x < band]
 
 
-def study(p, d, k_design, tie_frac=1e-4, ship=1e7, closing=0.1, train_mass=50e3, target=TARGET):
+def above_band(s, info, lattice, kind, laced, nets_laced, band=BAND):
+    """The lowest mode above the band's lower edge, over the spin (inf if none)."""
+    w = modes(s, info, lattice, kind, laced, nets_laced)[0] / s.omega
+    w = w[w > 1 / band]
+    return float(w.min()) if len(w) else math.inf
+
+
+def study(p, d, k_design, tie_frac=1e-4, ship=1e7, closing=0.1, train_mass=50e3, band=BAND):
     """Axial and torsional modes of the stack with its rim lattice: as built (radial farm spokes,
-    radial stabilising lines), then with the farm spokes and the tori's lines laced for `target`
-    times the spin; and the docking and braking loads on the laced stack."""
+    radial stabilising lines), then with the least crossing of the farm spokes and lacing of the
+    tori's lines that clears the band around the spin; and the docking and braking loads."""
     lat, s, info, _ = lk.converged(p, d, k_design, tie_frac=tie_frac)
     geo, nets, h = info["geometry"], info["nets"], info["geometry"]["hub_radius"]
-    bare = {kind: lowest(s, info, lat, kind) for kind in ("axial", "torsion")}
-    # Along the axis only the farm spokes' lacing helps (the tori ride on the lattice and nets): the
-    # share needed, for the record; all of them are laced (crossed like a bicycle wheel's, a few
-    # tonnes), which also holds the farm rings about the axis.
-    farm_axial = laced_needed(s, info, lat, "axial", target)
-    farm_share = 1.0
-    # About it, the hub and farm section turn against the tori on the nets: lace the tori's lines.
-    nets_share = _bisect(lambda x: lowest(s, info, lat, "torsion", farm_share, x), target)
-    w_ax = modes(s, info, lat, "axial", farm_share, nets_share)[0]
-    w_to = modes(s, info, lat, "torsion", farm_share, nets_share)[0]
+    bare = {kind: modes(s, info, lat, kind)[0] / s.omega for kind in ("axial", "torsion")}
+    farm_share = _bisect(lambda x: above_band(s, info, lat, "axial", x, 0.0, band), band)
+    farm_share = 1.0 if farm_share is None else farm_share
+    nets_share = _bisect(lambda x: above_band(s, info, lat, "torsion", farm_share, x, band), band)
+    nets_share = 1.0 if nets_share is None else nets_share
+    w_ax = modes(s, info, lat, "axial", farm_share, nets_share)[0] / s.omega
+    w_to = modes(s, info, lat, "torsion", farm_share, nets_share)[0] / s.omega
     n_hub = len(s.hub_nodes)
     # Docking: the ship's axial momentum taken out by the dock's buffers over BUFFER seconds.
     dock = response(s, info, lat, "axial", 0, ship * closing / BUFFER, duration=BUFFER, laced=farm_share,
@@ -194,10 +206,14 @@ def study(p, d, k_design, tie_frac=1e-4, ship=1e7, closing=0.1, train_mass=50e3,
     farm_extra = farm_share * info["mass"]["farm_spokes"] * (math.hypot(geo["farm_width"], spoke_length)
                                                             / spoke_length - 1)
     return {
-        "axial_bare": bare["axial"], "torsion_bare": bare["torsion"],
-        "farm_laced": farm_share, "farm_laced_axial": farm_axial, "nets_laced": nets_share,
-        "farm_extra_mass": farm_extra, "nets_extra_mass": net_lacing(nets, h, nets_share or 0.0)[1],
-        "axial_lowest": float(w_ax.min()) / s.omega, "torsion_lowest": float(w_to.min()) / s.omega,
+        "axial_bare_near": near_spin(bare["axial"], band), "torsion_bare_near": near_spin(bare["torsion"], band),
+        "axial_bare": float(bare["axial"].min()), "torsion_bare": float(bare["torsion"].min()),
+        "farm_crossed": farm_share, "nets_laced": nets_share,
+        "farm_extra_mass": farm_extra, "nets_extra_mass": net_lacing(nets, h, nets_share)[1],
+        "axial_near": near_spin(w_ax, band), "torsion_near": near_spin(w_to, band),
+        "axial_lowest": float(w_ax.min()), "torsion_lowest": float(w_to.min()),
+        "axial_above": float(w_ax[w_ax > 1 / band].min()), "torsion_above": float(w_to[w_to > 1 / band].min()),
+        "torsion_below": [float(x) for x in np.unique(np.round(w_to[w_to <= 1 / band], 3))],
         "dock_force": ship * closing / BUFFER, "dock_link_force": dock["link_force"], "dock_largest": dock["largest"],
         "brake_torque": brake_torque, "brake_link_torque": brake["link_force"], "brake_largest": brake["largest"],
         "lattice": lat,

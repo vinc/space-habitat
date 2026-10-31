@@ -109,14 +109,14 @@ The hub is a short, wide tube (radius ~60 m), so its shear flexibility counts: e
 
 ## Along and about the axis
 
-Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would excite any mode near the spin. Target: every mode above 1.40× the spin. As built, the farm rings bounce on their radial spokes at ~1.05× the spin (held along the axis only by the spokes' tension) and the hub with the farm section turns against the tori at ~0.2× (the stabilising lines hold it about the axis only by their preload). Fixes: the farm spokes laced (crossed between the two planes and leaving the hub tangentially, like a bicycle wheel's), and a share of the tori's stabilising lines laced tangentially at 45.0°. Loads on the laced stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
+Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would pump any mode near the spin. Requirement: no mode between 1/1.40 and 1.40× the spin; modes well below or above are left alone. As built, two sit in that band. The farm rings bounce along the axis at ~1.04–1.09× the spin: their radial spokes hold them along it only by their tension, giving ~ω√(r_f/L) whatever the ring's size or mass (the tori had the same weakness in their nets, fixed with inclined lines, plan §2, and are now also tied by the lattice). And the hub twists between the tori's nets and the farm spokes at ~1.05–1.3×. Fixes, the least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial seen along the axis), and a small share of the tori's stabilising lines laced tangentially at 45.0°. The slower twists (the farm rings on their spokes, ~0.45×, and the farm section with the hub against the tori, ~0.2–0.35×) stay well below the spin. Loads on the fixed stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
 
-| Torus | Tori | Axial, as built | Axial, laced | Torsion, as built | Torsion, laced | Farm spokes laced (share for axial alone) | Lines laced | Lacing's extra steel (t) | Docking: largest force | Braking: torque on a lattice |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 1.05 | 1.74 | 0.18 | 1.40 | 100% (15%) | 3.5% | 16 | 0.17 MN | 41 MN·m |
-| 900 m | 6 | 1.05 | 1.74 | 0.18 | 1.40 | 100% (15%) | 4.1% | 49 | 0.19 MN | 66 MN·m |
-| 1.6 km | 2 | 1.04 | 1.45 | 0.20 | 1.40 | 100% (30%) | 2.7% | 90 | 0.23 MN | 74 MN·m |
-| 1.6 km | 6 | 1.04 | 1.45 | 0.20 | 1.40 | 100% (32%) | 3.5% | 270 | 0.26 MN | 120 MN·m |
+| Torus | Tori | Axial near the spin, as built | Torsion near the spin, as built | Farm spokes crossed | Lines laced | Extra steel (t per stack) | Axial: lowest above the band | Torsion: lowest above the band | Torsion below the band | Docking: largest force | Braking: torque on a lattice |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 900 m | 2 | 1.05–1.09 | 1.28 | 15% | 0.07% | 2.3 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 41 MN·m |
+| 900 m | 6 | 1.05–1.09 | 1.28 | 15% | 0.07% | 7.1 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 66 MN·m |
+| 1.6 km | 2 | 1.04–1.09 | 1.05 | 30% | 0.22% | 27 | 1.40 | 1.40 | 0.34, 0.45 | 0.22 MN | 74 MN·m |
+| 1.6 km | 6 | 1.04–1.09 | 1.05 | 32% | 0.22% | 83 | 1.40 | 1.40 | 0.34, 0.45 | 0.25 MN | 120 MN·m |
 
 ## Building and losing a lattice
 

@@ -185,18 +185,23 @@ def report(p):
         "## Along and about the axis",
         "Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so "
         "dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running "
-        "slightly off true is the one interface turning against the stack) would excite any mode near the "
-        f"spin. Target: every mode above {num(at.TARGET)}× the spin. As built, the farm rings bounce on their "
-        "radial spokes at ~1.05× the spin (held along the axis only by the spokes' tension) and the hub "
-        "with the farm section turns against the tori at ~0.2× (the stabilising lines hold it about the axis "
-        "only by their preload). Fixes: the farm spokes laced (crossed between the two planes and leaving the "
-        "hub tangentially, like a bicycle wheel's), and a share of the tori's stabilising lines laced "
-        f"tangentially at {num(math.degrees(at.NET_LACING_ANGLE))}°. Loads on the laced stack: a "
-        f"{num(ds.SHIP_MASS / 1e6)} kt ship closing at 0.1 m/s, taken out over {num(at.BUFFER)} s by the dock's "
-        "buffers; a 50 t rim train braking at 0.1 g.",
-        table(["Torus", "Tori", "Axial, as built", "Axial, laced", "Torsion, as built", "Torsion, laced",
-               "Farm spokes laced (share for axial alone)", "Lines laced", "Lacing's extra steel (t)",
-               "Docking: largest force", "Braking: torque on a lattice"], axial_rows),
+        "slightly off true is the one interface turning against the stack) would pump any mode near the spin. "
+        f"Requirement: no mode between 1/{num(at.BAND)} and {num(at.BAND)}× the spin; modes well below or above "
+        "are left alone. As built, two sit in that band. The farm rings bounce along the axis at ~1.04–1.09× the "
+        "spin: their radial spokes hold them along it only by their tension, giving ~ω√(r_f/L) whatever the "
+        "ring's size or mass (the tori had the same weakness in their nets, fixed with inclined lines, plan §2, "
+        "and are now also tied by the lattice). And the hub twists between the tori's nets and the farm spokes at "
+        "~1.05–1.3×. Fixes, the least that clears the band: a share of each farm ring's spokes crossed between "
+        "its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a "
+        "bicycle wheel's; still radial seen along the axis), and a small share of the tori's stabilising lines "
+        f"laced tangentially at {num(math.degrees(at.NET_LACING_ANGLE))}°. The slower twists (the farm rings on "
+        "their spokes, ~0.45×, and the farm section with the hub against the tori, ~0.2–0.35×) stay well below "
+        f"the spin. Loads on the fixed stack: a {num(ds.SHIP_MASS / 1e6)} kt ship closing at 0.1 m/s, taken out "
+        f"over {num(at.BUFFER)} s by the dock's buffers; a 50 t rim train braking at 0.1 g.",
+        table(["Torus", "Tori", "Axial near the spin, as built", "Torsion near the spin, as built",
+               "Farm spokes crossed", "Lines laced", "Extra steel (t per stack)", "Axial: lowest above the band",
+               "Torsion: lowest above the band", "Torsion below the band", "Docking: largest force",
+               "Braking: torque on a lattice"], axial_rows),
         "## Building and losing a lattice",
         "The stack's margin with one gap unlinked: a torus just closed next to the stack, or a lattice lost. "
         "The share of a gap's bays (spread evenly) that restores 1.2.",
@@ -243,11 +248,13 @@ def details(p):
                                  f"{num(j['opening_margin'])}×"])
         a = at.study(p, d, k, tie_frac=TIES)
         axial_rows.append(label + [
-            num(a["axial_bare"], 3), num(a["axial_lowest"], 3), num(a["torsion_bare"], 2),
-            num(a["torsion_lowest"], 3),
-            f"{a['farm_laced']:.0%} ({a['farm_laced_axial']:.0%})" if a["farm_laced_axial"] is not None
-            else f"{a['farm_laced']:.0%} (all)",
-            f"{a['nets_laced']:.1%}", num((a["farm_extra_mass"] * n + a["nets_extra_mass"] * n) / 1e3, 2),
+            "–".join(num(x, 3) for x in (min(a["axial_bare_near"]), max(a["axial_bare_near"])))
+            if a["axial_bare_near"] else "none",
+            ", ".join(num(x, 3) for x in a["torsion_bare_near"]) or "none",
+            f"{a['farm_crossed']:.0%}", f"{a['nets_laced']:.2%}",
+            num((a["farm_extra_mass"] + a["nets_extra_mass"]) * n / 1e3, 2),
+            num(a["axial_above"], 3), num(a["torsion_above"], 3),
+            ", ".join(num(x, 2) for x in a["torsion_below"]),
             f"{num(a['dock_largest'] / 1e6, 2)} MN", f"{num(a['brake_link_torque'] / 1e6, 2)} MN·m"])
         c = lk.construction(p, d, k, tie_frac=TIES)
         build_rows.append(label + [num(c["full"], 3), num(c["end_gap"], 3),

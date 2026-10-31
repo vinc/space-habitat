@@ -300,12 +300,21 @@ class TestDetails(unittest.TestCase):
         h = evaluate(self.p, self.d)["geometry"]["hub_radius"]
         self.assertAlmostEqual(j["flange"], st.E * jt.BOLT_AREA / jt.BOLT_GRIP / jt.BOLT_SPACING * math.pi * h ** 3)
 
-    def test_lacing_lifts_the_axial_and_torsional_modes(self):
+    def test_crossing_and_lacing_clear_the_band_around_the_spin(self):
         a = at.study(self.p, self.d, self.k, tie_frac=1e-4)
-        self.assertLess(a["axial_bare"], 1.2)
-        self.assertLess(a["torsion_bare"], 1.0)
-        self.assertGreaterEqual(a["axial_lowest"], at.TARGET * 0.999)
-        self.assertGreaterEqual(a["torsion_lowest"], at.TARGET * 0.999)
+        self.assertTrue(a["axial_bare_near"])
+        self.assertTrue(a["torsion_bare_near"])
+        self.assertEqual(a["axial_near"], [])
+        self.assertEqual(a["torsion_near"], [])
+        self.assertLess(a["farm_crossed"], 0.5)
+        self.assertLess(a["nets_laced"], 0.01)
+
+    def test_crossed_farm_spokes_leave_the_twist_alone(self):
+        res = evaluate(self.p, self.d)
+        plain = at.farm_spokes(res["geometry"], res["mass"])
+        crossed = at.farm_spokes(res["geometry"], res["mass"], laced=0.3)
+        self.assertGreater(crossed["axial"], 2 * plain["axial"])
+        self.assertEqual(crossed["torsion"], plain["torsion"])
 
     def test_a_farm_ring_bounces_on_its_spokes_tension(self):
         # Two planes of radial spokes, each T / L along the axis: w^2 = 2 T / (L m), T = m w^2 r_f / 2
