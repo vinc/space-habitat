@@ -255,3 +255,51 @@ def construction(p, d, k_design, tie_frac=0.0, target=1.2):
             "e_folding_hours": (1 / growth / 3600) if growth and growth > 0 else None,
             "worst": missing[worst] if worst is not None else None, "end_gap": end,
             "share": share, "bays": math.ceil(share * lat["bays"]) if share else None, "lattice": lat}
+
+
+def building_torus(p, d, share, link=True, radial_lines=True, tie_frac=1e-4, k_design=None):
+    """The stack while its last torus is being hung, at full spin: that torus a partial ring of
+    `share` of its rim in two opposite pairs of arcs at right angles (so its transverse inertia is
+    half its polar one, as for a ring), held on the hub by its nets (their stiffness in proportion to
+    its chords), by the temporary radial lines from the hub to its arcs' single-laced anchors
+    (structure_model.nonlinear and sequence.SUPPORT: N / 2 E A / L sideways, N counted from the arcs'
+    own geometry, if radial_lines) and, if link, by the rim
+    lattice's bays alongside its arcs (in proportion). Returns the stack's lowest forward whirl over
+    the spin, the lines' stiffness and their number."""
+    if k_design is None:
+        k_design, _ = design_stiffness(p, d, tie_frac=tie_frac)
+    lat, s, info, _ = converged(p, d, k_design, tie_frac=tie_frac)
+    geo, mass = info["geometry"], info["mass"]
+    r = geo["radius"]
+    last = d.n_tori - 1
+    body = s.bodies[last]
+    k_lines, n_single = 0.0, 0
+    if radial_lines:
+        # The single-laced anchors of the very arcs being hung (two pairs at right angles), counted from
+        # the construction model's own geometry, and the proposed lines' area there.
+        from structure_model import nonlinear as nl
+        from structure_model import sequence
+        model, built = nl.for_design(
+            p, r, arcs_fn=lambda n, net: nl.opposite_pairs(n, max(1, round(share * n / 4)), pairs=2),
+            **sequence.SUPPORT)
+        n_single = len(model.radials)
+        length = r - geo["hub_radius"]
+        k_lines = n_single / 2 * E * model.radial_area / length
+    m_part = share * body.mass
+    springs = [(z, k * share + k_lines / len(body.springs)) for z, k in body.springs]
+    s.bodies[last] = st.Body(body.name, m_part, share * body.polar, share * body.transverse, body.z, springs)
+    s.links = [(i, j, kl * (share if link else 0.0), kt * (share if link else 0.0)) if j == last else (i, j, kl, kt)
+               for i, j, kl, kt in s.links]
+    return s.forward_ratio(), k_lines, n_single
+
+
+def spinup(p, d, fractions=(0.05, 0.1, 0.25, 0.5, 0.75, 1.0), tie_frac=1e-4, k_design=None):
+    """The finished, linked stack spun up from rest (the baseline for a child, built at rest): its
+    lowest forward whirl over the spin at each share of the final rate. The nets' and farm spokes'
+    centring scales with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and
+    ties are elastic, relatively stiffer at low spin: full spin is the worst case."""
+    if k_design is None:
+        k_design, _ = design_stiffness(p, d, tie_frac=tie_frac)
+    lat, _, _, _ = converged(p, d, k_design, tie_frac=tie_frac)
+    return {f: st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac,
+                        spin_fraction=f)[0].forward_ratio() for f in fractions}

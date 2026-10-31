@@ -228,12 +228,12 @@ class Stack:
         return polar / transverse
 
 
-def farm_ring_plane_stiffness(p, geo, mass):
+def farm_ring_plane_stiffness(p, geo, mass, spin_fraction=1.0):
     """Lateral stiffness of one of a farm ring's two planes of radial spokes: N/2 (EA + T)/L,
     with half the spokes' area and tension in each plane (radial spokes of length L)."""
     length = geo["farm_radius"] - geo["hub_radius"]
     area = mass["farm_spokes"] / (p.steel_density * length) / 2      # total spoke area per plane
-    tension = (mass["farm_total"] - mass["farm_spokes"]) * geo["omega"] ** 2 * geo["farm_radius"] / 2
+    tension = (mass["farm_total"] - mass["farm_spokes"]) * (spin_fraction * geo["omega"]) ** 2 * geo["farm_radius"] / 2
     return (E * area + tension) / (2 * length)
 
 
@@ -251,7 +251,7 @@ G = 77e9
 
 
 def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim_link=None, link_tilt=None,
-          shear=True, joint_k=None, links_skip=()):
+          shear=True, joint_k=None, links_skip=(), spin_fraction=1.0):
     """The stack of design d: tori, their farm rings, the hub and the despun array.
 
     tie_frac: radial ties from the hub to each torus (share of its mass); rim_link: lateral
@@ -259,17 +259,20 @@ def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim
     tilt stiffness (N m/rad), by default k r^2 / 2 (the links' spread around the rim).
     shear: the hub's shear flexibility (Timoshenko); joint_k: rotational stiffness (N m/rad) of
     joints in the hub between its segments, one at every gap between tori and farm rings, None for
-    a continuous hub; links_skip: gaps (0 = between tori 1 and 2) left unlinked."""
+    a continuous hub; links_skip: gaps (0 = between tori 1 and 2) left unlinked. spin_fraction: the
+    stack spinning at this share of its rate (spin-up from rest): the nets' and the farm spokes'
+    stiffness from their tension goes as its square; the hub, lattice, ties and spokes' own
+    elasticity don't change."""
     from habitat_model import evaluate
     from structure_model import hub as hub_model
 
     res = evaluate(p, d)
     geo, mass, power = res["geometry"], res["mass"], res["power"]
-    n, r, h, w = d.n_tori, geo["radius"], geo["hub_radius"], geo["omega"]
+    n, r, h, w = d.n_tori, geo["radius"], geo["hub_radius"], geo["omega"] * spin_fraction
     t = p.hub_shell_m if hub_shell_m is None else hub_shell_m
     nets = hub_model.compute(p, geo, mass)
-    k_plane, offset = nets["k_plane"], nets["plane_offset"]
-    k_farm = farm_ring_plane_stiffness(p, geo, mass)
+    k_plane, offset = nets["k_plane"] * spin_fraction ** 2, nets["plane_offset"]
+    k_farm = farm_ring_plane_stiffness(p, geo, mass, spin_fraction)
     k_tie, tie_length = tie_plane_stiffness(geo, mass["total"], tie_frac, p.steel_density)
 
     pitch, fp = geo["pitch"], geo["farm_pitch"]

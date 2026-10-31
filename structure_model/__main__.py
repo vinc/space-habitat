@@ -11,7 +11,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import cable_net, hub, net_statics, spinup, tube_section, wire
+from . import cable_net, hub, net_statics, nonlinear, sequence, spinup, tube_section, wire
 
 SIZES = (400, 900, 1600, 2500)
 
@@ -115,6 +115,114 @@ def construction_section(p):
         "Rigid segments make this a crude model: even resolved stages settle the force balance, not the "
         "construction sequence, and the joint moments of the longer locked arcs depend on the segments' real "
         "flexibility.",
+    ])
+
+
+def sequence_section(p):
+    mpa = lambda x: num(x / 1e6)
+    joint_rows = []
+    for row in sequence.joints_study(p):
+        if row["resolved"]:
+            status = (f"held, but rotations {num(row['rotation'], 2)} rad, {num(row['displacement'])} m, chords "
+                      f"{num(row['stress'] / row['sigma'], 2)}× the allowable")
+        else:
+            status = (f"**no equilibrium** below {row['released']:.0e} of the locked moment stiffness"
+                      if row["released"] is not None else "**no equilibrium**")
+        joint_rows.append([f"{num(row['factor'])}× ({num(row['arc'])} m)", row["to"],
+                           f"{num(row['locked_stress'] / row['sigma'], 2)}× the allowable, "
+                           f"{num(row['locked_joint_moment'] / 1e9, 2)} GN·m in the joints", status])
+    flex_rows = []
+    linear = {}
+    for f in sequence.ARC_FACTORS:
+        n, s_lin, _ = _stage(p, 900, f, "locked")
+        linear[f] = s_lin["max_spin_fraction"]
+    for row in sequence.flexible_study(p):
+        flex_rows.append([size_label(row["r"]), f"{num(row['factor'])}×", num(row["limit"], 2),
+                          num(min(linear[row["factor"]], 1.0), 2) if row["r"] == 900 else "—",
+                          num(row["tension_ratio"], 2), mpa(row["hull"]), mpa(row["hull_at_limit"]),
+                          num(row["joint_tension"] / 1e6), num(row["joint_moment"] / 1e9, 2)])
+    support_rows = [[size_label(row["r"]), f"{num(row['factor'])}×", row["kind"],
+                     "full spin" if row["reached"] >= 1 else f"{num(row['reached'], 2)} of the spin",
+                     f"{mpa(row['stress'])} ({num(row['stress'] / row['sigma'], 3)}×)",
+                     f"{mpa(row['line_stress'])} ({num(row['line_stress'] / row['sigma'], 3)}×)" if row["line_stress"]
+                     else "—", mpa(row["hull"]),
+                     num(row["joint_tension"] / 1e6), num(row["extra"] / 1e6, 2) if row["extra"] else "—"]
+                    for row in sequence.support_study(p)]
+    growth_rows = [[size_label(row["r"]), f"{num(row['arc'])} m ({row['share']:.0%} of a half ring)",
+                    "full spin" if row["reached"] >= 1 else f"{num(row['reached'], 2)}",
+                    f"{mpa(row['stress'])} ({num(row['stress'] / row['sigma'], 3)}×)",
+                    f"{mpa(row['line_stress'])} ({num(row['line_stress'] / row['sigma'], 3)}×)",
+                    num(row["spin_within"], 3), mpa(row["hull"]),
+                    f"{num(row['joint_tension'] / 1e6)} ({row['joint_tension'] / row['hoop']:.1%})",
+                    num(row["joint_moment"] / 1e9, 2), num(row["hub_pull"] / 1e9, 2), str(row["lines"]),
+                    num(row["extra"] / 1e6, 2)] for row in sequence.growth_study(p)]
+    c = sequence.closure_study(p)
+    closure = (f"**Closure (900 m, full spin).** Closed with every joint locked, the hull becomes a hoop: "
+               f"~{mpa(c['locked']['hull_axial'])} MPa along it, the chords at ~{num(c['locked']['tension_ratio'], 2)}× "
+               "their finished tension. Made instead with its two closure joints sliding, the ring never becomes a "
+               f"hoop: the hull at ~{mpa(c['closure_sliding']['hull_axial'])} MPa along it and "
+               f"~{mpa(c['closure_sliding']['hull_bending'])} MPa in bending, the chords at "
+               f"{num(c['closure_sliding']['tension_min'], 2)}–{num(c['closure_sliding']['tension_max'], 2)}× their "
+               f"finished tension (peak {num(c['closure_sliding']['peak'], 3)}× the allowable), every anchor now "
+               "double-laced (the radial lines can go). Then every joint is released to sliding, step by step from "
+               "the last equilibrium: "
+               + (f"the finished net, chords at {num(c['released']['tension_min'], 3)}–"
+                  f"{num(c['released']['tension_max'], 3)}× the formula (peak {num(c['released']['peak'], 3)}× the "
+                  f"allowable; {num(c['released']['path_peak'], 3)}× at worst on the way)."
+                  if c["released"]["resolved"] else "**not reached**."))
+    return "\n\n".join([
+        "## Adding a torus to a spinning stack: geometrically nonlinear",
+        "**The baseline is simpler.** A child is built at rest: its hub, nets and every arc, the ring closed and "
+        "its joints released, the lattice fitted, the rock and soil in, without spin load, so the partial-ring "
+        "stages below don't arise; then the finished stack spins up slowly and the water goes in last, trimmed "
+        "with ballast. The spin loads should then grow in their finished proportions (expected, not checked "
+        "here); checked so far is only that the stack's whirl margin falls as it spins up "
+        "(`reports/dynamics.md`). Still open for the baseline: the stationary assembly's equilibrium, the "
+        "cables taking up tension and the sliding joints settling as the spin starts, the spin-up torque and "
+        "angular-acceleration loads, and the fill's retention and settling. What follows is the harder option: "
+        "a torus added to a living stack, which can't stop, so its arcs are hung at full spin. It checks "
+        "selected stages of that sequence, not the whole process.",
+        "`structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible "
+        "beams (corotational, one per anchor spacing, E A and E I of the hull and frames as a thin tube of the "
+        "tube's radius), joined at the segment joints (locked, pinned or sliding: penalty springs); each chord a "
+        "tension-only cable with its geometric stiffness, pretensioned slightly; the rim's and the chords' "
+        "centrifugal loads following the parts as they move; the assembly's centre of mass and mean rotation "
+        "held (it turns about its centre of mass); the spin stepped up with Newton iterations and line search. "
+        "It reproduces the linear model on the shortest locked arcs (chords ~1.94× their finished tension, "
+        "joints ~186 MN and ~6 GN·m at full spin) and the finished net (within 1% of the formula). Sequence "
+        "studies: `structure_model/sequence.py`.",
+        "**Joints.** The shortest and longer arcs held at 0.7 of the spin with locked joints, then released "
+        "step by step, each from the last equilibrium, towards pinned or sliding joints.",
+        table(["Arcs (× the shortest)", "Released to", "Locked", "Released"], joint_rows),
+        "**Flexible arcs, locked, nothing temporary.** The spin each stage reaches with every chord within its "
+        "allowable, against the linear rigid-segment model's, and the hull's bending.",
+        table(["Torus", "Arcs", "Spin limit (chords)", "Linear, rigid segments", "Chords at full spin (× finished)",
+               "Hull bending at full spin (MPa)", "At the spin limit (MPa)", "Joint tension (MN)",
+               "Joint moment (GN·m)"], flex_rows),
+        f"With flexible segments, longer arcs don't relieve the chords: the single-laced end zones load theirs "
+        f"to ~1.8× whatever the arc's length, and the arcs bend the hull far past its ~{mpa(sequence.HULL_STRESS)} MPa "
+        "plate stress. A torus added to a spinning stack is hung at full spin, so it needs temporary support:",
+        "Every chord and line at its peak: tension over area plus its own spin load (a chord's at mid-chord; "
+        "a radial line's, conservatively, all of it, at its hub end).",
+        table(["Torus", "Arcs", "Temporary support", "Reached", "Peak chord stress (MPa, × allowable)",
+               "Peak radial-line stress (MPa, × allowable)", "Hull bending (MPa)", "Joint tension (MN)",
+               "Temporary steel (kt)"], support_rows),
+        "Doubling the cables at the single-laced anchors keeps the chords within their allowable but leaves "
+        "the hull bending. Temporary radial lines from the hub to those anchors (pulling straight in, nothing "
+        "along the rim) take the bending away; at a chord's area they are themselves ~5% over at their hub "
+        "end, thicker they stiffen the ends and bend the hull again. Proposed: lines of 1.15× a chord's area "
+        "and a 1.05× sleeve on the end-zone cables. The chords are sized to their allowable in the finished "
+        "net (here at ~1.007× it, from the anchors' discrete positions), so wherever a stage loads them past "
+        "their finished tension (the mid-arc chords by ~1%) they are past it too at full spin; the worst step "
+        "is the release after closure (below, ~7%): building at ~0.97 of the spin for it, or a lower safety "
+        "factor while building, covers it. The hub carries the two arcs' pull across its diameter.",
+        "**Growing to closure at full spin** (one opposite pair; two pairs at right angles behave the same, each "
+        "arc at least the shortest, with twice the lines), with the proposed support:",
+        table(["Torus", "Each arc", "Reached", "Peak chord stress (MPa, × allowable)",
+               "Peak radial-line stress", "Spin within every allowable", "Hull bending (MPa)",
+               "Joint tension (MN, share of hoop)", "Joint moment (GN·m)", "Pull across the hub (GN)",
+               "Radial lines", "Their steel (kt)"], growth_rows),
+        closure,
     ])
 
 
@@ -304,7 +412,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     p = params(load(), **dict(args.set))
     print("\n\n".join(["# Structure: wire, cable net, spin-up and the tube's cross-section", wire_section(p),
-                       net_section(p, args.anchor_spacing), construction_section(p),
+                       net_section(p, args.anchor_spacing), construction_section(p), sequence_section(p),
                        imbalance_section(p, args.mismatch), hub_report(p), tube_section_report(p)]) + "\n")
     return 0
 
