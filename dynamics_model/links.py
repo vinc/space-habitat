@@ -20,6 +20,10 @@ L_d; N bays give k_lat = N k_bay / 2. Pinned tubular struts (D/t fixed): Euler b
 pi^2 E A D^2 / (8 L^2); no preload (struts, not cables: preloaded cables would pull the tori
 together along the axis, where only the nets' weak axial stiffness holds them).
 
+Each strut end meets the torus at a fitting: a shear web through the jacket and crawl space to
+the hull, in the bay's tangential-axial plane (a jacket bulkhead in that plane), in series with
+the struts in every stiffness (lattice()).
+
 Differential motion between neighbours, imposed, and what it costs the lattice:
 - radial (a warmer or more loaded rim): the struts bend out of the surface; their hoop share
   strains by about delta / R;
@@ -42,15 +46,47 @@ MIN_AREA = 2e-4                # m^2, smallest strut worth building (a ~6 cm tub
 KNEE = 0.98                    # design stiffness: this share of the margin with rigid links
 STIFF = 1e13                   # N/m, links taken as rigid
 THERMAL_EXPANSION = 12e-6      # 1/K, steel
+STRUT_SHARE = 2.0              # struts sized for twice the bay's stiffness, the fittings take the rest
+WEB_KAPPA = 5 / 6              # shear coefficient of a plate's rectangular section
+MIN_WEB = 0.006                # m, thinnest fitting web
+WEB_BUCKLING_K = 9.34          # shear buckling coefficient of a square plate, simply supported
 
 
 def link_radius(geo):
+    """The lattice's radius: the tube's centre (r - a). Neighbouring envelopes come closest there,
+    at the tubes' flat sides facing each other along the habitat's axis (the gap is axial: pitch =
+    2 x envelope radius + gap)."""
     return geo["radius"] - geo["tube_radius"]
 
 
+def fitting_depth(geo):
+    """How far a fitting reaches from the envelope to the hull, through the jacket and crawl space.
+    At the tube's side, where the lattice is, that depth runs along the habitat's axis."""
+    return geo["envelope_radius"] - geo["tube_radius"]
+
+
+def web_stiffness(depth, width):
+    """A fitting's shear web per metre of thickness. At the tube's side the jacket's depth runs along
+    the habitat's axis, so the web spans `depth` along the axis (from the envelope to the hull) and is
+    `width` wide tangentially: it lies in the tangential-axial plane, its normal radial. Both loads
+    the lattice gives it are in that plane: tangential, at its envelope end (bending and shear in
+    series, k = t / (L^3 / (3 E w^3 / 12) + L / (kappa G w))), and axial, along its span (E w t / L).
+    Its weak direction, out of its plane, is the habitat's radial one, where the lattice is meant to
+    give way."""
+    tangential = 1 / (depth ** 3 / (3 * E * width ** 3 / 12) + depth / (WEB_KAPPA * st.G * width))
+    return tangential, E * width / depth
+
+
 def lattice(geo, k_lat, steel_density, force=0.0):
-    """An X-braced ring across one gap giving lateral stiffness k_lat (N/m): its bays, struts and
-    mass. force: the largest lateral force it carries (N), for the struts' buckling and yield."""
+    """An X-braced ring across one gap and its fittings, together giving lateral stiffness k_lat
+    (N/m): its bays, struts, fittings and mass. force: the largest lateral force it carries (N), for
+    the struts' buckling and yield and the fittings' strength.
+
+    Each strut end meets the torus at a fitting carried to the hull through the jacket and crawl
+    space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane): the
+    bay's struts and the fittings at its two ends act in series, 1/k = 1/k_struts + 2/k_fitting.
+    Sizing: the struts for twice the bay's share of k_lat (or their strength), then the webs for the
+    rest of the compliance (or their strength), so the finished lattice gives at least k_lat."""
     radius, height = link_radius(geo), max(geo["gap"], 1.0)
     bays = max(3, round(2 * math.pi * radius / height))
     width = 2 * math.pi * radius / bays
@@ -58,10 +94,11 @@ def lattice(geo, k_lat, steel_density, force=0.0):
     k_bay = 2 * k_lat / bays
     cos = width / diagonal
     # A tangential motion u_t stretches each diagonal by u_t cos: k_bay = 2 (E A / L) cos^2.
-    area_stiff = k_bay * diagonal / (2 * E * cos ** 2)
+    area_stiff = STRUT_SHARE * k_bay * diagonal / (2 * E * cos ** 2)
     # The lateral force F spreads as F sin(theta) / (N / 2) per bay: the largest bay shear is 2F / N,
     # each diagonal carrying half of it along its length.
-    strut_force = (2 * force / bays) / (2 * cos)
+    shear = 2 * force / bays
+    strut_force = shear / (2 * cos)
     area_yield = SAFETY * strut_force / YIELD
     # Euler, pinned: P = pi^2 E I / L^2, I = A D^2 / 8 for a thin tube, D = sqrt(D/t A / pi).
     area_buckle = math.sqrt(SAFETY * strut_force * 8 * diagonal ** 2 * math.pi
@@ -70,18 +107,48 @@ def lattice(geo, k_lat, steel_density, force=0.0):
     set_by = max((area_stiff, "stiffness"), (area_yield, "yield"), (area_buckle, "buckling"),
                  (MIN_AREA, "minimum size"))[1]
     diameter = math.sqrt(STRUT_D_OVER_T * area / math.pi)
-    k_actual = bays * 2 * E * area / diagonal * cos ** 2 / 2
+    k_struts = 2 * E * area / diagonal * cos ** 2                 # per bay, tangential
+    k_struts_axial = 2 * E * area / diagonal * (height / diagonal) ** 2
+    # Fittings: webs as wide as the jacket is deep (or the bay, if narrower).
+    depth = fitting_depth(geo)
+    web_width = min(depth, width)
+    per_t, axial_per_t = web_stiffness(depth, web_width)
+    # Stiffness: 1/k_bay >= 1/k_struts + 2/k_fit.
+    spare = 1 / k_bay - 1 / k_struts
+    t_stiff = 2 / (spare * per_t) if spare > 0 else math.inf
+    # Strength: the bay's shear at the web's envelope end, bending at its root (6 V L / (t w^2)) and
+    # shear (1.5 V / (t w)).
+    t_bend = SAFETY * 6 * shear * depth / (YIELD * web_width ** 2)
+    t_shear = SAFETY * 1.5 * shear / (YIELD / math.sqrt(3) * web_width)
+    # Shear buckling of the unstiffened panel (its shorter side b): tau_cr = k pi^2 E / (12 (1 - nu^2))
+    # (t / b)^2 against the mean shear V / (t w): t^3 = SAFETY V b^2 / (w C).
+    side = min(depth, web_width)
+    c_buckle = WEB_BUCKLING_K * math.pi ** 2 * E / (12 * (1 - 0.3 ** 2))
+    t_buckle = (SAFETY * shear * side ** 2 / (web_width * c_buckle)) ** (1 / 3) if shear else 0.0
+    web_t = max(t_stiff, t_bend, t_shear, t_buckle, MIN_WEB)
+    web_set_by = max((t_stiff, "stiffness"), (t_bend, "bending"), (t_shear, "shear"), (t_buckle, "buckling"),
+                     (MIN_WEB, "minimum"))[1]
+    k_fit, k_fit_axial = per_t * web_t, axial_per_t * web_t
+    k_bay_tan = 1 / (1 / k_struts + 2 / k_fit)
+    k_bay_ax = 1 / (1 / k_struts_axial + 2 / k_fit_axial)
+    k_actual = bays * k_bay_tan / 2
     mass = 2 * bays * area * diagonal * steel_density
+    web_mass = 2 * bays * web_t * web_width * depth * steel_density
     return {
         "bays": bays, "width": width, "height": height, "diagonal": diagonal, "area": area,
         "set_by": set_by, "diameter": diameter, "mass": mass, "k_lat": k_actual, "radius": radius,
         # Share of the gap's cylinder the struts cover (seen radially), for the gap vents.
         "blocked": 2 * diagonal * diameter / (width * height),
-        "strut_force": strut_force,
-        # Stiffness along the axis (both diagonals stretch alike) and in torsion (tangential, all bays).
-        "k_axial": bays * 2 * E * area / diagonal * (height / diagonal) ** 2,
-        "k_torsion": bays * k_bay * radius ** 2,
-        "tilt": bays * 2 * E * area / diagonal * (height / diagonal) ** 2 * radius ** 2 / 2,
+        "strut_force": strut_force, "shear": shear,
+        "k_struts_lat": bays * k_struts / 2,
+        "web_thickness": web_t, "web_set_by": web_set_by, "web_width": web_width, "web_depth": depth,
+        "web_mass": web_mass, "k_fitting": k_fit, "k_fittings_lat": bays * k_fit / 4,
+        "fitting_motion": shear / k_fit,
+        # Along the axis (both diagonals stretch alike) and in torsion (tangential, all bays), each bay
+        # with its fittings in series; torsion N k_t R^2 = 2 k_lat R^2.
+        "k_axial": bays * k_bay_ax,
+        "k_torsion": bays * k_bay_tan * radius ** 2,
+        "tilt": bays * k_bay_ax * radius ** 2 / 2,
     }
 
 
@@ -144,3 +211,47 @@ def converged(p, d, k_design, tie_frac=0.0, iterations=20):
         area, force = lat["area"], unbalanced["link"]
     lat = lattice(geo, k_design, p.steel_density, force=unbalanced["link"])
     return lat, s, info, unbalanced
+
+
+def construction(p, d, k_design, tie_frac=0.0, target=1.2):
+    """Building and losing lattices: the stack's margin with one gap left unlinked (a torus just
+    closed next to the stack, or a lattice lost), the worst gap, and the share of a gap's bays
+    that must be in place (spread evenly around it) to restore `target`."""
+    lat, s, info, _ = converged(p, d, k_design, tie_frac=tie_frac)
+    n = d.n_tori
+    full = s.forward_ratio()
+    missing = {}
+    for gap in range(n - 1):
+        missing[gap] = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac,
+                                links_skip=(gap,))[0].forward_ratio()
+    worst = min(missing, key=missing.get) if missing else None
+
+    def with_share(gap, share):
+        stack, _ = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac)
+        stack.links = [(i, j, kl * (share if i == gap else 1.0), kt * (share if i == gap else 1.0))
+                       for i, j, kl, kt in stack.links]
+        return stack.forward_ratio()
+
+    share = None
+    if worst is not None:
+        if with_share(worst, 1.0) >= target:
+            lo, hi = 1e-6, 1.0
+            if with_share(worst, lo) >= target:
+                hi = lo
+            else:
+                for _ in range(40):
+                    mid = math.sqrt(lo * hi)
+                    lo, hi = (lo, mid) if with_share(worst, mid) >= target else (mid, hi)
+                    if hi / lo < 1.01:
+                        break
+            share = hi
+    end = missing.get(n - 2)
+    growth = None
+    if worst is not None:
+        _, g = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=tie_frac,
+                        links_skip=(worst,))[0].modes(damping=0.01)
+        growth = float(g.max())
+    return {"full": full, "missing": missing, "worst_gap": worst, "growth": growth,
+            "e_folding_hours": (1 / growth / 3600) if growth and growth > 0 else None,
+            "worst": missing[worst] if worst is not None else None, "end_gap": end,
+            "share": share, "bays": math.ceil(share * lat["bays"]) if share else None, "lattice": lat}

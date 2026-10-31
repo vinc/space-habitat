@@ -11,7 +11,10 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
+from . import axial_torsion as at
 from . import disturbances as ds
+from . import fatigue as fa
+from . import joints as jt
 from . import links as lk
 from . import stack as st
 
@@ -79,6 +82,7 @@ def report(p):
                             num(budget * 100), num(best, 3)])
     shell_cm = p.hub_shell_m * 100
     link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows = links_and_disturbances(p)
+    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows = details(p)
     return "\n\n".join([
         "# Stack dynamics: whirl modes and passive stability",
         "The stack as one flexible spinning body (`dynamics_model/stack.py`): the shared hub as a thin-walled beam "
@@ -167,11 +171,117 @@ def report(p):
         "**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack "
         "destabilises it; it only sets how fast a disturbance dies out (×1/e in hours to days at 1%, ten times longer "
         "at 0.1%). Nothing has to be added for it.",
-        "Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional "
-        "motion, the ties' and lattice's joints and how they are built into the construction sequence, a tunnel "
-        "(one stiff link at one angle makes the stiffness differ by direction; it stays clear of trouble while "
-        "the lattice's even stiffness dominates), fatigue.",
+        "## The hub: shear and joints",
+        "The hub is a short, wide tube (radius ~60 m), so its shear flexibility counts: every result above "
+        "includes it (Timoshenko, κ = 0.5). It is built in segments, one per torus or farm ring, joined at the "
+        "gaps; each joint a rotational spring (`dynamics_model/joints.py`). Needed: the stiffness keeping "
+        f"{jt.KNEE:.0%} of a continuous hub's margin, against one pitch of the hub's own wall (EI over the pitch) "
+        f"and a bolted flange ring (M36 bolts every {num(jt.BOLT_SPACING * 100)} cm, {num(jt.BOLT_GRIP * 100)} cm "
+        "grip), whose bolts' preload must keep it closed under the hub's largest moment (the ballast tanks' "
+        "whole capacity untrimmed).",
+        table(["Torus", "Tori", "Margin, no shear", "With shear", "Joint needed (N·m/rad)",
+               "One pitch of hub (EI/p)", "Bolted flange", "Margin with flanges", "Flange: preload / load"],
+              hub_rows),
+        "## Along and about the axis",
+        "Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so "
+        "dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running "
+        "slightly off true is the one interface turning against the stack) would pump any mode near the spin. "
+        f"Requirement: no mode between 1/{num(at.BAND)} and {num(at.BAND)}× the spin; modes well below or above "
+        "are left alone. As built, two sit in that band. The farm rings bounce along the axis at ~1.04–1.09× the "
+        "spin: their radial spokes hold them along it only by their tension, giving ~ω√(r_f/L) whatever the "
+        "ring's size or mass (the tori had the same weakness in their nets, fixed with inclined lines, plan §2, "
+        "and are now also tied by the lattice). And the hub twists between the tori's nets and the farm spokes at "
+        "~1.05–1.3×. Fixes, the least that clears the band: a share of each farm ring's spokes crossed between "
+        "its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a "
+        "bicycle wheel's; still radial seen along the axis), and a small share of the tori's stabilising lines "
+        f"laced tangentially at {num(math.degrees(at.NET_LACING_ANGLE))}°. The slower twists (the farm rings on "
+        "their spokes, ~0.45×, and the farm section with the hub against the tori, ~0.2–0.35×) stay well below "
+        f"the spin. Loads on the fixed stack: a {num(ds.SHIP_MASS / 1e6)} kt ship closing at 0.1 m/s, taken out "
+        f"over {num(at.BUFFER)} s by the dock's buffers; a 50 t rim train braking at 0.1 g.",
+        table(["Torus", "Tori", "Axial near the spin, as built", "Torsion near the spin, as built",
+               "Farm spokes crossed", "Lines laced", "Extra steel (t per stack)", "Axial: lowest above the band",
+               "Torsion: lowest above the band", "Torsion below the band", "Docking: largest force",
+               "Braking: torque on a lattice"], axial_rows),
+        "## Building and losing a lattice",
+        "The stack's margin with one gap unlinked: a torus just closed next to the stack, or a lattice lost. "
+        "The share of a gap's bays (spread evenly) that restores 1.2.",
+        table(["Torus", "Tori", "All linked", "End gap unlinked", "Worst gap unlinked", "Grows ×e (1% damping)",
+               "Bays needed in that gap"], build_rows),
+        "## Fittings and tunnels",
+        "Each strut meets the torus at a fitting on the envelope, carried to the hull through the jacket and "
+        "crawl space by a shear web in the bay's tangential-axial plane (a jacket bulkhead in that plane: at "
+        "the tube's side, where the gap is, the jacket's depth runs along the axis), as wide as the jacket is "
+        "deep, loaded in its own plane both tangentially and axially, its weak direction radial: sized with the lattice for stiffness (the "
+        "struts take half the bay's compliance, the two fittings the rest) and strength (safety factor 2), and "
+        "in series with the struts in every result above. A post bending as a cantilever through the jacket "
+        "would be far too soft: sized for strength alone, its compliance would cut a 900 m six-stack's margin "
+        f"below 1. A tunnel ({num(jt.TUNNEL_RADIUS)} m radius) crosses each gap on an expansion joint taking "
+        "the rims' relative motions (the imposed motions above and the lattice's own give under the largest "
+        f"load), holding its pressure thrust inside itself (pressure-balanced), with at most {jt.ANISOTROPY:.0%} "
+        "of the lattice's sideways stiffness (more would make the stiffness differ by direction). Without a "
+        "joint, a tube fixed at both rims (3 cm wall) has ~7–20% of the lattice's stiffness, at one angle, and is bent by a "
+        "rim's growth.",
+        table(["Torus", "Tori", "Fitting webs (thickness, mass per gap, their sideways stiffness)", "Joint: radial", "Axial", "Tangential",
+               "Pressure thrust", "Joint's sideways stiffness at most", "Rigid tube: stiffness, stress"], fit_rows),
+        "## Fatigue",
+        f"Load cycles over {num(fa.LIFE)} years (`dynamics_model/fatigue.py`): rim trains (one cycle per lap, "
+        f"{fa.TRAIN_SERVICE:.0%} of the time at 20 m/s), ballast trims ({fa.BALLAST_DAILY:.0%} of the tanks' "
+        "capacity daily), a docking a day, the rims' daily temperature difference (4 K), sunlight on the struts "
+        "each turn. Stress ranges ×1.35 against EN 1993-1-9's cut-off (detail 71 MPa for the struts' and the "
+        "hub's welds, 160 MPa for strand): below it, no damage.",
+        table(["Torus", "Tori", "Part", "Largest range ×1.35 (MPa)", "Cut-off (MPa)", "Damage (Miner)"],
+              fatigue_rows),
+        "Not modelled: the elevator, pipe and power shafts, the lattice's erection on a partial ring (before a "
+        "torus closes), the fittings' local details in the jacket, the bellows' own design.",
     ]) + "\n"
+
+
+def details(p):
+    from structure_model import hub as hub_model
+    hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows = [], [], [], [], []
+    for r, n in CASES:
+        d = Design(radius_m=r, n_tori=n)
+        label = [size_label(r), str(n)]
+        k, _ = lk.design_stiffness(p, d, tie_frac=TIES)
+        lat, s, info, unbalanced = lk.converged(p, d, k, tie_frac=TIES)
+        geo = info["geometry"]
+        no_shear = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"], tie_frac=TIES,
+                            shear=False)[0].forward_ratio()
+        j = jt.hub_joint(p, d, k, tie_frac=TIES)
+        hub_rows.append(label + [num(no_shear, 3), num(j["continuous"], 3), f"{j['needed']:.1e}",
+                                 f"{j['per_pitch']:.1e}", f"{j['flange']:.1e}", num(j["flange_ratio"], 3),
+                                 f"{num(j['opening_margin'])}×"])
+        a = at.study(p, d, k, tie_frac=TIES)
+        axial_rows.append(label + [
+            "–".join(num(x, 3) for x in (min(a["axial_bare_near"]), max(a["axial_bare_near"])))
+            if a["axial_bare_near"] else "none",
+            ", ".join(num(x, 3) for x in a["torsion_bare_near"]) or "none",
+            f"{a['farm_crossed']:.0%}", f"{a['nets_laced']:.2%}",
+            num((a["farm_extra_mass"] + a["nets_extra_mass"]) * n / 1e3, 2),
+            num(a["axial_above"], 3), num(a["torsion_above"], 3),
+            ", ".join(num(x, 2) for x in a["torsion_below"]),
+            f"{num(a['dock_largest'] / 1e6, 2)} MN", f"{num(a['brake_link_torque'] / 1e6, 2)} MN·m"])
+        c = lk.construction(p, d, k, tie_frac=TIES)
+        build_rows.append(label + [num(c["full"], 3), num(c["end_gap"], 3),
+                                   f"{num(c['worst'], 3)} (gap {c['worst_gap'] + 1})",
+                                   f"{num(c['e_folding_hours'], 2)} h" if c["e_folding_hours"] else "—",
+                                   f"{c['bays']} of {lat['bays']} ({c['share']:.1%})" if c["share"] else "—"])
+        fit = jt.fittings(lat)
+        im = lk.imposed(p, geo, hub_model.compute(p, geo, info["mass"]))
+        tun = jt.tunnel(geo, lat, im, unbalanced["link"])
+        fit_rows.append(label + [
+            f"{num(fit['thickness'] * 1000, 2)} mm ({fit['set_by']}), {num(fit['per_gap'] / 1e3, 2)} t, "
+            f"{fit['k_lat']:.1e} N/m",
+            f"±{num(tun['radial'] * 100, 2)} cm", f"±{num(tun['axial'] * 100, 2)} cm",
+            f"±{num(tun['tangential'] * 1000, 2)} mm", f"{num(tun['thrust'] / 1e6, 2)} MN",
+            f"{tun['max_lateral_k']:.1e} N/m",
+            f"{tun['rigid_k']:.1e} N/m, {num(tun['rigid_stress'] / 1e6, 2)} MPa"])
+        if n == 6:
+            f = fa.study(p, d, k, tie_frac=TIES)
+            for part in fa.DETAIL:
+                fatigue_rows.append(label + [part, num(f["largest"][part] / 1e6, 2), num(f["cutoff"][part] / 1e6, 2),
+                                             num(f["damage"][part], 2)])
+    return hub_rows, axial_rows, build_rows, fit_rows, fatigue_rows
 
 
 def links_and_disturbances(p):
