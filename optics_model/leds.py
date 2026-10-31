@@ -119,6 +119,7 @@ CHAIN = [
      "separation by solvent extraction, at kilogram scale a lab process", "⚠"),
     ("Packaging", "lead frames or chip-on-board, encapsulant, heat spreaders",
      "copper or steel boards, phosphor in glass (local glass) instead of silicone, copper bond wire", "✓"),
-    ("Drivers", "constant-current supplies, ~1 per kW", "silicon or GaN power transistors, capacitors, "
-     "ferrite inductors: electronics, the same vitamin as the rest of the habitat's", "✗ vitamin"),
+    ("Drivers", "constant-current converters, ~100 kW–1 MW per sector feeding long series strings",
+     "power transistors and diodes from the semiconductor works' silicon (or GaN from the LED reactors), film "
+     "capacitors, ferrite and copper magnetics, analog or simple bipolar control", "✓ (a 1980s power-device process)"),
 ]

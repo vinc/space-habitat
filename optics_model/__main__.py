@@ -334,17 +334,17 @@ def led_section(p, results):
         f"~{num(b['ammonia'] / 1e3)} t per torus's wafers ({num(p.mocvd_ammonia_kg_m2)} kg/m²), against "
         "~8 kt of nitrogen recovered from the C-type, and mostly recoverable.",
         table(["Step", "Needs", "From", "Status"], chain),
-        f"**The trade against the array's silicon.** Blue + red LEDs need {num(r['power']['array_site'] / 1e4)} ha "
+        f"**LEDs halve the semiconductor works' silicon.** The array is made at the host (notes §2, §13), by the "
+        "works that can also make the LEDs and their drivers. Blue + red LEDs need {num(r['power']['array_site'] / 1e4)} ha "
         f"of array against {num(lamps[2]['power']['array_site'] / 1e4)} ha for the proposed sulfur lamps in the "
-        f"box: ~{num(silicon / 1e3)} t less imported silicon per torus at {num(p.pv_silicon_kg_m2)} kg/m². "
-        f"Importing the finished dies and phosphor instead costs ~{num(b['dies_imported'])} kg per torus "
+        f"box: ~{num(silicon / 1e3)} t less wafer silicon per torus at {num(p.pv_silicon_kg_m2)} kg/m². "
+        f"Until a new site's works runs, importing the finished dies and phosphor instead costs ~{num(b['dies_imported'])} kg per torus "
         f"(dies thinned to {num(leds.DIE_THINNED_M * 1e6)} µm), and ~{pct(b['replaced_per_yr'])} of that a year: "
         f"~{num(silicon / b['dies_imported'])}× less than the silicon saved, and still "
         f"~{num(silicon / (b['dies_imported'] * (1 + 30 * b['replaced_per_yr'])))}× with 30 years of "
         "replacements. Making the dies locally is a small fab: one MOCVD reactor growing ~0.1 m² "
         f"every ~5 h makes ~150 m² a year, so a torus's ~{num(wafers)} m² takes a few reactor-years, and "
-        "micron-scale LEDs need none of a chip fab's steppers. What stays imported is the drivers' "
-        "electronics, the same vitamin as the rest of the habitat's.",
+        "micron-scale LEDs need none of a chip fab's steppers.",
     ]
 
 
