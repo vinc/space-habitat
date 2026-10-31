@@ -11,6 +11,8 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
+from . import disturbances as ds
+from . import links as lk
 from . import stack as st
 
 CASES = ((900, 2), (900, 6), (1600, 2), (1600, 6))
@@ -76,6 +78,7 @@ def report(p):
                             num(s.forward_ratio(), 3), num(need * 100, 2) if need else "**not enough**",
                             num(budget * 100), num(best, 3)])
     shell_cm = p.hub_shell_m * 100
+    link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows = links_and_disturbances(p)
     return "\n\n".join([
         "# Stack dynamics: whirl modes and passive stability",
         "The stack as one flexible spinning body (`dynamics_model/stack.py`): the shared hub as a thin-walled beam "
@@ -113,10 +116,110 @@ def report(p):
         "factory metal as a shell along the stack).",
         table(["Torus", "Tori", "Stack length (m)", "Rigid J/I_t", f"Forward whirl / spin, {num(shell_cm)} cm wall",
                "Wall needed (cm)", "Wall from the hub's budget (cm)", "Forward whirl / spin at that wall"], lengths),
+        "## Rim links: what they must resist",
+        "Lowest forward whirl over the spin with the links' tilt stiffness as taken above (k r²/2), with none, "
+        "and with a lattice's (below), at the design stiffness and with the trace of ties. Only the links' "
+        "sideways stiffness matters: they need not be stiff along the axis. And since sideways motion of two "
+        "rims is radial at some angles and tangential at others, links stiff only tangentially, spread evenly "
+        "around the rim (any three or more), give the same sideways stiffness in every direction: they can be "
+        "compliant radially, free of the rims' differential growth (`dynamics_model/links.py`).",
+        table(["Torus", "Tori", "Design stiffness (N/m)", "Tilt k r²/2", "No tilt stiffness", "Lattice's tilt"],
+              link_rows),
+        "## The lattice",
+        f"A ring of X-braced bays across each gap at the envelopes' closest approach (r − a), diagonals at 45°, "
+        f"pinned tubular struts (D/t {num(lk.STRUT_D_OVER_T)}, no preload: struts, not cables, which would pull "
+        "the tori together along the axis, where only the nets hold them). Stiff in shear and along the axis in "
+        "its own surface, compliant radially (the struts bend out of it). Design stiffness: "
+        f"{lk.KNEE:.0%} of the margin rigid links would give (stiffer buys almost nothing; the nets and the hub's "
+        f"bending set the rest), with {TIES:.2%} ties. Struts sized for that stiffness, and for the largest link "
+        f"force below (the ballast tanks' whole capacity untrimmed) at a safety factor of {num(lk.SAFETY)} on "
+        f"buckling and on {num(lk.YIELD / 1e6)} MPa yield, at least {num(lk.MIN_AREA * 1e4)} cm².",
+        table(["Torus", "Tori", "Bays", "Strut (cm², diameter)", "Set by", "Mass per gap (t)",
+               "Share of a torus", "Gap blocked", "Forward whirl / spin", "Ties needed for 1.2"], lattice_rows),
+        "**Imposed motions** between neighbours. Along the axis the lattice is far stiffer than the nets "
+        "(`structure_model/hub.py`, inclined lines included), so the tori follow the lattice and the nets take "
+        "the difference.",
+        table(["Torus", "Hub 20 K warmer over a pitch", "One rim 4 K warmer", "Struts 100 K colder"], imposed_rows),
+        "## Disturbances",
+        f"The stack with the lattice and ties above (`dynamics_model/disturbances.py`). Rim train: one "
+        f"{num(ds.TRAIN_MASS / 1e3)} t train antispinward in the first torus, a load whirling at ω − v/R, below "
+        "the spin, where a passively stable stack has no forward modes. Imbalance: the ballast tanks' whole "
+        f"capacity untrimmed ({p.ballast_frac:.2%} of the rim's mass at the first torus's rim), fixed in the "
+        f"rotating frame. Docking: a {num(ds.SHIP_MASS / 1e6)} kt ship missing by {num(ds.SHIP_MISS)} m/s "
+        f"sideways at the dock, followed for 40 turns with {DAMPING:.0%} damping. Link force: the sideways force "
+        "across one gap; torus: the largest torus's motion off the stack's axis.",
+        table(["Torus", "Tori", "Train at 20 m/s: link force", "Train: torus moves",
+               "Imbalance: link force", "Imbalance: torus moves", "Imbalance: dock moves",
+               "Docking: link force (peak)", "Docking: axis turned", "Docking: decay (×1/e)"], dist_rows),
+        "**Slow torques.** Sunlight on the despun array (pushed ×"
+        f"{num(ds.ARRAY_PUSH)} its absorbed value, the mast {num(ds.MAST)} m beyond the stack) and on the rims "
+        "edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun "
+        "and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the "
+        "axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing "
+        f"(friction Q = {num(ds.BEARING_FRICTION / 1e3)} kN·m, a guess): its friction and the drive holding the "
+        "array facing the Sun both act between array and hub, and the drive must cancel the friction on the "
+        "array, so its reaction cancels the friction on the hub. Compensated, the stack keeps its spin and the "
+        "friction only costs the drive's power, Qω, as heat. Uncompensated (drive off, or the bearing seized), "
+        "friction drags the array up to the spin, and the stack gives up the array's share of the spin once.",
+        table(["Torus", "Tori", "Sunlight torque (N·m)", "Axis drift (°/yr, if it didn't turn)",
+               "Yearly wobble at 1 AU (°)", "On Eros's orbit (°)", "Drive power against the friction (kW)",
+               "Drive off: array at the spin in (h)", "Spin given up then"], slow_rows),
+        "**Damping.** Every forward mode beats the spin, so no amount of dissipation turning with the stack "
+        "destabilises it; it only sets how fast a disturbance dies out (×1/e in hours to days at 1%, ten times longer "
+        "at 0.1%). Nothing has to be added for it.",
         "Not modelled: the hub's shear and joints, the elevator, pipe and power shafts, axial and torsional "
-        "motion, the rim links' and ties' preload and details, and disturbances (docking, rim trains, ballast "
-        "transfers, the array's bearing, sunlight pressure).",
+        "motion, the ties' and lattice's joints and how they are built into the construction sequence, a tunnel "
+        "(one stiff link at one angle makes the stiffness differ by direction; it stays clear of trouble while "
+        "the lattice's even stiffness dominates), fatigue.",
     ]) + "\n"
+
+
+def links_and_disturbances(p):
+    from structure_model import hub as hub_model
+    link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows = [], [], [], [], []
+    for r, n in CASES:
+        d = Design(radius_m=r, n_tori=n)
+        k, _ = lk.design_stiffness(p, d, tie_frac=TIES)
+        s, info = st.build(p, d, rim_link=k, tie_frac=TIES)
+        geo, mass = info["geometry"], info["mass"]
+        res = evaluate(p, d)
+        label = [size_label(r), str(n)]
+        tilt = lk.compare_tilt(p, d, k, tie_frac=TIES)
+        link_rows.append(label + [f"{k:.1e}", num(tilt["default"], 3), num(tilt["none"], 3), num(tilt["lattice"], 3)])
+        # The finished lattice: struts sized for the force its own stack takes, iterated to agree; the
+        # disturbances below run on it.
+        lat, s_lat, info_lat, unbalanced = lk.converged(p, d, k, tie_frac=TIES)
+        bare = st.build(p, d, rim_link=lat["k_lat"], link_tilt=lat["tilt"])[0].forward_ratio()
+        ties = None if bare >= TARGET else st.required(p, d, "tie_frac", target=TARGET, low=1e-7, high=0.1,
+                                                         rim_link=lat["k_lat"], link_tilt=lat["tilt"])
+        lattice_rows.append(label + [
+            num(lat["bays"]), f"{num(lat['area'] * 1e4, 2)} ({num(lat['diameter'] * 100, 2)} cm)", lat["set_by"],
+            num(lat["mass"] / 1e3, 2), f"{lat['mass'] / mass['total']:.3%}", f"{lat['blocked']:.1%}",
+            num(s_lat.forward_ratio(), 3),
+            "none" if ties is None else f"{ties:.3%} ({num(ties * mass['total'] / 1e3, 2)} t)"])
+        if n == 6:
+            im = lk.imposed(p, geo, hub_model.compute(p, geo, mass))
+            imposed_rows.append([size_label(r),
+                                 f"{num(im['axial_mismatch'] * 100, 2)} cm, {num(im['axial_force'] / 1e6, 2)} MN",
+                                 f"{num(im['radial'] * 100, 2)} cm, hoop {num(im['hoop_stress'] / 1e6, 2)} MPa",
+                                 f"gap closes {num(im['closing'] * 100, 2)} cm, {num(im['closing_force'] / 1e6, 2)} MN"])
+        train = ds.rim_train(s_lat, geo, speed=20.0)
+        dock = ds.docking(s_lat)
+        dist_rows.append(label + [
+            f"{num(train['link'] / 1e6, 2)} MN", f"{num(train['torus'] * 1000, 2)} mm",
+            f"{num(unbalanced['link'] / 1e6, 2)} MN", f"{num(unbalanced['torus'] * 100, 2)} cm",
+            f"{num(unbalanced['dock_offset'] * 100, 2)} cm",
+            f"{num(dock['link'] / 1e6, 2)} MN", f"{num(math.degrees(dock['axis_turn']), 2)}°",
+            f"{num(dock['decay_hours'], 2)} h" if dock["decay_hours"] else "—"])
+        array = res["power"]["array_site"] * n
+        sun = ds.sunlight(s_lat, geo, array, n)
+        eros = ds.sunlight(s_lat, geo, array, n, a_au=1.458, e=0.2227)
+        brg = ds.bearing(s_lat, info_lat["array_mass"], array)
+        slow_rows.append(label + [num(sun["torque"], 2), num(math.degrees(sun["rate"] * ds.YEAR), 2),
+                                  num(math.degrees(sun["wobble"]), 2), num(math.degrees(eros["wobble"]), 2),
+                                  num(brg["power"] / 1e3, 2), num(brg["spin_up_hours"], 2),
+                                  f"{brg['spin_share']:.1e}"])
+    return link_rows, lattice_rows, imposed_rows, dist_rows, slow_rows
 
 
 def main(argv=None):

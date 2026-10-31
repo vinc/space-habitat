@@ -29,8 +29,12 @@ such mode is its nutation, at lambda = (J / I_t) w: the criterion is the maximum
 the same measure as §11's inertia ratio (1.2 for a 20% margin). A damped solve (dissipation
 proportional to stiffness, turning with the stack) checks it.
 
+Forced and transient motion (disturbances.py): a load whirling at lambda in the inertial frame,
+F exp(i lambda t), gives Q = (K - lambda^2 M + lambda w G)^-1 F; an impulse is followed through the
+modes of the damped first-order system.
+
 Not modelled: the hub's shear and its joints to the dock and array mast, the elevator, pipe and
-power shafts, axial and torsional motion (they don't couple to the spin), disturbances.
+power shafts, axial and torsional motion (they don't couple to the spin).
 """
 
 import math
@@ -87,22 +91,80 @@ class Stack:
         for b, body in enumerate(self.bodies):
             i = 2 * n + 2 * b
             m[i], m[i + 1], g[i + 1] = body.mass, body.transverse, body.polar
+        # The body's point at z moves by u_b + (z - z_b) beta_b; the hub's node by u_h.
+        for _, _, stiffness, c in self.spring_vectors():
+            k += stiffness * np.outer(c, c)
+        for (i, j, k_lat, k_tilt), (c_lat, c_tilt) in zip(self.links, self.link_vectors()):
+            k += k_lat * np.outer(c_lat, c_lat) + k_tilt * np.outer(c_tilt, c_tilt)
+        return np.diag(m), np.diag(g), k
+
+    def size(self):
+        return 2 * len(self.hub_nodes) + 2 * len(self.bodies)
+
+    def body_dof(self, b):
+        """Index of body b's displacement (its slope is the next one)."""
+        return 2 * len(self.hub_nodes) + 2 * b
+
+    def link_vectors(self):
+        """Per link, the vectors giving the relative displacement of the two bodies at the link's
+        mid-plane and their relative tilt (c . q)."""
+        out = []
+        for i, j, _, _ in self.links:
+            a, b = self.body_dof(i), self.body_dof(j)
+            mid = (self.bodies[i].z + self.bodies[j].z) / 2
+            c = np.zeros(self.size())
+            c[a], c[a + 1], c[b], c[b + 1] = 1.0, mid - self.bodies[i].z, -1.0, -(mid - self.bodies[j].z)
+            t = np.zeros(self.size())
+            t[a + 1], t[b + 1] = 1.0, -1.0
+            out.append((c, t))
+        return out
+
+    def spring_vectors(self):
+        """Per body and attachment, (body, z, stiffness, vector giving the body's point at z less the
+        hub's node there)."""
+        out = []
+        for b, body in enumerate(self.bodies):
+            i = self.body_dof(b)
             for z, stiffness in body.springs:
                 node = int(np.argmin(np.abs(self.hub_nodes - z)))
-                # The body's point at z moves by u_b + (z - z_b) beta_b; the hub's node by u_h.
-                c = np.zeros(size)
+                c = np.zeros(self.size())
                 c[i], c[i + 1], c[2 * node] = 1.0, z - body.z, -1.0
-                k += stiffness * np.outer(c, c)
-        for i, j, k_lat, k_tilt in self.links:
-            a, b = 2 * n + 2 * i, 2 * n + 2 * j
-            mid = (self.bodies[i].z + self.bodies[j].z) / 2
-            c = np.zeros(size)
-            c[a], c[a + 1], c[b], c[b + 1] = 1.0, mid - self.bodies[i].z, -1.0, -(mid - self.bodies[j].z)
-            k += k_lat * np.outer(c, c)
-            c = np.zeros(size)
-            c[a + 1], c[b + 1] = 1.0, -1.0
-            k += k_tilt * np.outer(c, c)
-        return np.diag(m), np.diag(g), k
+                out.append((b, z, stiffness, c))
+        return out
+
+    def response(self, lam, force):
+        """Steady response Q to a load F exp(i lam t) (complex, per degree of freedom: forces on the
+        displacements, moments on the slopes), whirling at lam in the inertial frame."""
+        m, g, k = self.matrices()
+        return np.linalg.solve(k - lam ** 2 * m + lam * self.omega * g, np.asarray(force, dtype=complex))
+
+    def transient(self, velocity, times, damping=0.0):
+        """Motion after an impulse: q(t) for the velocities `velocity` given at t = 0 (q = 0), the
+        stack's free drift removed (its centre of mass held). Returns an array (time, dof)."""
+        m, g, k = self.matrices()
+        s = 1 / np.sqrt(np.diag(m))
+        basis = self._basis(s)
+        k_n, g_n = basis.T @ (k * np.outer(s, s)) @ basis, basis.T @ (g * np.outer(s, s)) @ basis
+        d_n = damping / self.omega * k_n
+        size = len(k_n)
+        a = np.zeros((2 * size, 2 * size), dtype=complex)
+        a[:size, size:] = np.eye(size)
+        a[size:, :size] = k_n - 1j * self.omega * d_n
+        a[size:, size:] = self.omega * g_n + 1j * d_n
+        lam, vec = np.linalg.eig(a)
+        # State (v, lambda v) = (v, -i v'), v the reduced mass-normalised coordinates (x = q / s).
+        v_dot = basis.T @ (np.asarray(velocity, dtype=complex) / s)
+        state0 = np.concatenate([np.zeros(size, dtype=complex), -1j * v_dot])
+        coef = np.linalg.solve(vec, state0)
+        phase = np.exp(1j * np.outer(np.asarray(times), lam))           # (time, mode)
+        v = (phase * coef) @ vec[:size].T
+        return (v @ basis.T) * s
+
+    def _basis(self, s):
+        drift = np.zeros(len(s))
+        drift[self.displacements()] = 1 / s[self.displacements()]
+        drift /= np.linalg.norm(drift)
+        return np.linalg.svd(np.eye(len(s)) - np.outer(drift, drift))[0][:, :len(s) - 1]
 
     def modes(self, damping=0.0):
         """Whirl frequencies lambda (rad/s, inertial frame) and growth rates.
@@ -114,10 +176,7 @@ class Stack:
         k_n, g_n = k * np.outer(s, s), g * np.outer(s, s)
         # The stack drifts freely (a double zero): hold its centre of mass, the drift's direction in
         # mass-normalised coordinates being sqrt(m) on every displacement.
-        drift = np.zeros(len(s))
-        drift[self.displacements()] = 1 / s[self.displacements()]
-        drift /= np.linalg.norm(drift)
-        basis = np.linalg.svd(np.eye(len(s)) - np.outer(drift, drift))[0][:, :len(s) - 1]
+        basis = self._basis(s)
         k_n, g_n = basis.T @ k_n @ basis, basis.T @ g_n @ basis
         d_n = damping / self.omega * k_n
         size = len(k_n)
@@ -170,12 +229,12 @@ def tie_plane_stiffness(geo, torus_mass, tie_frac, density):
     return E * area / (2 * length), length
 
 
-def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim_link=None):
+def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim_link=None, link_tilt=None):
     """The stack of design d: tori, their farm rings, the hub and the despun array.
 
     tie_frac: radial ties from the hub to each torus (share of its mass); rim_link: lateral
-    stiffness of links between neighbouring tori's rims (N/m; their tilt stiffness follows from
-    the links' spread around the rim), None for none."""
+    stiffness of links between neighbouring tori's rims (N/m), None for none; link_tilt: their
+    tilt stiffness (N m/rad), by default k r^2 / 2 (the links' spread around the rim)."""
     from habitat_model import evaluate
     from structure_model import hub as hub_model
 
@@ -226,7 +285,8 @@ def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim
     if rim_link:
         # Neighbouring tori joined at their rims, spread evenly around them: lateral k, and tilt
         # k r^2 / 2 about the link's mid-plane.
-        links = [(i, i + 1, rim_link, rim_link * r * r / 2) for i in range(n - 1)]
+        tilt = rim_link * r * r / 2 if link_tilt is None else link_tilt
+        links = [(i, i + 1, rim_link, tilt) for i in range(n - 1)]
     stack = Stack(nodes, hub_mass, hub_polar, hub_transverse, E * math.pi * h ** 3 * t, bodies, w,
                   {len(nodes) - 1: array}, links)
     info = {"geometry": geo, "mass": mass, "nets": nets, "k_farm_plane": k_farm, "k_tie_plane": k_tie,

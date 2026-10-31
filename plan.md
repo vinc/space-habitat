@@ -121,14 +121,20 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - found: the nets alone hold a torus on the shared axis at only ~half its centrifugal pull: a stack is not passively stable (six-stack ~0.16 of the spin); rim links between neighbouring tori and a trace of radial ties from the hub fix it (proposed)
   - found: long stacks are then set by the hub's bending with the farm section at its end: ~18 tori of 900 m, ~14–17 of 1.6 km with the hub's mass budget as its wall (rigid rule: 22, 25); a six-stack needs a few mm to ~1 cm of wall
 - [x] Flexible stack: hub as a beam, tori as rings on cable nets (their stiffness per torus from plan §2, `structure_model/hub.py`); lowest forward whirl vs spin rate for a pair and a six-stack, and vs stack length
-- [ ] Disturbances: docking, rim trains, ballast transfers, friction in the despun array's bearing, sunlight pressure on the array
-- [ ] Tools: Python (scipy) multibody model, or modal analysis using model 2's stiffness
-- [ ] Output: ratio of lowest mode to spin rate and maximum tori (done, `reports/dynamics.md`); damping needed and the disturbances' response still open
-- [ ] Rim links and radial ties: design, preload, how they're built in the construction sequence; the hub's shear and joints; axial and torsional modes
+- [x] Disturbances (`dynamics_model/disturbances.py`): steady response to loads whirling at any rate, impulses followed through the damped modes
+  - rim trains whirl below the spin, where a passively stable stack has no forward modes: ~0.15–0.3 MN on a rim link, under 2 mm; nothing at the rim's speed
+  - the ballast tanks' whole capacity left untrimmed (0.05% of the end torus's rim): tori ~8–34 cm off the axis, 31–160 MN on a link (the links' design load, iterated with the struts it sizes)
+  - a 10 kt ship missing the dock by 0.1 m/s: axis turned ~2 × 10⁻⁶°, nutation gone in ~2–50 h at 1% damping
+  - sunlight on the despun array: ~0.001°/yr, but zero net over every orbit (Kepler's second law), a yearly wobble under 0.0004°; the array's bearing costs no spin while its drive works (the drive's reaction cancels the friction on the hub), only ~1 kW per 10 kN·m of friction; drive off, the stack gives up ~10⁻⁶ of its spin once
+- [x] Tools: modal analysis in numpy (complex whirl coordinates, gyroscopic, damped first-order modes) using model 2's stiffness
+- [x] Output: ratio of lowest mode to spin rate and maximum tori (`reports/dynamics.md`); damping needed: none (every forward mode beats the spin, so dissipation only sets the decay, hours at 1%)
+- [ ] Rim links and radial ties (`dynamics_model/links.py`):
+  - done: only the links' sideways stiffness matters (their tilt stiffness moves the margin by under 1%), and tangential stiffness alone gives it in every direction; proposed an X-braced lattice of pinned struts across each gap, compliant radially, no preload, sized by buckling under the untrimmed ballast: ~0.55–0.7 kt per gap at 900 m, ~1.3–1.7 kt at 1.6 km (~0.005% of a torus), ~5–6% of the gap covered; radial ties then only for 1.6 km six-stacks (~0.001%); imposed motions (hub and struts' temperature, a warmer rim) cost ~0.2–0.6 MN and ~10 MPa
+  - open: the lattice's joints to the envelopes and how it is built into the construction sequence (a torus joined to a spinning stack), the tunnels' compliant joints (one stiff link at one angle makes the stiffness differ by direction), fatigue; the hub's shear and joints; axial and torsional modes
 
 **Changes the design if:** a six-stack needs active control to stay stable, which would break the "nothing has to keep working" principle.
 
-**Status:** no active control is needed, but the nets alone don't hold the tori on the shared axis: rim links between neighbouring tori (and a trace of radial ties) are added to the design (proposed), and the hub's wall sets the longest stack (`reports/dynamics.md`).
+**Status:** no active control or added damping is needed, but the nets alone don't hold the tori on the shared axis: an X-braced rim lattice across each gap does, for ~0.005% of a torus's mass (proposed), with radial ties only for 1.6 km six-stacks, and the hub's wall sets the longest stack. The disturbances (rim trains, imbalance, docking, sunlight, the array's bearing) are all small (`reports/dynamics.md`).
 
 ---
 
