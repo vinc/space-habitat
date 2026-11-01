@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Space Habitat · Design explorer</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./node_modules/three/build/three.module.js",
+          "three/addons/": "./node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="identity">
+        <span class="mark">◌</span>
+        <div>
+          <strong>SPACE HABITAT</strong
+          ><small>Parametric design explorer</small>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="status" role="status">Loading model…</span
+        ><button id="import">Load design</button
+        ><input
+          id="design-file"
+          type="file"
+          accept="application/json,.json"
+          hidden
+        /><button id="export" disabled>Export design</button
+        ><button id="reset">Reset</button>
+      </div>
+    </header>
+    <main>
+      <aside class="controls">
+        <div class="eyebrow">01 / CONFIGURATION</div>
+        <h1>Habitat<br />configuration.</h1>
+        <p class="intro">
+          Explore the geometry and resource costs of a rotating habitat.
+        </p>
+        <div id="inputs"></div>
+        <details>
+          <summary>Model assumptions</summary>
+          <div id="advanced"></div>
+        </details>
+        <div id="error" role="alert"></div>
+      </aside>
+      <section class="scene-panel" aria-label="Interactive 3D habitat">
+        <div class="scene-top">
+          <div>
+            <span class="eyebrow">LIVE GEOMETRY</span>
+            <h2 id="scene-title">Six-ring stack</h2>
+          </div>
+          <select id="view" aria-label="Camera view">
+            <option value="overview">Overview</option>
+            <option value="end">Along the axis</option>
+            <option value="side">Side elevation</option>
+            <option value="section">Tube section</option>
+          </select>
+        </div>
+        <div id="viewport" aria-label="Drag to orbit; scroll to zoom"></div>
+        <div class="scene-bottom">
+          <div class="legend">
+            <span style="--swatch: #c4b59c">Habitat</span
+            ><span style="--swatch: #86bfa5">Farms</span
+            ><span style="--swatch: #d98a6c">Radiators</span
+            ><span style="--swatch: #7195c8">Solar array</span>
+          </div>
+          <div class="tools">
+            <label><input id="cutaway" type="checkbox" /> Cutaway</label
+            ><label
+              ><input id="structure" type="checkbox" checked /> Cables &
+              lattice</label
+            ><label
+              ><input id="radiators" type="checkbox" checked /> Radiators</label
+            ><label><input id="array" type="checkbox" checked /> Array</label
+            ><label><input id="spin" type="checkbox" /> Rotate</label
+            ><button id="fit">Fit view</button>
+          </div>
+          <p id="scene-note">
+            Drag to orbit · Scroll to zoom · Dimensions in metres
+          </p>
+        </div>
+      </section>
+      <aside class="numbers">
+        <div class="eyebrow">02 / MODEL OUTPUT</div>
+        <div id="headline"></div>
+        <div class="tabs">
+          <button data-tab="design" class="active">Design</button
+          ><button data-tab="resources">Resources</button
+          ><button data-tab="limits">Limits</button>
+        </div>
+        <div id="stats"></div>
+        <p class="model-note">
+          Calculated by <code>habitat_model</code> in this checkout. These are
+          model estimates, not engineering certification.
+        </p>
+        <details>
+          <summary>Geometry & calculation scope</summary>
+          <p>
+            The tube, jacket, crawl space, hub and farm envelopes use
+            system-model dimensions. Floors and layers in the section are
+            schematic. Cable, lattice, radiator and array arrangements
+            illustrate the architecture; their fittings and layout are not
+            construction drawings.
+          </p>
+          <p>
+            The array has the calculated stack area, drawn as one square beyond
+            the hub. Radiators show their available radial reach, not a
+            thermally sized panel layout. The jacket is drawn uniformly; the
+            mass calculation includes the floor fill’s shielding credit.
+          </p>
+          <p>
+            Heat and inertia figures below are the inexpensive system-model
+            bounds. Flexible dynamics, radiation transport, assembled thermal
+            exchange and dated shipping studies are not rerun by this viewer.
+          </p>
+        </details>
+      </aside>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
