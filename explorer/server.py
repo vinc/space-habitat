@@ -22,7 +22,7 @@ DESIGN_RANGES = {
 OVERRIDE_RANGES = {
     'width_ratio': (8, 32), 'shield_areal_t_m2': (5, 20),
     'fill_depth_m': (0, 5), 'pressure_kpa': (40, 101.3),
-    'farm_radiator_outer_frac': (0.45, 0.9),
+    'farm_radiator_outer_frac': (0.45, 1.4),
 }
 
 

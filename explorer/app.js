@@ -1,3 +1,4 @@
+import { solarLayout, farmRadiatorBounds } from "./scene-layout.js";
 import * as THREE from "three";
 import { SVGRenderer } from "three/addons/renderers/SVGRenderer.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -251,7 +252,7 @@ controls.minDistance = 5;
 if (software) scene.add(new THREE.AmbientLight(0xffffff, 0.65));
 scene.add(new THREE.HemisphereLight(0xe5efcf, 0x34433b, software ? 0.7 : 2.3));
 const sun = new THREE.DirectionalLight(0xffead2, software ? 0.7 : 3);
-sun.position.set(2000, -1000, 3000);
+sun.position.set(5000, 0, 0);
 scene.add(sun);
 const fill = new THREE.DirectionalLight(0x9ebcda, software ? 0.35 : 1.4);
 fill.position.set(-2000, 1000, -1000);
@@ -485,16 +486,20 @@ function rebuild() {
           rad(fr, (j * Math.PI) / 12, fz),
         );
     if ($("radiators").checked && d.tiers_lit > 0)
-      for (let j = 0; j < 8; j++) {
-        const panel = annulus(
-          fr + fh,
-          g.farm_radiator_outer,
-          fz,
-          materials.radiator,
-          Math.PI / 14,
-        );
-        panel.rotation.z = (j * Math.PI) / 4;
-      }
+      for (const [inner, outer] of farmRadiatorBounds(
+        g,
+        $("farm-layout").value,
+      ))
+        for (let j = 0; j < 8; j++) {
+          const panel = annulus(
+            inner,
+            outer,
+            fz,
+            materials.radiator,
+            Math.PI / 14,
+          );
+          panel.rotation.z = (j * Math.PI) / 4;
+        }
   }
   if (!section) {
     const hub = mesh(
@@ -511,35 +516,51 @@ function rebuild() {
   let arrayZ = z0 - 100;
   extent = Math.max(g.envelope_outer, g.stack_length / 2);
   if ($("array").checked && !section) {
-    const side = Math.sqrt(current.results.power.array_site * n);
-    arrayZ = z0 - g.hub_radius - 100;
-    const panel = mesh(
-      new THREE.PlaneGeometry(side, side),
-      materials.solar,
-      stationary,
+    const layout = solarLayout(
+      g.stack_length,
+      current.results.power.array_site * n,
     );
-    panel.position.z = arrayZ;
-    const gridMat = materials.line;
+    const { side } = layout;
+    arrayZ = layout.z;
+    const array = new THREE.Group();
+    array.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(...layout.normal),
+    );
+    array.position.z = arrayZ;
+    stationary.add(array);
+    mesh(new THREE.PlaneGeometry(side, side), materials.solar, array);
     for (let i = 0; i <= 16; i++) {
       const v = -side / 2 + (i * side) / 16;
-      line(
-        [v, -side / 2, arrayZ + 0.2],
-        [v, side / 2, arrayZ + 0.2],
-        gridMat,
-        stationary,
-      );
-      line(
-        [-side / 2, v, arrayZ + 0.2],
-        [side / 2, v, arrayZ + 0.2],
-        gridMat,
-        stationary,
-      );
+      line([v, -side / 2, 0.2], [v, side / 2, 0.2], materials.line, array);
+      line([-side / 2, v, 0.2], [side / 2, v, 0.2], materials.line, array);
     }
-    extent = Math.max(extent, side * 0.72, Math.abs(arrayZ));
+    // Illustrative axial support and sunlight arrow, both despun.
+    line([0, 0, z0], [0, 0, arrayZ], materials.brace, stationary);
+    const arrowZ = arrayZ + side * 0.3;
+    line(
+      [side * 0.6, 0, arrowZ],
+      [side * 0.2, 0, arrowZ],
+      materials.brace,
+      stationary,
+    );
+    line(
+      [side * 0.2, 0, arrowZ],
+      [side * 0.27, side * 0.04, arrowZ],
+      materials.brace,
+      stationary,
+    );
+    line(
+      [side * 0.2, 0, arrowZ],
+      [side * 0.27, -side * 0.04, arrowZ],
+      materials.brace,
+      stationary,
+    );
+    extent = Math.max(extent, side * 0.72, Math.abs(arrayZ) + side / 2);
   }
   $("scene-note").textContent = cut
     ? "Cutaway · Uniform jacket; schematic floor · Cable counts reduced for clarity"
-    : "Drag to orbit · Scroll to zoom · Array area to scale; panel arrangements illustrative";
+    : "Sunlight arrow: +X → −X · Spin axis: Z · Panel arrangements illustrative";
   if (first) {
     fit();
     first = false;
@@ -607,7 +628,7 @@ function animate(now) {
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
-for (const id of ["cutaway", "structure", "radiators", "array"])
+for (const id of ["cutaway", "structure", "radiators", "array", "farm-layout"])
   $(id).addEventListener("change", rebuild);
 $("view").addEventListener("change", () => {
   rebuild();
@@ -656,6 +677,8 @@ $("design-file").addEventListener("change", async () => {
     design = data.design;
     overrides = data.overrides;
     current = data;
+    $("farm-layout").value = saved.viewer?.farm_layout ?? "outboard";
+    if (!$("farm-layout").value) $("farm-layout").value = "outboard";
     renderInputs();
     renderStats();
     first = true;
@@ -681,6 +704,7 @@ $("export").addEventListener("click", () => {
         {
           schema_version: 1,
           ...current,
+          viewer: { farm_layout: $("farm-layout").value },
           scope: "System-model estimates; see explorer/README.md",
         },
         null,

@@ -25,7 +25,8 @@ Drag to orbit, scroll to zoom, or choose an axial, side or tube-section view. **
 - Valley envelopes use toroidal circular sections. Farm envelopes have rectangular sections, axial width and radial height. The two sections share a hub.
 - Cutaways show the pressure boundary, nominal rock jacket, crawl-space boundary and a schematic floor. The uniform drawn jacket does not show the floor-fill shielding credit used in the mass calculation. There is no terrain or detailed room layout.
 - Two tangent-chord side nets, hub lines, farm spokes and rim-gap X braces illustrate the structural architecture. Counts are reduced for clarity; sizes, exact anchor positions and fittings are not engineering drawings. No detailed structural solve runs in the viewer.
-- Solar area is the per-torus aphelion-sized system-model array multiplied by ring count, drawn as one square beyond the hub. This placement is illustrative. The factory's power supply is not included in that array.
+- Solar area is the per-torus aphelion-sized system-model array multiplied by ring count, drawn as one square beyond the hub, normal to the Sun direction (+X); the spin axis is +Z. The entire panel lies beyond the stack end to avoid stack shadows. A despun axial support and sunlight arrow are illustrative. This placement is illustrative. The factory's power supply is not included in that array.
+- Farm radiator layout can be outboard (pumped baseline), inboard (passive alternative), or both (pumped with passive fallback), as discussed in notes §13 and reports/heat_rejection.md. With LEDs, the report finds an inboard six-stack can cool three tiers at ~1.2–1.3× margin, below the 1.5× target; two tiers have ~1.8× at 900 m. Switching the layout does not rerun thermal calculations.
 - Radiator sectors show available radial reach only. They are not sized to the heat load. The reported panel area is a black-body, two-sided lower bound, not the rendered sectors' area or a mutually shaded thermal solution.
 - Torus mass excludes the separately reported farm and the hub/factory, array and radiators. No incomplete sum is labelled total stack mass.
 - Stability outputs are **rigid thin-ring inertia bounds**, not flexible whirl margins. The favourable baseline depends on the lattice in the detailed dynamics work. Heat margin is the **main drum's ideal end-aperture bound**, not assembled radiative exchange.
@@ -36,7 +37,8 @@ Drag to orbit, scroll to zoom, or choose an axial, side or tube-section view. **
 
 ```sh
 node --check explorer/app.js
+node --test explorer/test_scene.js
 python -m unittest discover -s tests -p 'test_explorer.py'
 ```
 
-![Explorer baseline, using the SVG fallback](preview.jpg)
+![Sun-facing array and inboard passive alternative, using the SVG fallback](preview.jpg)

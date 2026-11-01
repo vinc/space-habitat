@@ -81,6 +81,17 @@
             ><label><input id="spin" type="checkbox" /> Rotate</label
             ><button id="fit">Fit view</button>
           </div>
+          <label for="farm-layout">Farm radiator layout</label>
+          <select id="farm-layout">
+            <option value="outboard">Outboard · pumped baseline</option>
+            <option value="inboard">Inboard · passive alternative</option>
+            <option value="both">Both · pumped + passive fallback</option>
+          </select>
+          <p class="model-note">
+            Layout changes the drawing only. Inboard cooling is passive;
+            outboard cooling requires pumps. Panel coverage and thermal margins
+            are not recalculated here.
+          </p>
           <p id="scene-note">
             Drag to orbit · Scroll to zoom · Dimensions in metres
           </p>
@@ -109,10 +120,11 @@
             construction drawings.
           </p>
           <p>
-            The array has the calculated stack area, drawn as one square beyond
-            the hub. Radiators show their available radial reach, not a
-            thermally sized panel layout. The jacket is drawn uniformly; the
-            mass calculation includes the floor fill’s shielding credit.
+            The array has the calculated stack area, drawn as one Sun-facing
+            square beyond the hub, with its normal in the orbital plane.
+            Radiators show their available radial reach, not a thermally sized
+            panel layout. The jacket is drawn uniformly; the mass calculation
+            includes the floor fill’s shielding credit.
           </p>
           <p>
             Heat and inertia figures below are the inexpensive system-model
