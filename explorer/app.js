@@ -1,4 +1,9 @@
-import { solarLayout, farmRadiatorBounds } from "./scene-layout.js";
+import {
+  solarLayout,
+  farmRadiatorBounds,
+  valleyPoint,
+  frameBounds,
+} from "./scene-layout.js";
 import * as THREE from "three";
 import { SVGRenderer } from "three/addons/renderers/SVGRenderer.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -248,7 +253,7 @@ controls.addEventListener("change", () => {
 });
 controls.enableDamping = true;
 controls.minDistance = 5;
-if (software) scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+scene.add(new THREE.AmbientLight(0xffffff, software ? 0.65 : 0.8));
 scene.add(new THREE.HemisphereLight(0xe5efcf, 0x34433b, software ? 0.7 : 2.3));
 const sun = new THREE.DirectionalLight(0xffead2, software ? 0.7 : 3);
 sun.position.set(5000, 0, 0);
@@ -262,6 +267,16 @@ let assembly = new THREE.Group(),
   extent = 2000;
 scene.add(assembly, stationary);
 const materials = {
+  ceiling: new THREE.MeshStandardMaterial({
+    color: 0xe5e5dc,
+    roughness: 1,
+    side: THREE.DoubleSide,
+  }),
+  path: new THREE.MeshStandardMaterial({
+    color: 0xb7a48b,
+    roughness: 1,
+    side: THREE.DoubleSide,
+  }),
   hull: new THREE.MeshStandardMaterial({
     color: 0xc4b59c,
     roughness: 0.72,
@@ -315,6 +330,57 @@ const materials = {
     opacity: 0.6,
   }),
 };
+const colorKeys = {
+  hull: "Habitat",
+  farm: "Farms",
+  radiator: "Radiators",
+  solar: "Solar array",
+  rock: "Shield rock",
+  skin: "Hub and mast",
+  floor: "Valley floor",
+  ceiling: "Ceiling",
+  path: "Path",
+  line: "Cables",
+  brace: "Lattice",
+};
+function applyColors(colors) {
+  for (const [key, value] of Object.entries(colors ?? {}))
+    if (materials[key] && /^#[0-9a-f]{6}$/i.test(value))
+      materials[key].color.set(value);
+  dirty = true;
+}
+try {
+  applyColors(JSON.parse(localStorage.getItem("habitat-colors") ?? "{}"));
+} catch {}
+function colorValues() {
+  return Object.fromEntries(
+    Object.keys(colorKeys).map((k) => [
+      k,
+      "#" + materials[k].color.getHexString(),
+    ]),
+  );
+}
+function renderLegend() {
+  const legend = document.querySelector(".legend");
+  legend.replaceChildren();
+  for (const [key, label] of Object.entries(colorKeys)) {
+    const item = document.createElement("label"),
+      picker = document.createElement("input");
+    picker.type = "color";
+    picker.value = "#" + materials[key].color.getHexString();
+    picker.setAttribute("aria-label", label + " colour");
+    picker.addEventListener("input", () => {
+      materials[key].color.set(picker.value);
+      dirty = true;
+      try {
+        localStorage.setItem("habitat-colors", JSON.stringify(colorValues()));
+      } catch {}
+    });
+    item.append(picker, document.createTextNode(label));
+    legend.append(item);
+  }
+}
+renderLegend();
 function mesh(geometry, mat, group = assembly) {
   const obj = new THREE.Mesh(geometry, mat);
   group.add(obj);
@@ -332,7 +398,13 @@ function line(a, b, mat = materials.line, group = assembly) {
 const polar = (r, t, z) => [r * Math.cos(t), r * Math.sin(t), z];
 function torus(r, a, z, mat, arc = 2 * Math.PI) {
   const obj = mesh(
-    new THREE.TorusGeometry(r, a, software ? 8 : 20, software ? 64 : 160, arc),
+    new THREE.TorusGeometry(
+      r,
+      a,
+      software ? 8 : 20,
+      $("view").value === "interior" ? 500 : software ? 64 : 160,
+      arc,
+    ),
     mat,
   );
   obj.position.z = z;
@@ -353,6 +425,44 @@ function band(r, width, z, mat, arc = 2 * Math.PI) {
   const obj = mesh(geo, mat);
   obj.position.z = z;
   return obj;
+}
+function valleySurface(c, a, fill, z, arc, start, end, material) {
+  const along = software ? 220 : 500,
+    across = 40,
+    vertices = [],
+    indices = [];
+  for (let i = 0; i <= along; i++)
+    for (let j = 0; j <= across; j++)
+      vertices.push(
+        ...valleyPoint(
+          c,
+          a,
+          fill,
+          (i / along) * arc,
+          start + ((end - start) * j) / across,
+          z,
+        ),
+      );
+  for (let i = 0; i < along; i++)
+    for (let j = 0; j < across; j++) {
+      const v = i * (across + 1) + j;
+      indices.push(
+        v,
+        v + 1,
+        v + across + 1,
+        v + 1,
+        v + across + 2,
+        v + across + 1,
+      );
+    }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3),
+  );
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return mesh(geometry, material);
 }
 function annulus(inner, outer, z, mat, arc = 2 * Math.PI) {
   const obj = mesh(
@@ -394,36 +504,65 @@ function rebuild() {
     n = d.n_tori,
     a = g.tube_radius,
     c = g.radius - a;
-  const section = $("view").value === "section";
+  const interior = $("view").value === "interior";
+  const section = $("view").value === "section" || interior;
   const cut = $("cutaway").checked || section,
-    arc = cut ? Math.PI * 1.55 : Math.PI * 2;
+    arc = interior ? Math.PI * 2 : cut ? Math.PI * 1.55 : Math.PI * 2;
   const z0 = -g.stack_length / 2;
   const rad = (r, t, z) => polar(r, t, z);
   const cable = $("structure").checked && !section;
   for (let k = 0; k < (section ? 1 : n); k++) {
     const z = z0 + (k + 0.5) * g.pitch;
     if (cut) {
-      torus(c, a + g.jacket, z, materials.rock, arc);
-      torus(c, a, z, materials.skin, arc);
-      // Schematic habitable outer floor, exposed at the cut ends.
-
-      band(
-        g.radius - current.assumptions.fill_depth_m.value,
-        a * 1.2,
-        z,
-        materials.floor,
-        arc,
-      );
-      for (const t of [0, arc]) {
-        cap(c, a, a + g.jacket, z, t, materials.rock);
-        cap(c, a + g.jacket, g.envelope_radius, z, t, materials.skin);
+      if (!interior) {
+        torus(c, a + g.jacket, z, materials.rock, arc);
+        // Pressure boundary is a surface, not another solid tube inside the air.
+        torus(c, a, z, materials.ceiling, arc);
+        for (const t of [0, arc]) {
+          cap(c, a, a + g.jacket, z, t, materials.rock);
+          cap(
+            c,
+            g.envelope_radius - 0.15,
+            g.envelope_radius,
+            z,
+            t,
+            materials.hull,
+          );
+        }
+      } else {
+        torus(c, a, z, materials.ceiling, arc);
       }
-      const envelope = torus(c, g.envelope_radius, z, materials.hull, arc);
-      envelope.material = materials.hull.clone();
-      envelope.material.transparent = true;
-      envelope.material.opacity = 0.12;
-      envelope.material.depthWrite = false;
-      envelope.userData.disposableMaterial = true;
+      valleySurface(
+        c,
+        a,
+        current.assumptions.fill_depth_m.value,
+        z,
+        arc,
+        -Math.PI / 2,
+        Math.PI / 2,
+        materials.floor,
+      );
+      // A two-metre path and metre-high posts provide human scale, not new infrastructure sizing.
+      const floorRadius =
+        c + Math.max(0.1, a - current.assumptions.fill_depth_m.value);
+      band(floorRadius - 0.03, 2, z, materials.path, arc);
+      for (
+        let distance = 0;
+        distance < Math.min(600, c * arc);
+        distance += 20
+      ) {
+        const t = distance / c,
+          pos = polar(floorRadius - 0.5, t, z + 1.8);
+        const post = mesh(
+          new THREE.CylinderGeometry(0.07, 0.07, 1, 6),
+          materials.path,
+        );
+        post.quaternion.setFromUnitVectors(
+          new THREE.Vector3(0, 1, 0),
+          new THREE.Vector3(Math.cos(t), Math.sin(t), 0),
+        );
+        post.position.set(...pos);
+      }
     } else {
       torus(c, g.envelope_radius, z, materials.hull);
     }
@@ -511,9 +650,6 @@ function rebuild() {
       materials.skin,
     );
     hub.rotation.x = Math.PI / 2;
-    // Dock collar and axial approach at the end opposite the farms and array.
-    torus(g.hub_radius * 0.5, g.hub_radius * 0.08, z0 - 5, materials.skin);
-    line([0, 0, z0 - g.hub_radius * 3], [0, 0, z0 - 5], materials.brace);
   }
   let arrayZ = z0 - 100;
   extent = Math.max(g.envelope_outer, g.stack_length / 2);
@@ -538,7 +674,19 @@ function rebuild() {
       line([-side / 2, v, 0.2], [side / 2, v, 0.2], materials.line, array);
     }
     // Illustrative axial support and sunlight arrow, both despun.
-    line([0, 0, -z0], [0, 0, arrayZ], materials.brace, stationary);
+    const mastLength = arrayZ + z0;
+    const mast = mesh(
+      new THREE.CylinderGeometry(
+        Math.max(0.8, g.hub_radius * 0.025),
+        Math.max(0.8, g.hub_radius * 0.025),
+        mastLength,
+        16,
+      ),
+      materials.skin,
+      stationary,
+    );
+    mast.rotation.x = Math.PI / 2;
+    mast.position.z = (-z0 + arrayZ) / 2;
     const arrowZ = arrayZ + side * 0.3;
     line(
       [side * 0.6, 0, arrowZ],
@@ -561,7 +709,9 @@ function rebuild() {
     extent = Math.max(extent, side * 0.72, Math.abs(arrayZ) + side / 2);
   }
   $("scene-note").textContent = cut
-    ? "Cutaway · Uniform jacket; schematic floor · Cable counts reduced for clarity"
+    ? interior
+      ? "Eye height: 1.7 m · Path: 2 m wide · Posts: 1 m high, 20 m apart · Circular shell approximation"
+      : "Tube section · Green: outer-half floor fill · Brown: shielding · Crawl space left empty"
     : "Sunlight: +X → −X · Farms + array: +Z · Dock: −Z · Layout illustrative";
   if (first) {
     fit();
@@ -572,38 +722,64 @@ function fit() {
   if (!current) return;
   const g = current.results.geometry,
     v = $("view").value;
-  controls.target.set(0, 0, 0);
+  camera.fov = v === "interior" ? 75 : 38;
   camera.up.set(0, 0, 1);
-  if (v === "section") {
+  controls.minDistance = v === "interior" ? 0.1 : 5;
+  if (v === "interior") {
+    const z = -g.stack_length / 2 + g.pitch / 2;
+    const r = g.radius - current.assumptions.fill_depth_m.value - 1.7;
+    camera.position.set(r, 0, z);
+    camera.up.set(-1, 0, 0);
+    controls.target.set(r * Math.cos(0.09), r * Math.sin(0.09), z);
+  } else if (v === "section") {
     const z = -g.stack_length / 2 + g.pitch / 2,
       t = 1.55 * Math.PI;
-    camera.up.set(-Math.cos(t), -Math.sin(t), 0);
-    controls.target.set(
+    const centre = new THREE.Vector3(
       (g.radius - g.tube_radius) * Math.cos(t),
       (g.radius - g.tube_radius) * Math.sin(t),
       z,
     );
+    camera.up.set(-Math.cos(t), -Math.sin(t), 0);
+    controls.target.copy(centre);
     camera.position
-      .copy(controls.target)
+      .copy(centre)
       .add(
-        new THREE.Vector3(-Math.sin(t), Math.cos(t), 0.6).multiplyScalar(
-          (g.envelope_radius * 9) / Math.min(1, camera.aspect),
+        new THREE.Vector3(-Math.sin(t), Math.cos(t), 0.1).multiplyScalar(
+          (g.envelope_radius * 5) / Math.min(1, camera.aspect),
         ),
       );
   } else {
-    const distance = (extent * 3.5) / Math.min(1, camera.aspect);
+    assembly.updateMatrixWorld(true);
+    stationary.updateMatrixWorld(true);
+    const box = new THREE.Box3()
+      .setFromObject(assembly)
+      .union(new THREE.Box3().setFromObject(stationary));
+    const centre = box.getCenter(new THREE.Vector3());
     const direction =
       v === "end"
         ? new THREE.Vector3(0, 0, 1)
         : v === "side"
-          ? new THREE.Vector3(1, 0, 0.001)
+          ? new THREE.Vector3(1, 0, 0.001).normalize()
           : new THREE.Vector3(1.5, -2, 1.3).normalize();
-    camera.position.copy(direction.multiplyScalar(distance));
+    const framing = frameBounds(
+      box.min.toArray(),
+      box.max.toArray(),
+      direction.toArray(),
+      camera.aspect,
+      camera.fov,
+    );
+    controls.target.fromArray(framing.centre);
+    camera.position
+      .copy(controls.target)
+      .addScaledVector(direction, framing.distance);
   }
+  camera.near = v === "interior" ? 0.05 : 0.1;
   camera.far = Math.max(50000, extent * 20);
   camera.updateProjectionMatrix();
   controls.update();
+  dirty = true;
 }
+
 new ResizeObserver(() => {
   const w = viewport.clientWidth,
     h = viewport.clientHeight;
@@ -618,7 +794,11 @@ let previous = performance.now();
 function animate(now) {
   const dt = Math.min((now - previous) / 1000, 0.05);
   previous = now;
-  if (current && $("spin").checked && $("view").value !== "section") {
+  if (
+    current &&
+    $("spin").checked &&
+    !["section", "interior"].includes($("view").value)
+  ) {
     assembly.rotation.z += current.results.geometry.omega * dt;
     dirty = true;
   }
@@ -676,6 +856,8 @@ $("design-file").addEventListener("change", async () => {
     const data = await response.json();
     if (id !== sequence) return;
     if (!response.ok) throw new Error(data.error);
+    applyColors(saved.viewer?.colors);
+    renderLegend();
     design = data.design;
     overrides = data.overrides;
     current = data;
@@ -706,7 +888,10 @@ $("export").addEventListener("click", () => {
         {
           schema_version: 1,
           ...current,
-          viewer: { farm_layout: $("farm-layout").value },
+          viewer: {
+            farm_layout: $("farm-layout").value,
+            colors: colorValues(),
+          },
           scope: "System-model estimates; see explorer/README.md",
         },
         null,

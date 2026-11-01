@@ -59,7 +59,8 @@
             <option value="overview">Overview</option>
             <option value="end">Along the axis</option>
             <option value="side">Side elevation</option>
-            <option value="section">Tube section</option>
+            <option value="section">Tube cutaway</option>
+            <option value="interior">Inside valley · eye level</option>
           </select>
         </div>
         <div id="viewport" aria-label="Drag to orbit; scroll to zoom"></div>
@@ -108,10 +109,12 @@
           <summary>Geometry & calculation scope</summary>
           <p>
             The tube, jacket, crawl space, hub and farm envelopes use
-            system-model dimensions. Floors and layers in the section are
-            schematic. Cable, lattice, radiator and array arrangements
-            illustrate the architecture; their fittings and layout are not
-            construction drawings.
+            system-model dimensions. The floor follows the tube’s outer half
+            with an inward fill offset; this is a circular-shell approximation,
+            not a terrain design. The eye-level view shows longitudinal
+            curvature with a 2 m path for scale. Cable, lattice, radiator and
+            array arrangements illustrate the architecture; their fittings and
+            layout are not construction drawings.
           </p>
           <p>
             The array has the calculated stack area, drawn as one Sun-facing

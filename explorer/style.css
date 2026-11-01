@@ -403,3 +403,26 @@ body.busy #headline {
     font-size: 10px;
   }
 }
+
+.legend label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.legend input[type="color"] {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+}
+.legend input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.legend input[type="color"]::-webkit-color-swatch {
+  border: 1px solid #ffffff40;
+  border-radius: 3px;
+}

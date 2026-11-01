@@ -16,16 +16,17 @@ Change the radius, spin gravity, number of rings, clear gap, lit farm tiers, hos
 
 WebGL is used when available; a reduced-detail SVG fallback works without it.
 
-Drag to orbit, scroll to zoom, or choose an axial, side or tube-section view. **Fit view** reframes after changing size. Rotation uses the calculated rate in real time; the solar array stays despun. Turn off the array to inspect the stack more closely. **Load design** reopens an exported JSON file and recalculates it against the current model; saved results are never trusted as inputs. JSON export includes the evaluated inputs, results and assumption sources/statuses. It exports the last successfully evaluated design only; exports are disabled while changes are pending or invalid.
+Drag to orbit, scroll to zoom, or choose an axial, side or tube-section view. **Fit view** centres and fits the complete visible geometry, including the offset solar array. Click a legend colour to change that material; colours persist in this browser and travel with JSON exports. The dock is not drawn; a narrow axial mast joins the farm end to the array. Rotation uses the calculated rate in real time; the solar array stays despun. Turn off the array to inspect the stack more closely. **Load design** reopens an exported JSON file and recalculates it against the current model; saved results are never trusted as inputs. JSON export includes the evaluated inputs, results and assumption sources/statuses. It exports the last successfully evaluated design only; exports are disabled while changes are pending or invalid.
 
 ## Scope
 
 - All dimensions and numbers come from the Python system model. Radius, gravity and period remain dependent. The notes' gravity unit is π² m/s², approximately 1.006 Earth g.
 - The six-ring, 900 m, two-lit-tier, Eros/LL/Ryugu preset is an exploration starting point.
 - Valley envelopes use toroidal circular sections. Farm envelopes have rectangular sections, axial width and radial height. The two sections share a hub.
-- Cutaways show the pressure boundary, nominal rock jacket, crawl-space boundary and a schematic floor. The uniform drawn jacket does not show the floor-fill shielding credit used in the mass calculation. There is no terrain or detailed room layout.
+- The tube cutaway shows the pressure boundary, rock jacket and empty crawl space. The old narrow cylindrical green strip was incorrect. The new floor follows the outer semicircle, offset inward by the fill depth, consistent with the structural model's floor-half load approximation. Its projected axial span is about the nominal width minus twice the fill depth (52.25 m for a 56.25 m tube with 2 m fill). This is a circular-shell approximation, not a finished valley or interior architectural design; it does not change the system model's nominal floor-area calculation.
+- **Inside valley · eye level** places the camera 1.7 m above the floor, looking along the ring, with the hub overhead. A 2 m path and 1 m posts every 20 m provide scale. Terrain, trees, buildings and the final light-box ceiling have not been designed here. The path is illustrative and excluded from resource calculations.
 - Two tangent-chord side nets, hub lines, farm spokes and rim-gap X braces illustrate the structural architecture. Counts are reduced for clarity; sizes, exact anchor positions and fittings are not engineering drawings. No detailed structural solve runs in the viewer.
-- Solar area is the per-torus aphelion-sized system-model array multiplied by ring count, drawn as one square beyond the farm end of the hub (+Z), opposite the dock (−Z), normal to the Sun direction (+X); the spin axis is +Z. The entire panel lies beyond the stack end to avoid stack shadows. A despun axial support and sunlight arrow are illustrative. This placement is illustrative. The factory's power supply is not included in that array.
+- Solar area is the per-torus aphelion-sized system-model array multiplied by ring count, drawn as one square beyond the farm end of the hub (+Z), opposite the dock (−Z), normal to the Sun direction (+X); the spin axis is +Z. The entire panel lies beyond the stack end to avoid stack shadows. The narrow mast and sunlight arrow are illustrative, not structurally sized. This placement is illustrative. The factory's power supply is not included in that array.
 - Farm radiators are inboard and passive, between the hub and the farm rings. No outboard radiator extensions or heat-rejection pumps are adopted. The LED study gives ~1.2–1.3× farm margin for three-tier six-stacks (below the former 1.5× target) and ~1.8× for two tiers at 900 m. These margins are not recalculated by the viewer.
 - Radiator sectors show available radial reach only. They are not sized to the heat load. The reported panel area is a black-body, two-sided lower bound, not the rendered sectors' area or a mutually shaded thermal solution.
 - Torus mass excludes the separately reported farm and the hub/factory, array and radiators. No incomplete sum is labelled total stack mass.
@@ -40,5 +41,3 @@ node --check explorer/app.js
 node --test explorer/test_scene.js
 python -m unittest discover -s tests -p 'test_explorer.py'
 ```
-
-![Sun-facing array and inboard passive alternative, using the SVG fallback](preview.jpg)
