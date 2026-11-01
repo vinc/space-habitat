@@ -77,7 +77,7 @@ These are actual allocations from the integer schedule, not merely candidate lau
 
 ## Numerical record
 
-28 trajectory attempts, 22 independently accepted. 22 accepted legs did not converge the mass objective; their costs are feasible upper bounds. The JSON saves every control vector, engine setting, epoch, mass, optimizer status, verification error and selected ship ID. Input hashes cover code, settings, cargo demand and the saved orbital data; stale reports are rejected.
+28 trajectory attempts, 22 independently accepted. 22 accepted legs did not converge the mass objective; their costs are feasible upper bounds. The JSON saves every control vector, engine setting, epoch, mass, optimizer status, verification error and selected ship ID. Report hashes cover both project packages, including selection and demand helpers. Trajectory hashes cover the solver, ephemeris interpreter and physical constants. Input hashes also cover settings, cargo demand and the saved orbital data; stale reports are rejected.
 
 ## Reproduce
 

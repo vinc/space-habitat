@@ -1,6 +1,6 @@
 {
- "input_hash": "e462a113776cfa9e7d82c479c3b3d93cf88547e871d91fd7ea805e940ff0ec08",
- "trajectory_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+ "input_hash": "97fbe176ec20d969a2ac10e5689b2ad59fb412402e062aca819d79451d8aa690",
+ "trajectory_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
  "settings": {
   "start_year": 2030,
   "end_year": 2050,
@@ -157,7 +157,8 @@
    "loaded_propellant_kg": 291755.6345085307,
    "final_reserve_kg": 1200.0003403825233,
    "integrated_delta_v_m_s": 6498.979413469702,
-   "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+   "mass_objective_converged": false
   },
   "6f855e72dc2e509fb00d84af59a6a4df5b0883be7c17518c098d0409ae9cd609": {
    "origin": "162173",
@@ -280,7 +281,8 @@
    "loaded_propellant_kg": 326587.54745507677,
    "final_reserve_kg": 1200.0004128869257,
    "integrated_delta_v_m_s": 7191.414774995401,
-   "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+   "mass_objective_converged": false
   },
   "250fa992cecff43f5f5d80a049f627de3d5829a1eb70a67c589b3f00aff1f955": {
    "origin": "162173",
@@ -403,7 +405,8 @@
    "loaded_propellant_kg": 355436.892766473,
    "final_reserve_kg": 1200.0002556910695,
    "integrated_delta_v_m_s": 7753.062264236162,
-   "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+   "mass_objective_converged": false
   },
   "35b509aece0725178bd384175c8e45b4942589ccb983ad2b41a4f51ec302b27f": {
    "origin": "433",
@@ -528,7 +531,7 @@
    "final_reserve_kg": 199.9999951106446,
    "integrated_delta_v_m_s": 16451.905590500104,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "5ea98bb4738908ed4b284a1cfed4059313a445832b3549f2caa42b27a658373e": {
    "origin": "433",
@@ -653,7 +656,7 @@
    "final_reserve_kg": 200.00179998240776,
    "integrated_delta_v_m_s": 14704.335692633547,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "035ee140cffc89e9e60b1f4b9ea98243e533e327bd0ff720edbb2b57bc13e04a": {
    "origin": "433",
@@ -672,7 +675,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -777,7 +780,8 @@
    "loaded_propellant_kg": 165150.15338104783,
    "final_reserve_kg": 199.99998830986243,
    "integrated_delta_v_m_s": 18029.753438781852,
-   "adaptive_correction_iterations": 2
+   "adaptive_correction_iterations": 2,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "7c84065e385991405dabb1156016c90e7dfa5d56be114d1dd766fe5cd52bfac7": {
    "origin": "162173",
@@ -796,7 +800,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 6,
@@ -900,7 +904,8 @@
    "energy_j": 62300343064806.375,
    "loaded_propellant_kg": 6923460.345300428,
    "final_reserve_kg": 1200.0047663858204,
-   "integrated_delta_v_m_s": 5734.30545960327
+   "integrated_delta_v_m_s": 5734.30545960327,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "4a0e5fdb753b83ce2b0804852e9e052390f032ad2c1bd99e6e423898165fff50": {
    "origin": "433",
@@ -919,7 +924,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 17,
@@ -1023,7 +1028,8 @@
    "energy_j": 19798199772703.934,
    "loaded_propellant_kg": 2199999.9769700756,
    "final_reserve_kg": 200.00222519422906,
-   "integrated_delta_v_m_s": 7451.721386232776
+   "integrated_delta_v_m_s": 7451.721386232776,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "8150a96171443c8a4151ddc34461ed1bb0563eada9da96a9054a92024530a379": {
    "origin": "162173",
@@ -1042,7 +1048,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 6,
@@ -1146,7 +1152,8 @@
    "energy_j": 96784352621942.73,
    "loaded_propellant_kg": 10755016.970457526,
    "final_reserve_kg": 1200.0124638879229,
-   "integrated_delta_v_m_s": 6893.489858802207
+   "integrated_delta_v_m_s": 6893.489858802207,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "93872fecdf7c2d3325e4c3329984a4d4ba1d10a84d55ccc3051dfb93b3caa47d": {
    "origin": "433",
@@ -1165,7 +1172,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 22,
@@ -1270,7 +1277,8 @@
    "loaded_propellant_kg": 2199998.754319829,
    "final_reserve_kg": 199.99971779500748,
    "integrated_delta_v_m_s": 7451.719895492979,
-   "adaptive_correction_iterations": 3
+   "adaptive_correction_iterations": 3,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "b81cd7cd06ddf9134414993cac650888fcb0ed05f1413ef3e4dce28f0c44d011": {
    "origin": "162173",
@@ -1289,7 +1297,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 7,
@@ -1393,7 +1401,8 @@
    "energy_j": 117281648433334.66,
    "loaded_propellant_kg": 13032494.27674356,
    "final_reserve_kg": 1200.0063730430277,
-   "integrated_delta_v_m_s": 7416.619851853644
+   "integrated_delta_v_m_s": 7416.619851853644,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "efd9c020f3e31cf92e431920e37d19f483482d8115fe6f4625b4719d18c860a9": {
    "origin": "433",
@@ -1658,7 +1667,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -1763,7 +1772,8 @@
    "loaded_propellant_kg": 1338938.6476671281,
    "final_reserve_kg": 1199.9999021829133,
    "integrated_delta_v_m_s": 22452.752442295376,
-   "adaptive_correction_iterations": 3
+   "adaptive_correction_iterations": 3,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "44842f105b5de6d46617efaa7e14a43997aed546c2e1e76c312ed83d97a0a670": {
    "origin": "433",
@@ -1782,7 +1792,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 12,
@@ -1886,7 +1896,8 @@
    "energy_j": 438631604444316.7,
    "loaded_propellant_kg": 633778.9851025096,
    "final_reserve_kg": 200.00090516330005,
-   "integrated_delta_v_m_s": 42799.54469891339
+   "integrated_delta_v_m_s": 42799.54469891339,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "fff69f35c3defa22664bc66adcccd149cde0a46eb1ada1e6c33838a63ee9d429": {
    "origin": "275611",
@@ -2028,7 +2039,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -2132,7 +2143,8 @@
    "energy_j": 507603254443727.7,
    "loaded_propellant_kg": 734404.7014516403,
    "final_reserve_kg": 1200.0005884782006,
-   "integrated_delta_v_m_s": 14294.357211086617
+   "integrated_delta_v_m_s": 14294.357211086617,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "8b7383e755118fdfb234a639b7152756fce5f969b99d8aeece8bd06cd5c6d338": {
    "origin": "433",
@@ -2151,7 +2163,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 9,
@@ -2255,7 +2267,8 @@
    "energy_j": 429878746623254.0,
    "loaded_propellant_kg": 621135.9681196366,
    "final_reserve_kg": 200.00077493644852,
-   "integrated_delta_v_m_s": 42341.15513404224
+   "integrated_delta_v_m_s": 42341.15513404224,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "0689540be29b4c921b5550bc06a809a87d213237b213744802ae8d6624b65c32": {
    "origin": "275611",
@@ -2274,7 +2287,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -2378,7 +2391,8 @@
    "energy_j": 392685938514124.2,
    "loaded_propellant_kg": 568413.0226176211,
    "final_reserve_kg": 1200.0003194416743,
-   "integrated_delta_v_m_s": 11602.844688531983
+   "integrated_delta_v_m_s": 11602.844688531983,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "45ac800ced0ae4b3886e7eb87f34e4a7ebb1da321ae6f1ef3645647bc891ec60": {
    "origin": "433",
@@ -2397,7 +2411,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -2501,7 +2515,8 @@
    "energy_j": 26473600876931.227,
    "loaded_propellant_kg": 38439.645734435144,
    "final_reserve_kg": 200.0000233122634,
-   "integrated_delta_v_m_s": 5243.980607672127
+   "integrated_delta_v_m_s": 5243.980607672127,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "46201ce9851c4307561d61386e973161573873cdd6c90d4d1276dff35b980f2b": {
    "origin": "275611",
@@ -2520,7 +2535,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -2624,7 +2639,8 @@
    "energy_j": 118789121638019.64,
    "loaded_propellant_kg": 13199991.298506293,
    "final_reserve_kg": 1200.0053930019128,
-   "integrated_delta_v_m_s": 7451.719622083979
+   "integrated_delta_v_m_s": 7451.719622083979,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "1fe4e4e6d59dfa48b1bee47645d81dcb3be2d13c10d0d4b2637f8df840e42615": {
    "origin": "433",
@@ -2889,7 +2905,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 5,
@@ -2993,7 +3009,8 @@
    "energy_j": 6950654436604.844,
    "loaded_propellant_kg": 772494.937795045,
    "final_reserve_kg": 200.00039450667197,
-   "integrated_delta_v_m_s": 4741.644003825694
+   "integrated_delta_v_m_s": 4741.644003825694,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "89b3b3640f77fb801a19a28f2dff6558fd697768bcba3ef20fcb82998958a2de": {
    "origin": "275611",
@@ -3135,7 +3152,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -3240,7 +3257,8 @@
    "loaded_propellant_kg": 13199999.99760717,
    "final_reserve_kg": 1199.999999935919,
    "integrated_delta_v_m_s": 7451.721447866405,
-   "adaptive_correction_iterations": 2
+   "adaptive_correction_iterations": 2,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "9700d0b76cc33364449f03ae8d3038e6ec81abdf5d24ef8fc4f041075359d91a": {
    "origin": "433",
@@ -3259,7 +3277,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Optimization terminated successfully",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 24,
@@ -3363,7 +3381,8 @@
    "energy_j": 19798199738523.13,
    "loaded_propellant_kg": 2199999.972853166,
    "final_reserve_kg": 200.00190615148128,
-   "integrated_delta_v_m_s": 7451.721385867499
+   "integrated_delta_v_m_s": 7451.721385867499,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   },
   "8834bafd342c0c2ac426e07f614af7370c2647982ae32ed2847919eeb0dbbab2": {
    "origin": "275611",
@@ -3382,7 +3401,7 @@
    "segments": 16,
    "step_days": 1.0,
    "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
    "mass_objective_converged": false,
    "feasibility_projection_success": true,
    "iterations": 50,
@@ -3486,7 +3505,8 @@
    "energy_j": 117886335529511.55,
    "loaded_propellant_kg": 13099681.73113341,
    "final_reserve_kg": 1200.005632127965,
-   "integrated_delta_v_m_s": 7430.748655914883
+   "integrated_delta_v_m_s": 7430.748655914883,
+   "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
   }
  },
  "networks": {
@@ -3628,7 +3648,8 @@
       "loaded_propellant_kg": 291755.6345085307,
       "final_reserve_kg": 1200.0003403825233,
       "integrated_delta_v_m_s": 6498.979413469702,
-      "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+      "mass_objective_converged": false
      },
      "return": {
       "origin": "433",
@@ -3753,7 +3774,7 @@
       "final_reserve_kg": 199.9999951106446,
       "integrated_delta_v_m_s": 16451.905590500104,
       "adaptive_correction_iterations": 3,
-      "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -3884,7 +3905,8 @@
       "loaded_propellant_kg": 326587.54745507677,
       "final_reserve_kg": 1200.0004128869257,
       "integrated_delta_v_m_s": 7191.414774995401,
-      "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+      "mass_objective_converged": false
      },
      "return": {
       "origin": "433",
@@ -4009,7 +4031,7 @@
       "final_reserve_kg": 200.00179998240776,
       "integrated_delta_v_m_s": 14704.335692633547,
       "adaptive_correction_iterations": 3,
-      "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -4140,7 +4162,8 @@
       "loaded_propellant_kg": 355436.892766473,
       "final_reserve_kg": 1200.0002556910695,
       "integrated_delta_v_m_s": 7753.062264236162,
-      "revalidated_from_solver_hash": "8f884acf0200335b2ec59b5dc30defed855c612c51af242ed708440c02b1e9c8"
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092",
+      "mass_objective_converged": false
      },
      "return": {
       "origin": "433",
@@ -4159,7 +4182,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -4264,7 +4287,8 @@
       "loaded_propellant_kg": 165150.15338104783,
       "final_reserve_kg": 199.99998830986243,
       "integrated_delta_v_m_s": 18029.753438781852,
-      "adaptive_correction_iterations": 2
+      "adaptive_correction_iterations": 2,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     }
    ],
@@ -4813,7 +4837,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 6,
@@ -4917,7 +4941,8 @@
       "energy_j": 62300343064806.375,
       "loaded_propellant_kg": 6923460.345300428,
       "final_reserve_kg": 1200.0047663858204,
-      "integrated_delta_v_m_s": 5734.30545960327
+      "integrated_delta_v_m_s": 5734.30545960327,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -4936,7 +4961,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 17,
@@ -5040,7 +5065,8 @@
       "energy_j": 19798199772703.934,
       "loaded_propellant_kg": 2199999.9769700756,
       "final_reserve_kg": 200.00222519422906,
-      "integrated_delta_v_m_s": 7451.721386232776
+      "integrated_delta_v_m_s": 7451.721386232776,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -5067,7 +5093,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 6,
@@ -5171,7 +5197,8 @@
       "energy_j": 96784352621942.73,
       "loaded_propellant_kg": 10755016.970457526,
       "final_reserve_kg": 1200.0124638879229,
-      "integrated_delta_v_m_s": 6893.489858802207
+      "integrated_delta_v_m_s": 6893.489858802207,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -5190,7 +5217,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 22,
@@ -5295,7 +5322,8 @@
       "loaded_propellant_kg": 2199998.754319829,
       "final_reserve_kg": 199.99971779500748,
       "integrated_delta_v_m_s": 7451.719895492979,
-      "adaptive_correction_iterations": 3
+      "adaptive_correction_iterations": 3,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     }
    ],
@@ -5590,7 +5618,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -5695,7 +5723,8 @@
       "loaded_propellant_kg": 1338938.6476671281,
       "final_reserve_kg": 1199.9999021829133,
       "integrated_delta_v_m_s": 22452.752442295376,
-      "adaptive_correction_iterations": 3
+      "adaptive_correction_iterations": 3,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -5714,7 +5743,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 12,
@@ -5818,7 +5847,8 @@
       "energy_j": 438631604444316.7,
       "loaded_propellant_kg": 633778.9851025096,
       "final_reserve_kg": 200.00090516330005,
-      "integrated_delta_v_m_s": 42799.54469891339
+      "integrated_delta_v_m_s": 42799.54469891339,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -5845,7 +5875,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -5949,7 +5979,8 @@
       "energy_j": 507603254443727.7,
       "loaded_propellant_kg": 734404.7014516403,
       "final_reserve_kg": 1200.0005884782006,
-      "integrated_delta_v_m_s": 14294.357211086617
+      "integrated_delta_v_m_s": 14294.357211086617,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -5968,7 +5999,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 9,
@@ -6072,7 +6103,8 @@
       "energy_j": 429878746623254.0,
       "loaded_propellant_kg": 621135.9681196366,
       "final_reserve_kg": 200.00077493644852,
-      "integrated_delta_v_m_s": 42341.15513404224
+      "integrated_delta_v_m_s": 42341.15513404224,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -6099,7 +6131,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -6203,7 +6235,8 @@
       "energy_j": 392685938514124.2,
       "loaded_propellant_kg": 568413.0226176211,
       "final_reserve_kg": 1200.0003194416743,
-      "integrated_delta_v_m_s": 11602.844688531983
+      "integrated_delta_v_m_s": 11602.844688531983,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -6222,7 +6255,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -6326,7 +6359,8 @@
       "energy_j": 26473600876931.227,
       "loaded_propellant_kg": 38439.645734435144,
       "final_reserve_kg": 200.0000233122634,
-      "integrated_delta_v_m_s": 5243.980607672127
+      "integrated_delta_v_m_s": 5243.980607672127,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     }
    ],
@@ -6905,7 +6939,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -7009,7 +7043,8 @@
       "energy_j": 118789121638019.64,
       "loaded_propellant_kg": 13199991.298506293,
       "final_reserve_kg": 1200.0053930019128,
-      "integrated_delta_v_m_s": 7451.719622083979
+      "integrated_delta_v_m_s": 7451.719622083979,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -7028,7 +7063,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 5,
@@ -7132,7 +7167,8 @@
       "energy_j": 6950654436604.844,
       "loaded_propellant_kg": 772494.937795045,
       "final_reserve_kg": 200.00039450667197,
-      "integrated_delta_v_m_s": 4741.644003825694
+      "integrated_delta_v_m_s": 4741.644003825694,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -7159,7 +7195,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -7264,7 +7300,8 @@
       "loaded_propellant_kg": 13199999.99760717,
       "final_reserve_kg": 1199.999999935919,
       "integrated_delta_v_m_s": 7451.721447866405,
-      "adaptive_correction_iterations": 2
+      "adaptive_correction_iterations": 2,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -7283,7 +7320,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 24,
@@ -7387,7 +7424,8 @@
       "energy_j": 19798199738523.13,
       "loaded_propellant_kg": 2199999.972853166,
       "final_reserve_kg": 200.00190615148128,
-      "integrated_delta_v_m_s": 7451.721385867499
+      "integrated_delta_v_m_s": 7451.721385867499,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     },
     {
@@ -7414,7 +7452,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -7518,7 +7556,8 @@
       "energy_j": 117886335529511.55,
       "loaded_propellant_kg": 13099681.73113341,
       "final_reserve_kg": 1200.005632127965,
-      "integrated_delta_v_m_s": 7430.748655914883
+      "integrated_delta_v_m_s": 7430.748655914883,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      },
      "return": {
       "origin": "433",
@@ -7537,7 +7576,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Optimization terminated successfully",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 5,
@@ -7641,7 +7680,8 @@
       "energy_j": 6950654436604.844,
       "loaded_propellant_kg": 772494.937795045,
       "final_reserve_kg": 200.00039450667197,
-      "integrated_delta_v_m_s": 4741.644003825694
+      "integrated_delta_v_m_s": 4741.644003825694,
+      "revalidated_from_solver_hash": "6c7104cb54ba95fc18c3b8763ee6663cd0cfc3f439bf91705a0c72dd644a7092"
      }
     }
    ],

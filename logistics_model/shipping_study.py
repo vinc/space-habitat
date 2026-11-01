@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import low_thrust, shipping, windows
+from . import ephemeris, low_thrust, shipping, transfers, windows
 from .ephemeris import Ephemeris, jd_of
 from .networks import DATA, NETWORK_VECTORS, content_hash, reference_design, vector_hash, bounded_refine
 
@@ -27,9 +27,18 @@ SETTINGS={"start_year":2030,"end_year":2050,"departure_end_year":2047,
 SOURCES={"162173":"Ryugu","275611":"1999 XX262"}
 
 
+def code_hashes(paths):
+    root=Path(__file__).resolve().parents[1]
+    return {p.relative_to(root).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(paths)}
+
+
 def identity():
-    code={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in
-          (Path(__file__),Path(low_thrust.__file__),Path(shipping.__file__))}
+    # Hash both project packages, including imported selection/interpolation and
+    # demand helpers. Adding a project helper must not silently evade the cache.
+    root=Path(__file__).resolve().parents[1]
+    code=code_hashes(p for package in ("logistics_model","habitat_model")
+                     for p in (root/package).rglob("*.py"))
     return content_hash({"settings":SETTINGS,"code":code,"vectors":vector_hash(),
                          "annual_demand_kg":annual_demand()})
 
@@ -39,7 +48,10 @@ def annual_demand():
 
 
 def trajectory_identity():
-    return content_hash({"solver":hashlib.sha256(Path(low_thrust.__file__).read_bytes()).hexdigest(),
+    # Fixed-date legs depend on the integrator/engine, interpreted endpoint
+    # states and the physical constants, even when vector bytes stay unchanged.
+    code=code_hashes(Path(module.__file__).resolve() for module in (low_thrust,ephemeris,transfers))
+    return content_hash({"code":code,
         "vectors":vector_hash(),"segments":SETTINGS["segments"],
         "step_days":SETTINGS["step_days"],"maxiter":SETTINGS["maxiter"]})
 
@@ -250,8 +262,10 @@ def report():
         f"{len(attempts)} trajectory attempts, {len(accepted)} independently accepted. "
         f"{sum(not v['optimizer_success'] for v in accepted)} accepted legs did not converge the mass objective; "
         "their costs are feasible upper bounds. The JSON saves every control vector, engine setting, "
-        "epoch, mass, optimizer status, verification error and selected ship ID. Input hashes cover code, "
-        "settings, cargo demand and the saved orbital data; stale reports are rejected.","",
+        "epoch, mass, optimizer status, verification error and selected ship ID. Report hashes cover both "
+        "project packages, including selection and demand helpers. Trajectory hashes cover the solver, "
+        "ephemeris interpreter and physical constants. Input hashes also cover settings, "
+        "cargo demand and the saved orbital data; stale reports are rejected.","",
         "## Reproduce", "", "```bash", "python -m pip install -r requirements.txt",
         "python -m logistics_model.shipping_study --solve --report",
         "python -m unittest tests.test_shipping", "```", "",

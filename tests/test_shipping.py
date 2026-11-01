@@ -1,10 +1,16 @@
 import math
+import json
+from pathlib import Path
+import tempfile
 import unittest
 from dataclasses import asdict
+from unittest.mock import patch
 
 import numpy as np
 
-from logistics_model import low_thrust as lt, shipping
+from logistics_model import low_thrust as lt, shipping, shipping_study as study
+from logistics_model import ephemeris, networks, transfers, windows
+from habitat_model import mass as habitat_mass
 
 
 class CircularEphemeris:
@@ -120,6 +126,78 @@ class TestDatedShipping(unittest.TestCase):
         back["departure_jd"]=10
         with self.assertRaisesRegex(ValueError,"return leg"):
             shipping.cycle(out,back,100,10,1)
+
+
+class TestShippingCache(unittest.TestCase):
+    def changed_source(self,module):
+        original=Path.read_bytes
+        target=Path(module.__file__).resolve()
+        def read(path):
+            data=original(path)
+            return data+b"\n# changed dependency\n" if path.resolve()==target else data
+        return patch.object(Path,"read_bytes",read)
+
+    def test_dependency_changes_invalidate_the_relevant_identities(self):
+        report_id=study.identity();trajectory_id=study.trajectory_identity()
+        for module,physical in ((ephemeris,True),(transfers,True),(lt,True),
+                                (windows,False),(networks,False),(shipping,False),(habitat_mass,False)):
+            with self.subTest(module=module.__name__),self.changed_source(module):
+                self.assertNotEqual(study.identity(),report_id)
+                if physical:self.assertNotEqual(study.trajectory_identity(),trajectory_id)
+                else:self.assertEqual(study.trajectory_identity(),trajectory_id)
+
+    def test_report_rejects_a_changed_interpreter_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            results=Path(td)/"results.json";output=Path(td)/"report.md"
+            results.write_text(json.dumps({"complete":True,"input_hash":study.identity()}))
+            with patch.object(study,"RESULTS",results),patch.object(study,"REPORT",output),self.changed_source(ephemeris):
+                with self.assertRaisesRegex(ValueError,"stale"):
+                    study.report()
+                self.assertFalse(output.exists())
+
+    def test_changed_physics_rechecks_controls_and_does_not_reuse_failed_attempts(self):
+        for keep_outbound in (True,False):
+            with self.subTest(keep_outbound=keep_outbound),tempfile.TemporaryDirectory() as td:
+                settings=dict(study.SETTINGS,payload_kg=100.,dry_kg=10.,fleets=[1],
+                    engines=[{"name":"test","exhaust_m_s":30000.,"efficiency":.65}])
+                engine=asdict(lt.Engine("test",power_1au_w=settings["power_1au_w"]))
+                departure=study.jd_of(2031);back_departure=departure+50
+                def record(origin,target,t,mass,accepted):
+                    return {"origin":origin,"target":target,"departure_jd":t,"arrival_jd":t+10,
+                        "flight_days":10.,"delivered_kg":mass,"engine":engine,"segments":16,
+                        "step_days":1.,"wet_ratio":1.1,"controls":np.zeros((16,3)).tolist(),
+                        "accepted":accepted,"verification":{"accepted":accepted},
+                        "propellant_kg":1.,"energy_j":100.}
+                out=record("source","433",departure,110.,True)
+                back=record("433","source",back_departure,10.,False)
+                def key(r):return study.content_hash([r["origin"],r["target"],r["departure_jd"],10.,engine,r["delivered_kg"]])
+                results=Path(td)/"results.json"
+                with patch.object(study,"SETTINGS",settings),patch.object(study,"SOURCES",{"source":"test"}), \
+                     patch.object(study,"RESULTS",results),patch.object(study,"annual_demand",return_value=1.), \
+                     patch.object(study,"vector_hash",return_value="unchanged vectors"):
+                    results.write_text(json.dumps({"input_hash":study.identity(),
+                        "trajectory_hash":study.trajectory_identity(),"attempts":{key(out):out,key(back):back}}))
+                    class FakeEphemeris:
+                        def state(self,body,jd):return np.zeros(3),np.zeros(3)
+                    checks=[{"accepted":keep_outbound,"final_mass_ratio":1.,"position_error_m":0. if keep_outbound else 1e9},
+                            {"accepted":False,"position_error_m":1e9}]
+                    def seeds(eph,origin,target,start,end,count=3):
+                        return [(1000.,departure if origin=="source" else back_departure,10.)]
+                    solved=[dict(back,accepted=True,verification={"accepted":True})]
+                    if not keep_outbound:solved.insert(0,out)
+                    with self.changed_source(ephemeris),patch.object(study,"Ephemeris",return_value=FakeEphemeris()), \
+                         patch.object(study,"candidates",side_effect=seeds), \
+                         patch.object(lt,"verify",side_effect=checks) as verify, \
+                         patch.object(lt,"polish",side_effect=lambda eph,r:r), \
+                         patch.object(lt,"solve",side_effect=solved) as solve, \
+                         patch.object(shipping,"schedule",return_value={"feasible":False}):
+                        result=study.run()
+                        self.assertEqual(verify.call_count,2)
+                        self.assertEqual(solve.call_count,1 if keep_outbound else 2)
+                        self.assertTrue(result["complete"])
+                        self.assertEqual(result["input_hash"],study.identity())
+                        self.assertEqual(result["trajectory_hash"],study.trajectory_identity())
+                        self.assertTrue(result["attempts"][key(back)]["accepted"])
 
 
 if __name__=="__main__":unittest.main()
