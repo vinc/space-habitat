@@ -11,7 +11,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import cable_net, hub, net_statics, nonlinear, sequence, spinup, tube_section, wire
+from . import cable_net, hub, net_statics, nonlinear, rest, sequence, spinup, tube_section, wire
 
 SIZES = (400, 900, 1600, 2500)
 
@@ -172,14 +172,8 @@ def sequence_section(p):
                   if c["released"]["resolved"] else "**not reached**."))
     return "\n\n".join([
         "## Adding a torus to a spinning stack: geometrically nonlinear",
-        "**The baseline is simpler.** A child is built at rest: its hub, nets and every arc, the ring closed and "
-        "its joints released, the lattice fitted, the rock and soil in, without spin load, so the partial-ring "
-        "stages below don't arise; then the finished stack spins up slowly and the water goes in last, trimmed "
-        "with ballast. The spin loads should then grow in their finished proportions (expected, not checked "
-        "here); checked so far is only that the stack's whirl margin falls as it spins up "
-        "(`reports/dynamics.md`). Still open for the baseline: the stationary assembly's equilibrium, the "
-        "cables taking up tension and the sliding joints settling as the spin starts, the spin-up torque and "
-        "angular-acceleration loads, and the fill's retention and settling. What follows is the harder option: "
+        "**The baseline is simpler** (previous section): a child is built at rest and spun up finished, so the "
+        "partial-ring stages below don't arise. What follows is the harder option: "
         "a torus added to a living stack, which can't stop, so its arcs are hung at full spin. It checks "
         "selected stages of that sequence, not the whole process.",
         "`structure_model/nonlinear.py`, in the ring's plane and the rotating frame: the rim a chain of flexible "
@@ -330,6 +324,196 @@ def tube_section_report(p):
     ])
 
 
+def rest_section(p):
+    """The baseline: built at rest, spun up finished (rest.py)."""
+    mpa = lambda x: num(x / 1e6)
+    rows, path_rows, path_text = [], [], []
+    for r in (900, 1600):
+        s, m, info = rest.at_rest(p, r)
+        te = info["net"]["tension_end"]
+        th = rest.thermal(p, r)
+        b = rest.buckling(p, r) if r == 900 else None
+        rows.append([size_label(r), f"{num(s['tension_min'] / te * 100, 2)}–{num(s['tension_max'] / te * 100, 2)}%",
+                     mpa(-s["hull_min"]), num(s["joint_compression"] / 1e6),
+                     f"{mpa(-th['cold']['hull_min'])} / {num(th['warm']['tension_min'] / te * 100, 2)}%, "
+                     f"{th['warm']['slack'] + th['cold']['slack']} slack",
+                     num(b["factor"]) + "×" if b else "—"])
+    for scatter in (False, True):
+        res = rest.spin_up(p, 900, scatter=scatter)
+        te = res["tension_end"]
+        label = "as drawn" if not scatter else (f"scattered: chords ±{rest.LENGTH_SCATTER * 100:g} cm, mass per "
+                                                  f"anchor ±{rest.MASS_SCATTER:.0%} (1σ)")
+        for st in res["states"]:
+            path_rows.append([label, num(st["spin"], 2),
+                              f"{num(st['tension_min'] / te, 3)}–{num(st['tension_max'] / te, 3)}",
+                              f"{mpa(st['hull_min'])} to {mpa(st['hull_max'])}", num(st["hull_bending"] / 1e6, 2),
+                              f"{st['open']}/{st['joints']}",
+                              f"{num(st['gap_min'] * 100)}–{num(st['gap_max'] * 100)}" if st["open"] else "closed",
+                              num(st["joint_compression"] / 1e6)])
+        path_text.append(
+            f"{label.capitalize()}: the joints open at ~{num(res['spin_open'], 2)} of the spin; every chord's tension "
+            f"on the way is at most {num(res['chord_path_ratio'], 4)}× its own at full spin; the hull's worst is "
+            f"{mpa(res['hull_compression_peak'])} MPa of compression at rest ({mpa(res['hull_final'])} MPa along it "
+            f"at full spin), its bending at most {num(res['bending_peak'] / 1e6, 2)} MPa "
+            f"({num(res['bending_final'] / 1e6, 2)} at full spin); finished, the chords at "
+            f"{num(res['final']['tension_min'] / te, 3)}–{num(res['final']['tension_max'] / te, 3)}× the formula "
+            f"(peak {num(res['final']['peak_stress'] / res['sigma'], 3)}× the allowable) and the joints open by "
+            f"{num(res['final']['gap_min'] * 100)}–{num(res['final']['gap_max'] * 100)} cm.")
+    hub_rows, torque_rows, cost_rows = [], [], []
+    for r in (900, 1600):
+        s, _, info = rest.at_rest(p, r)
+        share = (s["tension_min"] + s["tension_max"]) / 2 / info["net"]["tension_end"]
+        ln = rest.lines(p, r)
+        hub_rows.append([size_label(r), f"{ln['s0']:.1%}", num(ln["bow"], 2),
+                         f"{num(ln['as_sized_ratio'], 2)}×",
+                         f"{num(ln['area'] * 1e6)} ({num(ln['area'] / ln['area_finished'], 2)}×)",
+                         f"{num(ln['pull_rest'])} N / {num(ln['pull_full'] / 1e3)} kN",
+                         f"{num(ln['gap_rest'], 2)} / {num(ln['gap_full'], 2)} ({num(ln['gap_finished'], 2)})",
+                         f"{num(ln['k_rest'] / 1e6, 2)} / {num(ln['k_full'] / 1e6)}",
+                         f"{num(ln['margin_min'], 2)} ({num(ln['margin_finished'], 2)})",
+                         num(ln["dock_offset"] * 100), num(ln["period_s"]),
+                         f"{num(ln['mass'] / 1e3)} ({num(ln['mass_finished'] / 1e3)})",
+                         f"{num(ln['hub_ring_force'] / 1e6)} MN; {num(ln['hub_ring_mass'] / 1e3)} t"])
+        t = rest.torque(p, r)
+        ft = rest.farm_twist(t, share)
+        torque_rows.append([size_label(r), f"{t['alpha']:.1e}", num(t["torque"] / 1e6), num(t["thrust"] / 1e3),
+                            f"{t['rim_ratio']:.0e}", f"{num(ft['rest_rim'] * 100)} / {num(ft['full_rim'] * 100, 2)}",
+                            f"{t['hub_twist_rest']:.0e} / {t['hub_twist']:.0e}; {t['line_lean_rest']:.0e} / "
+                            f"{t['line_lean_full']:.0e}",
+                            f"{num(t['mismatch_torque'] / 1e6)} MN·m; {num(t['lattice_force'] / 1e3)} kN",
+                            f"{t['water_spin_drop']:.1%}"])
+        for name, o in t["options"].items():
+            cost_rows.append([size_label(r), name, num(o["exhaust"] / 1e3, 2), num(o["propellant"] / MT, 2),
+                              num(o["energy"] / 1e15, 2), num(o["days_at_power"])])
+    f = rest.fill(p, 900)
+    fill_rows = [[f"loose, {d['density']:g} t/m³", num(d["areal"], 3), num(d["jacket_dose"]),
+                  f"{d['strain']:.0%}", num(d["floor_settle"] * 100), num(d["slot"] * 100), num(d["slot_dose"]),
+                  num(d["top_up"] / MT, 2)] for d in f["loose"].values()]
+    fill_rows += [[f"compacted at rest, M = {num(d['modulus'] / 1e6)} MPa", num(d["areal"], 3), num(d["jacket_dose"]),
+                   "—", num(d["floor_settle"] * 100, 2), num(d["slot"] * 100, 2), num(d["slot_dose"], 2), "—"]
+                  for d in f["compacted"].values()]
+    return "\n\n".join([
+        "## The baseline: built at rest, spun up finished",
+        "A child's stack is assembled at rest (`structure_model/rest.py`): every ring closed, the lattice "
+        "fitted, the rock and soil in; then spun up slowly with the water last. In the ring's plane, with the "
+        "geometrically nonlinear model above, the joints sliding along the rim but **bearing on stops**: closed "
+        "(compression) they act locked, rocking once their moment passes their compression times the tube's "
+        f"radius; open, they slide on a light spring along the rim (~10⁸ N/m, below). The "
+        "chords are pretensioned to a strain of 5 × 10⁻⁴ as installed, to stay taut through a "
+        f"±{rest.THERMAL_SWING:g} K swing of their temperature against the hull's (a guess; α ΔT = "
+        f"{rest.ALPHA_STEEL * rest.THERMAL_SWING:.1e}).",
+        "### At rest",
+        "With no spin load, only the hull resists the chords' pull: the closed ring is squeezed, its joints "
+        "bear, and most of the installed stretch goes into the hull's shortening (the chords keep only a few % "
+        f"of their finished tension). Allowable compression {mpa(rest.HULL_COMPRESSION)} MPa (half the plate "
+        "stress, as in the cross-section). Thermal swing: the chords colder (hull's compression) / warmer (the "
+        "least chord tension). Buckling in the plane: the pretension at which the ring's lowest stiffness "
+        f"vanishes, over the 5 × 10⁻⁴ used (the chords hold it far beyond the free ring's 3EI/r²). "
+        "Scattered as built (below).",
+        table(["Torus", "Chords (% of finished)", "Hull compression (MPa)", "Joints' compression (MN)",
+               "Cold: hull (MPa) / warm: least chord", "Buckling margin"], rows),
+        "### Spinning up: the cables take up tension, the joints open",
+        "The spin stepped up from rest to full at 900 m, each step from the last equilibrium. Spin as a share of "
+        "the final rate; chords as a share of the finished tension; hull stress along the rim (negative: "
+        "compression) and in bending; joints open and their gap.",
+        table(["Ring", "Spin", "Chords (× finished)", "Hull along the rim (MPa)", "Hull bending (MPa)",
+               "Joints open", "Gap (cm)", "Joints' compression (MN)"], path_rows),
+        " ".join(path_text),
+        "**So nothing exceeds the finished state on the way, except the at-rest pretension:** the hoop's "
+        "compression in the hull and on the joints' stops, which falls linearly with the spin load and is gone "
+        "by about a third of the spin, when the joints open together and the chords carry the rim alone, as "
+        "finished. The scattered ring's finished chords spread by ±~7% (mostly the mass scatter): the "
+        "finished net's own tolerance, not the spin-up's; it needs the rim's mass placed within ~2% per anchor, "
+        "or the chords trimmed after spin-up, or a little more safety margin.",
+        f"**The joints need a spring along the rim.** With joints that only slide, the segments' positions "
+        "along the rim are barely held: the chords are nearly diametral, so segments sliding in odd harmonics "
+        "hardly stretch them, and a 2% scatter in the rim's mass slides segments by up to ~1–2 m at a fifth of "
+        f"the spin (and the solution doesn't converge). A spring of ~10⁸ N/m in each joint "
+        "holds them to the gaps above for a few MPa along the hull; ~10⁷ N/m is too soft to settle, ~10⁹ N/m "
+        "puts ~30 MPa in the hull. The joints travel ~0.15–0.4 m each by full spin (and ~2 cm more each as the chords "
+        "creep, ~0.5 m per chord at 900 m: the wire, above).",
+        "### The hub's stabilising lines, from rest to full spin",
+        "The lines (section on the hub, below) as fixed-length, tension-only lines from the hub's surface to the "
+        "chords' tangent points, in series with chords whose tension and bow grow with the spin. A chord bows "
+        "away from the axis by its own spin load over its tension: nothing at rest, the finished bow from where "
+        "the joints open (its tension grows from its at-rest share, linearly while the joints bear, then with "
+        "the spin). A line cut to a fixed length is stretched by the chord's free movement outward less what its "
+        "pull draws the chord in: P = k_s (bow + d0), k_s the line and chord in series at the current tension "
+        "and spin, d0 the pull-in it is installed with at rest, enough to stay taut "
+        f"({hub.TAUT_MARGIN:g}× the swing) under a {rest.SHIP_MASS / 1e6:g} kt ship docking at "
+        f"{rest.SHIP_CLOSING:g} m/s over {rest.BUFFER:g} s. **So a fixed line holds back the whole bow,** and the "
+        "earlier sizing (lines cut to the bowed chords, preloaded against their swing, a few kN) would be "
+        "overloaded if installed snug at rest; the hub's design (below) sizes them for it, and here it is traced "
+        "with the chords' tension as the ring model gives it. Window: the gap around the hub at rest / at full "
+        "spin with the chords drawn in (the earlier sizing's, bowed). Margin: the hub's lateral stiffness over its divergence, "
+        "the least through the spin-up (finished). The lines' pull loads the hub's shell outward all round each "
+        "net's plane: a ring frame there, at the plate stress.",
+        table(["Torus", "Chords at rest", "Finished bow (m)", "Earlier sizing, installed snug: peak / allowable",
+               "Line area sized for the bow (mm²)", "Line pull at rest / full spin", "Window, rest / full (m)",
+               "Lateral stiffness, rest / full (MN/m)", "Least margin", "Docking offset at rest (cm)",
+               "Hub's period at rest (s)", "Lines' mass (t), earlier", "Hub ring frames, per net; both nets"], hub_rows),
+        "**Lines installed snug at rest and sized for the bow (proposed; the hub's design below and the stack "
+        "dynamics use them)** keep every line taut and the hub held "
+        "from rest to full spin, its margin never below the finished one; they cost ~1.7× the earlier sizing's "
+        "area but are shorter (the window narrower by the bow), so only a little more mass, plus a ring frame in "
+        "the hub at each net. The alternative, lines paid out by the bow as the spin grows (winches, locked at "
+        "full spin), keeps the earlier sizing and window but adds machinery that must work during the spin-up.",
+        "### The spin-up's torque",
+        f"Thrusters on each ring's rim sized to its own inertia; bounded by a fast spin-up, {rest.FAST_SPINUP_DAYS:g} "
+        "days. Per torus with its hub share and farm ring. Rim: the tangential load over the centrifugal at "
+        "full spin. Farm ring: its twist at its rim if it is turned by the hub through its radial spokes rather "
+        "than its own thrusters (at rest / full spin; the spokes resist only by their tension, pretensioned like "
+        "the chords). Hub: its twist (rad) on the stabilising lines, held by their preload (at rest / full "
+        "spin), and how far each line leans (its tangential share over its tension). Lattice: one torus's thrusters {rest.THRUST_MISMATCH:.0%} off "
+        "their share, carried across a gap (a braking rim train puts ~40–120 MN·m on a lattice). Water: the "
+        "spin lost as the water arrives from the axis, made up by thrust.",
+        table(["Torus", "α (rad/s²)", "Torque (MN·m)", "Thrust (kN)", "Rim: tangential / spin load",
+               "Farm ring twist at its rim (cm)", "Hub twist; lines' lean (rad), rest / full", "Thrust mismatch; lattice force",
+               "Water last: spin lost"], torque_rows),
+        "The spin-up's cost, for the angular momentum of a torus with its hub and farm ring at full spin, "
+        "delivered at the envelope's outer rim, at the torus's own power (its array, `habitat_model`):",
+        table(["Torus", "Reaction mass", "Exhaust (km/s)", "Propellant (Mt)", "Energy (PJ)", "Days at the torus's power"],
+              cost_rows),
+        "**The angular acceleration is negligible:** even at the fast rate its loads are millionths of the "
+        "spin's; a farm ring turned through its radial spokes alone lags ~0.25–0.8 m at its rim at rest "
+        "(centimetres at full spin), so it gets its own thrusters or simply follows; the hub twists by milliradians at most on its "
+        "lines, and the lattice carries any mismatch with ample margin. What sets the spin-up is energy: water thrusters take years of the "
+        f"torus's own power, host rock thrown by a mass driver at ~{rest.ROCK_DRIVER_EXHAUST:g} km/s ~5–7 months "
+        "(proposed; ~6× the reaction mass, of rock mined anyway). The stack at rest has no gyroscopic stiffness, "
+        "so the thrusters' sideways torques must be balanced or held by the attitude thrusters until the spin "
+        "builds (not modelled).",
+        "### The fill as gravity grows",
+        "The rock and soil are placed at rest, in the jacket's cells, whose volume is fixed "
+        f"({f['jacket']:g} m of jacket, {p.rock_density:g} t/m³ finished, ~{f['porosity_final']:.0%} porosity on "
+        f"~{rest.GRAIN_DENSITY:g} t/m³ chondrite grains). **Filled loose, a cell holds less rock than the design:** "
+        f"the shield is short of its {p.shield_areal_t_m2:g} t/m² everywhere, floor and ceiling included, and "
+        "settling keeps that mass without restoring it (review of #18). Dose at a sphere's centre behind what "
+        "is installed, OLTARIS's regolith curve (the design's at "
+        f"{p.shield_areal_t_m2:g} t/m²: {num(f['design_dose'])} mSv/yr). Loose fill also settles by its porosity as "
+        "the spin grows: through the jacket's thickness on the floor and ceiling, but at the tube's two sides its "
+        f"cells' columns run along the radius, a cell high ({f['cell']:g} m), and a settled cell leaves a slot at "
+        "its top through the jacket's whole thickness. A slot h high in a wall t thick lets through, "
+        "unshielded, ~h/4t of the directions seen from the valley at its height, both side walls together twice "
+        "that: the dose it adds there, against the jacket left around it, is rough. Compacted to its final "
+        "density as placed, the fill holds the design's mass and settles only by its elastic compression under "
+        "its own weight at full spin. Top-up: the rock that loose cells lack, per 900 m torus, to be added to "
+        "every cell.",
+        table(["Fill placed", "Shield installed (t/m²)", "Dose behind it (mSv/yr)", "Settling strain",
+               "Settling through the jacket (cm)", "Slot at the sides (cm)", "Added at the slots' height (mSv/yr)",
+               "Top-up to the design (Mt)"], fill_rows),
+        "**The fill must be compacted as it is placed (proposed).** Loose, the shield is short everywhere "
+        "(~19–38 mSv/yr behind it, against the design's ~15) and the slots add tens of mSv/yr where they face; "
+        "making it good would take topping up every cell, not only the sides, with ~0.55–2.2 Mt of rock per "
+        "900 m torus, after spin-up and through fill ports. Settling unevenly moves the rim's first moment by ~"
+        f"{num(f['first_moment'] * 100)} cm × its mass even loose, within the ballast's {f['ballast'] * 100:g} "
+        f"cm, and slows the spin by ~{f['spin_drop']:.2%}. The loads the fill puts on its cells grow with the "
+        "spin to their finished values (the cross-section above).",
+        "Not modelled: out of the ring's plane (the ring's buckling sideways, the two nets apart), the joints' "
+        "stops and springs as hardware, the fill's flow and arching in its cells, the stack's attitude while at "
+        "rest, the despun array.",
+    ])
+
+
 def hub_report(p):
     finished, cases, build = [], [], []
     for r in SIZES:
@@ -350,7 +534,7 @@ def hub_report(p):
         for pairs, b in out["build"].items():
             unbraced = ("grows ×e every " + num(b["e_folding_unbraced_spins"], 2) + " turns"
                         if b["growth_unbraced"] else "stable")
-            offset = num(abs(b["offset"]), 2) + (" (**more than the gap**)" if abs(b["offset"]) > out["gap"] else "")
+            offset = num(abs(b["offset"]), 2) + (" (**more than the gap**)" if abs(b["offset"]) > out["gap_bowed"] else "")
             build.append([size_label(r), "one opposite pair" if pairs == 1 else "two pairs at right angles",
                           str(b["chords"]), num(b["margin_unbraced"], 2), unbraced,
                           num(b["preload"] / 1e3), num(b["swing"] / 1e3), num(b["pull_in"], 2), offset,
@@ -367,20 +551,29 @@ def hub_report(p):
         f"hub, dock and factory metal ({p.hub_factory_metal_frac:.0%} of the torus steel). The torus and its hub "
         "move relative to each other with their reduced mass μ; off the axis they are pulled apart by μω²x, so the "
         "margin is K / μω². In the rotating frame Coriolis couples the two directions of the window's plane: the "
-        "relative motion has two modes, at |√(K/μ) ∓ ω| (√(K/μ) seen from outside). Lines are preloaded "
-        f"{hub.TAUT_MARGIN:g}× their largest swing of tension, in service and while building, and the area, "
-        "preload, stiffness and loads are iterated until they agree, every line taut and within the wire stress.",
+        "relative motion has two modes, at |√(K/μ) ∓ ω| (√(K/μ) seen from outside). **The lines are installed "
+        "snug at rest** (the baseline, built at rest; review of #18): cut to reach the chords' tangent points "
+        "when the chords have no bow, drawing them in a little to stay taut under a docking ship. As the spin "
+        "grows each chord bows outward and its line holds the bow back, so in service a line's preload is the "
+        "bow's pull, far above its swing of tension, and the window around the hub is the unbowed one (the "
+        "previous section traces it through the spin-up). The lines' pull loads the hub's shell outward all "
+        "round each net's plane, carried by a ring frame there. While building at spin (the option of adding a "
+        f"torus to a living stack), lines are preloaded {hub.TAUT_MARGIN:g}× their swing. Area, preload, "
+        "stiffness and loads are iterated until they agree, every line taut and within the wire stress.",
         "### Finished torus",
         table(["Torus", "Hub share (Mt)", "Window gap (m)", "Lines", "Chord stiffness (kN/m)",
                "Lateral stiffness (MN/m)", "Margin K / μω²", "Natural frequency / spin: inertial; rotating modes",
                "Tilt stiffness (GN·m/rad)", f"Axial stiffness (MN/m): radial lines / {hub.INCLINED_FRAC:.0%} inclined",
                "Axial natural frequency / spin", "Torsional stiffness (GN·m/rad)", "Line area (mm²)",
                "Service preload (kN)", "Lines' mass (t), + inclined option"], finished),
-        "Radial lines hold the hub along the axis only through their preload: its axial natural frequency is "
-        f"below the spin rate. Running {hub.INCLINED_FRAC:.0%} of the lines from the hub's mid-plane out to the side "
-        "nets, over their full length (the gap and the nets' offset from the mid-plane), holds it ~8–25× more "
-        "stiffly (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass "
-        "shown. Torsion is likewise held by preload only.",
+        "Radial lines hold the hub along the axis and in torsion only through their preload (geometric "
+        "stiffness, P/l). Holding back the bow, that preload is large: the hub's axial natural frequency is "
+        f"~4× the spin with radial lines alone. Running {hub.INCLINED_FRAC:.0%} of the lines from the hub's "
+        "mid-plane out to the side nets, over their full length (the gap and the nets' offset from the "
+        "mid-plane), adds a little more (second figure; a chord resists sideways pulls out of its plane alike), "
+        "for the extra line mass shown: no longer needed, kept as an option. (With lines cut to the bowed "
+        "chords and preloaded only against their swing, the earlier sizing, the axial frequency was ~0.45× the "
+        "spin, and the inclined lines were needed; those lines would be slack at rest.)",
         "### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines",
         f"Hub imbalance: {hub.HUB_IMBALANCE_FRAC:.0%} of the hub's mass at its rim. Torus imbalance: a "
         f"{hub.ARC_MISMATCH:.0%} mismatch between two opposite arcs of 4θr, never ballasted. Orbit thrust: "
@@ -399,8 +592,8 @@ def hub_report(p):
                "Preload (kN)", "Swing of tension (kN)", "Chord pull-in (m)", "Hub offset from the arcs (m)",
                "Force in the lines (MN)"], build),
         "Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator, pipe and "
-        "power shafts and their compliant joints, docking loads (set by the dock's buffers), and torque through "
-        "the lines.",
+        "power shafts and their compliant joints, the ring frames' local details. The torque through the lines "
+        "while spinning up is in the previous section.",
     ])
 
 
@@ -412,7 +605,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     p = params(load(), **dict(args.set))
     print("\n\n".join(["# Structure: wire, cable net, spin-up and the tube's cross-section", wire_section(p),
-                       net_section(p, args.anchor_spacing), construction_section(p), sequence_section(p),
+                       net_section(p, args.anchor_spacing), construction_section(p), rest_section(p), sequence_section(p),
                        imbalance_section(p, args.mismatch), hub_report(p), tube_section_report(p)]) + "\n")
     return 0
 

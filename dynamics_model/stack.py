@@ -327,6 +327,9 @@ def build(p, d, hub_shell_m=None, element=20.0, farm_planes=2, tie_frac=0.0, rim
     info = {"geometry": geo, "mass": mass, "nets": nets, "k_farm_plane": k_farm, "k_tie_plane": k_tie,
             "tie_length": tie_length, "tie_mass": tie_frac * mass["total"], "hub_line_mass": line,
             "hub_shell_mass": shell, "hub_share": share, "array_mass": array, "hub_shell_m": t,
+            # Ring frames in the hub at each net's plane, carrying the stabilising lines' pull (hub.py):
+            # part of the hub's metal, so not available to its wall.
+            "hub_ring_frames": n * nets["ring_frame_mass"],
             "joints": joints}
     return stack, info
 

@@ -10,10 +10,10 @@ Torus centring: the nets' lateral stiffness over the centrifugal pull on a torus
 
 | Torus | Tori | Torus centring (K / mω²) | Rigid J/I_t | Lowest forward whirl / spin | Damped |
 |---|---|---|---|---|---|
-| 900 m | 2 | 0.46 | 1.99 | 0.45 | grows ×e every 2.3 h |
-| 900 m | 6 | 0.46 | 1.90 | 0.16 | grows ×e every 2.4 h |
-| 1.6 km | 2 | 0.44 | 1.99 | 0.46 | grows ×e every 3.1 h |
-| 1.6 km | 6 | 0.44 | 1.92 | 0.16 | grows ×e every 3.1 h |
+| 900 m | 2 | 0.47 | 1.99 | 0.45 | grows ×e every 2.3 h |
+| 900 m | 6 | 0.47 | 1.90 | 0.16 | grows ×e every 2.4 h |
+| 1.6 km | 2 | 0.45 | 1.99 | 0.46 | grows ×e every 3.1 h |
+| 1.6 km | 6 | 0.45 | 1.92 | 0.17 | grows ×e every 3.1 h |
 
 ## Fixes
 
@@ -21,10 +21,10 @@ Rim links: neighbouring tori joined at their rims (tunnels, or a thin cylinder a
 
 | Torus | Tori | Rim links alone | Radial ties alone | Both: lowest forward whirl / spin | Damped |
 |---|---|---|---|---|---|
-| 900 m | 2 | 1.1e+08 N/m (0.0050 mm shell, 2.2 t per link) | 0.18% (23 kt per torus) | 1.80 | stable |
-| 900 m | 6 | 1.2e+09 N/m (0.059 mm shell, 26 t per link) | 1.81% (230 kt per torus) | 1.60 | stable |
-| 1.6 km | 2 | 2.1e+08 N/m (0.0055 mm shell, 4.3 t per link) | 0.30% (120 kt per torus) | 1.56 | stable |
-| 1.6 km | 6 | not enough alone | 3.07% (1,300 kt per torus) | 1.25 | stable |
+| 900 m | 2 | 1.1e+08 N/m (0.0050 mm shell, 2.2 t per link) | 0.18% (23 kt per torus) | 1.81 | stable |
+| 900 m | 6 | 1.2e+09 N/m (0.058 mm shell, 25 t per link) | 1.81% (230 kt per torus) | 1.60 | stable |
+| 1.6 km | 2 | 2.0e+08 N/m (0.0055 mm shell, 4.2 t per link) | 0.30% (120 kt per torus) | 1.57 | stable |
+| 1.6 km | 6 | not enough alone | 3.04% (1,300 kt per torus) | 1.26 | stable |
 
 ## How long a stack: the hub's wall
 
@@ -32,18 +32,18 @@ With rim links (1e+11 N/m) and a trace of ties (0.01%), long stacks are limited 
 
 | Torus | Tori | Stack length (m) | Rigid J/I_t | Forward whirl / spin, 2.00 cm wall | Wall needed (cm) | Wall from the hub's budget (cm) | Forward whirl / spin at that wall |
 |---|---|---|---|---|---|---|---|
-| 900 m | 2 | 332 | 1.99 | 1.80 | 0.10 | 58.2 | 1.81 |
-| 900 m | 6 | 895 | 1.90 | 1.60 | 0.43 | 64.7 | 1.77 |
-| 900 m | 10 | 1,460 | 1.73 | 1.08 | 2.9 | 66.2 | 1.62 |
-| 900 m | 14 | 2,020 | 1.54 | 0.714 | 12 | 66.8 | 1.42 |
-| 900 m | 18 | 2,590 | 1.34 | 0.503 | 64 | 67.2 | 1.20 |
-| 900 m | 22 | 3,150 | 1.15 | 0.374 | **not enough** | 67.4 | 1.01 |
-| 1.6 km | 2 | 498 | 1.99 | 1.56 | 0.10 | 112 | 1.57 |
-| 1.6 km | 6 | 1,390 | 1.92 | 1.25 | 1.4 | 120 | 1.44 |
-| 1.6 km | 10 | 2,290 | 1.78 | 0.825 | 11 | 122 | 1.38 |
-| 1.6 km | 14 | 3,190 | 1.61 | 0.535 | 55 | 123 | 1.27 |
-| 1.6 km | 18 | 4,080 | 1.43 | 0.373 | **not enough** | 123 | 1.11 |
-| 1.6 km | 22 | 4,980 | 1.25 | 0.275 | **not enough** | 123 | 0.944 |
+| 900 m | 2 | 332 | 1.99 | 1.81 | 0.10 | 58.1 | 1.82 |
+| 900 m | 6 | 895 | 1.90 | 1.60 | 0.43 | 64.6 | 1.78 |
+| 900 m | 10 | 1,460 | 1.73 | 1.09 | 2.9 | 66.0 | 1.62 |
+| 900 m | 14 | 2,020 | 1.54 | 0.716 | 12 | 66.7 | 1.42 |
+| 900 m | 18 | 2,590 | 1.34 | 0.504 | 63 | 67.1 | 1.20 |
+| 900 m | 22 | 3,150 | 1.15 | 0.374 | **not enough** | 67.3 | 1.01 |
+| 1.6 km | 2 | 498 | 1.99 | 1.57 | 0.10 | 112 | 1.58 |
+| 1.6 km | 6 | 1,390 | 1.92 | 1.26 | 1.4 | 120 | 1.45 |
+| 1.6 km | 10 | 2,290 | 1.78 | 0.827 | 11 | 121 | 1.39 |
+| 1.6 km | 14 | 3,190 | 1.61 | 0.536 | 53 | 122 | 1.27 |
+| 1.6 km | 18 | 4,080 | 1.43 | 0.374 | **not enough** | 123 | 1.11 |
+| 1.6 km | 22 | 4,980 | 1.25 | 0.275 | **not enough** | 123 | 0.945 |
 
 ## Rim links: what they must resist
 
@@ -51,10 +51,10 @@ Lowest forward whirl over the spin with the links' tilt stiffness as taken above
 
 | Torus | Tori | Design stiffness (N/m) | Tilt k r²/2 | No tilt stiffness | Lattice's tilt |
 |---|---|---|---|---|---|
-| 900 m | 2 | 7.2e+08 | 1.77 | 1.77 | 1.77 |
-| 900 m | 6 | 8.1e+09 | 1.57 | 1.56 | 1.57 |
-| 1.6 km | 2 | 9.6e+08 | 1.53 | 1.53 | 1.53 |
-| 1.6 km | 6 | 9.8e+09 | 1.23 | 1.23 | 1.23 |
+| 900 m | 2 | 7.3e+08 | 1.77 | 1.77 | 1.77 |
+| 900 m | 6 | 8.3e+09 | 1.57 | 1.57 | 1.57 |
+| 1.6 km | 2 | 9.7e+08 | 1.54 | 1.54 | 1.54 |
+| 1.6 km | 6 | 1.0e+10 | 1.24 | 1.23 | 1.24 |
 
 ## The lattice
 
@@ -62,17 +62,17 @@ A ring of X-braced bays across each gap at the envelopes' closest approach (r �
 
 | Torus | Tori | Bays | Strut (cm², diameter) | Set by | Mass per gap (t) | Share of a torus | Gap blocked | Forward whirl / spin | Ties needed for 1.2 |
 |---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 548 | 45 (17 cm) | buckling | 550 | 0.004% | 4.8% | 1.80 | none |
-| 900 m | 6 | 548 | 59 (19 cm) | buckling | 720 | 0.006% | 5.5% | 1.58 | none |
-| 1.6 km | 2 | 974 | 60 (20 cm) | buckling | 1,300 | 0.003% | 5.5% | 1.56 | none |
-| 1.6 km | 6 | 974 | 78 (22 cm) | buckling | 1,700 | 0.004% | 6.3% | 1.25 | 0.004% (1,700 t) |
+| 900 m | 2 | 548 | 45 (17 cm) | buckling | 550 | 0.004% | 4.8% | 1.81 | none |
+| 900 m | 6 | 548 | 59 (19 cm) | buckling | 720 | 0.006% | 5.5% | 1.59 | none |
+| 1.6 km | 2 | 974 | 60 (20 cm) | buckling | 1,300 | 0.003% | 5.5% | 1.57 | none |
+| 1.6 km | 6 | 974 | 78 (22 cm) | buckling | 1,700 | 0.004% | 6.3% | 1.25 | 0.004% (1,500 t) |
 
 **Imposed motions** between neighbours. Along the axis the lattice is far stiffer than the nets (`structure_model/hub.py`, inclined lines included), so the tori follow the lattice and the nets take the difference.
 
 | Torus | Hub 20 K warmer over a pitch | One rim 4 K warmer | Struts 100 K colder |
 |---|---|---|---|
-| 900 m | 1.9 cm, 0.23 MN | 4.2 cm, hoop 9.6 MPa | gap closes 2.4 cm, 0.28 MN |
-| 1.6 km | 3.0 cm, 0.63 MN | 7.4 cm, hoop 9.6 MPa | gap closes 2.4 cm, 0.51 MN |
+| 900 m | 1.9 cm, 1.3 MN | 4.2 cm, hoop 9.6 MPa | gap closes 2.4 cm, 1.6 MN |
+| 1.6 km | 3.0 cm, 5.3 MN | 7.4 cm, hoop 9.6 MPa | gap closes 2.4 cm, 4.3 MN |
 
 ## Disturbances
 
@@ -80,10 +80,10 @@ The stack with the lattice and ties above (`dynamics_model/disturbances.py`). Ri
 
 | Torus | Tori | Train at 20 m/s: link force | Train: torus moves | Imbalance: link force | Imbalance: torus moves | Imbalance: dock moves | Docking: link force (peak) | Docking: axis turned | Docking: decay (×1/e) |
 |---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 0.15 MN | 1.6 mm | 31 MN | 20 cm | 18 cm | 0.18 MN | 0.0000022° | 6.5 h |
-| 900 m | 6 | 0.24 MN | 0.59 mm | 52 MN | 7.9 cm | 3.7 cm | 0.30 MN | 0.0000022° | 2.3 h |
-| 1.6 km | 2 | 0.17 MN | 0.87 mm | 97 MN | 34 cm | 27 cm | 0.085 MN | 0.00000045° | 53 h |
-| 1.6 km | 6 | 0.28 MN | 0.31 mm | 160 MN | 12 cm | 2.6 cm | 0.47 MN | 0.00000044° | 13 h |
+| 900 m | 2 | 0.15 MN | 1.6 mm | 31 MN | 21 cm | 18 cm | 0.19 MN | 0.0000022° | 6.0 h |
+| 900 m | 6 | 0.24 MN | 0.59 mm | 52 MN | 7.9 cm | 3.8 cm | 0.30 MN | 0.0000022° | 2.2 h |
+| 1.6 km | 2 | 0.17 MN | 0.87 mm | 97 MN | 34 cm | 27 cm | 0.085 MN | 0.00000045° | 51 h |
+| 1.6 km | 6 | 0.28 MN | 0.31 mm | 160 MN | 12 cm | 2.8 cm | 0.47 MN | 0.00000044° | 13 h |
 
 **Slow torques.** Sunlight on the despun array (pushed ×1.30 its absorbed value, the mast 100 m beyond the stack) and on the rims edge-on, about the centre of mass: it turns the axis sideways at τ/H, but the torque turns with the Sun and falls as 1/d², so by Kepler's second law it sums to zero over every orbit, eccentric or not: the axis only wobbles (at 1 AU, and on Eros's orbit, a = 1.458 AU, e = 0.223). The despun array's bearing (friction Q = 10.0 kN·m, a guess): its friction and the drive holding the array facing the Sun both act between array and hub, and the drive must cancel the friction on the array, so its reaction cancels the friction on the hub. Compensated, the stack keeps its spin and the friction only costs the drive's power, Qω, as heat. Uncompensated (drive off, or the bearing seized), friction drags the array up to the spin, and the stack gives up the array's share of the spin once.
 
@@ -102,21 +102,21 @@ The hub is a short, wide tube (radius ~60 m), so its shear flexibility counts: e
 
 | Torus | Tori | Margin, no shear | With shear | Joint needed (N·m/rad) | One pitch of hub (EI/p) | Bolted flange | Margin with flanges | Flange: preload / load |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 1.80 | 1.80 | 2.5e+12 | 3.5e+13 | 5.8e+15 | 1.80 | 387× |
-| 900 m | 6 | 1.61 | 1.58 | 1.4e+14 | 3.5e+13 | 5.8e+15 | 1.58 | 92.2× |
-| 1.6 km | 2 | 1.57 | 1.56 | 8.7e+12 | 1.3e+14 | 3.2e+16 | 1.56 | 196× |
-| 1.6 km | 6 | 1.28 | 1.25 | 5.8e+14 | 1.3e+14 | 3.2e+16 | 1.25 | 28.0× |
+| 900 m | 2 | 1.81 | 1.81 | 2.5e+12 | 3.5e+13 | 5.8e+15 | 1.81 | 388× |
+| 900 m | 6 | 1.61 | 1.59 | 1.4e+14 | 3.5e+13 | 5.8e+15 | 1.59 | 92.7× |
+| 1.6 km | 2 | 1.57 | 1.57 | 8.8e+12 | 1.3e+14 | 3.2e+16 | 1.57 | 197× |
+| 1.6 km | 6 | 1.29 | 1.25 | 5.9e+14 | 1.3e+14 | 3.2e+16 | 1.25 | 28.4× |
 
 ## Along and about the axis
 
-Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would pump any mode near the spin. Requirement: no mode between 1/1.40 and 1.40× the spin; modes well below or above are left alone. As built, two sit in that band. The farm rings bounce along the axis at ~1.04–1.09× the spin: their radial spokes hold them along it only by their tension, giving ~ω√(r_f/L) whatever the ring's size or mass (the tori had the same weakness in their nets, fixed with inclined lines, plan §2, and are now also tied by the lattice). And the hub twists between the tori's nets and the farm spokes at ~1.05–1.3×. Fixes, the least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial seen along the axis), and a small share of the tori's stabilising lines laced tangentially at 45.0°. The slower twists (the farm rings on their spokes, ~0.45×, and the farm section with the hub against the tori, ~0.2–0.35×) stay well below the spin. Loads on the fixed stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
+Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would pump any mode near the spin. Requirement: no mode between 1/1.40 and 1.40× the spin; modes well below or above are left alone. As built, one sits in that band: the farm rings bounce along the axis at ~1.1× the spin, their radial spokes holding them along it only by their tension, ~ω√(r_f/L) whatever the ring's size or mass. The tori don't: their stabilising lines, installed snug at rest and holding back the chords' bow (`structure_model/hub.py`, review of #18), carry ~50× the earlier preload, and their geometric stiffness holds each torus along the axis at ~4× the spin and the hub in torsion well above the band (~4.2–4.4×), with no lacing (lines laced tangentially at 45.0° would add to it; the search finds none needed). Fix, the least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial seen along the axis). The slower twists (the farm rings on their spokes and the farm section with the hub against the tori, ~0.43–0.45×) stay below the band. the spin. Loads on the fixed stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
 
 | Torus | Tori | Axial near the spin, as built | Torsion near the spin, as built | Farm spokes crossed | Lines laced | Extra steel (t per stack) | Axial: lowest above the band | Torsion: lowest above the band | Torsion below the band | Docking: largest force | Braking: torque on a lattice |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m | 2 | 1.05–1.09 | 1.28 | 15% | 0.07% | 2.3 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 41 MN·m |
-| 900 m | 6 | 1.05–1.09 | 1.28 | 15% | 0.07% | 7.1 | 1.40 | 1.40 | 0.25, 0.45 | 0.17 MN | 67 MN·m |
-| 1.6 km | 2 | 1.04–1.09 | 1.05 | 30% | 0.22% | 27 | 1.40 | 1.40 | 0.34, 0.45 | 0.22 MN | 74 MN·m |
-| 1.6 km | 6 | 1.04–1.09 | 1.05 | 32% | 0.22% | 83 | 1.40 | 1.40 | 0.34, 0.45 | 0.25 MN | 120 MN·m |
+| 900 m | 2 | 1.09–1.09 | none | 10% | 0.00% | 1.6 | 1.40 | 4.42 | 0.43, 0.45 | 0.17 MN | 41 MN·m |
+| 900 m | 6 | 1.09–1.09 | none | 10% | 0.00% | 4.7 | 1.40 | 4.36 | 0.43, 0.45 | 0.17 MN | 66 MN·m |
+| 1.6 km | 2 | 1.08–1.09 | none | 10% | 0.00% | 8.6 | 1.40 | 4.40 | 0.44, 0.45 | 0.26 MN | 74 MN·m |
+| 1.6 km | 6 | 1.08–1.09 | none | 10% | 0.00% | 26 | 1.40 | 4.23 | 0.43, 0.45 | 0.27 MN | 120 MN·m |
 
 ## Building and losing a lattice
 
@@ -124,33 +124,33 @@ The stack's margin with one gap unlinked: a torus just closed next to the stack,
 
 | Torus | Tori | All linked | End gap unlinked | Worst gap unlinked | Grows ×e (1% damping) | Bays needed in that gap |
 |---|---|---|---|---|---|---|
-| 900 m | 2 | 1.80 | 0.521 | 0.521 (gap 1) | 2.3 h | 5 of 548 (0.8%) |
-| 900 m | 6 | 1.58 | 0.585 | 0.398 (gap 3) | 2.3 h | 15 of 548 (2.6%) |
-| 1.6 km | 2 | 1.56 | 0.505 | 0.505 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
-| 1.6 km | 6 | 1.25 | 0.532 | 0.365 (gap 3) | 3.1 h | 50 of 974 (5.1%) |
+| 900 m | 2 | 1.81 | 0.524 | 0.524 (gap 1) | 2.3 h | 5 of 548 (0.8%) |
+| 900 m | 6 | 1.59 | 0.588 | 0.400 (gap 3) | 2.3 h | 15 of 548 (2.6%) |
+| 1.6 km | 2 | 1.57 | 0.507 | 0.507 (gap 1) | 3.1 h | 7 of 974 (0.7%) |
+| 1.6 km | 6 | 1.25 | 0.534 | 0.366 (gap 3) | 3.1 h | 47 of 974 (4.8%) |
 
-**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, so the margin only falls as the stack spins up: full spin, checked above, is the worst case for whirl. Whirl only, at selected rates, the nets' stiffness scaled with the spin load; the spin-up's torque, the cables taking up tension and the fill's settling are not modelled.
+**Built at rest, spun up together** (the baseline for a child): the finished, linked stack at each share of its final spin rate. The nets' and farm spokes' centring goes with the spin load, so its ratio to the centrifugal pull holds; the hub, lattice and ties are elastic, relatively stiffer at low spin, so the margin only falls as the stack spins up: full spin, checked above, is the worst case for whirl. Whirl only, at selected rates, the nets' stiffness scaled with the spin load (their pretension at rest left out, which only adds to it); the ring's own statics through the spin-up, its torque and the fill's settling are in `reports/structure.md`.
 
 | Torus | Tori | 10% of the spin | 25% of the spin | 50% of the spin | 75% of the spin | 100% of the spin |
 |---|---|---|---|---|---|---|
-| 900 m | 2 | 1.99 | 1.99 | 1.98 | 1.94 | 1.80 |
-| 900 m | 6 | 1.90 | 1.89 | 1.87 | 1.76 | 1.58 |
-| 1.6 km | 2 | 1.99 | 1.99 | 1.88 | 1.66 | 1.56 |
-| 1.6 km | 6 | 1.91 | 1.90 | 1.67 | 1.40 | 1.25 |
+| 900 m | 2 | 1.99 | 1.99 | 1.98 | 1.94 | 1.81 |
+| 900 m | 6 | 1.90 | 1.89 | 1.87 | 1.77 | 1.59 |
+| 1.6 km | 2 | 1.99 | 1.99 | 1.88 | 1.67 | 1.57 |
+| 1.6 km | 6 | 1.91 | 1.90 | 1.67 | 1.41 | 1.25 |
 
 **While a torus is hung** at the end of a spinning stack (the option for growing a living stack) (the stack keeps its spin), that torus a partial ring in two opposite pairs of arcs at right angles, held on the hub by its nets (in proportion to its chords) and by the temporary radial lines to its arcs' single-laced anchors (`structure_model/sequence.py`), and linked to its neighbour by the lattice's bays alongside its arcs (in proportion), or not. Lowest forward whirl over the spin:
 
 | Torus | Tori | Share of the ring hung | Unlinked, no radial lines | Unlinked, radial lines | Linked as hung, no radial lines | Linked as hung, radial lines |
 |---|---|---|---|---|---|---|
-| 900 m | 2 | 25% | 0.568 | 1.34 | 1.23 | 1.99 |
-| 900 m | 2 | 50% | 0.533 | 1.12 | 1.48 | 1.99 |
-| 900 m | 2 | 95% | 0.521 | 0.879 | 1.77 | 1.99 |
-| 900 m | 6 | 25% | 0.707 | 1.11 | 1.32 | 1.88 |
-| 900 m | 6 | 50% | 0.651 | 0.967 | 1.43 | 1.87 |
-| 900 m | 6 | 95% | 0.590 | 0.770 | 1.57 | 1.86 |
-| 1.6 km | 6 | 25% | 0.639 | 0.958 | 1.04 | 1.84 |
-| 1.6 km | 6 | 50% | 0.589 | 0.858 | 1.12 | 1.85 |
-| 1.6 km | 6 | 95% | 0.536 | 0.698 | 1.24 | 1.82 |
+| 900 m | 2 | 25% | 0.570 | 1.35 | 1.23 | 1.99 |
+| 900 m | 2 | 50% | 0.536 | 1.12 | 1.48 | 1.99 |
+| 900 m | 2 | 95% | 0.524 | 0.883 | 1.78 | 1.99 |
+| 900 m | 6 | 25% | 0.710 | 1.12 | 1.33 | 1.88 |
+| 900 m | 6 | 50% | 0.655 | 0.971 | 1.43 | 1.87 |
+| 900 m | 6 | 95% | 0.593 | 0.773 | 1.57 | 1.86 |
+| 1.6 km | 6 | 25% | 0.642 | 0.961 | 1.04 | 1.84 |
+| 1.6 km | 6 | 50% | 0.592 | 0.862 | 1.12 | 1.85 |
+| 1.6 km | 6 | 95% | 0.539 | 0.701 | 1.24 | 1.82 |
 
 ## Fittings and tunnels
 
@@ -170,10 +170,10 @@ Load cycles over 100 years (`dynamics_model/fatigue.py`): rim trains (one cycle 
 | Torus | Tori | Part | Largest range ×1.35 (MPa) | Cut-off (MPa) | Damage (Miner) |
 |---|---|---|---|---|---|
 | 900 m | 6 | lattice struts | 13 | 29 | 0 |
-| 900 m | 6 | hub wall | 0.54 | 29 | 0 |
-| 900 m | 6 | stabilising lines | 9.6 | 65 | 0 |
+| 900 m | 6 | hub wall | 0.53 | 29 | 0 |
+| 900 m | 6 | stabilising lines | 5.7 | 65 | 0 |
 | 1.6 km | 6 | lattice struts | 13 | 29 | 0 |
-| 1.6 km | 6 | hub wall | 1.8 | 29 | 0 |
-| 1.6 km | 6 | stabilising lines | 8.7 | 65 | 0 |
+| 1.6 km | 6 | hub wall | 1.7 | 29 | 0 |
+| 1.6 km | 6 | stabilising lines | 5.0 | 65 | 0 |
 
 Not modelled: the elevator, pipe and power shafts, the fittings' local details in the jacket, the bellows' own design.
