@@ -160,7 +160,9 @@ Check the design's load-bearing assumptions with models before going deeper. The
   - done: a Lambert solver (`logistics_model/transfers.py`) on JPL's current elements reproduces the notes' best-phase Δv within ~0.1 km/s; dated windows (`windows.py`) on JPL Horizons' ephemerides for 2027–2077 (`ephemeris.py`, stored in `logistics_model/data/`) confirm the notes' dated values within ~0.1 km/s (Ryugu → Eros 4.66 km/s in 2031, best 4.52 in 2061), with usable windows on average every ~2–7 years but clustered, gaps up to ~20 years (Ryugu → Eros, 2036–2056) setting the stock to hold; propulsion options by energy and propellant (`propulsion.py`)
   - found: the electricity per kg delivered is lowest at vₑ ≈ Δv / 1.59 (~3 km/s): mass-driver freighters using the C-type's baked residue need ~3.7× less than electric thrusters at 30 km/s (proposed)
   - found: a catalogue search (`catalogue.py`, 365 dark or C-complex near-Earth asteroids) finds better partners than Ryugu: 1999 XX262 for Eros (~3.6 km/s phase-free, ~1.5 km) and 2001 WT1 for Itokawa and Torifune (~3.9 / ~2.8 km/s); 1999 XX262 is already a B/Ch type in published spectra (SsODNet); next its 3 µm band (water, ammonium), and a spectrum of 2001 WT1
-  - open: low-thrust and multi-revolution trajectories, gravity assists, a dated shipping schedule (stock against off-window departures and their Δv), the freighters' mass and power, ranking S-type hosts by orbit and metal class
+  - done, first finite-thrust study (`low_thrust.py`, `shipping.py`, `shipping_study.py`, `reports/shipping-schedule.md`): power-limited, variable-mass, Sun-gravity trajectories to integrated Horizons endpoints, independently propagated before acceptance; outbound and empty return legs, local refuelling at both ends, integer fleet allocation, dated delivery stocks and continuous construction demand. Electric propulsion and a hypothetical onboard residue mass driver are separate scenarios. A sparse menu of dates and guessed vehicle mass/power are used, not an optimised regular service.
+  - done: the host–supplier network screen and evidence audit (`reports/asteroid-networks.md`, `reports/asteroid-evidence.md`), including orbit, sunlight, conditional metal inventories, dated impulsive routes and supplier uncertainty
+  - open: a sourced freighter/array/tank mass and power budget, propellant production and cargo throughput at both ends, reserves/failures, denser searches including off-window and multi-revolution families, planetary perturbations/gravity assists, and a coupled shipping/construction/resource schedule beyond the finite study horizon
 
 **Changes the design if:** shipping dominates the generation time enough to favour a different C-type partner, local water, or a different propulsion.
 
@@ -217,4 +219,3 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] Magnetic separation of free metal from L and LL chondrite material (meteorites or simulant)
 - [ ] Partial-gravity health data (spaceflight, centrifuge studies)
 - [ ] Growth chambers on 1.05–1.8-year cycles for candidate species
-
