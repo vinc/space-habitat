@@ -3,6 +3,7 @@ import {
   farmRadiatorBounds,
   valleyPoint,
   frameBounds,
+  depthRange,
 } from "./scene-layout.js";
 import * as THREE from "three";
 import { SVGRenderer } from "three/addons/renderers/SVGRenderer.js";
@@ -230,7 +231,11 @@ let renderer,
   software = false,
   dirty = true;
 try {
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+    logarithmicDepthBuffer: true,
+  });
 } catch {
   renderer = new SVGRenderer();
   software = true;
@@ -780,6 +785,26 @@ function fit() {
   dirty = true;
 }
 
+// Tighten the clipping range as the camera orbits/zooms. Log depth also
+// preserves small separations when a camera is inside the scene bounds.
+function updateClipping() {
+  if (!current) return;
+  assembly.updateMatrixWorld(true);
+  stationary.updateMatrixWorld(true);
+  const box = new THREE.Box3()
+    .setFromObject(assembly)
+    .union(new THREE.Box3().setFromObject(stationary));
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  const range = depthRange(
+    camera.position.distanceTo(sphere.center),
+    sphere.radius,
+  );
+  if (camera.near !== range.near || camera.far !== range.far) {
+    camera.near = range.near;
+    camera.far = range.far;
+    camera.updateProjectionMatrix();
+  }
+}
 new ResizeObserver(() => {
   const w = viewport.clientWidth,
     h = viewport.clientHeight;
@@ -804,6 +829,7 @@ function animate(now) {
   }
   controls.update();
   if (dirty) {
+    updateClipping();
     renderer.render(scene, camera);
     dirty = false;
   }

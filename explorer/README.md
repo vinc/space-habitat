@@ -41,3 +41,5 @@ node --check explorer/app.js
 node --test explorer/test_scene.js
 python -m unittest discover -s tests -p 'test_explorer.py'
 ```
+
+Rendering uses logarithmic depth in WebGL and adapts camera clipping to the visible scene bounds during orbit and zoom. This prevents distant, closely spaced farm panels and walls from competing in the depth buffer. The one-metre radiator clearance remains geometric; depth precision is handled separately.

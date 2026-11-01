@@ -5,6 +5,7 @@ import {
   farmRadiatorBounds,
   valleyPoint,
   frameBounds,
+  depthRange,
 } from "./scene-layout.js";
 
 test("solar normal faces the Sun and is perpendicular to spin axis", () => {
@@ -64,4 +65,14 @@ test("axial fit remains finite", () => {
   const f = frameBounds([-1, -1, -1], [1, 1, 5], [0, 0, 1], 1, 38);
   assert.ok(Number.isFinite(f.distance));
   assert.deepEqual(f.centre, [0, 0, 2]);
+});
+
+test("overview depth range preserves nearby surfaces without clipping the scene", () => {
+  const { near, far } = depthRange(6000, 2200);
+  assert.ok(near > 100);
+  assert.ok(near < 6000 - 2200);
+  assert.ok(far > 6000 + 2200);
+  const inside = depthRange(10, 2000);
+  assert.equal(inside.near, 0.05);
+  assert.ok(inside.far > 2010);
 });

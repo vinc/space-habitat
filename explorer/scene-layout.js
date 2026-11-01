@@ -50,3 +50,10 @@ export function frameBounds(min, max, direction, aspect, fov) {
       }
   return { centre, distance: distance * 1.12 };
 }
+
+export function depthRange(distance, radius) {
+  return {
+    near: Math.max(0.05, (distance - radius) * 0.25),
+    far: Math.max(100, (distance + radius) * 1.25),
+  };
+}
