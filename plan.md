@@ -172,11 +172,19 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Why sixth:** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~5.2× margin in the drum and ~5.0× in the farm section at once with LEDs (~2.4× / ~2.5× with sulfur lamps; ~1.3× with the farm rings in the tori's planes). With LEDs, heat no longer limits the stack (40 tori or more cooled; with sulfur lamps ~16–18, just below stability's ~22).
+**Adopted, 1 Nov 2026:** passive inboard radiators in both sections. No outboard farm radiators or farm heat-rejection pumps. The LED study gives ~1.8× farm margin for a 900 m six-stack with two tiers lit, ~1.3× with three, and ~1.2× at 1.6 km with three. The lower three-tier margin is accepted instead of the former 1.5× target.
+
+- [ ] Size the inboard panel coverage and farm thermosiphon pipes, losses and startup.
+- [ ] Sweep maximum stack length for the inboard layout. The earlier 40-torus result belongs to outboard radiators.
+- [ ] Recheck sunlight and detailed shading for the adopted panel layout.
+
+The completed work below records the earlier comparisons, not the adopted baseline. Its outboard pump loads, panel areas and maximum stack counts must not be reused for inboard cooling.
+
+**Earlier outboard study (historical comparison):** a preliminary radiative exchange model now exists (below). With the farm rings in their own section, the tori's drum carries only the valleys' heat: traced together as one scene, a 900 m six-stack with three tiers lit keeps ~5.2× margin in the drum and ~5.0× in the farm section at once with LEDs (~2.4× / ~2.5× with sulfur lamps; ~1.3× with the farm rings in the tori's planes). With LEDs, heat no longer limits the stack (40 tori or more cooled; with sulfur lamps ~16–18, just below stability's ~22).
 
 - [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
 - [x] Farm section's radiators: reach, layout, and how much of the drum's farm end they may shade (`thermal_model/layout.py`, `reports/heat_rejection.md`)
-  - found: outboard of the farm rings (the baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.3× with three tiers lit; ~0.5–0.75× with sulfur lamps). Baseline: outboard pumped, with the inboard passive set as fallback; inboard alone now possible
+  - found: outboard of the farm rings (the former baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.3× with three tiers lit; ~0.5–0.75× with sulfur lamps). Former baseline: outboard pumped with passive fallback; superseded by inboard-only cooling above
   - found: reach ~0.45–0.5 r for 1.5× (six-stack, three tiers lit; ~0.75 r with sulfur lamps); at most ~9 + ~11 ha of panels per 900 m torus at 1.5× (~27 + ~42 with sulfur lamps)
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
   - done: end openings, gap vents, farm rings and their radiators, the whole stack as one scene (`habitat_model/cavity.py`); open: the spokes and cables, the envelopes' rounded inner faces
@@ -187,7 +195,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 **Changes the design if:** the end openings carry much less than ~1.6 GW for a 900 m stack, or six-stacks with two or three tiers lit don't fit.
 
-**Status:** six-stacks with three tiers lit fit easily with LEDs (~5.0–5.2× in both sections), the farm radiators reaching ~0.5 r or more; the valleys' loops are passive, the farm's pumped with a passive fallback that now carries every tier (`reports/heat_rejection.md`). Open: the spokes and the envelopes' faces in the ray tracing, freezing at low load, hardware.
+**Earlier outboard status (superseded):** six-stacks with three tiers lit fit easily with LEDs (~5.0–5.2× in both sections), the farm radiators reaching ~0.5 r or more; the valleys' loops are passive, the farm's pumped with a passive fallback that now carries every tier (`reports/heat_rejection.md`). Open: the spokes and the envelopes' faces in the ray tracing, freezing at low load, hardware.
 
 ---
 
