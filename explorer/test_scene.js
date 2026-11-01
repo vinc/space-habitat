@@ -10,9 +10,9 @@ test("solar normal faces the Sun and is perpendicular to spin axis", () => {
   );
   assert.equal(p.normal[2], 0);
   assert.ok(Math.abs(p.side ** 2 - 3e6) < 1e-6);
-  assert.ok(p.z + p.side / 2 < -900 / 2);
+  assert.ok(p.z - p.side / 2 > 900 / 2);
 });
-test("farm panels stay on the selected side of the farm envelope", () => {
+test("farm panels stay between hub and farm ring", () => {
   const g = {
     hub_radius: 60,
     farm_radius: 360,
@@ -20,9 +20,4 @@ test("farm panels stay on the selected side of the farm envelope", () => {
     farm_radiator_outer: 900,
   };
   assert.deepEqual(farmRadiatorBounds(g, "inboard"), [[60, 355.75]]);
-  assert.deepEqual(farmRadiatorBounds(g, "outboard"), [[364.25, 900]]);
-  assert.deepEqual(farmRadiatorBounds(g, "both"), [
-    [60, 355.75],
-    [364.25, 900],
-  ]);
 });

@@ -81,16 +81,10 @@
             ><label><input id="spin" type="checkbox" /> Rotate</label
             ><button id="fit">Fit view</button>
           </div>
-          <label for="farm-layout">Farm radiator layout</label>
-          <select id="farm-layout">
-            <option value="outboard">Outboard · pumped baseline</option>
-            <option value="inboard">Inboard · passive alternative</option>
-            <option value="both">Both · pumped + passive fallback</option>
-          </select>
+          <input id="farm-layout" type="hidden" value="inboard" />
           <p class="model-note">
-            Layout changes the drawing only. Inboard cooling is passive;
-            outboard cooling requires pumps. Panel coverage and thermal margins
-            are not recalculated here.
+            Farm radiators: inboard and passive. No outboard cooling panels or
+            pumps. Panel coverage and thermal margins are not recalculated here.
           </p>
           <p id="scene-note">
             Drag to orbit · Scroll to zoom · Dimensions in metres

@@ -30,7 +30,6 @@ const advanced = [
   ["shield_areal_t_m2", "Shield areal density", "t/m²", 0.5],
   ["fill_depth_m", "Floor fill depth", "m", 0.1],
   ["pressure_kpa", "Valley pressure", "kPa", 1],
-  ["farm_radiator_outer_frac", "Farm radiator reach", "× radius", 0.05],
   ["factory_power_gw", "Factory power / stack", "GW", 0.1],
 ];
 
@@ -512,6 +511,9 @@ function rebuild() {
       materials.skin,
     );
     hub.rotation.x = Math.PI / 2;
+    // Dock collar and axial approach at the end opposite the farms and array.
+    torus(g.hub_radius * 0.5, g.hub_radius * 0.08, z0 - 5, materials.skin);
+    line([0, 0, z0 - g.hub_radius * 3], [0, 0, z0 - 5], materials.brace);
   }
   let arrayZ = z0 - 100;
   extent = Math.max(g.envelope_outer, g.stack_length / 2);
@@ -536,7 +538,7 @@ function rebuild() {
       line([-side / 2, v, 0.2], [side / 2, v, 0.2], materials.line, array);
     }
     // Illustrative axial support and sunlight arrow, both despun.
-    line([0, 0, z0], [0, 0, arrayZ], materials.brace, stationary);
+    line([0, 0, -z0], [0, 0, arrayZ], materials.brace, stationary);
     const arrowZ = arrayZ + side * 0.3;
     line(
       [side * 0.6, 0, arrowZ],
@@ -560,7 +562,7 @@ function rebuild() {
   }
   $("scene-note").textContent = cut
     ? "Cutaway · Uniform jacket; schematic floor · Cable counts reduced for clarity"
-    : "Sunlight arrow: +X → −X · Spin axis: Z · Panel arrangements illustrative";
+    : "Sunlight: +X → −X · Farms + array: +Z · Dock: −Z · Layout illustrative";
   if (first) {
     fit();
     first = false;
@@ -677,8 +679,8 @@ $("design-file").addEventListener("change", async () => {
     design = data.design;
     overrides = data.overrides;
     current = data;
-    $("farm-layout").value = saved.viewer?.farm_layout ?? "outboard";
-    if (!$("farm-layout").value) $("farm-layout").value = "outboard";
+    $("farm-layout").value = "inboard";
+    if (!$("farm-layout").value) $("farm-layout").value = "inboard";
     renderInputs();
     renderStats();
     first = true;
