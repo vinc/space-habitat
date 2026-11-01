@@ -341,11 +341,13 @@ class TestDetails(unittest.TestCase):
     def test_crossing_and_lacing_clear_the_band_around_the_spin(self):
         a = at.study(self.p, self.d, self.k, tie_frac=1e-4)
         self.assertTrue(a["axial_bare_near"])
-        self.assertTrue(a["torsion_bare_near"])
+        # The stabilising lines, installed snug at rest and holding the chords' bow, keep the hub's twist
+        # above the band on their preload alone (review of #18): no lacing.
+        self.assertFalse(a["torsion_bare_near"])
         self.assertEqual(a["axial_near"], [])
         self.assertEqual(a["torsion_near"], [])
         self.assertLess(a["farm_crossed"], 0.5)
-        self.assertLess(a["nets_laced"], 0.01)
+        self.assertEqual(a["nets_laced"], 0.0)
 
     def test_crossed_farm_spokes_leave_the_twist_alone(self):
         res = evaluate(self.p, self.d)

@@ -75,7 +75,7 @@ def report(p):
             d = Design(radius_m=r, n_tori=n)
             s, info = st.build(p, d, rim_link=RIM_LINK, tie_frac=TIES)
             h, length = info["geometry"]["hub_radius"], info["geometry"]["stack_length"]
-            budget = info["hub_share"] / (2 * math.pi * h * length * p.steel_density)
+            budget = (info["hub_share"] - info["hub_ring_frames"]) / (2 * math.pi * h * length * p.steel_density)
             need = st.required(p, d, "hub_shell_m", target=TARGET, low=1e-3, high=budget, rim_link=RIM_LINK,
                                tie_frac=TIES)
             best = st.build(p, d, rim_link=RIM_LINK, tie_frac=TIES, hub_shell_m=budget)[0].forward_ratio()
@@ -189,15 +189,17 @@ def report(p):
         "dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running "
         "slightly off true is the one interface turning against the stack) would pump any mode near the spin. "
         f"Requirement: no mode between 1/{num(at.BAND)} and {num(at.BAND)}× the spin; modes well below or above "
-        "are left alone. As built, two sit in that band. The farm rings bounce along the axis at ~1.04–1.09× the "
-        "spin: their radial spokes hold them along it only by their tension, giving ~ω√(r_f/L) whatever the "
-        "ring's size or mass (the tori had the same weakness in their nets, fixed with inclined lines, plan §2, "
-        "and are now also tied by the lattice). And the hub twists between the tori's nets and the farm spokes at "
-        "~1.05–1.3×. Fixes, the least that clears the band: a share of each farm ring's spokes crossed between "
-        "its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a "
-        "bicycle wheel's; still radial seen along the axis), and a small share of the tori's stabilising lines "
-        f"laced tangentially at {num(math.degrees(at.NET_LACING_ANGLE))}°. The slower twists (the farm rings on "
-        "their spokes, ~0.45×, and the farm section with the hub against the tori, ~0.2–0.35×) stay well below "
+        "are left alone. As built, one sits in that band: the farm rings bounce along the axis at ~1.1× the "
+        "spin, their radial spokes holding them along it only by their tension, ~ω√(r_f/L) whatever the "
+        "ring's size or mass. The tori don't: their stabilising lines, installed snug at rest and holding back "
+        "the chords' bow (`structure_model/hub.py`, review of #18), carry ~50× the earlier preload, and their "
+        "geometric stiffness holds each torus along the axis at ~4× the spin and the hub in torsion well above "
+        "the band (~4.2–4.4×), with no lacing (lines laced tangentially at "
+        f"{num(math.degrees(at.NET_LACING_ANGLE))}° would add to it; the search finds none needed). Fix, the "
+        "least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the "
+        "front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial "
+        "seen along the axis). The slower twists (the farm rings on their spokes and the farm section with the "
+        "hub against the tori, ~0.43–0.45×) stay below the band. "
         f"the spin. Loads on the fixed stack: a {num(ds.SHIP_MASS / 1e6)} kt ship closing at 0.1 m/s, taken out "
         f"over {num(at.BUFFER)} s by the dock's buffers; a 50 t rim train braking at 0.1 g.",
         table(["Torus", "Tori", "Axial near the spin, as built", "Torsion near the spin, as built",

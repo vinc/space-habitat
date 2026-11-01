@@ -87,7 +87,8 @@ class TestTorqueAndFill(unittest.TestCase):
     def test_angular_acceleration_is_negligible(self):
         t = rest.torque(self.p, 900)
         self.assertLess(t["rim_ratio"], 1e-5)
-        self.assertLess(t["laced_force"], 0.1 * t["line_capacity"])
+        self.assertLess(t["hub_twist_rest"], 0.01)
+        self.assertLess(t["line_lean_rest"], 0.1)
         self.assertLess(rest.farm_twist(t, 0.02)["rest"], 0.01)
         self.assertLess(t["options"]["rock mass driver"]["energy"], t["options"]["water thrusters"]["energy"])
 

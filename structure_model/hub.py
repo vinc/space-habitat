@@ -4,7 +4,8 @@ Each torus has two chord nets, one in each side plane of its tube (y = ±(a + t)
 mid-plane, tube_section.py). In each, the chords pass the hub tangent to a circle c = 1.1 h
 (h the hub radius), bowed outward by their own spin load, so a window of gap
 l = c + bow - h opens around the hub. Short stabilising lines run from the hub's surface to
-every chord's tangent point, preloaded so none goes slack.
+every chord's tangent point, installed snug at rest (the baseline, built at rest): holding the
+chords' bow back as the spin grows, they carry a large preload in service, so none goes slack.
 
 - A chord pulled sideways at its middle resists like a taut string: k_c = 2 T beta cot(beta L),
   with beta^2 = mu w^2 / T for its own spin load (a slightly negative foundation); ~2 T / L.
@@ -35,7 +36,8 @@ growth (an asymmetric rotor).
 
 Not modelled: the hub as a beam between tori and the stack's modes (plan §4), the elevator,
 pipe and power shafts and their compliant joints, docking loads (set by the dock's buffers),
-and torque through the lines (radial lines carry it only by their preload).
+and torque through the lines (radial lines carry it only by their preload: large in service,
+small at rest; structure_model/rest.py).
 """
 
 import math
@@ -52,6 +54,11 @@ TAUT_MARGIN = 1.5             # preload / largest swing of line tension (in serv
 E_WIRE = 200e9
 N_NETS = 2                    # chord nets per torus, one in each side plane of its tube
 INCLINED_FRAC = 0.1           # share of lines run out of the nets' planes, from the hub's mid-plane (option)
+# Lines installed snug at rest (the baseline, built at rest; structure_model/rest.py): cut to reach the
+# chords' tangent points with no bow, then holding the bow back as the spin grows.
+REST_SHARE = 0.02             # the chords' tension at rest, share of the finished (rest.py: ~2.0-2.7%)
+DOCK_FORCE = 1e7 * 0.1 / 10.0  # N, a 10 kt ship docking at 0.1 m/s over 10 s, at the hub at rest
+PLATE_STRESS = 300e6          # Pa, the hub's ring frames at the plate stress (as tube_section)
 
 
 def chord_stiffness(tension, half_length, line_mass, omega):
@@ -97,18 +104,30 @@ def modes(mu, k_x, k_y, omega):
     return {"frequencies": freqs, "growth": growth if growth > 1e-9 * max(abs(lam)) else 0.0}
 
 
-def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
+def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2, snug_at_rest=True, rest_share=REST_SHARE):
     """The finished nets and the first arcs (build_pairs opposite pairs), for one torus and its share
     of the hub. The lines' area, preloads, stiffnesses and load cases are iterated together until
-    they agree: every line taut and within the wire stress in service and while building."""
+    they agree: every line taut and within the wire stress in service and while building.
+
+    snug_at_rest (the baseline, built at rest; review of #18): each line is cut to reach its chord's
+    tangent point at rest, where the chord has no bow, drawing it in by d0 (enough to stay taut under
+    a ship docking at rest: TAUT_MARGIN x its swing, with the chords at rest_share of their tension).
+    As the spin grows the chord bows outward and the fixed line holds the bow back: in service it
+    pulls P = k_s (bow + d0), its preload, far above the swing, and the window around the hub is
+    the tangent gap less d0 or so. The pull loads the hub's shell outward all round each net's
+    plane, carried by a ring frame there. False: lines cut to the bowed chords, preloaded
+    TAUT_MARGIN x their swing (the earlier sizing; such lines would be slack at rest)."""
     r, h, omega = geo["radius"], geo["hub_radius"], geo["omega"]
     sigma, rho = p.wire_stress_mpa * 1e6, p.steel_density
     net = cable_net.compute(r, mass["rim"], omega, h, sigma, rho, anchor_spacing=anchor_spacing)
     n = net["n_chords"]                                  # per net: each net has an anchor every spacing
     tension = net["tension_mid_uniform"] / N_NETS       # each net holds half the rim
     mu_chord = rho * net["wire_area_uniform"] / N_NETS
-    gap = net["tangent_radius"] + net["bow"] - h
+    gap_bowed = net["tangent_radius"] + net["bow"] - h
+    gap_rest = net["tangent_radius"] - h
     k_chord = chord_stiffness(tension, net["half_length"], mu_chord, omega)
+    k_chord_rest = 2 * rest_share * tension / net["half_length"]
+    swing_rest = 2 * DOCK_FORCE / (N_NETS * n)
     m_hub = p.hub_factory_metal_frac * mass["steel"]
     m_torus = mass["total"]
     mu = m_torus * m_hub / (m_torus + m_hub)
@@ -130,21 +149,28 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
     spread = alpha ** 2 / 3                             # mean sin^2 of their directions
 
     def service(area):
-        k_line = E_WIRE * area / gap
-        k_torus = N_NETS * n * series(k_chord, k_line) / 2
+        length = gap_rest if snug_at_rest else gap_bowed
+        k_line = E_WIRE * area / length
+        k_s = series(k_chord, k_line)
+        k_torus = N_NETS * n * k_s / 2
         cases = {name: two_bodies(m_torus, m_hub, k_torus, omega, ft, fh) for name, (ft, fh) in cases_in.items()}
         # Lines evenly spread: the most loaded swings by k delta = 2 F / (N n_nets).
         swing = max(2 * abs(c["force"]) / (N_NETS * n) for c in cases.values())
-        preload = TAUT_MARGIN * swing
+        if snug_at_rest:
+            d0 = TAUT_MARGIN * swing_rest / series(k_chord_rest, k_line)
+            preload = k_s * (net["bow"] + d0)
+            gap = gap_bowed - preload / k_chord        # the window: the chords drawn in by the lines
+        else:
+            d0, preload, gap = 0.0, TAUT_MARGIN * swing, gap_bowed
         return {"k_line": k_line, "k_torus": k_torus, "cases": cases, "swing": swing, "preload": preload,
-                "area": (preload + swing) / sigma}
+                "area": (preload + swing) / sigma, "d0": d0, "gap": gap}
 
     def building(pairs, area):
         """The first stage: its weak direction runs along one pair's chords. There, a second pair's
         lines resist elastically (and those of the first pair by their spread); the first pair's
         lines, across the motion, add their preload's geometric stiffness. Preload: enough for the
         stiffness margin over the pair's and hub's reduced mass, and to keep every line taut."""
-        k_s = series(k_chord_build, E_WIRE * area / gap)
+        k_s = series(k_chord_build, E_WIRE * area / gap_bowed)
         mu_b = 2 * pairs * arc_mass * m_hub / (2 * pairs * arc_mass + m_hub)
         elastic = N_NETS * n_build * k_s * (spread + (pairs - 1) * (1 - spread))
         cos_max = 1.0 if pairs > 1 else math.sin(alpha)  # the most stretched line's share of the motion
@@ -153,15 +179,15 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
         mismatch = ARC_MISMATCH * arc_mass * w_build ** 2 * r
         preload = 0.0
         for _ in range(200):
-            k_weak = elastic + perpendicular * preload / gap
+            k_weak = elastic + perpendicular * preload / gap_bowed
             res = two_bodies(2 * pairs * arc_mass, m_hub, k_weak, w_build, mismatch, 0.0)
             swing = k_s * abs(res["relative"]) * cos_max
-            stiff_need = max(0.0, (TAUT_MARGIN * mu_b * w_build ** 2 - elastic) * gap / perpendicular)
+            stiff_need = max(0.0, (TAUT_MARGIN * mu_b * w_build ** 2 - elastic) * gap_bowed / perpendicular)
             new = max(stiff_need, TAUT_MARGIN * swing)
             if abs(new - preload) <= 1e-9 * max(new, 1.0):
                 break
             preload = new
-        k_across = across + (pairs - 1) * perpendicular * preload / gap
+        k_across = across + (pairs - 1) * perpendicular * preload / gap_bowed
         mode = modes(mu_b, k_weak, k_across, w_build)
         bare = modes(mu_b, elastic, across, w_build)       # the same lines without preload
         return {
@@ -186,12 +212,14 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
             break
         area = new
     svc = service(area)
+    gap = svc["gap"]
     build = {pairs: building(pairs, area) for pairs in (1, 2)}
     k_torus = svc["k_torus"]
     natural = math.sqrt(k_torus / mu)
     mode = modes(mu, k_torus, k_torus, omega)
 
-    # Along the axis and in torsion, radial lines resist by their preload only (geometric stiffness).
+    # Along the axis and in torsion, radial lines resist by their preload only (geometric stiffness):
+    # with the lines holding the bow back, a large one.
     k_axial = N_NETS * n * svc["preload"] / gap
     # Option: a share of the lines run from the hub's mid-plane to the side nets, length
     # hypot(gap, plane offset), inclined at gamma; each holds the hub along the axis by k sin^2(gamma).
@@ -200,6 +228,8 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
     k_inclined = series(k_chord, E_WIRE * area / inclined)
     k_axial_inclined = INCLINED_FRAC * N_NETS * n * k_inclined * math.sin(gamma) ** 2
     line_mass = N_NETS * n * area * gap * rho
+    ring_force = n * svc["preload"] / (2 * math.pi)            # hoop force in each net's ring frame
+    ring_mass = N_NETS * 2 * math.pi * h * ring_force / PLATE_STRESS * rho
     return {
         "net": net, "n_lines": N_NETS * n, "gap": gap, "tension": tension, "k_chord": k_chord,
         "k_chord_string": 2 * tension / net["half_length"],
@@ -220,6 +250,8 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2):
         "cases": svc["cases"], "design_force": max(abs(c["force"]) for c in svc["cases"].values()),
         "service_swing": svc["swing"], "service_preload": svc["preload"],
         "chord_pull_in": svc["preload"] / k_chord,
-        "line_area": area, "line_mass": line_mass,
+        "line_area": area, "line_mass": line_mass, "snug_at_rest": snug_at_rest,
+        "gap_rest": gap_rest, "gap_bowed": gap_bowed, "d0": svc["d0"], "rest_share": rest_share,
+        "swing_rest": swing_rest, "ring_force": ring_force, "ring_frame_mass": ring_mass,
         "build": build, "build_pairs": build_pairs,
     }

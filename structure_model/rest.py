@@ -23,7 +23,7 @@ geometrically nonlinear model (nonlinear.py), and estimates what the ring model 
    chords whose tension and bow grow with the spin (the bow is nil at rest): a line installed snug
    at rest holds back the whole bow and is sized for it (review of #18).
 4. The spin-up torque: the angular acceleration's loads on the rims, the farm rings on their radial
-   spokes, the hub through its laced lines and the lattice, set against the spin load; the spin-up's
+   spokes, the hub through its stabilising lines' preload and the lattice, set against the spin load; the spin-up's
    propellant, energy and time; the water added last.
 5. The fill: the rock and soil, placed at rest in compartments, settle as gravity grows. Cells
    filled loose hold less rock than the design (their volume is fixed), short everywhere until
@@ -240,22 +240,23 @@ def lines(p, r, lambdas=LAMBDAS):
     point, cut to a fixed length, is stretched by whatever the chord's free position moves out, less
     what its pull draws the chord in: P = k_s (b + d0), k_s the line and chord in series (the chord's
     k = 2 T beta cot(beta L) at its current tension and spin), d0 the pull-in it is installed with at
-    rest. d0 keeps every line taut at rest under a docking ship (TAUT_MARGIN x its swing). So a
-    fixed line holds back the whole bow: at full spin it pulls ~k_s b, far above the finished
-    sizing's service preload, and the line is sized for it (the area, its stiffness and the pull
-    iterated). Alternative: lines paid out by the bow during the spin-up (winches), then locked."""
+    rest. So a fixed line holds back the whole bow: at full spin it pulls ~k_s b, far above the
+    earlier sizing's service preload (lines cut to the bowed chords, slack at rest). The hub's design
+    (structure_model.hub, snug_at_rest) sizes the lines for it, with d0 for a docking ship at rest;
+    here that design is traced from rest to full spin with the chords' tension as the ring model
+    gives it, and the earlier sizing, installed snug at rest, is checked against the same bow.
+    Alternative: lines paid out by the bow during the spin-up (winches), then locked."""
     res = evaluate(p, Design(radius_m=r, n_tori=1))
     g = res["geometry"]
-    h = hub_model.compute(p, g, res["mass"])
+    h = hub_model.compute(p, g, res["mass"])                         # the design: snug at rest
+    old = hub_model.compute(p, g, res["mass"], snug_at_rest=False)   # the earlier sizing
     tu = take_up(p, r)
-    om, sigma, rho = g["omega"], p.wire_stress_mpa * 1e6, p.steel_density
+    om, sigma = g["omega"], p.wire_stress_mpa * 1e6
     net = h["net"]
     n = net["n_chords"]
-    n_lines = hub_model.N_NETS * n
-    mu_chord = rho * net["wire_area_uniform"] / hub_model.N_NETS
-    gap_rest = net["tangent_radius"] - g["hub_radius"]           # no bow at rest
-    dock = SHIP_MASS * SHIP_CLOSING / BUFFER
-    swing_rest = 2 * dock / n_lines
+    mu_chord = p.steel_density * net["wire_area_uniform"] / hub_model.N_NETS
+    gap_rest = h["gap_rest"]
+    swing_rest = h["swing_rest"]
     swing_full = h["service_swing"]
     mu = h["reduced_mass"]
 
@@ -267,46 +268,37 @@ def lines(p, r, lambdas=LAMBDAS):
         share = tension_share(lam, tu["s0"], tu["lam_open"])
         return net["bow"] * lam / share
 
-    def run(area):
+    def run(area, d0):
         k_line = hub_model.E_WIRE * area / gap_rest
         ks = [hub_model.series(k_chord(x), k_line) for x in lambdas]
-        d0 = hub_model.TAUT_MARGIN * swing_rest / ks[0]
-        pull = [k * (bow(x) + d0) for k, x in zip(ks, lambdas)]
-        return k_line, ks, d0, pull
+        return ks, [k * (bow(x) + d0) for k, x in zip(ks, lambdas)]
 
-    # Fixed lines at the finished sizing (hub.compute), installed snug at rest.
-    _, ks_f, d0_f, pull_f = run(h["line_area"])
-    as_sized = (pull_f[-1] + swing_full) / (h["line_area"] * sigma)
-    # Sized for the bow they hold back.
-    area = h["line_area"]
-    for _ in range(100):
-        k_line, ks, d0, pull = run(area)
-        new = max(max(pull) + swing_full, max(pull[0] + swing_rest, 0.0)) / sigma
-        if abs(new - area) <= 1e-9 * new:
-            break
-        area = max(new, h["line_area"])
-    k_line, ks, d0, pull = run(area)
+    # The earlier sizing installed snug at rest (its own d0 for the docking ship).
+    k_old = hub_model.series(k_chord(0.0), hub_model.E_WIRE * old["line_area"] / gap_rest)
+    _, pull_old = run(old["line_area"], hub_model.TAUT_MARGIN * swing_rest / k_old)
+    as_sized = (pull_old[-1] + swing_full) / (old["line_area"] * sigma)
+    # The design.
+    area, d0 = h["line_area"], h["d0"]
+    ks, pull = run(area, d0)
     K = [hub_model.N_NETS * n * k / 2 for k in ks]
     margins = [K[i] / (mu * om ** 2 * x) for i, x in enumerate(lambdas) if x > 0]
     kc_full = k_chord(1.0)
     return {
         "s0": tu["s0"], "lam_open": tu["lam_open"], "bow": net["bow"], "gap_rest": gap_rest,
-        "gap_finished": h["gap"], "as_sized_ratio": as_sized, "area_finished": h["line_area"],
+        "gap_finished": old["gap"], "as_sized_ratio": as_sized, "area_finished": old["line_area"],
         "area": area, "pull_full": pull[-1], "pull_rest": pull[0], "d0": d0,
-        "service_preload": h["service_preload"],
-        "taut": min(pull) > max(swing_rest, 0.0),
+        "service_preload": old["service_preload"], "design_preload": h["service_preload"],
+        "peak_ratio": (max(pull) + swing_full) / (area * sigma),
+        "taut": pull[0] >= swing_rest and min(pull) > 0,
         # The chord drawn in by the line at full spin: the window left around the hub.
         "pull_in_full": pull[-1] / kc_full, "gap_full": gap_rest + net["bow"] - pull[-1] / kc_full,
+        "gap_design": h["gap"],
         "k_rest": K[0], "k_full": K[-1], "k_finished": h["k_torus"], "margin_min": min(margins),
         "margin_finished": h["margin"],
-        "dock_offset": dock * h["torus_mass"] / (h["torus_mass"] + h["hub_mass"]) / K[0],
+        "dock_offset": hub_model.DOCK_FORCE * h["torus_mass"] / (h["torus_mass"] + h["hub_mass"]) / K[0],
         "period_s": 2 * math.pi * math.sqrt(mu / K[0]),
-        "mass": n_lines * area * gap_rest * rho, "mass_finished": h["line_mass"],
-        # The lines pull the hub's shell outward all round each net's plane: a ring frame there carries
-        # the hoop force N P / (2 pi), sized at the plate stress (tube_section's).
-        "hub_ring_force": n * pull[-1] / (2 * math.pi),
-        "hub_ring_mass": hub_model.N_NETS * 2 * math.pi * g["hub_radius"] * (n * pull[-1] / (2 * math.pi))
-                         / (p.plate_stress_mpa * 1e6) * rho,
+        "mass": h["line_mass"], "mass_finished": old["line_mass"],
+        "hub_ring_force": h["ring_force"], "hub_ring_mass": h["ring_frame_mass"],
         "lambdas": list(lambdas), "pull": pull,
     }
 
@@ -330,10 +322,12 @@ def torque(p, r, n_tori=6, days=FAST_SPINUP_DAYS):
     spokes = at.farm_spokes(g, m)
     k_farm_full = 2 * spokes["torsion"]                                   # two planes
     hub_lines = hub_model.compute(p, g, m)
-    k_lines, _ = at.net_lacing(hub_lines, h, 0.002)
+    # The hub turned through its stabilising lines' preload (geometric, hub.k_torsion), no lacing needed
+    # with the lines installed snug at rest; at rest their preload is only the docking margin's.
+    k_lines = hub_lines["k_torsion"]
+    rest_ratio = hub_lines["swing_rest"] * hub_model.TAUT_MARGIN / hub_lines["service_preload"]
     tau_hub = (j_hub + j_farm) * alpha                                    # the hub and its farm ring via the lines
-    n_laced = 0.002 * hub_lines["n_lines"]
-    laced_force = tau_hub / (max(n_laced, 1.0) * h * math.sin(at.NET_LACING_ANGLE))
+    line_tangential = tau_hub / (hub_lines["n_lines"] * h)          # per line, at the hub's surface
     # Cost: angular momentum delivered at the torus's outer rim.
     lever = g["envelope_outer"]
     momentum = j_all * om
@@ -352,7 +346,10 @@ def torque(p, r, n_tori=6, days=FAST_SPINUP_DAYS):
         "euler_equals_spin_below": math.sqrt(alpha) / om,  # spin share below which alpha r > w^2 r
         "farm_torque": j_farm * alpha, "k_farm_full": k_farm_full,
         "hub_torque": tau_hub, "k_lines": k_lines, "hub_twist": tau_hub / k_lines,
-        "laced_force": laced_force, "line_capacity": hub_lines["line_area"] * p.wire_stress_mpa * 1e6,
+        "hub_twist_rest": tau_hub / (k_lines * rest_ratio),
+        # Each line leans by its tangential share over its tension: at rest, against the docking preload.
+        "line_lean_rest": line_tangential / (hub_lines["service_preload"] * rest_ratio),
+        "line_lean_full": line_tangential / hub_lines["service_preload"],
         "mismatch_torque": THRUST_MISMATCH * j_torus * alpha,
         "lattice_force": THRUST_MISMATCH * j_torus * alpha / (r - g["tube_radius"]),   # tangential, across a gap
         "options": rows, "momentum": momentum,
