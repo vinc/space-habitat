@@ -1,3 +1,4 @@
+import { modelConfig, evaluateModel } from "./model-client.js";
 import {
   solarLayout,
   farmRadiatorBounds,
@@ -115,14 +116,8 @@ function schedule() {
 }
 async function update(id) {
   try {
-    const response = await fetch("/api/evaluate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ design, overrides }),
-    });
-    const data = await response.json();
+    const data = await evaluateModel({ design, overrides });
     if (id !== sequence) return;
-    if (!response.ok) throw new Error(data.error);
     current = data;
     $("error").textContent = "";
     document.body.classList.remove("busy");
@@ -871,17 +866,11 @@ $("design-file").addEventListener("change", async () => {
     if (file.size > 2e6) throw new Error("Design file exceeds 2 MB");
     const saved = JSON.parse(await file.text());
     if (!saved.design) throw new Error("File has no design object");
-    const response = await fetch("/api/evaluate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        design: saved.design,
-        overrides: saved.overrides ?? {},
-      }),
+    const data = await evaluateModel({
+      design: saved.design,
+      overrides: saved.overrides ?? {},
     });
-    const data = await response.json();
     if (id !== sequence) return;
-    if (!response.ok) throw new Error(data.error);
     applyColors(saved.viewer?.colors);
     renderLegend();
     design = data.design;
@@ -934,9 +923,7 @@ $("export").addEventListener("click", () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 try {
-  const response = await fetch("/api/config");
-  if (!response.ok) throw new Error("Could not load model configuration");
-  config = await response.json();
+  config = await modelConfig();
   design = { ...config.design };
   renderInputs();
   await update(++sequence);
