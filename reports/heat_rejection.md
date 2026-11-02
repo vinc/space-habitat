@@ -1,10 +1,12 @@
 # Heat rejection: radiator layout, sunlight, coolant loops and the valley's swing
 
+**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former alternative. Three-tier six-stacks accept the reported ~1.2–1.3× farm margin rather than the earlier 1.5× target. Inboard thermosiphon hardware and a new maximum-stack sweep remain open.
+
 Plan §6 (`thermal_model/`), building on the assembled radiative exchange of `habitat_model/cavity.py` (`reports/thermal.md`): radiators at ~285 K, emissivity ~0.9.
 
 ## The farm radiators: where, and how far out
 
-Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the baseline, from the rings out to ~1 r), the warm coolant must sink against spin gravity: pumped loops. **Inboard** (from the hub to the rings), it rises: passive thermosiphons, as in the main section, but the radiators then sit in the space the farm rings enclose. The whole stack traced as one scene (`habitat_model/cavity.py`), both sections' panel coverages swept on a finer grid; best margins main / farm, and the least panel area (one face, main / farm section) that keeps both at 1.5× (coverage in steps of 5%, so areas move in steps of ~25%).
+Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the former baseline, from the rings out to ~1 r), the warm coolant must sink against spin gravity: pumped loops. **Inboard** (from the hub to the rings), it rises: passive thermosiphons, as in the main section, but the radiators then sit in the space the farm rings enclose. The whole stack traced as one scene (`habitat_model/cavity.py`), both sections' panel coverages swept on a finer grid; best margins main / farm, and the least panel area (one face, main / farm section) that keeps both at 1.5× (coverage in steps of 5%, so areas move in steps of ~25%).
 
 | Stack, tiers lit | Farm radiators | Best margins, main / farm | At coverage, main / farm | Least panels for 1.5× (ha), main / farm | Tiers the passive set alone carries |
 |---|---|---|---|---|---|

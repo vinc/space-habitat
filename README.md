@@ -7,3 +7,5 @@ The repository contains design notes and numerical models covering structure, ma
 This is a vibe coding experiment: Claude Opus 5.5 generates the code and GPT 6.1 reviews it, under my direction. The models help check the assumptions, but do not prove that the design would work.
 
 See [notes.md](notes.md) for the design and [plan.md](plan.md) for the work in progress.
+
+The [3D explorer](explorer/README.md) visualises configurable stacks and calculates their geometry, mass, power and resource needs using the Python system model.

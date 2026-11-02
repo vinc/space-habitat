@@ -38,3 +38,16 @@ jobs:
           python -m ecology_model > /dev/null
           python -m optics_model > /dev/null
           python -m radiation_model > /dev/null
+
+  explorer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: explorer/package-lock.json
+      - run: npm ci --prefix explorer --ignore-scripts
+      - run: npm run --prefix explorer check
+      - run: node --test explorer/test_scene.js

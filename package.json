@@ -1,0 +1,8 @@
+{
+  "name": "space-habitat",
+  "private": true,
+  "scripts": {
+    "dev": "python3 explorer/server.py --host 0.0.0.0",
+    "check:explorer": "node --check explorer/app.js"
+  }
+}
