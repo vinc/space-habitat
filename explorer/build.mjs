@@ -39,6 +39,12 @@ for (const name of [
   "pyodide-lock.json",
 ])
   await cp(source + "node_modules/pyodide/" + name, output + "runtime/" + name);
+// Jekyll also copies explorer/package.json (type: module). Pyodide's
+// asm.js loader is CommonJS under Node; .mjs remains ESM in both runtimes.
+await writeFile(
+  output + "runtime/package.json",
+  JSON.stringify({ type: "commonjs" }) + "\n",
+);
 execFileSync(
   process.env.PYTHON ?? "python3",
   [source + "package_model.py", output + "model.zip"],

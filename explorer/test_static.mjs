@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import assert from "node:assert/strict";
 const root = fileURLToPath(new URL("../", import.meta.url));
-const built = root + "dist/explorer/";
+const built = process.env.HABITAT_STATIC_DIR ?? root + "dist/explorer/";
 const py = await loadPyodide({ indexURL: built + "runtime/" });
 py.unpackArchive(new Uint8Array(await readFile(built + "model.zip")), "zip", {
   extractDir: "/model",

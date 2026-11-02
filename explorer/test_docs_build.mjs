@@ -24,6 +24,7 @@ try {
     "reports/index.html": "Report index",
     "reports/assumptions.html": "Assumptions report",
     "explorer/README.html": "Viewer documentation",
+    "explorer/package.json": '{"type":"module"}',
   };
   for (const [path, content] of Object.entries(files))
     await writeFile(join(docs, path), content);
@@ -48,6 +49,24 @@ try {
   );
   await access(join(output, "explorer/app.js"));
   await access(join(output, "explorer/runtime/pyodide.asm.wasm"));
+  // The copied ESM package boundary must not break the CommonJS runtime.
+  assert.equal(
+    JSON.parse(
+      await readFile(join(output, "explorer/runtime/package.json"), "utf8"),
+    ).type,
+    "commonjs",
+  );
+  execFileSync(
+    process.execPath,
+    [fileURLToPath(new URL("./test_static.mjs", import.meta.url))],
+    {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        HABITAT_STATIC_DIR: join(output, "explorer") + "/",
+      },
+    },
+  );
   console.log(
     "Rendered homepage, reports and documentation survive the explorer overlay.",
   );
