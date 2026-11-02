@@ -1,6 +1,6 @@
 # Habitat explorer
 
-Local 3D interface to `habitat_model`. Uses Three.js for rendering and the existing Python calculations for all reported quantities. No formulas are reimplemented in JavaScript.
+3D interface to `habitat_model`, available locally or as a static GitHub Pages site. Uses Three.js for rendering and the existing Python calculations for all reported quantities. No formulas are reimplemented in JavaScript.
 
 From the repository root, with Python 3.11+ and Node/npm installed:
 
@@ -43,3 +43,24 @@ python -m unittest discover -s tests -p 'test_explorer.py'
 ```
 
 Rendering uses logarithmic depth in WebGL and adapts camera clipping to the visible scene bounds during orbit and zoom. This prevents distant, closely spaced farm panels and walls from competing in the depth buffer. The one-metre radiator clearance remains geometric; depth precision is handled separately.
+
+## GitHub Pages
+
+In the repository settings, select **Pages → Build and deployment → Source → GitHub Actions**. The `pages.yml` workflow builds and tests on pull requests, then builds and deploys after a push to `main` (or a manual workflow run). It first builds the existing Markdown site with GitHub’s Jekyll action, then adds the bundled explorer to that output and publishes `dist/`. The homepage, notes, plan, report index and existing report URLs such as `/space-habitat/reports/assumptions` are preserved. The explorer stays at https://vinc.github.io/space-habitat/explorer/.
+
+The build bundles Three.js, copies a pinned Pyodide runtime and packages the existing Python model with its assumptions and shared input-validation API. Calculations run in a module worker in the visitor's browser. There is no Python server on Pages, no duplicated JavaScript formulas and no runtime CDN dependency. The first visit downloads roughly 14 MB of assets, mostly Python/WebAssembly; subsequent caching depends on the host/browser.
+
+To build and test the static version from the repository root:
+
+```sh
+npm ci --prefix explorer
+npm run --prefix explorer build
+npm run --prefix explorer test:static
+python -m http.server --directory dist 8000
+```
+
+Open http://127.0.0.1:8000/explorer/. This uses browser Python; `python explorer/server.py` continues to use the native Python API for local development. All static asset and worker URLs are relative, so repository subpaths need no hard-coded base URL.
+
+The static smoke test runs the shipped model archive under WebAssembly and compares results against native Python, including unknown routes and invalid inputs. It also exercises the shipped worker's queued config/evaluation/error messages under a Node worker adapter. Browser rendering remains a separate verification step.
+
+For the full Pages build, generate the normal Jekyll site into `_site/`, then run `npm run --prefix explorer build:pages`. The explorer build overlays its assets without replacing the rendered homepage or Markdown reports. `npm run --prefix explorer test:docs` checks this preservation using a fixture; the Pages workflow also checks the actual Jekyll output.
