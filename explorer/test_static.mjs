@@ -130,3 +130,29 @@ try {
 } finally {
   await worker.terminate();
 }
+
+// The Pages job must preserve every rendered report, not just the viewer.
+try {
+  await access(root + "_site");
+  const { readdir } = await import("node:fs/promises");
+  for (const file of await readdir(root + "reports"))
+    if (file.endsWith(".md")) {
+      const rendered =
+        file === "README.md" ? "index.html" : file.replace(/\.md$/, ".html");
+      assert.equal(
+        await readFile(root + "dist/reports/" + rendered, "utf8"),
+        await readFile(root + "_site/reports/" + rendered, "utf8"),
+      );
+    }
+  assert.equal(
+    await readFile(root + "dist/index.html", "utf8"),
+    await readFile(root + "_site/index.html", "utf8"),
+  );
+  console.log("Jekyll homepage and every Markdown report preserved.");
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+  if (process.env.CI)
+    throw new Error(
+      "Expected rendered Markdown site is missing: " + error.message,
+    );
+}

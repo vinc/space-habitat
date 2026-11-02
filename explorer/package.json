@@ -6,7 +6,9 @@
     "dev": "python3 server.py --host 0.0.0.0 --port ${PORT:-3000}",
     "check": "node --check app.js",
     "build": "node build.mjs",
-    "test:static": "node test_static.mjs"
+    "test:static": "node test_static.mjs",
+    "build:pages": "node build.mjs --with-docs",
+    "test:docs": "node test_docs_build.mjs"
   },
   "dependencies": {
     "three": "0.180.0"

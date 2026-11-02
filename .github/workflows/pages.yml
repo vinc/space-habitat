@@ -1,4 +1,4 @@
-name: Build and deploy explorer
+name: Build and deploy site
 on:
   push:
     branches: [main]
@@ -22,9 +22,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      # Keep the same Markdown rendering and URLs as branch-based Pages.
+      # Run before npm install so dependencies are not copied into the site.
+      - name: Build existing Markdown site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
       - run: npm ci --prefix explorer
-      - run: npm run --prefix explorer build
+      - run: npm run --prefix explorer build:pages
       - run: npm run --prefix explorer test:static
+      - run: npm run --prefix explorer test:docs
       - uses: actions/upload-pages-artifact@v4
         if: github.event_name != 'pull_request'
         with:

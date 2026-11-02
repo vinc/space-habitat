@@ -4,8 +4,18 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const source = fileURLToPath(new URL("./", import.meta.url));
-const output = root + "dist/explorer/";
-await rm(root + "dist", { recursive: true, force: true });
+const option = (name, fallback) => {
+  const index = process.argv.indexOf(name);
+  return index < 0 ? fallback : process.argv[index + 1];
+};
+const destination = option("--outdir", root + "dist");
+const docs = option(
+  "--docs-dir",
+  process.argv.includes("--with-docs") ? root + "_site" : null,
+);
+const output = destination + "/explorer/";
+await rm(destination, { recursive: true, force: true });
+if (docs) await cp(docs, destination, { recursive: true });
 await mkdir(output + "runtime", { recursive: true });
 await build({
   entryPoints: [source + "app.js"],
@@ -34,11 +44,7 @@ execFileSync(
   [source + "package_model.py", output + "model.zip"],
   { cwd: root, stdio: "inherit" },
 );
-await writeFile(
-  root + "dist/index.html",
-  '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=./explorer/"><a href="./explorer/">Habitat explorer</a>',
-);
-await writeFile(root + "dist/.nojekyll", "");
+await writeFile(destination + "/.nojekyll", "");
 console.log(
   "Built dist/explorer with local Python runtime and relative asset URLs.",
 );
