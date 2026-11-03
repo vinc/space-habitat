@@ -21,7 +21,9 @@ it. Here, in the ring's plane and the rotating frame:
   the step cut when they fail. A stage is resolved up to the spin where equilibrium was last
   found; a mechanism shows as Newton failing at small steps, or as the displacements running off.
 
-Several opposite or crossed pairs of arcs can be hung at once (arcs given as anchor ranges).
+Several opposite or crossed pairs of arcs can be hung at once (arcs given as anchor ranges). For the
+baseline built at rest (rest.py), the joints can instead bear on stops: locked while in compression,
+sliding (on an optional spring) once they open.
 """
 
 import math
@@ -37,9 +39,15 @@ RELEASED = 1e-9                # joint stiffness (share of locked) counted as fu
 class Model:
     def __init__(self, radius, tangent_radius, rim_line_mass, rim_ea, rim_ei, chord_area, density,
                  arcs=None, anchor_spacing=10.0, segment_anchors=6, joints="locked", n_anchors=None,
-                 end_zone_factor=1.0, radial_lines=0.0, hub_radius=0.0, hub_mass=0.0, sliding_at=()):
+                 end_zone_factor=1.0, radial_lines=0.0, hub_radius=0.0, hub_mass=0.0, sliding_at=(),
+                 prestrain=PRESTRAIN, stops=False, length_errors=None, rock_lever=0.0, slide_stiffness=0.0):
         """arcs: list of (first anchor, number of anchors), anchors numbered 0..n-1 around the ring;
-        None for the whole ring. Segments are `segment_anchors` anchors long, joined at joints."""
+        None for the whole ring. Segments are `segment_anchors` anchors long, joined at joints.
+        prestrain: the chords' (and radial lines') strain as installed, before any spin. stops: the
+        joints slide along the rim but bear on stops: closed (in compression) they act locked, rocking
+        once their moment passes their compression times rock_lever; open, they slide.
+        slide_stiffness (N/m): a spring along the rim in sliding joints and in open stops (0: none).
+        length_errors: per chord, the error in its unstretched length as made (m)."""
         r = radius
         n = n_anchors or 2 * round(math.pi * r / anchor_spacing)       # even, so arcs can be opposite
         self.n_anchors, self.r = n, r
@@ -117,7 +125,10 @@ class Model:
         self.chord_areas = chord_area * factor
         self.chord_eas = E * self.chord_areas
         self.chord_mus = density * self.chord_areas
-        self.chord_l0 = np.array([np.linalg.norm(self.X[j] - self.X[i]) for i, j in chords]) / (1 + PRESTRAIN)
+        self.chord_l0 = np.array([np.linalg.norm(self.X[j] - self.X[i]) for i, j in chords]) / (1 + prestrain)
+        if length_errors is not None:
+            self.chord_l0 = self.chord_l0 + np.asarray(length_errors)
+        self.prestrain = prestrain
         self.chord_area = chord_area
         self.chord_mu = density * chord_area
         self.extra_cable_mass = float(((factor - 1) * chord_area * density * self.chord_l0).sum())
@@ -130,7 +141,7 @@ class Model:
             self.mass = np.array(mass)
             for node in sorted(single):
                 l0 = (np.linalg.norm(self.X[node]) - hub_radius)
-                self.radials.append((hub, node, l0 / (1 + PRESTRAIN), hub_radius))
+                self.radials.append((hub, node, l0 / (1 + prestrain), hub_radius))
             self.extra_cable_mass += len(self.radials) * radial_lines * chord_area * density * (r - hub_radius)
         self.radial_ea = E * radial_lines * chord_area
         self.radial_area = radial_lines * chord_area
@@ -148,6 +159,9 @@ class Model:
             "sliding": (1e-9 * k_lin, k_lin, 0.0),
         }[joints]
         self.joint_type = joints
+        self.stops = stops
+        self.rock_lever = rock_lever
+        self.slide_stiffness = slide_stiffness
         self.sliding = np.zeros(len(joint_pairs), dtype=bool)
         for ang in sliding_at:
             gaps = [abs((psi - ang + math.pi) % (2 * math.pi) - math.pi) for _, _, psi in joint_pairs]
@@ -246,27 +260,46 @@ class Model:
         for (a, b, psi), slide in zip(self.joints, self.sliding):
             kt, kn, kr = self.k_joint
             if slide:
-                kt, kr = 1e-9 * kn, 0.0
+                kt, kr = self.slide_stiffness or 1e-9 * kn, 0.0
             ang = psi + th[a]
             nrm = np.array([math.cos(ang), math.sin(ang)])
             tan = np.array([-math.sin(ang), math.cos(ang)])
             d = x[b] - x[a]
-            fa = np.zeros(2)
-            for vec, k in ((tan, kt), (nrm, kn)):
+            gap = float(d @ tan)
+            stop = self.stops and not slide
+            if stop and gap > 0:
+                kt_eff = self.slide_stiffness or 1e-9 * kn   # open: it slides along the rim, on its spring
+            else:
+                kt_eff = kt
+            for vec, k in ((tan, kt_eff), (nrm, kn)):
                 force = k * (d @ vec)
                 R[[3 * b, 3 * b + 1]] += force * vec
                 R[[3 * a, 3 * a + 1]] -= force * vec
                 kk = k * np.outer(vec, vec)
                 for p_, q_, sgn in ((b, b, 1), (a, a, 1), (a, b, -1), (b, a, -1)):
                     K[np.ix_([3 * p_, 3 * p_ + 1], [3 * q_, 3 * q_ + 1])] += sgn * kk
-            moment = kr * (th[b] - th[a])
+            rot = [3 * a + 2, 3 * b + 2]
+            m_el = kr * (th[b] - th[a])
+            if stop:
+                # Bearing on its stops, the joint rocks: its moment is at most its compression times
+                # the lever (the tube's radius), and nothing once it opens.
+                cap = self.rock_lever * kt * max(-gap, 0.0)
+                if abs(m_el) <= cap:
+                    moment, k_rot, dm_dgap = m_el, kr, 0.0
+                else:
+                    moment, k_rot = math.copysign(cap, m_el), 0.0
+                    dm_dgap = -math.copysign(self.rock_lever * kt, m_el) if gap < 0 else 0.0
+            else:
+                moment, k_rot, dm_dgap = m_el, kr, 0.0
             R[3 * b + 2] += moment
             R[3 * a + 2] -= moment
-            K[3 * b + 2, 3 * b + 2] += kr
-            K[3 * a + 2, 3 * a + 2] += kr
-            K[3 * a + 2, 3 * b + 2] -= kr
-            K[3 * b + 2, 3 * a + 2] -= kr
-            out["J"].append({"tension": kt * (d @ tan), "shear": kn * (d @ nrm), "moment": moment})
+            K[np.ix_(rot, rot)] += k_rot * np.array([[1.0, -1.0], [-1.0, 1.0]])
+            if dm_dgap:
+                # d(gap)/d(x_b) = tan, d(gap)/d(x_a) = -tan.
+                for row, sgn_r in ((3 * b + 2, 1.0), (3 * a + 2, -1.0)):
+                    K[row, [3 * b, 3 * b + 1]] += sgn_r * dm_dgap * tan
+                    K[row, [3 * a, 3 * a + 1]] -= sgn_r * dm_dgap * tan
+            out["J"].append({"tension": kt_eff * gap, "shear": kn * (d @ nrm), "moment": moment, "gap": gap})
         # Rim's centrifugal load at current positions.
         for node, m in enumerate(self.mass):
             if m:
@@ -351,7 +384,7 @@ class Model:
 
     def peak_stress(self, tensions, omega_now):
         """Largest chord stress: tension over area plus the chord's own spin load at mid-chord."""
-        length = float(self.chord_l0.mean()) * (1 + PRESTRAIN)
+        length = float(self.chord_l0.mean()) * (1 + self.prestrain)
         self_load = self.chord_mu / self.chord_area * omega_now ** 2 * (length / 2) ** 2 / 2
         return (float((tensions / self.chord_areas).max()) if len(tensions) else 0.0) + self_load
 
@@ -472,6 +505,7 @@ def for_design(p, r, arcs_fn=None, joints="locked", radial_lines=0.0, **kw):
     lam = m["rim"] / (2 * math.pi * r)
     steel_area = m["hull_frames"] / (2 * math.pi * r * p.steel_density)
     a = g["tube_radius"]
+    kw.setdefault("rock_lever", a)
     n = 2 * round(math.pi * r / net["anchor_spacing"])
     segment = max(1, round(g["width"] / (2 * math.pi * r / n)))
     arcs = arcs_fn(n, net) if arcs_fn else None

@@ -334,10 +334,42 @@ class TestHub(unittest.TestCase):
             self.assertLess(abs(out["build"][2]["offset"]), abs(out["build"][1]["offset"]))
             self.assertLess(abs(out["build"][2]["offset"]), out["gap"])
 
-    def test_axial_hold_needs_inclined_lines(self):
+    def test_axial_hold_needed_inclined_lines_only_with_the_earlier_sizing(self):
+        # Lines cut to the bowed chords and preloaded only against their swing hold the hub along the
+        # axis below the spin; installed snug at rest, holding the bow back, their preload holds it above.
         for r, out in self.out.items():
-            self.assertLess(out["axial_natural_vs_spin"], 1, r)
-            self.assertGreater(out["k_axial_inclined"], 5 * out["k_axial"], r)
+            res = evaluate(self.p, Design(radius_m=r, n_tori=1))
+            old = self.hub.compute(self.p, res["geometry"], res["mass"], snug_at_rest=False)
+            self.assertLess(old["axial_natural_vs_spin"], 1, r)
+            self.assertGreater(old["k_axial_inclined"], 5 * old["k_axial"], r)
+            self.assertGreater(out["axial_natural_vs_spin"], 2, r)
+
+    def test_axial_hold_in_series_with_the_chords_out_of_plane(self):
+        # Review of #18: a line's geometric stiffness along the axis, P/l, acts in series with its chord
+        # drawn out of the net's plane, a taut string 2T/L (no spin load along the axis).
+        for r, out in self.out.items():
+            k_out = 2 * out["tension"] / out["net"]["half_length"]
+            self.assertAlmostEqual(out["k_chord_out"], k_out)
+            per_line = self.hub.series(out["service_preload"] / out["gap"], k_out)
+            self.assertAlmostEqual(out["k_axial"] / (out["n_lines"] * per_line), 1, places=9)
+            self.assertLess(out["k_axial"], out["k_axial_fixed_chords"])
+            # With the bow's large preload the chords' give matters (~30-40% off at 900 m-1.6 km).
+            self.assertLess(out["k_axial"], 0.8 * out["k_axial_fixed_chords"], r)
+
+    def test_lines_installed_snug_hold_the_bow_back(self):
+        # Review of #18: the line's pull is the bow (plus its installed pull-in) through line and chord in
+        # series; the window is the bowed gap less the chord drawn in; a ring frame carries the pull.
+        for r, out in self.out.items():
+            self.assertTrue(out["snug_at_rest"])
+            k_s = self.hub.series(out["k_chord"], out["k_line"])
+            self.assertAlmostEqual(out["service_preload"] / (k_s * (out["net"]["bow"] + out["d0"])), 1, places=9)
+            self.assertAlmostEqual(out["gap"], out["gap_bowed"] - out["service_preload"] / out["k_chord"], places=9)
+            self.assertLess(abs(out["gap"] - out["gap_rest"]), 0.2 * out["gap_rest"])
+            self.assertAlmostEqual(out["ring_force"], out["net"]["n_chords"] * out["service_preload"] / (2 * math.pi))
+            # At rest, with the chords at rest_share of their tension, every line keeps the docking margin.
+            k_rest = self.hub.series(2 * out["rest_share"] * out["tension"] / out["net"]["half_length"],
+                                     out["k_line"])
+            self.assertAlmostEqual(k_rest * out["d0"], self.hub.TAUT_MARGIN * out["swing_rest"])
 
 
 class TestHubReview(unittest.TestCase):
@@ -396,6 +428,6 @@ class TestHubReview(unittest.TestCase):
         for r, (out, _) in self.out.items():
             length = math.hypot(out["gap"], out["plane_offset"])
             self.assertAlmostEqual(out["inclined_length"], length)
-            k = hub.series(out["k_chord"], hub.E_WIRE * out["line_area"] / length)
+            k = hub.series(out["k_chord_out"], hub.E_WIRE * out["line_area"] / length)
             expected = hub.INCLINED_FRAC * out["n_lines"] * k * math.sin(out["inclination"]) ** 2
             self.assertAlmostEqual(out["k_axial_inclined"] / expected, 1, places=9)
