@@ -17,7 +17,8 @@ chords' bow back as the spin grows, they carry a large preload in service, so no
   the window's plane, so the relative motion has two modes at |sqrt(K / mu) -/+ w| (sqrt(K / mu)
   in the inertial frame). Static loads fixed in the rotating frame need K > mu w^2.
 - Preloaded lines also resist motion they don't stretch (geometric stiffness P0 / l): along
-  the axis and in torsion. That is weak; as an option, a share of the lines run from the hub's
+  the axis (in series with the chord drawn out of its net's plane, a taut string, 2T/L) and in
+  torsion. That is weak; as an option, a share of the lines run from the hub's
   mid-plane out to the side nets, inclined at gamma (tan gamma = (a + t) / l), and hold the hub
   along the axis by k sin^2(gamma) each (a chord resists sideways pulls out of its plane alike).
 
@@ -219,13 +220,18 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2, snug_at_rest=True,
     mode = modes(mu, k_torus, k_torus, omega)
 
     # Along the axis and in torsion, radial lines resist by their preload only (geometric stiffness):
-    # with the lines holding the bow back, a large one.
-    k_axial = N_NETS * n * svc["preload"] / gap
+    # with the lines holding the bow back, a large one. Along the axis each line's pull also draws its
+    # chord out of the net's plane, which the chord resists as a taut string (no spin load acts along
+    # the axis): 2T/L, in series with the line's P/l (review of #18). In torsion the line's hub end
+    # moves along its chord's own direction at the tangent point, where the chord is stiff: no series term.
+    k_chord_out = 2 * tension / net["half_length"]
+    k_line_axial = svc["preload"] / gap
+    k_axial = N_NETS * n * series(k_line_axial, k_chord_out)
     # Option: a share of the lines run from the hub's mid-plane to the side nets, length
     # hypot(gap, plane offset), inclined at gamma; each holds the hub along the axis by k sin^2(gamma).
     inclined = math.hypot(gap, plane_offset)
     gamma = math.atan2(plane_offset, gap)
-    k_inclined = series(k_chord, E_WIRE * area / inclined)
+    k_inclined = series(k_chord_out, E_WIRE * area / inclined)
     k_axial_inclined = INCLINED_FRAC * N_NETS * n * k_inclined * math.sin(gamma) ** 2
     line_mass = N_NETS * n * area * gap * rho
     ring_force = n * svc["preload"] / (2 * math.pi)            # hoop force in each net's ring frame
@@ -240,7 +246,7 @@ def compute(p, geo, mass, anchor_spacing=10.0, build_pairs=2, snug_at_rest=True,
         "natural_vs_spin": natural / omega,
         "rotating_vs_spin": [f / omega for f in mode["frequencies"]], "growth": mode["growth"],
         "k_tilt": 2 * (k_torus / N_NETS) * plane_offset ** 2, "plane_offset": plane_offset,
-        "k_axial": k_axial,
+        "k_axial": k_axial, "k_axial_fixed_chords": N_NETS * n * k_line_axial, "k_chord_out": k_chord_out,
         "k_torsion": N_NETS * n * svc["preload"] * h * (h + gap) / gap,
         "k_axial_inclined": k_axial_inclined, "inclination": gamma, "inclined_length": inclined,
         "inclined_extra_mass": INCLINED_FRAC * N_NETS * n * area * (inclined - gap) * rho,

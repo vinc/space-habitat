@@ -242,12 +242,12 @@ Each torus has two chord nets, one in each side plane of its tube. In each, the 
 
 | Torus | Hub share (Mt) | Window gap (m) | Lines | Chord stiffness (kN/m) | Lateral stiffness (MN/m) | Margin K / μω² | Natural frequency / spin: inertial; rotating modes | Tilt stiffness (GN·m/rad) | Axial stiffness (MN/m): radial lines / 10% inclined | Axial natural frequency / spin | Torsional stiffness (GN·m/rad) | Line area (mm²) | Service preload (kN) | Lines' mass (t), + inclined option |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 400 m | 0.032 | 2.5 | 502 | 127 (-1%) | 31.4 | 40 | 6.3; 5.3 and 7.3 | 10.2 | 18 / 5.54 | 4.7 / 5.4 | 14 | 87.4 | 87 | 0.86 (+0.54) |
-| 900 m | 0.29 | 6.0 | 1,130 | 117 (-2%) | 65.5 | 21 | 4.6; 3.6 and 5.6 | 74.0 | 53 / 12.0 | 4.1 / 4.6 | 220 | 287 | 280 | 15 (+7.2) |
-| 1.6 km | 1.5 | 11 | 2,010 | 115 (-4%) | 115 | 13 | 3.6; 2.6 and 4.6 | 353 | 160 / 21.5 | 4.2 / 4.5 | 2,000 | 859 | 850 | 150 (+62) |
-| 2.5 km | 5.5 | 17 | 3,142 | 115 (-7%) | 180 | 8.7 | 2.9; 1.9 and 3.9 | 1,260 | 380 / 34.0 | 4.3 / 4.5 | 12,000 | 2,090 | 2,100 | 880 (+360) |
+| 400 m | 0.032 | 2.5 | 502 | 127 (-1%) | 31.4 | 40 | 6.3; 5.3 and 7.3 | 10.2 | 14 / 5.59 | 4.2 / 5.0 | 14 | 87.4 | 87 | 0.86 (+0.54) |
+| 900 m | 0.29 | 6.0 | 1,130 | 117 (-2%) | 65.5 | 21 | 4.6; 3.6 and 5.6 | 74.0 | 38 / 12.3 | 3.5 / 4.0 | 220 | 287 | 280 | 15 (+7.2) |
+| 1.6 km | 1.5 | 11 | 2,010 | 115 (-4%) | 115 | 13 | 3.6; 2.6 and 4.6 | 353 | 95 / 22.4 | 3.3 / 3.6 | 2,000 | 859 | 850 | 150 (+62) |
+| 2.5 km | 5.5 | 17 | 3,142 | 115 (-7%) | 180 | 8.7 | 2.9; 1.9 and 3.9 | 1,260 | 190 / 36.3 | 3.0 / 3.3 | 12,000 | 2,090 | 2,100 | 880 (+360) |
 
-Radial lines hold the hub along the axis and in torsion only through their preload (geometric stiffness, P/l). Holding back the bow, that preload is large: the hub's axial natural frequency is ~4× the spin with radial lines alone. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), adds a little more (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown: no longer needed, kept as an option. (With lines cut to the bowed chords and preloaded only against their swing, the earlier sizing, the axial frequency was ~0.45× the spin, and the inclined lines were needed; those lines would be slack at rest.)
+Radial lines hold the hub along the axis and in torsion only through their preload (geometric stiffness, P/l, in series along the axis with the chord drawn out of its net's plane, a taut string, 2T/L). Holding back the bow, that preload is large: the hub's axial natural frequency is ~3.3–3.5× the spin with radial lines alone. Running 10% of the lines from the hub's mid-plane out to the side nets, over their full length (the gap and the nets' offset from the mid-plane), adds a little more (second figure; a chord resists sideways pulls out of its plane alike), for the extra line mass shown: no longer needed, kept as an option. (With lines cut to the bowed chords and preloaded only against their swing, the earlier sizing, the axial frequency was ~0.45× the spin, and the inclined lines were needed; those lines would be slack at rest.)
 
 ### Loads on the hub (finished torus, full spin): offset of the hub from the torus / force in the lines
 

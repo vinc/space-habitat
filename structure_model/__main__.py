@@ -567,8 +567,9 @@ def hub_report(p):
                "Axial natural frequency / spin", "Torsional stiffness (GN·m/rad)", "Line area (mm²)",
                "Service preload (kN)", "Lines' mass (t), + inclined option"], finished),
         "Radial lines hold the hub along the axis and in torsion only through their preload (geometric "
-        "stiffness, P/l). Holding back the bow, that preload is large: the hub's axial natural frequency is "
-        f"~4× the spin with radial lines alone. Running {hub.INCLINED_FRAC:.0%} of the lines from the hub's "
+        "stiffness, P/l, in series along the axis with the chord drawn out of its net's plane, a taut string, "
+        "2T/L). Holding back the bow, that preload is large: the hub's axial natural frequency is ~3.3–3.5× the "
+        f"spin with radial lines alone. Running {hub.INCLINED_FRAC:.0%} of the lines from the hub's "
         "mid-plane out to the side nets, over their full length (the gap and the nets' offset from the "
         "mid-plane), adds a little more (second figure; a chord resists sideways pulls out of its plane alike), "
         "for the extra line mass shown: no longer needed, kept as an option. (With lines cut to the bowed "

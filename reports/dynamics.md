@@ -71,8 +71,8 @@ A ring of X-braced bays across each gap at the envelopes' closest approach (r �
 
 | Torus | Hub 20 K warmer over a pitch | One rim 4 K warmer | Struts 100 K colder |
 |---|---|---|---|
-| 900 m | 1.9 cm, 1.3 MN | 4.2 cm, hoop 9.6 MPa | gap closes 2.4 cm, 1.6 MN |
-| 1.6 km | 3.0 cm, 5.3 MN | 7.4 cm, hoop 9.6 MPa | gap closes 2.4 cm, 4.3 MN |
+| 900 m | 1.9 cm, 0.97 MN | 4.2 cm, hoop 9.6 MPa | gap closes 2.4 cm, 1.2 MN |
+| 1.6 km | 3.0 cm, 3.5 MN | 7.4 cm, hoop 9.6 MPa | gap closes 2.4 cm, 2.8 MN |
 
 ## Disturbances
 
@@ -109,14 +109,14 @@ The hub is a short, wide tube (radius ~60 m), so its shear flexibility counts: e
 
 ## Along and about the axis
 
-Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would pump any mode near the spin. Requirement: no mode between 1/1.40 and 1.40× the spin; modes well below or above are left alone. As built, one sits in that band: the farm rings bounce along the axis at ~1.1× the spin, their radial spokes holding them along it only by their tension, ~ω√(r_f/L) whatever the ring's size or mass. The tori don't: their stabilising lines, installed snug at rest and holding back the chords' bow (`structure_model/hub.py`, review of #18), carry ~50× the earlier preload, and their geometric stiffness holds each torus along the axis at ~4× the spin and the hub in torsion well above the band (~4.2–4.4×), with no lacing (lines laced tangentially at 45.0° would add to it; the search finds none needed). Fix, the least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial seen along the axis). The slower twists (the farm rings on their spokes and the farm section with the hub against the tori, ~0.43–0.45×) stay below the band. the spin. Loads on the fixed stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
+Axial and torsional motion (`dynamics_model/axial_torsion.py`) don't couple to the spin, so dissipation can't destabilise them, but a once-per-turn load (the despun array's bearing running slightly off true is the one interface turning against the stack) would pump any mode near the spin. Requirement: no mode between 1/1.40 and 1.40× the spin; modes well below or above are left alone. As built, one sits in that band: the farm rings bounce along the axis at ~1.1× the spin, their radial spokes holding them along it only by their tension, ~ω√(r_f/L) whatever the ring's size or mass. The tori don't: their stabilising lines, installed snug at rest and holding back the chords' bow (`structure_model/hub.py`, review of #18), carry ~50× the earlier preload, and their geometric stiffness (along the axis in series with the chords drawn out of their planes) holds each torus along the axis at ~3.3–3.5× the spin and the hub in torsion well above the band (~4.2–4.4×), with no lacing (lines laced tangentially at 45.0° would add to it; the search finds none needed). Fix, the least that clears the band: a share of each farm ring's spokes crossed between its two planes (from the front plane at the hub to the back plane at the ring, alternately, like a bicycle wheel's; still radial seen along the axis). The slower twists (the farm rings on their spokes and the farm section with the hub against the tori, ~0.43–0.45×) stay below the band. the spin. Loads on the fixed stack: a 10.0 kt ship closing at 0.1 m/s, taken out over 10.0 s by the dock's buffers; a 50 t rim train braking at 0.1 g.
 
 | Torus | Tori | Axial near the spin, as built | Torsion near the spin, as built | Farm spokes crossed | Lines laced | Extra steel (t per stack) | Axial: lowest above the band | Torsion: lowest above the band | Torsion below the band | Docking: largest force | Braking: torque on a lattice |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 900 m | 2 | 1.09–1.09 | none | 10% | 0.00% | 1.6 | 1.40 | 4.42 | 0.43, 0.45 | 0.17 MN | 41 MN·m |
-| 900 m | 6 | 1.09–1.09 | none | 10% | 0.00% | 4.7 | 1.40 | 4.36 | 0.43, 0.45 | 0.17 MN | 66 MN·m |
-| 1.6 km | 2 | 1.08–1.09 | none | 10% | 0.00% | 8.6 | 1.40 | 4.40 | 0.44, 0.45 | 0.26 MN | 74 MN·m |
-| 1.6 km | 6 | 1.08–1.09 | none | 10% | 0.00% | 26 | 1.40 | 4.23 | 0.43, 0.45 | 0.27 MN | 120 MN·m |
+| 900 m | 6 | 1.09–1.09 | none | 10% | 0.00% | 4.8 | 1.40 | 4.36 | 0.43, 0.45 | 0.18 MN | 66 MN·m |
+| 1.6 km | 2 | 1.08–1.09 | none | 10% | 0.00% | 8.8 | 1.40 | 4.40 | 0.44, 0.45 | 0.24 MN | 74 MN·m |
+| 1.6 km | 6 | 1.08–1.09 | none | 10% | 0.00% | 26 | 1.40 | 4.23 | 0.43, 0.45 | 0.28 MN | 120 MN·m |
 
 ## Building and losing a lattice
 
