@@ -82,7 +82,9 @@ class TestSunlight(unittest.TestCase):
 class TestLayout(unittest.TestCase):
     def test_layouts(self):
         g = evaluate(P, Design(radius_m=900))["geometry"]
-        self.assertEqual(cavity._farm_band(g, "inboard"), (g["hub_radius"] + 1.0, g["farm_radius"]))
+        self.assertEqual(cavity._farm_band(g, "inboard"),
+                         (g["hub_radius"] + 1.0, g["farm_radius"] - g["farm_height"] / 2))
+        self.assertEqual(cavity._farm_band(g, "outboard")[0], g["farm_radius"] + g["farm_height"] / 2)
         with self.assertRaises(ValueError):
             cavity._farm_band(g, "sideways")
 

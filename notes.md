@@ -1223,7 +1223,7 @@ Each torus grows its staple food in a farm ring of its own, in the stack's farm 
             ←── ~0.9 × tube width along the axis (~50 m at 900 m) ──→
         "down" ↓ outward; radiators are inward, towards the hub
 ```
-(section through the ring in its own plane; `≡` LED strips just above the canopy, `▒` crops; floors at ~0.39–0.40 g)
+(section through the ring in its own plane; `≡` LED strips just above the canopy, `▒` crops; floors at ~0.40 g, the ring centred on ~0.4 r)
 
 **Layout:**
 - **A farm section of its own (proposed, 28 Oct 2026).** The farm rings, one per torus, sit side by side on the shared hub beyond the tori (at the despun array's end, next to the largest power load), ~50 m from the last torus and ~10 m apart, each on its own spokes, at ~0.4 r: ~360 m at 900 m, ~640 m at 1.6 km, ~1,000 m at 2.5 km. Earlier they sat in each torus's plane, where the tori's chord spokes would have had to pass through them (section 12). Each section is modelled on its own, and their interaction checked last; the arrangement can be revisited later.

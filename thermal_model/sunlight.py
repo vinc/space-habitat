@@ -36,7 +36,7 @@ def _distance(x, y, z, geo, tori, rings):
     d_tori = np.hypot(rho - centre, dz) - geo["envelope_radius"]
     d_hub = rho - geo["hub_radius"]
     # Farm rings: boxes in (rho, z), the ring's height radially and its width along the axis.
-    qr = np.abs(rho - (geo["farm_radius"] + geo["farm_height"] / 2)) - geo["farm_height"] / 2
+    qr = np.abs(rho - geo["farm_radius"]) - geo["farm_height"] / 2   # centred on farm_radius
     qz = np.min(np.abs(z[:, None] - rings[None, :]), axis=1) - geo["farm_width"] / 2
     d_rings = np.hypot(np.maximum(qr, 0), np.maximum(qz, 0)) + np.minimum(np.maximum(qr, qz), 0)
     return np.minimum(np.minimum(d_tori, d_hub), d_rings)

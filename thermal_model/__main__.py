@@ -147,8 +147,8 @@ def coolant_section(p):
         sink = coolant.annulus_centroid(g["radiator_inner"], g["drum_radius"])
         nat = coolant.size_natural(h["main_per_torus"], omega, source, sink, p.coolant_dt_k,
                                    p.coolant_loops_per_torus)
-        ring = g["farm_radius"] + g["farm_height"] / 2
-        farm_sink = coolant.annulus_centroid(g["farm_radius"] + g["farm_height"], g["farm_radiator_outer"])
+        ring = g["farm_radius"]
+        farm_sink = coolant.annulus_centroid(g["farm_radius"] + g["farm_height"] / 2, g["farm_radiator_outer"])
         pump = coolant.size_pumped(h["farm_per_ring"], omega, ring, farm_sink, p.coolant_dt_k,
                                    p.coolant_loops_per_torus, pump_efficiency=p.pump_efficiency)
         rows.append([label(radius), f"{num(h['main_per_torus'] / MW)} MW", f"{num(nat['diameter'], 2)} m",

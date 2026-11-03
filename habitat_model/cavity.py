@@ -80,19 +80,19 @@ def _farm_band(geo, layout="outboard"):
     outward, against spin gravity: pumped loops), or inboard, from the hub to the rings (heat flows inward,
     with spin gravity: passive thermosiphons)."""
     if layout == "inboard":
-        return geo["hub_radius"] + 1.0, geo["farm_radius"]
+        return geo["hub_radius"] + 1.0, geo["farm_radius"] - geo["farm_height"] / 2
     if layout != "outboard":
         raise ValueError(f"farm radiator layout must be one of {FARM_LAYOUTS}, not {layout!r}")
-    ring_outer = geo["farm_radius"] + geo["farm_height"]
+    ring_outer = geo["farm_radius"] + geo["farm_height"] / 2
     return ring_outer, max(geo["farm_radiator_outer"], ring_outer + 1.0)
 
 
 def farm_scene(geo, n, layout="outboard"):
     fp = geo["farm_pitch"]
     band = _farm_band(geo, layout)
-    ring_outer = geo["farm_radius"] + geo["farm_height"]
+    ring_outer = geo["farm_radius"] + geo["farm_height"] / 2      # the ring is centred on farm_radius
     return Scene(**_section(((k + 0.5) * fp for k in range(n)), band, 1), length=n * fp, hub=geo["hub_radius"],
-                 ring_radius=geo["farm_radius"] + geo["farm_height"] / 2, ring_half=geo["farm_width"] / 2,
+                 ring_radius=geo["farm_radius"], ring_half=geo["farm_width"] / 2,
                  open_radius=max(band[1], ring_outer) + 1.0)
 
 
