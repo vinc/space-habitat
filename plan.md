@@ -177,7 +177,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 
 ## 6. Heat rejection
 
-**Adopted, 1 Nov 2026:** passive inboard radiators in both sections. No outboard farm radiators or farm heat-rejection pumps. The LED study gives ~1.8× farm margin for a 900 m six-stack with two tiers lit, ~1.3× with three, and ~1.2× at 1.6 km with three. The lower three-tier margin is accepted instead of the former 1.5× target.
+**Adopted, 1 Nov 2026:** passive inboard radiators in both sections. No outboard farm radiators or farm heat-rejection pumps. The LED study gives ~1.8× farm margin for a 900 m six-stack with two tiers lit, ~1.2× with three, and ~1.2× at 1.6 km with three. The lower three-tier margin is accepted instead of the former 1.5× target.
 
 - [ ] Size the inboard panel coverage and farm thermosiphon pipes, losses and startup.
 - [ ] Sweep maximum stack length for the inboard layout. The earlier 40-torus result belongs to outboard radiators.
@@ -189,7 +189,7 @@ The completed work below records the earlier comparisons, not the adopted baseli
 
 - [x] Preliminary radiative exchange (`habitat_model/cavity.py`, `reports/thermal.md`): finite two-sided panels with emissivity ~0.9, insulated hub, farm rings and envelopes, escape through the ends and optionally the side gaps; per section (the tori's drum, the open farm section), then the whole stack traced as one scene, with both sections' panel coverages swept together; the farm radiators' reach swept on its own
 - [x] Farm section's radiators: reach, layout, and how much of the drum's farm end they may shade (`thermal_model/layout.py`, `reports/heat_rejection.md`)
-  - found: outboard of the farm rings (the former baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.3× with three tiers lit; ~0.5–0.75× with sulfur lamps). Former baseline: outboard pumped with passive fallback; superseded by inboard-only cooling above
+  - found: outboard of the farm rings (the former baseline) the heat flows against spin gravity, so the loops need pumps; inboard (passive) the rings enclose the radiators: with LEDs they cool a six-stack's whole farm (~1.2× with three tiers lit; ~0.5–0.75× with sulfur lamps). Former baseline: outboard pumped with passive fallback; superseded by inboard-only cooling above
   - found: reach ~0.45–0.5 r for 1.5× (six-stack, three tiers lit; ~0.75 r with sulfur lamps); at most ~9 + ~11 ha of panels per 900 m torus at 1.5× (~27 + ~42 with sulfur lamps)
 - [ ] Full Monte Carlo ray tracing of the drum between hub and rims: radiators on the spokes, end openings, gap vents, shading by the farm rings and main rings
   - done: end openings, gap vents, farm rings and their radiators, the whole stack as one scene (`habitat_model/cavity.py`); open: the spokes and cables, the envelopes' rounded inner faces

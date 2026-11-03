@@ -1,23 +1,23 @@
 # Heat rejection: radiator layout, sunlight, coolant loops and the valley's swing
 
-**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former alternative. Three-tier six-stacks accept the reported ~1.2–1.3× farm margin rather than the earlier 1.5× target. Inboard thermosiphon hardware and a new maximum-stack sweep remain open.
-
 Plan §6 (`thermal_model/`), building on the assembled radiative exchange of `habitat_model/cavity.py` (`reports/thermal.md`): radiators at ~285 K, emissivity ~0.9.
 
 ## The farm radiators: where, and how far out
+
+**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former alternative. Three-tier six-stacks accept the reported ~1.2× farm margin (~1.2–1.3× before the farm ring was centred on 0.4 r, 3 Nov 2026) rather than the earlier 1.5× target. Inboard thermosiphon hardware and a new maximum-stack sweep remain open.
 
 Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the former baseline, from the rings out to ~1 r), the warm coolant must sink against spin gravity: pumped loops. **Inboard** (from the hub to the rings), it rises: passive thermosiphons, as in the main section, but the radiators then sit in the space the farm rings enclose. The whole stack traced as one scene (`habitat_model/cavity.py`), both sections' panel coverages swept on a finer grid; best margins main / farm, and the least panel area (one face, main / farm section) that keeps both at 1.5× (coverage in steps of 5%, so areas move in steps of ~25%).
 
 | Stack, tiers lit | Farm radiators | Best margins, main / farm | At coverage, main / farm | Least panels for 1.5× (ha), main / farm | Tiers the passive set alone carries |
 |---|---|---|---|---|---|
-| 900 m pair, 3 tiers | outboard | 13 / 13 | 100% / 100% | 17.9 / 21.2 | — |
-| 900 m pair, 3 tiers | inboard | 3.8 / 3.5 | 10% / 100% | 17.9 / 19.8 | 11 |
-| 900 m six, 2 tiers | outboard | 6.0 / 6.2 | 100% / 25% | 53.8 / 63.5 | — |
-| 900 m six, 2 tiers | inboard | 3.1 / 1.8 | 10% / 100% | 53.8 / 83.0 | 3.5 |
-| 900 m six, 3 tiers | outboard | 5.3 / 5.5 | 100% / 50% | 53.8 / 63.5 | — |
-| 900 m six, 3 tiers | inboard | 1.7 / 1.3 | 5% / 75% | **not reached** | 3.8 |
-| 1.6 km six, 3 tiers | outboard | 5.3 / 5.3 | 100% / 50% | 171 / 202 | — |
-| 1.6 km six, 3 tiers | inboard | 1.8 / 1.2 | 5% / 100% | **not reached** | 3.7 |
+| 900 m pair, 3 tiers | outboard | 13 / 13 | 100% / 100% | 17.9 / 21.3 | — |
+| 900 m pair, 3 tiers | inboard | 3.9 / 3.5 | 10% / 100% | 17.9 / 19.3 | 10 |
+| 900 m six, 2 tiers | outboard | 5.9 / 6.2 | 100% / 25% | 53.8 / 63.8 | — |
+| 900 m six, 2 tiers | inboard | 1.8 / 1.8 | 5% / 50% | 53.8 / 81.0 | 3.5 |
+| 900 m six, 3 tiers | outboard | 5.3 / 5.6 | 100% / 50% | 53.8 / 63.8 | — |
+| 900 m six, 3 tiers | inboard | 1.7 / 1.2 | 5% / 100% | **not reached** | 3.7 |
+| 1.6 km six, 3 tiers | outboard | 5.1 / 5.3 | 100% / 50% | 171 / 202 | — |
+| 1.6 km six, 3 tiers | inboard | 1.8 / 1.2 | 5% / 100% | **not reached** | 3.5 |
 
 **Inboard radiators cool a six-stack's farm passively, but below 1.5× in some cases** (~1.2× at worst, ~3.5 tiers' heat): no pumps needed with all tiers lit, outboard pumped radiators for a full margin, the inboard set as their passive fallback.
 
@@ -26,7 +26,7 @@ Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the fo
 | Stack, tiers lit | Reach for 1× | Reach for 1.5× |
 |---|---|---|
 | 900 m six, 3 tiers | 0.45 | 0.49 |
-| 1.6 km six, 3 tiers | 0.46 | 0.50 |
+| 1.6 km six, 3 tiers | 0.45 | 0.50 |
 | 900 m six, 2 tiers | 0.45 | 0.45 |
 
 ## How many tori the radiators can cool
@@ -54,10 +54,10 @@ The axis points at the orbit's pole (notes §11), so sunlight arrives edge-on to
 | Axis tilt from the pole | Main section (drum) | Farm section (open) |
 |---|---|---|
 | 0.27° | 0 MW (0.0%) | 0.49 MW (0.2%) |
-| 0.5° | 0 MW (0.0%) | 0.91 MW (0.4%) |
+| 0.5° | 0 MW (0.0%) | 0.92 MW (0.4%) |
 | 1° | 0 MW (0.0%) | 1.8 MW (0.8%) |
-| 1.5° | 0.36 MW (0.2%) | 2.7 MW (1.2%) |
-| 2° | 0.64 MW (0.4%) | 3.6 MW (1.6%) |
+| 1.5° | 0.36 MW (0.2%) | 2.8 MW (1.2%) |
+| 2° | 0.64 MW (0.4%) | 3.7 MW (1.6%) |
 | 3° | 0.84 MW (0.5%) | 5.4 MW (2.4%) |
 | 5° | 2.3 MW (1.3%) | 8.7 MW (3.9%) |
 
@@ -69,8 +69,8 @@ Single-phase water, 10 K warmer leaving the heat source, 12 loops per torus or f
 
 | Torus | Valley's heat | Pipe (each loop) | Speed | Buoyancy head | Water in the loops | Farm ring's heat | Pipe (each loop) | Pumping |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 28.8 MW | 0.35 m | 0.61 m/s | 4.2 kPa | 0.55 kt | 37.4 MW | 0.22 m | 105 kW (0.28%) |
-| 1.6 km | 91.1 MW | 0.53 m | 0.81 m/s | 7.4 kPa | 2.3 kt | 118 MW | 0.39 m | 310 kW (0.26%) |
+| 900 m | 28.8 MW | 0.35 m | 0.61 m/s | 4.2 kPa | 0.55 kt | 37.4 MW | 0.22 m | 106 kW (0.28%) |
+| 1.6 km | 91.1 MW | 0.53 m | 0.81 m/s | 7.4 kPa | 2.3 kt | 118 MW | 0.39 m | 312 kW (0.26%) |
 
 **Main section: passive, as intended.** A few tenths of a kPa per kelvin of buoyancy, over hundreds of metres of spin gravity, drive ~0.3 m pipes at under 1 m/s; the loops hold ~0.5 kt of water per 900 m torus (~0.8% of its water budget, local). **Farm section: pumps** of ~0.3% of its heat.
 
