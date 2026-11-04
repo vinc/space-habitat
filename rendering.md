@@ -66,6 +66,51 @@ The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the s
 
 The [generator](rendering/generate_sky.py) and editable [recipe](rendering/sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](rendering/sky.md) for dependencies, controls, packing instructions, source hashes and attribution.
 
+### Adaptive sky and solar glare
+
+The compositor contains one group, **Sky adaptation and Sun glare**. It adjusts
+only the visible background and adds a camera-lens halo around the visible Sun.
+These are image-processing choices, not changes to the model or its lighting.
+
+The sky response uses exposure-adjusted foreground luminance, excluding the
+environment. Each pixel is capped before averaging, and the mean is normalized
+by foreground coverage. Small reflections and lamps therefore have limited
+influence, and empty sky does not dilute the measurement. A smooth transition
+reduces sky radiance to 50% in bright views and retains up to 100% in dark views.
+Sunlit Eros counts as bright foreground even when the habitat is in shadow.
+
+| Group control | Test value | Purpose |
+| --- | --- | --- |
+| Adaptive sky | 1 | Use the measured foreground; set to 0 for a fixed multiplier. |
+| Minimum sky | 0.5 | Sky multiplier for bright foreground. |
+| Maximum sky | 1 | Sky multiplier for dark foreground. |
+| Fixed sky | 0.5 | Multiplier used when Adaptive sky is 0; lower it for a darker fallback. |
+| Dark threshold | 0.015 | Mean exposed linear luminance giving the maximum sky multiplier. |
+| Bright threshold | 0.07 | Mean exposed linear luminance giving the minimum sky multiplier. |
+| Sun glare | 1 | Optical halo amount; 0 disables it. |
+
+The threshold values refer to exposure-adjusted linear pixels, not screen
+brightness. Multipliers scale linear radiance: 0.5 is one stop darker and need
+not look exactly half as bright on the display. The exposure input follows
+scene colour-management exposure automatically.
+
+Solar glare is seeded only by visible solar pixels, isolated from the catalogue
+stars and steel highlights. A bounded source feeds a soft halo and weaker wide
+scatter, added after foreground occlusion. Objects covering the Sun remove the
+corresponding source pixels before glare is calculated. This suggests light
+scattering within a lens; there is no atmospheric halo or space-filling fog.
+Its size and intensity are artistic approximations, without a specified lens
+or a calibrated optical scattering model.
+
+Film transparency and the Environment pass separate foreground and background
+within the same scene and view layer. The compositor restores an opaque result.
+Keep compositing enabled when rendering. No script or add-on is needed.
+
+For the original sky, set **Adaptive sky = 0, Fixed sky = 1, Sun glare = 0**.
+For the darker fallback, set **Adaptive sky = 0, Fixed sky = 0.5** or lower.
+A 50% sky reduction is a visual compromise; it does not make the photograph
+radiometrically calibrated.
+
 ### Eros
 
 Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427), so its overall shape comes from spacecraft data. Its centre is **200 km from the habitat**, at approximately **X = −141.421 km, Y = 0, Z = −141.421 km**. With the Sun toward +X and below defined as −Z, Eros is halfway between directly behind and directly below an observer facing the Sun: 45° below the direction opposite the Sun. Direct sunlight and light reflected from Eros therefore arrive from opposite sides, with the reflected light also arriving from below. The position and orientation are composition choices, without a dated ephemeris or a propagated habitat orbit.
