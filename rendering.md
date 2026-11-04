@@ -102,9 +102,19 @@ scattering within a lens; there is no atmospheric halo or space-filling fog.
 Its size and intensity are artistic approximations, without a specified lens
 or a calibrated optical scattering model.
 
-Film transparency and the Environment pass separate foreground and background
-within the same scene and view layer. The compositor restores an opaque result.
-Keep compositing enabled when rendering. No script or add-on is needed.
+Film transparency stays **off**, so the packed sky and visible Sun remain available
+in ordinary renders and while editing. In the viewport, use **Material Preview**
+or **Rendered** shading with **Scene World** enabled. The viewport shows the
+unprocessed world; adaptive sky brightness and solar glare are final-render
+effects. No manual transparency toggle is needed.
+
+The compositor measures the foreground by subtracting the Environment pass
+from the full render. A Mist pass supplies antialiased background coverage;
+its start follows the active camera's far clipping distance, so every visible
+surface lies before the transition. This pass is only a mask and adds no fog.
+Sky correction is applied directly to the existing world contribution, preserving
+foreground pixels and avoiding a second alpha multiplication at object edges.
+Keep compositing enabled for the final effects. No script or add-on is needed.
 
 For the original sky, set **Adaptive sky = 0, Fixed sky = 1, Sun glare = 0**.
 For the darker fallback, set **Adaptive sky = 0, Fixed sky = 0.5** or lower.
