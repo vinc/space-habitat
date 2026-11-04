@@ -48,13 +48,55 @@ The band arrangement, rails, perimeter frame, hollow mast and open hub mount are
 
 ### Sun and exposure
 
-The native Sun illuminates the scene from +X, with the habitat spin axis along +Z. A visible disk follows the Sun light's direction and angular size without adding illumination a second time.
+The scene uses the geometric Sun direction at **Eros perihelion on
+22 November 2027, about 14:18 TDB**, from [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/).
+The stored [solar reference](rendering/solar-reference.json) includes the exact
+query, state vector and coordinate definitions. Perihelion was located by the
+zero crossing of heliocentric position dotted with velocity.
 
-Here perihelion specifies the Sun's distance, irradiance and apparent diameter. Its fixed +X direction is illustrative; it does not establish a dated orbital configuration.
+The world frame remains **J2000 ecliptic**, with +X toward the equinox and +Z
+toward ecliptic north. The direction toward the Sun is
+**(+0.548114170, −0.836396491, −0.003430300)**, or ecliptic longitude
+**303.237954°**, latitude **−0.196542°**. The native light, visible disk and
+Eros material use this same direction. The Sun object's location only places
+its viewport icon; its rotation controls the directional light.
 
-The Sun now uses **Eros perihelion, 1.133324 AU**, from the [ESA NEOCC orbital solution](https://neo.ssa.esa.int/search-for-asteroids?des=433+Eros&tab=obs) dated 9 October 2026. Total sunlight scales from 1,361 W/m² at 1 AU to approximately **1,059.62 W/m²**. The RGB render retains the existing 40.39% visible-band approximation, giving a native Sun Strength of **427.98 W/m²**, with an angular diameter of **0.470347°** (about 1,693 arcseconds). This is an RGB lighting approximation rather than a spectral or thermal simulation.
+The reference distance is **1.133325423 AU**. Total sunlight scales from
+1,361 W/m² at 1 AU to approximately **1,059.62 W/m²**. The RGB render retains
+the existing 40.39% visible-band approximation, giving native Sun Strength
+**427.9793 W/m²**, with angular diameter **0.470346°** (about 1,693 arcseconds).
+A visible disk follows the light's direction and angular size without adding
+illumination a second time. This remains an RGB approximation, not a spectral
+or thermal simulation.
 
-Select **Sun > Light Data > Custom Properties > Distance (AU)** to change the reference distance. Native drivers keep irradiance proportional to the inverse square of distance and update the apparent diameter. The visible disk follows both values. The **solar array remains sized for aphelion**, when less sunlight is available; changing the lighting distance does not resize it. The numerical model uses rounded Eros orbital elements for that sizing, while this scene's perihelion distance uses the cited ESA value.
+Select **Sun > Light Data > Custom Properties > Distance (AU)** to change the
+reference distance. Native drivers update irradiance and apparent diameter.
+The **solar array remains sized for aphelion**, the lower-light sizing case;
+changing this lighting reference does not resize it.
+
+### Habitat axis relative to the stars
+
+The [adopted design](notes.md#orientation-adopted) keeps the spin axis inertially
+fixed, perpendicular to the host asteroid's heliocentric orbital plane. For
+Eros this is **10.8281° from ecliptic north**, rather than ecliptic north itself.
+
+The **Habitat - inertial attitude** parent aligns the rendered stack's local +Z
+with Eros's orbital north, computed as the normalized cross product of its
+heliocentric position and velocity. The module definitions and native torus
+Array remain in their local construction coordinates. The interior camera
+follows the assembly, with its grass-distance reference kept in that local frame.
+
+| End of the habitat | Fixed J2000 sky direction | Constellation |
+| --- | --- | --- |
+| Array end, local +Z | RA 16h49m22.3s, Dec +59°12′45.5″ | Draco |
+| Dock end, local −Z | RA 04h49m22.3s, Dec −59°12′45.5″ | Dorado |
+
+These are directions between stars, without requiring a bright pole star.
+The Sun direction lies in the ring plane. The array's local +X normal faces
+the Sun at the reference instant; continuous Sun tracking is not animated.
+Keeping the axis fixed avoids commanding it to follow the Sun around the orbit;
+the model's mass-distribution and disturbance checks remain separate from this
+static rendering pose.
 
 Camera exposure, AgX colour management and material roughness substantially affect the result. The supplied exterior camera uses −5.5 stops and the interior camera uses 0. These settings serve the image rather than predicting human visibility.
 
@@ -62,7 +104,7 @@ Artificial light sources are shared for common colour and power controls. The re
 
 ### Stars
 
-The sky is one packed **8192 × 4096 linear EXR**, combining the original **4000 × 2000** [Gaia EDR3 PNG](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png) with **8,404 Yale Bright Star Catalogue entries through visual magnitude 6.5**. The stars use catalogue positions and magnitude-based flux ratios; there are no random stars. The panorama and stars share a J2000 ecliptic orientation, with +X toward the equinox and +Z toward ecliptic north. This is a scene convention, without a dated alignment of the Sun or updates for proper motion and parallax.
+The sky is one packed **8192 × 4096 linear EXR**, combining the original **4000 × 2000** [Gaia EDR3 PNG](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png) with **8,404 Yale Bright Star Catalogue entries through visual magnitude 6.5**. The stars use catalogue positions and magnitude-based flux ratios; there are no random stars. The panorama and stars share a J2000 ecliptic orientation, with +X toward the equinox and +Z toward ecliptic north. The dated solar direction is expressed in this same frame. Proper motion and parallax updates remain omitted.
 
 The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the supplied exterior exposure and 0.15° smoothing. The gain is tuned to the original PNG's brightness and adjusted independently of the catalogue stars. The PNG's gamma metadata is decoded before filtering; the 8192 × 4096 output preserves the original map's finer detail without adding detail beyond that source. Gaia shows integrated stellar brightness and dark dust lanes; it does not provide all the nebulosity seen in deep Orion photographs. Absolute visibility, approximate temperature colours and finite star-image profiles are display choices. **Visible sky - camera background only > Strength** controls overall brightness; the supplied value is 5. The sky provides no illumination or reflections. Uniform background fill is zero, and the independent Sun disk and Eros lighting remain separate.
 
@@ -95,10 +137,10 @@ needed. Ordinary World Strength editing works independently of the halo.
 
 Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427),
 so its overall shape comes from spacecraft data. Its centre is **325 km from
-the habitat**, at **X = 0, Y = +325 km, Z = 0**. With the Sun toward +X, direct
-sunlight and reflected light from Eros arrive from directions approximately
-90° apart. The placement is a composition choice, without a dated ephemeris
-or a propagated habitat orbit.
+the habitat**, at **X = 0, Y = +325 km, Z = 0**. With the dated Sun direction,
+direct sunlight and reflected light from Eros arrive from directions about
+**147° apart**. This relative placement is a composition choice, not a propagated
+habitat orbit around Eros.
 
 ### Orienting Eros without changing its spin pole
 
@@ -109,12 +151,11 @@ Converted to this scene's ecliptic frame, one matching **XYZ Euler** orientation
 is **X = 0°, Y = 78.65°, Z = 17.24°**.
 
 This is an orientation relative to the stars, not one associated with a particular
-date. The scene's XY plane is the ecliptic, and the habitat ring currently lies
-in that plane. Eros's own orbital plane is inclined by about 10.83° to it; the
-spin pole is about 1° above that orbital plane, compared with 11.35° above the
-ecliptic. These are compatible measurements in different frames. Reinterpreting
-the habitat ring plane as Eros's orbital plane while keeping the Sun at +X would
-require a consistent rotation of the star background and the pole as well.
+date. The world's XY plane is the ecliptic, while the habitat ring is now aligned
+with Eros's own orbital plane, inclined by about 10.83°. Eros's spin pole is about
+1° above that orbital plane, compared with 11.35° above the ecliptic. These are
+compatible measurements in different frames. The habitat has been tilted within
+the fixed stellar frame; the sky and Eros's pole have not been rotated.
 
 After aligning the pole, select Eros and press **R → Z → Z**, enter an angle,
 and confirm. The second Z selects the object's **local Z axis**, so this changes
@@ -124,8 +165,9 @@ equivalent.
 
 The saved crater-facing phase uses XYZ Euler rotation
 **(−47.725°, 72.9887°, 328.242°)**. This phase is chosen for the image, without
-matching a specific epoch. The pole is aligned to the star background, while
-the Sun direction remains the scene convention described above.
+matching a specific epoch. The pole remains aligned to the star background, and
+the Sun now uses the dated perihelion direction described above. Eros's selected
+spin phase is still a visual choice, so this is not a fully dated attitude reconstruction.
 
 The material uses an approximate, Sun-dependent Hapke-style reflectance treatment. It has not been validated as a spectral or photometric reconstruction. Blender calculates its reflected light separately from the numerical habitat power and thermal models.
 
