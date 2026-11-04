@@ -122,8 +122,8 @@ Wings at the same angles in every ring face each other along the axis and lose ~
 
 | Stack | No nets | Anchors ~10 m | ~19–20 m | ~25–28 m |
 |---|---|---|---|---|
-| 900 m six, 2 tiers | 1.83 / 1.52 | 1.74 / 1.38 (9 m, 25 cm) | 1.76 / 1.40 (19 m, 36 cm) | 1.78 / 1.41 (28 m, 44 cm) |
-| 1.6 km six, 2 tiers | 1.87 / 1.48 | 1.74 / 1.32 (10 m, 35 cm) | 1.78 / 1.33 (20 m, 49 cm) | 1.79 / 1.34 (25 m, 55 cm) |
+| 900 m six, 2 tiers | 1.83 / 1.52 | 1.74 / 1.38 (9 m, 25 cm) | 1.77 / 1.40 (19 m, 36 cm) | 1.78 / 1.42 (28 m, 44 cm) |
+| 1.6 km six, 2 tiers | 1.87 / 1.48 | 1.76 / 1.30 (10 m, 35 cm) | 1.79 / 1.33 (20 m, 49 cm) | 1.79 / 1.34 (25 m, 55 cm) |
 
 The nets take ~5–12% off both sections' margins (the farm section looks back at the tori through them); fewer, thicker chords block less (√N), but the gain is a few percent. Not included: the farm spokes (~1% of their annulus) and the stabilising lines.
 
