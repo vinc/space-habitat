@@ -1,0 +1,10 @@
+{
+  "width": 8192,
+  "magnitude_limit": 6.5,
+  "zero_magnitude_flux": 80.0,
+  "star_fwhm_arcmin": 3.5,
+  "star_colour_strength": 0.35,
+  "milky_way_gain": 0.35,
+  "milky_way_blur_deg": 0.4,
+  "yaw_deg": 0.0
+}
