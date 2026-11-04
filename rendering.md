@@ -64,7 +64,7 @@ The star field is synthetic, with brightness boosted for the camera. It contribu
 
 ### Eros
 
-Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427), so its overall shape comes from spacecraft data. Its placement at X = −90 km, Y = 0, Z = −60 km and its orientation are composition choices, without a dated ephemeris or a selected habitat orbit.
+Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427), so its overall shape comes from spacecraft data. Its centre is **200 km from the habitat**, at approximately **X = −141.421 km, Y = 0, Z = −141.421 km**. With the Sun toward +X and below defined as −Z, Eros is halfway between directly behind and directly below an observer facing the Sun: 45° below the direction opposite the Sun. Direct sunlight and light reflected from Eros therefore arrive from opposite sides, with the reflected light also arriving from below. The position and orientation are composition choices, without a dated ephemeris or a propagated habitat orbit.
 
 The material uses an approximate, Sun-dependent Hapke-style reflectance treatment. It has not been validated as a spectral or photometric reconstruction. Blender calculates its reflected light separately from the numerical habitat power and thermal models.
 
