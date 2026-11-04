@@ -13,6 +13,7 @@ python -m thermal_model --set solar_absorptivity=0.3
 | `sunlight.py` | sun rays marched (sphere tracing) through the tori, hub and farm rings at a given axis tilt; sunlight the panels absorb against what they radiate |
 | `coolant.py` | loops in spin gravity: natural circulation (main section), pumped (farm section, radiators outboard), two-phase boiling suppression under the liquid column |
 | `valley.py` | the valley's steady-periodic day/night swing, by harmonics: air, plants and ponds as capacity, the soil as a semi-infinite conductor, cooling at U |
+| `wings.py` | the radiators as wings on the elevator shafts (four per plane, both sections), aligned or turned ring to ring, the least farm coverage for 1.5×, and the tori's chord nets as shading |
 | `__main__.py` | the report |
 
 ## Model
@@ -33,4 +34,4 @@ python -m thermal_model --set solar_absorptivity=0.3
 - **Sunlight:** none on the drum's panels below ~1.5° of axis tilt; the open farm section ~0.8% of its heat per degree at 1 AU.
 - **Loops:** passive water loops of ~0.35 m per 900 m torus (12 loops, ~0.6 m/s, ~0.55 kt of water); farm pumps ~0.3% of its heat; two-phase ammonia would need throttling at the rim (~1.9 MPa, boiling only above ~48 °C).
 - **Valley swing:** ~2–4 K (wet) to ~4–11 K (dry) left to itself; wider swings need scheduled cooling.
-- **Not modelled:** the spokes and cables, the envelopes' rounded inner faces, the radiators' tubes, freezing in cold panels at low load, reflected sunlight, the despun array's shadow, air movement in the valley.
+- **Not modelled:** the farm spokes and stabilising lines (the chord nets only in the wings section), the envelopes' rounded inner faces, the radiators' tubes, freezing in cold panels at low load, reflected sunlight, the despun array's shadow, air movement in the valley.

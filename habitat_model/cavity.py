@@ -22,9 +22,17 @@ scene (`assembled_scene`: the drum, the gap, the farm section with its radiators
 outer side facing it), as the final step that puts the sections together. Only the assembled
 check says whether the stack can reject its heat.
 
-Not included: sunlight entering through the gaps, spokes and cables, the despun array and
-dock, the envelopes' rounded shape (taken as a cylinder at R_d), and the actual radiator
-layout; the sink is taken at ~0 K.
+Options (off by default, so the baseline results are unchanged):
+- `wings`: the panels as the radiator wings actually laid out (notes §12, elevators): in each plane,
+  `shafts` elevator shafts, one per sector, each with a wing on both sides, an annular sector from the
+  plane's band inner to outer radius, from the shaft's edge out to the angle that gives the plane's
+  coverage; each ring's shafts turned by 1/N of a sector from its neighbour's in its section (`stagger`).
+- `nets`: the tori's tangent-chord nets in their two side planes (notes §12), thin cylinders that absorb
+  and re-emit diffusely (insulated): each crossing meets a chord with the probability their projected
+  width gives at that radius and direction.
+
+Not included: sunlight entering through the gaps, the farm spokes and stabilising lines, the despun
+array and dock, and the envelopes' rounded shape (taken as a cylinder at R_d); the sink is taken at ~0 K.
 """
 
 import math
@@ -63,6 +71,64 @@ class Scene:
 def _section(planes, band, group):
     planes = tuple(planes)
     return dict(planes=planes, bands=(band,) * len(planes), groups=(group,) * len(planes))
+
+
+class Wings:
+    """Radiator wings on elevator shafts (see the module docstring): per plane, `shafts` shafts with a wing
+    on each side, from radius band[0] to band[1], from the shaft's edge (`edge` m off its centre line, a
+    straight line) out to the angle beta that gives the plane its coverage. Ends are arcs of circle."""
+
+    def __init__(self, scene, cover, shafts=4, edge=5.0, stagger=True):
+        self.shafts, self.edge = shafts, edge
+        groups = np.array(scene.groups)
+        self.r0 = np.array([b[0] for b in scene.bands])
+        self.r1 = np.array([b[1] for b in scene.bands])
+        sector = 2 * math.pi / shafts
+        self.phi0 = np.zeros(len(groups))
+        if stagger:
+            for g in set(scene.groups):
+                idx = np.flatnonzero(groups == g)
+                self.phi0[idx] = np.arange(len(idx)) * sector / len(idx)
+        f = lambda q: q * q / 2 * np.arcsin(edge / q) + edge / 2 * np.sqrt(q * q - edge * edge)
+        area = np.asarray(cover) * math.pi * (self.r1 ** 2 - self.r0 ** 2)
+        self.beta = (area / (2 * shafts) + f(self.r1) - f(self.r0)) * 2 / (self.r1 ** 2 - self.r0 ** 2)
+        if (area > 0).any() and (self.beta[area > 0] > sector / 2).any():
+            raise ValueError("coverage too high for the wings: neighbouring wings would overlap")
+
+    def _local(self, x, y, k):
+        sector = 2 * math.pi / self.shafts
+        ang = np.mod(np.arctan2(y, x) - self.phi0[k] + sector / 2, sector) - sector / 2
+        return np.hypot(x, y), np.abs(ang)
+
+    def hit(self, x, y, k):
+        rr, a = self._local(x, y, k)
+        return (rr >= self.r0[k]) & (rr <= self.r1[k]) & (a <= self.beta[k]) & (rr * np.sin(a) >= self.edge)
+
+    def sample(self, k, rng):
+        """Uniform points on plane k's wings (k: one plane index per point)."""
+        n = len(k)
+        rho, ph = np.empty(n), np.empty(n)
+        todo = np.arange(n)
+        while len(todo):
+            kk = k[todo]
+            r = np.sqrt(rng.uniform(self.r0[kk] ** 2, self.r1[kk] ** 2))
+            p0 = np.arcsin(np.minimum(1.0, self.edge / r))
+            keep = rng.uniform(0, self.beta[kk]) < self.beta[kk] - p0
+            rho[todo[keep]] = r[keep]
+            ph[todo[keep]] = rng.uniform(p0[keep], self.beta[kk[keep]])
+            todo = todo[~keep]
+        ph = (ph * np.where(rng.random(n) < 0.5, 1.0, -1.0) + self.phi0[k]
+              + rng.integers(0, self.shafts, n) * 2 * math.pi / self.shafts)
+        return rho * np.cos(ph), rho * np.sin(ph)
+
+
+def nets_of(geo, n, chords, diameter, tangent_radius):
+    """The tori's chord nets for `nets`: two side planes per torus (on the jacket's outer face), `chords`
+    per net of `diameter`, tangent at `tangent_radius`, anchored on the tube's centre line."""
+    z = tuple((k + 0.5) * geo["pitch"] + side * (geo["tube_radius"] + geo["jacket"])
+              for k in range(n) for side in (-1, 1))
+    return {"z": np.array(z), "c": tangent_radius, "R": geo["radius"] - geo["tube_radius"],
+            "N": chords, "d": diameter}
 
 
 def main_scene(geo, n, side_gaps=False):
@@ -153,10 +219,13 @@ def _first_in_band(pos, d, t1, t2, planes, half_width):
     return best
 
 
-def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_steps=5000, source=None):
+def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_steps=5000, source=None,
+                       wings=None, nets=None):
     """Share of the rays emitted by the panels (of section `source`, or all) that escape.
 
     coverage: one fraction for every plane, or one per section (indexed by group).
+    wings: None (panels spread evenly over each annulus) or a dict of Wings options ({} for the defaults).
+    nets: None, or the tori's chord nets (nets_of).
     """
     rng = np.random.default_rng(seed)
     planes = np.array(scene.planes)
@@ -165,6 +234,7 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
     band_out = np.array([b[1] for b in scene.bands])
     cover = np.atleast_1d(np.asarray(coverage, dtype=float))
     cover = (np.full(groups.max() + 1, cover[0]) if cover.size == 1 else cover)[groups]
+    panels = Wings(scene, cover, **wings) if wings is not None else None
     wall_planes = planes[groups == 0] if (groups == 0).any() else planes
     ring_planes = planes[groups == 1] if (groups == 1).any() else planes
     z_lo, z_hi = scene.drum_span
@@ -174,9 +244,13 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
     emitting = np.flatnonzero(groups == source) if source is not None else np.arange(len(planes))
     weight = band_out[emitting] ** 2 - band_in[emitting] ** 2
     k = emitting[rng.choice(len(emitting), n, p=weight / weight.sum())]
-    rr = np.sqrt(rng.uniform(band_in[k] ** 2, band_out[k] ** 2))
-    ph = rng.uniform(0, 2 * math.pi, n)
-    pos = np.stack([rr * np.cos(ph), rr * np.sin(ph), planes[k]], axis=1)
+    if panels is None:
+        rr = np.sqrt(rng.uniform(band_in[k] ** 2, band_out[k] ** 2))
+        ph = rng.uniform(0, 2 * math.pi, n)
+        x0, y0 = rr * np.cos(ph), rr * np.sin(ph)
+    else:
+        x0, y0 = panels.sample(k, rng)
+    pos = np.stack([x0, y0, planes[k]], axis=1)
     side = np.where(rng.random(n) < 0.5, 1.0, -1.0)
     d = _diffuse(np.stack([np.zeros(n), np.zeros(n), side], axis=1), rng)
     pos = pos + EPS * 10 * d
@@ -233,7 +307,13 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
         else:
             t_body = np.full(m, np.inf)
 
-        times = np.stack([t_end, t_plane, t_drum, t_open, t_hub, t_ring, t_face, t_body], axis=1)
+        if nets is not None:
+            tn = (nets["z"][None, :] - p[:, 2:3]) / safe_dz[:, None]
+            t_net = np.where((tn > EPS) & moving[:, None], tn, np.inf).min(axis=1)
+        else:
+            t_net = np.full(m, np.inf)
+
+        times = np.stack([t_end, t_plane, t_drum, t_open, t_hub, t_ring, t_face, t_body, t_net], axis=1)
         event = np.argmin(times, axis=1)
         t = times[rows, event]
         hit = p + t[:, None] * v
@@ -247,8 +327,11 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
         # Panel planes: semi-transparent within their radiator band.
         on_plane = event == 1
         r_hit = np.hypot(hit[:, 0], hit[:, 1])
-        meets = (on_plane & (r_hit >= band_in[plane_k]) & (r_hit <= band_out[plane_k])
-                 & (rng.random(m) < cover[plane_k]))
+        in_band = on_plane & (r_hit >= band_in[plane_k]) & (r_hit <= band_out[plane_k])
+        if panels is None:
+            meets = in_band & (rng.random(m) < cover[plane_k])
+        else:
+            meets = in_band & panels.hit(hit[:, 0], hit[:, 1], plane_k)
         absorbed = meets & (rng.random(m) < emissivity)
         new_fate[absorbed] = 3
         reflect = meets & ~absorbed
@@ -287,6 +370,24 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
         body = event == 7
         if body.any():
             new_d[body] = _diffuse(radial[body], rng)
+
+        # A net's plane: meets a chord with the probability its projected width gives (the chords, of
+        # either handedness, cross a circle of radius rho at sin(alpha) = c / rho off the radial).
+        net = event == 8
+        if net.any():
+            rho = np.hypot(hit[net, 0], hit[net, 1])
+            c = nets["c"]
+            inside = (rho > c) & (rho < nets["R"])
+            rs = np.maximum(rho, c * (1 + 1e-9))
+            cos_a = np.sqrt(np.clip(1 - (c / rs) ** 2, 1e-12, 1))
+            share = np.where(inside, nets["N"] * nets["d"] / (cos_a * math.pi * rs), 0.0)
+            alpha = np.arcsin(np.clip(c / rs, 0, 1)) * np.where(rng.random(net.sum()) < 0.5, 1.0, -1.0)
+            ph = np.arctan2(hit[net, 1], hit[net, 0]) + alpha
+            along = v[net, 0] * np.cos(ph) + v[net, 1] * np.sin(ph)
+            prob = np.minimum(1.0, share * np.sqrt(np.clip(1 - along ** 2, 0, 1)) / np.maximum(np.abs(v[net, 2]), 1e-6))
+            caught = np.flatnonzero(net)[rng.random(net.sum()) < prob]
+            u = rng.normal(size=(len(caught), 3))
+            new_d[caught] = u / np.linalg.norm(u, axis=1, keepdims=True)   # insulated: re-emitted all round
 
         idx = np.flatnonzero(alive)
         fate[idx] = new_fate
@@ -351,7 +452,8 @@ def check_farm(p, d, geo, heat, n_rays=20000):
 GRID = (0.0, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0)
 
 
-def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_feasible=False, layout="outboard"):
+def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_feasible=False, layout="outboard",
+                    wings=None, nets=None):
     """The whole stack, traced as one scene: can both sections reject their heat at once?
 
     Each section's panels run at the same temperature, so what one absorbs from the other it sends back
@@ -369,7 +471,8 @@ def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_f
         for ff in grid:
             escape, output = [], []
             for group, f in ((0, fm), (1, ff)):
-                e = escape_probability(scene, (fm, ff), eps, n_rays, seed, source=group)["escape"] if f else 0.0
+                e = (escape_probability(scene, (fm, ff), eps, n_rays, seed, source=group, wings=wings, nets=nets)["escape"]
+                     if f else 0.0)
                 escape.append(e)
                 output.append(eps * flux * 2 * f * annuli[group] * e)
             margins = [o / load if load else math.inf for o, load in zip(output, loads)]

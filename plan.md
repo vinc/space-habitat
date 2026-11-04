@@ -144,7 +144,8 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [x] Axial and torsional modes (`dynamics_model/axial_torsion.py`): requirement, no mode within 1/1.4–1.4× the spin (once-per-turn loads from the array's bearing). As built the farm rings bounce at ~1.1× (radial spokes, tension only, ~ω√(r_f/L) at any size); crossing ~10% of the farm spokes between their planes clears the band (proposed, ~2–26 t per stack). The hub's twist sits at ~4.2–4.4× on the stabilising lines' preload (installed snug at rest, holding the chords' bow; with the earlier lines it sat at ~1.05–1.3× and needed lacing); the slower twists (~0.43–0.45×) stay below the band. Docking ~0.2 MN on the hub, a braking train ~40–120 MN·m on a lattice
 - [x] Fatigue (`dynamics_model/fatigue.py`): trains, ballast trims, docking, the rims' daily temperature and sunlight each turn over 100 years: every stress range (×1.35) below EN 1993-1-9's cut-off, no damage
 - [x] The lattice's erection on a torus still hung in arcs: link each arc to its neighbour as it is hung and keep the radial lines; the stack keeps a margin of ~1.8–2.0 throughout (unlinked ~0.5–0.7; `dynamics_model/links.building_torus`)
-- [ ] Still open: the fittings' local details in the jacket, the tunnels' bellows, the elevator, pipe and power shafts
+- [ ] Still open: the fittings' local details in the jacket, the tunnels' bellows, the elevator, pipe and power shafts (proposed, 3 Nov 2026: four shafts per torus and per farm ring, hung from the hub, sliding at the rim end, carrying the radiator wings)
+- [x] Anchor spacing (`structure_model/anchor_span.py`, first-order): 3 anchors per segment (~19 m at 900 m, ~20 m at 1.6 km) costs ~1% of a torus's steel and halves the chords; 2 per segment loads the locked joints while building ~3.5–4×. **Kept at 10 m**; to revisit if a 3D shell model of a segment and the fittings show a clear gain
 
 **Changes the design if:** a six-stack needs active control to stay stable, which would break the "nothing has to keep working" principle.
 
@@ -182,6 +183,8 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] Size the inboard panel coverage and farm thermosiphon pipes, losses and startup.
 - [ ] Sweep maximum stack length for the inboard layout. The earlier 40-torus result belongs to outboard radiators.
 - [ ] Recheck sunlight and detailed shading for the adopted panel layout.
+- [x] Panels laid out as wings on the elevator shafts (`thermal_model/wings.py`): turned ring to ring they match or beat evenly spread panels; least farm coverage for 1.5× per stack and tiers lit
+- [ ] Include the chord nets in the coverage sweeps: they take ~5–12% off both sections' margins (a 900 m six-stack with two tiers lit: farm ~1.38× at 35%)
 
 The completed work below records the earlier comparisons, not the adopted baseline. Its outboard pump loads, panel areas and maximum stack counts must not be reused for inboard cooling.
 

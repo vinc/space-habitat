@@ -18,6 +18,7 @@ python -m structure_model --anchor-spacing 20 --mismatch 0.02 --set wire_stress_
 | `net_statics.py` | assembled statics of a ring or of two opposite arcs: one tension per chord, rigid segments, sliding / pinned / locked joints, tension-only chords, residual check |
 | `hub.py` | the hub held in the two chord nets by stabilising lines: chords as taut strings, the hub's centrifugal divergence, load cases, the first construction stage, stiffness for the stack dynamics |
 | `tube_section.py` | the tube's cross-section by finite elements: membrane skins (hull, outer cell wall), the jacket's bulkheads as a plane-stress annulus, spin and pressure loads, chord anchors, fully stressed sizing |
+| `anchor_span.py` | fewer, thicker chords: each ring segment as a beam on k anchors, the skins' lengthwise bending and shear added to their cross-section forces, the extra skin and bulkhead steel (first-order; the anchor-spacing option, not adopted) |
 
 ## Findings
 

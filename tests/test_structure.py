@@ -7,7 +7,7 @@ import numpy as np
 
 from habitat_model import Design, evaluate, load, params
 from habitat_model.mass import spoke_factor
-from structure_model import cable_net, net_statics, spinup, tube_section, wire
+from structure_model import anchor_span, cable_net, net_statics, spinup, tube_section, wire
 from structure_model.__main__ import main
 
 
@@ -139,6 +139,23 @@ class TestWire(unittest.TestCase):
             self.assertEqual(main([]), 0)
         self.assertIn("Tangent-chord net", out.getvalue())
         self.assertIn("Tube cross-section", out.getvalue())
+
+
+class TestAnchorSpan(unittest.TestCase):
+    def test_beam_balances_and_supports_share_equally(self):
+        x, moment, shear, reactions = anchor_span.beam(30.0, [7.5, 22.5], 1.0)
+        self.assertAlmostEqual(reactions.sum(), 30.0, places=6)
+        self.assertAlmostEqual(abs(moment[-1]), 0.0, places=6)       # free ends
+        pos, (_, _, _, r3) = anchor_span.supports(56.25, 3, 1.0)
+        self.assertLess(np.ptp(r3) / r3.mean(), 0.01)
+
+    def test_one_anchor_per_bulkhead_adds_little_and_fewer_add_more(self):
+        p = params(load())
+        dense = anchor_span.check(p, 900, 6)
+        sparse = anchor_span.check(p, 900, 2)
+        self.assertLess(dense["skin_added"], 0.002 * dense["hull_frames"])
+        self.assertGreater(sparse["skin_added"] + sparse["bulkheads_added"], 10 * dense["skin_added"])
+        self.assertAlmostEqual(sparse["anchor_force"] * 2, sparse["load"] * sparse["segment"], delta=1e-6 * sparse["load"])
 
 
 if __name__ == "__main__":

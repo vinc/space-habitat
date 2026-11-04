@@ -12,7 +12,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import coolant, layout, sunlight, valley
+from . import coolant, layout, sunlight, valley, wings
 
 MW, HA = 1e6, 1e4
 TARGET = 1.5            # margin sought in both sections when sizing panels
@@ -216,6 +216,60 @@ def valley_section(p):
     ]
 
 
+def wings_section(p):
+    """Radiator wings on the elevator shafts, against evenly spread panels; least farm coverage; nets."""
+    layouts = (("Evenly spread panels (the sweeps above)", None), ("Wings, aligned in every ring", {"stagger": False}),
+               ("Wings, each ring turned 90°/N from its neighbour", {}))
+    cases = (("900 m pair, 3 tiers", 900, 2, 3, (wings.MAIN_COVER, 0.25)),
+             ("900 m six, 2 tiers", 900, 6, 2, (wings.MAIN_COVER, 0.35)))
+    rows = []
+    for name, w in layouts:
+        row = [name]
+        for _, r, n, t, cover in cases:
+            m, _, _ = wings.margins(p, r, n, t, cover, w)
+            row.append(f"{m[0]:.2f} / {m[1]:.2f}")
+        rows.append(row)
+    least = []
+    for n, stack in ((2, "pair"), (6, "six")):
+        for t in (1, 2, 3):
+            row = [f"{stack}, {t} tier{'s' if t > 1 else ''}"]
+            for r in (900, 1600, 2500):
+                f = wings.least_farm(p, r, n, t, {})
+                row.append(f"{f['coverage']:.0%} ({num(f['area_per_ring'] / HA)} ha)" if f["met"]
+                           else f"not reached: {f['margins'][1]:.2f}× at {f['coverage']:.0%}")
+            least.append(row)
+    shade = []
+    for r, n, spacings in ((900, 6, (56.55 / 6, 56.55 / 3, 56.55 / 2)), (1600, 6, (100.53 / 10, 100.53 / 5, 100.53 / 4))):
+        m0, _, _ = wings.margins(p, r, n, 2, (wings.MAIN_COVER, 0.35), {})
+        row = [f"{label(r)} six, 2 tiers", f"{m0[0]:.2f} / {m0[1]:.2f}"]
+        for sp in spacings:
+            m, _, res = wings.margins(p, r, n, 2, (wings.MAIN_COVER, 0.35), {}, net_spacing=sp)
+            d = wings.nets(p, res, n, sp)[2]
+            row.append(f"{m[0]:.2f} / {m[1]:.2f} ({sp:.0f} m, {d * 100:.0f} cm)")
+        shade.append(row)
+    return [
+        "## Radiator wings on the elevator shafts",
+        "Each torus and each farm ring carries its radiators on four elevator shafts in its mid-plane, one per "
+        "quadrant, a wing on both sides of each: an annular sector from the band's inner to outer radius (arcs of "
+        "circle at both ends), from the shaft's edge (5 m off its centre line) out to the angle that gives the "
+        f"plane's coverage (`habitat_model/cavity.py`, `Wings`). Margins main / farm, inboard farm radiators, "
+        f"{wings.N_RAYS} rays per section and seed, {len(wings.SEEDS)} seeds:",
+        table(["Panels", *(f"{c[0]} at {c[4][0]:.0%} / {c[4][1]:.0%}" for c in cases)], rows),
+        "Wings at the same angles in every ring face each other along the axis and lose ~10–15%; turned ring to ring "
+        "they do slightly better than evenly spread panels, which block every crossing a little.",
+        f"**Least farm coverage for {wings.TARGET:g}×** with staggered wings, the valleys' at "
+        f"{wings.MAIN_COVER:.0%} (one face, per farm ring):",
+        table(["Stack, tiers lit", "900 m", "1.6 km", "2.5 km"], least),
+        "**The chord nets' shading.** The tori's two side nets sit between the valleys' wings and the drum's open "
+        "ends; traced as thin insulated cylinders at the anchor spacing's chord count and diameter, margins main / "
+        "farm at 5% / 35% (no nets, then nets with anchors every ~10 m, ~19–20 m and ~25–28 m):",
+        table(["Stack", "No nets", "Anchors ~10 m", "~19–20 m", "~25–28 m"], shade),
+        "The nets take ~5–12% off both sections' margins (the farm section looks back at the tori through them); "
+        "fewer, thicker chords block less (√N), but the gain is a few percent. Not included: the farm spokes "
+        "(~1% of their annulus) and the stabilising lines.",
+    ]
+
+
 def report(a, overrides=None):
     p = params(a, **(overrides or {}))
     per_torus, coverages, lay = layout_section(a, p, overrides)
@@ -228,7 +282,9 @@ def report(a, overrides=None):
         *sunlight_section(p, *coverages["900 m six, 3 tiers"]),
         *coolant_section(p),
         *valley_section(p),
-        "Not modelled: the spokes and cables in the ray tracing, the envelopes' rounded inner faces, the "
+        *wings_section(p),
+        "Not modelled: the farm spokes and stabilising lines in the ray tracing (the chord nets only in the "
+        "wing section), the envelopes' rounded inner faces, the "
         "radiators' own tubes and their pressure, freezing in cold panels when the load drops, sunlight "
         "reflected between panels, the despun array's shadow, and the valley's air movement.",
     ]

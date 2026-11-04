@@ -2,7 +2,7 @@ import math
 import unittest
 
 from habitat_model import Design, cavity, evaluate, load, params
-from thermal_model import coolant, layout, sunlight, valley
+from thermal_model import coolant, layout, sunlight, valley, wings
 
 P = params(load())
 
@@ -119,6 +119,42 @@ class TestLayout(unittest.TestCase):
 
     def test_passive_tiers(self):
         self.assertAlmostEqual(layout.passive_tiers({"farm": 0.5, "loads": (0, 300.0)}, 100.0), 1.5)
+
+
+class TestWings(unittest.TestCase):
+    def setUp(self):
+        res = evaluate(P, Design(radius_m=900, n_tori=6, tiers_lit=2))
+        self.res, self.geo = res, res["geometry"]
+        self.scene = cavity.assembled_scene(self.geo, 6, layout="inboard")
+
+    def test_wings_have_their_coverage_and_samples_lie_on_them(self):
+        import numpy as np
+        cover = np.where(np.array(self.scene.groups) == 0, 0.05, 0.35)
+        w = cavity.Wings(self.scene, cover)
+        rng = np.random.default_rng(0)
+        for k in (0, 6):                                   # a torus plane and a farm plane
+            r0, r1 = self.scene.bands[k]
+            x, y = rng.uniform(-r1, r1, (2, 400000))
+            share = w.hit(x, y, np.full(len(x), k)).mean() * (2 * r1) ** 2 / (math.pi * (r1 ** 2 - r0 ** 2))
+            self.assertAlmostEqual(share / cover[k], 1.0, delta=0.03)
+            xs, ys = w.sample(np.full(20000, k), rng)
+            self.assertTrue(w.hit(xs, ys, np.full(20000, k)).all())
+            self.assertLessEqual(np.hypot(xs, ys).max(), r1)   # the wings end on an arc, inside the band
+
+    def test_staggered_wings_beat_aligned_ones(self):
+        cover = (0.05, 0.35)
+        aligned, _, _ = wings.margins(P, 900, 6, 2, cover, {"stagger": False}, n_rays=6000, seeds=(0,))
+        turned, _, _ = wings.margins(P, 900, 6, 2, cover, {}, n_rays=6000, seeds=(0,))
+        self.assertGreater(turned[0], aligned[0] * 1.1)
+
+    def test_nets_shade_and_default_trace_is_unchanged(self):
+        base = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0)["escape"]
+        again = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings=None, nets=None)
+        self.assertEqual(base, again["escape"])
+        net = wings.nets(P, self.res, 6, 10.0)[0]
+        shaded = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings={}, nets=net)
+        bare = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings={})
+        self.assertLess(shaded["escape"], bare["escape"])
 
 
 if __name__ == "__main__":
