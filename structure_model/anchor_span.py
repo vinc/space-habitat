@@ -7,8 +7,11 @@ anchors per ring segment (segments as long as the tube is wide), the tube must c
 to the anchors, as a beam.
 
 Each segment is a free-free beam (its joints carry shear only, and sit midway between two anchors, so by
-symmetry they carry none) on k evenly spaced anchors, the outer ones moved to give equal reactions (equal
-chords). The beam's section is the two skins as tube_section sizes them. Its lengthwise bending (M x / I)
+symmetry they carry none) on k evenly spaced anchors, as in the net models (cable_net, net_statics). The
+anchors are springs: the chords pulling on them (both nets, a chord of each handedness at each anchor, each
+E A / L along its length). They are ~10^4-10^5 times softer than the tube over a span, so the segment moves
+almost rigidly on them and the anchors share its load nearly equally. The beam's section is the two skins
+as tube_section sizes them, its stiffness E I. Its lengthwise bending (M x / I)
 and shear flow (V Q / I) add to the skins' hoop and lengthwise forces; each skin element is thickened
 where von Mises exceeds the allowable (with the model's compression knockdown), station by station. The
 anchored bulkheads carry the load of s metres instead of one cell (their steel scaled from what their
@@ -27,47 +30,56 @@ from . import tube_section as ts
 STATIONS = 161
 
 
-def beam(length, supports, q, n=801):
-    """Free-free Euler-Bernoulli beam, uniform stiffness, rigid point supports, uniform load q (N/m).
-    Returns x, M(x), V(x) and the reactions."""
+def beam(length, supports, q, n=801, spring=None, ei=1.0):
+    """Free-free Euler-Bernoulli beam of stiffness ei, point supports (rigid, or springs of stiffness
+    `spring` N/m), uniform load q (N/m). Returns x, M(x), V(x) and the reactions."""
     x = np.linspace(0, length, n)
     h = length / (n - 1)
     k = np.zeros((2 * n, 2 * n))
     f = np.zeros(2 * n)
-    ke = np.array([[12, 6 * h, -12, 6 * h], [6 * h, 4 * h * h, -6 * h, 2 * h * h],
-                   [-12, -6 * h, 12, -6 * h], [6 * h, 2 * h * h, -6 * h, 4 * h * h]]) / h ** 3
+    ke = ei * np.array([[12, 6 * h, -12, 6 * h], [6 * h, 4 * h * h, -6 * h, 2 * h * h],
+                        [-12, -6 * h, 12, -6 * h], [6 * h, 2 * h * h, -6 * h, 4 * h * h]]) / h ** 3
     fe = q * np.array([h / 2, h * h / 12, h / 2, -h * h / 12])
     for e in range(n - 1):
         d = slice(2 * e, 2 * e + 4)
         k[d, d] += ke
         f[d] += fe
     nodes = [int(round(s / h)) for s in supports]
-    free = np.setdiff1d(np.arange(2 * n), [2 * j for j in nodes])
-    u = np.zeros(2 * n)
-    u[free] = np.linalg.solve(k[np.ix_(free, free)], f[free])
-    reactions = -(k @ u - f)[[2 * j for j in nodes]]
+    if spring is None:
+        free = np.setdiff1d(np.arange(2 * n), [2 * j for j in nodes])
+        u = np.zeros(2 * n)
+        u[free] = np.linalg.solve(k[np.ix_(free, free)], f[free])
+        reactions = -(k @ u - f)[[2 * j for j in nodes]]
+    else:
+        for j in nodes:
+            k[2 * j, 2 * j] += spring
+        u = np.linalg.solve(k, f)
+        reactions = spring * u[[2 * j for j in nodes]]
     xs = x[nodes]
     shear = -q * x + sum(np.where(x >= s, r, 0.0) for s, r in zip(xs, reactions))
     moment = -q * x ** 2 / 2 + sum(np.where(x >= s, r * (x - s), 0.0) for s, r in zip(xs, reactions))
     return x, moment, shear, reactions
 
 
-def supports(length, k, q):
-    """k anchors evenly spaced (half a spacing from each end), the outer pair moved so the reactions agree."""
-    s = length / k
-    base = [(i + 0.5) * s for i in range(k)]
-    if k <= 2:
-        return base, beam(length, base, q)
-    best = None
-    for shift in np.linspace(-0.3 * s, 0.3 * s, 241):
-        pos = list(base)
-        pos[0] += shift
-        pos[-1] -= shift
-        res = beam(length, pos, q)
-        spread = np.ptp(res[3]) / res[3].mean()
-        if best is None or spread < best[0]:
-            best = (spread, pos, res)
-    return best[1], best[2]
+def supports(length, k, q, spring=None, ei=1.0):
+    """k anchors evenly spaced, half a spacing from each end (as the nets lay them out): positions and
+    the beam on them."""
+    pos = [(i + 0.5) * length / k for i in range(k)]
+    return pos, beam(length, pos, q, n=100 * k + 1, spring=spring, ei=ei)   # anchors exactly on nodes
+
+
+def anchor_stiffness(p, radius, spacing):
+    """Stiffness of one anchor station (both nets) against the tube: the four chord ends pulling on it,
+    each chord E A / L along its whole length (cable_net's uniform chords at this spacing)."""
+    from habitat_model import Design, evaluate
+
+    from . import cable_net
+    res = evaluate(p, Design(radius_m=radius, n_tori=1))
+    g, m = res["geometry"], res["mass"]
+    net = cable_net.compute(radius, m["rim"], g["omega"], g["hub_radius"], p.wire_stress_mpa * 1e6,
+                            p.steel_density, anchor_spacing=spacing)
+    per_chord = net["wire_area_uniform"] / 2          # each of the two nets carries half
+    return 4 * ts.E * per_chord / (2 * net["half_length"]) * net["efficiency"] ** 2
 
 
 _SECTIONS = {}
@@ -100,7 +112,9 @@ def check(p, radius, k, segment_length=None):
     ]
     for s in skins:
         s["x"] = s["rho"] * np.cos(phi)        # distance from the bending axis, along the spin's radial
-    pos, (x, moment, shear, reactions) = supports(length, k, q)
+    inertia0 = sum((s["t"] * s["l"] * s["x"] ** 2).sum() for s in skins)
+    spring = anchor_stiffness(p, radius, length / k)
+    pos, (x, moment, shear, reactions) = supports(length, k, q, spring=spring, ei=ts.E * inertia0)
     added, peak_bending, peak_shear = [], 0.0, 0.0
     for i in np.linspace(0, len(x) - 1, STATIONS).astype(int):
         t_new = [s["t"].copy() for s in skins]
@@ -117,7 +131,6 @@ def check(p, radius, k, segment_length=None):
             if all(np.allclose(a, b, rtol=1e-4) for a, b in zip(nxt, t_new)):
                 break
             t_new = nxt
-        inertia0 = sum((s["t"] * s["l"] * s["x"] ** 2).sum() for s in skins)
         peak_bending = max(peak_bending, abs(moment[i]) * skins[1]["rho"] / inertia0)
         peak_shear = max(peak_shear, max(abs(shear[i]) * np.abs(np.cumsum(s["t"] * s["l"] * s["x"])).max()
                                          / inertia0 / s["t"].min() for s in skins))
@@ -137,7 +150,8 @@ def check(p, radius, k, segment_length=None):
         bulk = float(new) - base
     return {
         "radius": radius, "k": k, "spacing": spacing, "segment": length, "supports": pos,
-        "reactions": reactions, "load": q, "anchor_force": float(reactions.mean()),
+        "reactions": reactions, "load": q, "anchor_force": float(reactions.mean()), "anchor_stiffness": spring,
+        "reaction_spread": float(np.ptp(reactions) / reactions.mean()),
         "moment_max": float(np.abs(moment).max()), "shear_max": float(np.abs(shear).max()),
         "bending_stress": peak_bending, "shear_stress": peak_shear,
         "skin_added": skin, "bulkheads_added": bulk, "hull_frames": out["per_torus"]["total"],
