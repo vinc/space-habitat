@@ -1,7 +1,7 @@
 # Reproduce the sky texture
 
-`generate_sky.py` combines the two sky inputs used by ESA's NEO orbit viewer:
-a Gaia Milky Way panorama and Spacekit's processed Yale Bright Star Catalogue.
+`generate_sky.py` combines ESA's original **4000 × 2000 Gaia EDR3 PNG** with
+Spacekit's processed Yale Bright Star Catalogue, also used by ESA's NEO viewer.
 It writes one 8192 × 4096 linear OpenEXR image and a JSON recipe manifest.
 The current recipe draws 8,404 catalogue entries through visual magnitude 6.5.
 There are no random stars.
@@ -19,7 +19,7 @@ python rendering/generate_sky.py
 
 This creates `rendering/output/habitat-sky.exr` and `habitat-sky.json`.
 Blender and `bpy` are not required to generate the texture.
-The first run downloads about 3 MB into `rendering/assets/`; subsequent runs
+The first run downloads about 19 MB into `rendering/assets/`; subsequent runs
 reuse those files. Both source files are checked against SHA-256 hashes pinned
 in the script. Preserve the cache for offline regeneration. A changed upstream
 file causes an error rather than silently changing the result.
@@ -37,18 +37,24 @@ Edit `rendering/sky.json` and run the generator again.
 | Parameter | Default | Effect |
 | --- | --- | --- |
 | `zero_magnitude_flux` | 80 | Brightness of the catalogue stars; doubling it doubles their flux. |
-| `milky_way_gain` | 8.0 | Brightness of the diffuse panorama; zero removes that layer. |
+| `milky_way_gain` | 0.4 | Brightness of the diffuse panorama; zero removes that layer. |
 | `magnitude_limit` | 6.5 | Faintest catalogue entries included; a smaller number gives fewer stars. |
 | `star_fwhm_arcmin` | 3.5 | Apparent image-profile width, in arcminutes; a display choice rather than a stellar diameter. |
 | `star_colour_strength` | 0.35 | Zero gives white stars; one uses the full approximate temperature colours. |
-| `milky_way_blur_deg` | 0.4 | FWHM of smoothing applied to the source panorama, in degrees. |
+| `milky_way_blur_deg` | 0.15 | FWHM of smoothing applied to the source panorama, in degrees. |
 | `yaw_deg` | 0 | Rotates both layers together around world Z. |
 | `width` | 8192 | Image width; height is half this value. Higher resolutions need more memory. |
 
-The source panorama is already dimmed for ESA's viewer. The default Milky Way
-gain of 8.0 makes the band and its dust lanes visible at the supplied exterior
-exposure of −5.5 stops and sky Strength 10. A gain around 4 is fainter; 12 is
+The original PNG has a much wider brightness range than the viewer texture.
+Its default gain of 0.4 keeps the Milky Way visible at the supplied exterior
+exposure of −5.5 stops and sky Strength 10. A gain around 0.2 is fainter; 0.6 is
 more pronounced. Change this parameter independently of the catalogue-star flux.
+The 0.15° smoothing retains more of the source's detail while softening its
+point sources beneath the sharp catalogue layer.
+
+The PNG's gAMA value (0.45455) is decoded to linear light before smoothing and
+reprojection. An explicit sRGB chunk takes precedence when present. The output
+EXR uses linear Rec.709 primaries and half-float channels.
 Gaia maps integrated stellar brightness and obscuring dust; it does not include
 all the emission and reflection nebulosity seen in deep photographs of Orion.
 
@@ -109,9 +115,7 @@ python -m unittest discover -s rendering -p 'test_*.py' -v
 - [ESA NEO orbit viewer](https://neotools.neo.s2p.esa.int/ovt?object=433%20Eros).
 - [Original Gaia EDR3 PNG, 4000 × 2000](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png),
   with [ESA's image description](https://www.esa.int/ESA_Multimedia/Images/2020/12/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_32).
-- [Viewer's Milky Way texture, 2160 × 1080](https://neotools.neo.s2p.esa.int/static/textures/MilkyWay.png).
-  The generator downloads this processed viewer texture; the original PNG above
-  is linked as its reference source. The viewer credits it to the same Gaia EDR3 map.
+  This original PNG is the generator's diffuse-background input.
   Credit **ESA/Gaia/DPAC**, [CC BY-SA 3.0 IGO](https://creativecommons.org/licenses/by-sa/3.0/igo/).
   The generated texture retains this credit and licence. Changes include
   smoothing, brightness scaling, reprojection and the added catalogue stars.

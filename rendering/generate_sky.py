@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bake ESA/Gaia's Milky Way and catalogue stars into one Blender sky EXR.
+"""Bake ESA/Gaia's original sky PNG and catalogue stars into one Blender sky EXR.
 
 Run with ordinary Python; Blender/bpy is not required. See sky.md for usage,
 coordinate conventions, source credits and the distinction from photometry.
@@ -18,10 +18,11 @@ import OpenEXR
 
 
 SOURCES = {
-    "MilkyWay.png": {
-        "url": "https://neotools.neo.s2p.esa.int/static/textures/MilkyWay.png",
-        "sha256": "09a14a8bedec643db01502cdd86b5b9f4445d2339bf85a0ae95dce606e5d894d",
-        "credit": "ESA/Gaia/DPAC; CC BY-SA 3.0 IGO",
+    "gaia-edr3-original.png": {
+        "url": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png",
+        "sha256": "68fef2ee355015f84a43105bbf296f5a8d8b38d2fe8fe1a068ba1402e9ce5550",
+        "credit": "ESA/Gaia/DPAC; acknowledgement A. Moitinho; CC BY-SA 3.0 IGO",
+        "dimensions": [4000, 2000],
     },
     "bsc.json": {
         "url": "https://neotools.neo.s2p.esa.int/static/spacekit/data/processed/bsc.json",
@@ -76,6 +77,22 @@ def srgb_to_linear(value):
     return np.where(value <= .04045, value / 12.92, ((value + .055) / 1.055) ** 2.4)
 
 
+def load_linear_png(path):
+    """Decode PNG colour metadata before any filtering or reprojection.
+
+    The original Gaia PNG has gAMA=0.45455 and Rec.709 chromaticities.
+    An explicit sRGB chunk takes precedence over gAMA, as the PNG spec requires.
+    """
+    with Image.open(path) as image:
+        rgb = np.asarray(image.convert("RGB"), dtype=np.float32) / 255.
+        gamma = image.info.get("gamma")
+        if "srgb" not in image.info and gamma is not None:
+            if not math.isfinite(gamma) or gamma <= 0:
+                raise ValueError("Invalid PNG gamma")
+            return rgb ** (1 / gamma)
+        return srgb_to_linear(rgb)
+
+
 def yaw_matrix(degrees):
     angle = math.radians(degrees)
     c, s = math.cos(angle), math.sin(angle)
@@ -102,9 +119,8 @@ def direction_to_pixel(vectors, width):
 
 def milky_way(path, width, gain, blur_deg, yaw_deg):
     # The source is a Galactic panorama: l=0 at centre; l increases leftward.
-    # Convert from display sRGB to linear light BEFORE filtering/resampling.
-    with Image.open(path) as image:
-        source = srgb_to_linear(np.asarray(image.convert("RGB")) / 255.)
+    # Convert from the PNG's colour encoding BEFORE filtering/resampling.
+    source = load_linear_png(path)
     if blur_deg:
         sigma = blur_deg * source.shape[1] / 360 / 2.354820045
         # Wrap longitude, but extend the pole rows rather than mixing poles.
@@ -224,7 +240,7 @@ def main():
     config = json.loads(args.config.read_text())
     validate(config)
     files = {name: source_file(args.assets_dir, name) for name in SOURCES}
-    image = milky_way(files["MilkyWay.png"], config["width"], config["milky_way_gain"], config["milky_way_blur_deg"], config["yaw_deg"])
+    image = milky_way(files["gaia-edr3-original.png"], config["width"], config["milky_way_gain"], config["milky_way_blur_deg"], config["yaw_deg"])
     available, count = add_stars(image, files["bsc.json"], config)
     if not np.isfinite(image).all() or image.max() > np.finfo(np.float16).max:
         raise ValueError("Sky radiance exceeds finite half-float EXR range")
@@ -233,7 +249,7 @@ def main():
                       "comments": "ESA/Gaia/DPAC; CC BY-SA 3.0 IGO. Catalogue stars: Spacekit. See adjacent JSON manifest."},
                      {"RGB": image.astype(np.float16)}) as output:
         output.write(str(args.output))
-    manifest = {"recipe_version": 1, "parameters": config, "sources": SOURCES,
+    manifest = {"recipe_version": 2, "parameters": config, "sources": SOURCES,
                 "catalogue_rows": available, "stars_drawn": count,
                 "coordinates": "J2000 ecliptic; +X equinox, +Z north; optional global yaw",
                 "projection": "Blender equirectangular, file top +Z, centre +X, quarter width +Y",

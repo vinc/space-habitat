@@ -5,13 +5,35 @@ import math
 from pathlib import Path
 import tempfile
 import unittest
+import struct
 
 import numpy as np
+from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 
 import generate_sky as sky
 
 
 class SkyTests(unittest.TestCase):
+    def test_png_gamma_is_decoded_before_filtering(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/"gamma.png"
+            info = PngInfo()
+            info.add(b'gAMA', struct.pack('>I', 45455))
+            Image.new('RGB', (1, 1), (128, 128, 128)).save(path, pnginfo=info)
+            expected = (128/255) ** (1/.45455)
+            np.testing.assert_allclose(sky.load_linear_png(path), expected, rtol=1e-6)
+
+    def test_srgb_chunk_takes_precedence_over_gamma(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/"srgb.png"
+            info = PngInfo()
+            info.add(b'gAMA', struct.pack('>I', 45455))
+            info.add(b'sRGB', b'\x00')
+            Image.new('RGB', (1, 1), (128, 128, 128)).save(path, pnginfo=info)
+            expected = ((128/255+.055)/1.055) ** 2.4
+            np.testing.assert_allclose(sky.load_linear_png(path), expected, rtol=1e-6)
+
     def test_blender_axes_are_not_mirrored(self):
         directions = np.array([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]])
         x, y = sky.direction_to_pixel(directions, 2048)
