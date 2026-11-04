@@ -95,4 +95,36 @@ Steady-periodic swing of a 900 m valley under a 12 h day (`thermal_model/valley.
 
 Left to itself the valley swings a few kelvin: the soil's admittance (~5–17 W/m²K at a daily period) and the ponds hold it, so a wet valley stays within ~2–4 K and a dry canyon ~4–11 K. Wider swings (the notes' ~15 °C canyon) need the cooling scheduled: more at night through the cold ceiling, less by day.
 
-Not modelled: the spokes and cables in the ray tracing, the envelopes' rounded inner faces, the radiators' own tubes and their pressure, freezing in cold panels when the load drops, sunlight reflected between panels, the despun array's shadow, and the valley's air movement.
+## Radiator wings on the elevator shafts
+
+Each torus and each farm ring carries its radiators on four elevator shafts in its mid-plane, one per quadrant, a wing on both sides of each: an annular sector from the band's inner to outer radius (arcs of circle at both ends), from the shaft's edge (5 m off its centre line) out to the angle that gives the plane's coverage (`habitat_model/cavity.py`, `Wings`). Margins main / farm, inboard farm radiators, 20000 rays per section and seed, 2 seeds:
+
+| Panels | 900 m pair, 3 tiers at 5% / 25% | 900 m six, 2 tiers at 5% / 35% |
+|---|---|---|
+| Evenly spread panels (the sweeps above) | 2.01 / 1.49 | 1.76 / 1.55 |
+| Wings, aligned in every ring | 1.79 / 1.28 | 1.47 / 1.37 |
+| Wings, each ring turned 90°/N from its neighbour | 2.03 / 1.60 | 1.83 / 1.52 |
+
+Wings at the same angles in every ring face each other along the axis and lose ~10–15%; turned ring to ring they do slightly better than evenly spread panels, which block every crossing a little.
+
+**Least farm coverage for 1.5×** with staggered wings, the valleys' at 5% (one face, per farm ring):
+
+| Stack, tiers lit | 900 m | 1.6 km | 2.5 km |
+|---|---|---|---|
+| pair, 1 tier | 10% (3.86 ha) | 10% (12.3 ha) | 10% (30.2 ha) |
+| pair, 2 tiers | 20% (7.71 ha) | 20% (24.6 ha) | 15% (45.4 ha) |
+| pair, 3 tiers | 25% (9.64 ha) | 25% (30.8 ha) | 25% (75.6 ha) |
+| six, 1 tier | 10% (3.86 ha) | 10% (12.3 ha) | 10% (30.2 ha) |
+| six, 2 tiers | 35% (13.5 ha) | 40% (49.3 ha) | 40% (121 ha) |
+| six, 3 tiers | not reached: 1.21× at 90% | not reached: 1.15× at 80% | not reached: 1.13× at 80% |
+
+**The chord nets' shading.** The tori's two side nets sit between the valleys' wings and the drum's open ends; traced as thin insulated cylinders at the anchor spacing's chord count and diameter, margins main / farm at 5% / 35% (no nets, then nets with anchors every ~10 m, ~19–20 m and ~25–28 m):
+
+| Stack | No nets | Anchors ~10 m | ~19–20 m | ~25–28 m |
+|---|---|---|---|---|
+| 900 m six, 2 tiers | 1.83 / 1.52 | 1.74 / 1.38 (9 m, 25 cm) | 1.76 / 1.40 (19 m, 36 cm) | 1.78 / 1.41 (28 m, 44 cm) |
+| 1.6 km six, 2 tiers | 1.87 / 1.48 | 1.74 / 1.32 (10 m, 35 cm) | 1.78 / 1.33 (20 m, 49 cm) | 1.79 / 1.34 (25 m, 55 cm) |
+
+The nets take ~5–12% off both sections' margins (the farm section looks back at the tori through them); fewer, thicker chords block less (√N), but the gain is a few percent. Not included: the farm spokes (~1% of their annulus) and the stabilising lines.
+
+Not modelled: the farm spokes and stabilising lines in the ray tracing (the chord nets only in the wing section), the envelopes' rounded inner faces, the radiators' own tubes and their pressure, freezing in cold panels when the load drops, sunlight reflected between panels, the despun array's shadow, and the valley's air movement.

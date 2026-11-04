@@ -54,7 +54,12 @@ def layout_section(a, p, overrides):
                              for t in (1.0, TARGET)]])
     return per_torus, coverages, [
         "## The farm radiators: where, and how far out",
-        "Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the baseline, from the rings "
+        "**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons "
+        "below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former "
+        "alternative. Three-tier six-stacks accept the reported ~1.2× farm margin (~1.2–1.3× before the farm ring "
+        "was centred on 0.4 r, 3 Nov 2026) rather than the earlier 1.5× target. Inboard thermosiphon hardware and a "
+        "new maximum-stack sweep remain open.",
+        "Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the former baseline, from the rings "
         "out to ~1 r), the warm coolant must sink against spin gravity: pumped loops. **Inboard** (from the hub "
         "to the rings), it rises: passive thermosiphons, as in the main section, but the radiators then sit in "
         "the space the farm rings enclose. The whole stack traced as one scene (`habitat_model/cavity.py`), "
