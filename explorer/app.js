@@ -1,7 +1,6 @@
 import { modelConfig, evaluateModel } from "./model-client.js";
 import {
   solarLayout,
-  farmRadiatorBounds,
   valleyPoint,
   frameBounds,
   depthRange,
@@ -329,6 +328,16 @@ const materials = {
     transparent: true,
     opacity: 0.6,
   }),
+  shaft: new THREE.MeshStandardMaterial({
+    color: 0xc9b48a,
+    roughness: 0.45,
+    metalness: 0.6,
+  }),
+  shaft_line: new THREE.LineBasicMaterial({
+    color: 0xc9b48a,
+    transparent: true,
+    opacity: 0.55,
+  }),
 };
 const colorKeys = {
   hull: "Habitat",
@@ -342,11 +351,13 @@ const colorKeys = {
   path: "Path",
   line: "Cables",
   brace: "Lattice",
+  shaft: "Elevator shafts",
 };
 function applyColors(colors) {
   for (const [key, value] of Object.entries(colors ?? {}))
     if (materials[key] && /^#[0-9a-f]{6}$/i.test(value))
       materials[key].color.set(value);
+  materials.shaft_line.color.copy(materials.shaft.color);
   dirty = true;
 }
 try {
@@ -371,6 +382,7 @@ function renderLegend() {
     picker.setAttribute("aria-label", label + " colour");
     picker.addEventListener("input", () => {
       materials[key].color.set(picker.value);
+      materials.shaft_line.color.copy(materials.shaft.color);
       dirty = true;
       try {
         localStorage.setItem("habitat-colors", JSON.stringify(colorValues()));
@@ -394,6 +406,72 @@ function line(a, b, mat = materials.line, group = assembly) {
   const obj = new THREE.Line(geometry, mat);
   group.add(obj);
   return obj;
+}
+// Many cables at once: one LineSegments per material (thousands of separate lines would be slow).
+function segments(points, mat, group = assembly) {
+  if (!points.length) return null;
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const obj = new THREE.LineSegments(geometry, mat);
+  group.add(obj);
+  return obj;
+}
+// A radiator wing in its ring's plane (faces along the axis): an annular sector r0..r1, from the
+// shaft's edge (a straight line `edge` off its centre line, at angle 0) out to `beta`, on one side.
+function wingGeometry(r0, r1, edge, beta, side) {
+  const nr = software ? 6 : 24,
+    na = software ? 6 : 24,
+    v = [],
+    idx = [];
+  for (let i = 0; i <= nr; i++) {
+    const rho = r0 + ((r1 - r0) * i) / nr,
+      p0 = Math.asin(Math.min(1, edge / rho));
+    for (let j = 0; j <= na; j++) {
+      const ph = p0 + ((beta - p0) * j) / na;
+      v.push(rho * Math.cos(ph), side * rho * Math.sin(ph), 0);
+    }
+  }
+  for (let i = 0; i < nr; i++)
+    for (let j = 0; j < na; j++) {
+      const a = i * (na + 1) + j,
+        b = a + na + 1;
+      idx.push(a, b, a + 1, a + 1, b, b + 1);
+    }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(v, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+// Four elevator shafts in a ring's mid-plane (layout.shafts), each with a radiator wing on both
+// sides; the ring's shafts turned by `turn`. Drawn with the wings only when radiators are shown.
+function shaftsAndWings(L, z, inner, top, wing, turn, withWings) {
+  const s = L.shafts,
+    w = s.width / 2,
+    len = top - inner;
+  const rail = new THREE.BoxGeometry(len, 0.9, 0.9);
+  const wings =
+    withWings && wing.angle > 0
+      ? [1, -1].map((side) => wingGeometry(wing.band[0], wing.band[1], L.wings.edge, wing.angle, side))
+      : [];
+  const frames = [];
+  for (let x = inner + 12; x < top; x += 12) {
+    const nx = Math.min(x + 12, top);
+    frames.push(x, -w, -w, x, w, -w, x, w, -w, x, w, w, x, w, w, x, -w, w, x, -w, w, x, -w, -w);
+    frames.push(x, -w, -w, nx, w, -w, x, -w, w, nx, w, w);
+  }
+  for (let q = 0; q < s.count; q++) {
+    const holder = new THREE.Group();
+    holder.rotation.z = turn + (q * 2 * Math.PI) / s.count;
+    holder.position.z = z;
+    assembly.add(holder);
+    for (const [y, zz] of [[-w, -w], [-w, w], [w, -w], [w, w]]) {
+      const m = mesh(rail, materials.shaft, holder);
+      m.position.set(inner + len / 2, y, zz);
+    }
+    if (!software) segments(frames, materials.shaft_line, holder);
+    for (const g of wings) mesh(g, materials.radiator, holder);
+  }
 }
 const polar = (r, t, z) => [r * Math.cos(t), r * Math.sin(t), z];
 function torus(r, a, z, mat, arc = 2 * Math.PI) {
@@ -511,6 +589,11 @@ function rebuild() {
   const z0 = -g.stack_length / 2;
   const rad = (r, t, z) => polar(r, t, z);
   const cable = $("structure").checked && !section;
+  const L = current.results.layout,
+    chords = [],
+    hubLines = [],
+    braces = [],
+    spokes = [];
   for (let k = 0; k < (section ? 1 : n); k++) {
     const z = z0 + (k + 0.5) * g.pitch;
     if (cut) {
@@ -567,46 +650,40 @@ function rebuild() {
       torus(c, g.envelope_radius, z, materials.hull);
     }
     if (cable) {
-      const h = g.hub_radius * 1.1,
-        theta = Math.acos(Math.min(0.95, h / c));
-      // Two side nets: chords tangent just outside the hub, decimated for clarity.
-      for (const side of [-1, 1])
-        for (let j = 0; j < 32; j++) {
-          const t = (j * 2 * Math.PI) / 32,
-            zz = z + side * a;
-          line(rad(c, t - theta, zz), rad(c, t + theta, zz));
-          line(rad(g.hub_radius, t, zz), rad(h, t, zz));
+      // Every cable (the SVG fallback draws a sample): two side nets, an anchor every cell of rim,
+      // each anchor joined to the one `chord_steps` ahead; one stabilising line per chord.
+      const net = L.net,
+        stride = software ? Math.ceil(net.anchors / 48) : 1,
+        dA = (2 * Math.PI) / net.anchors;
+      for (const side of [-1, 1]) {
+        const zz = z + side * net.planes_offset;
+        for (let j = 0; j < net.anchors; j += stride) {
+          const t0 = j * dA,
+            t1 = (j + net.chord_steps) * dA,
+            mid = (t0 + t1) / 2;
+          chords.push(...rad(net.anchor_radius, t0, zz), ...rad(net.anchor_radius, t1, zz));
+          hubLines.push(...rad(g.hub_radius, mid, zz), ...rad(net.tangent_radius, mid, zz));
         }
-      if (k < n - 1)
-        for (let j = 0; j < 40; j++) {
-          const t = (j * 2 * Math.PI) / 40,
-            dt = (2 * Math.PI) / 40;
-          line(
-            rad(g.envelope_outer, t, z + a + g.jacket),
-            rad(g.envelope_outer, t + dt, z + g.pitch - a - g.jacket),
-            materials.brace,
+      }
+      // Rim lattice across the gap to the next torus: X-braced bays at the tube's centre line.
+      const bays = L.lattice.bays;
+      if (k < n - 1 && bays) {
+        const db = (2 * Math.PI) / bays,
+          bs = software ? Math.ceil(bays / 60) : 1,
+          z1 = z + g.envelope_radius,
+          z2 = z + g.pitch - g.envelope_radius;
+        for (let j = 0; j < bays; j += bs)
+          braces.push(
+            ...rad(L.lattice.radius, j * db, z1), ...rad(L.lattice.radius, (j + 1) * db, z2),
+            ...rad(L.lattice.radius, (j + 1) * db, z1), ...rad(L.lattice.radius, j * db, z2),
           );
-          line(
-            rad(g.envelope_outer, t + dt, z + a + g.jacket),
-            rad(g.envelope_outer, t, z + g.pitch - a - g.jacket),
-            materials.brace,
-          );
-        }
-    }
-    if ($("radiators").checked && !section) {
-      // Sectors illustrate radial reach; coverage is not a thermal sizing result.
-      for (let j = 0; j < 8; j++) {
-        const panel = annulus(
-          g.radiator_inner,
-          g.drum_radius,
-          z,
-          materials.radiator,
-          Math.PI / 18,
-        );
-        panel.rotation.z = (j * Math.PI) / 4;
       }
     }
     if (section) continue;
+    // Four elevator shafts in the torus's mid-plane, hub to the rim train, with the valleys'
+    // radiator wings on both sides (sized in reports/heat_rejection.md); turned ring to ring.
+    shaftsAndWings(L, z, g.hub_radius, L.shafts.main_top, L.wings.main, k * L.shafts.stagger,
+                   $("radiators").checked);
     const fz =
       z0 + g.main_length + g.farm_section_gap + (k + 0.5) * g.farm_pitch;
     const fr = g.farm_radius,
@@ -617,28 +694,26 @@ function rebuild() {
     band(fr - fh, g.farm_width, fz, materials.farm, arc);
     annulus(fr - fh, fr + fh, fz - fw, materials.farm, arc);
     annulus(fr - fh, fr + fh, fz + fw, materials.farm, arc);
-    if (cable)
-      for (let j = 0; j < 24; j++)
-        line(
-          rad(g.hub_radius, (j * Math.PI) / 12, fz),
-          rad(fr, (j * Math.PI) / 12, fz),
-        );
-    if ($("radiators").checked && d.tiers_lit > 0)
-      for (const [inner, outer] of farmRadiatorBounds(
-        g,
-        $("farm-layout").value,
-      ))
-        for (let j = 0; j < 8; j++) {
-          const panel = annulus(
-            inner,
-            outer,
-            fz,
-            materials.radiator,
-            Math.PI / 14,
-          );
-          panel.rotation.z = (j * Math.PI) / 4;
+    if (cable) {
+      // Two planes of radial spokes at the ring's faces; every `crossed_every`-th crosses between them.
+      const fs = L.farm_spokes,
+        ds = (2 * Math.PI) / fs.per_plane,
+        stride = software ? Math.ceil(fs.per_plane / 48) : 1;
+      for (let j = 0; j < fs.per_plane; j += stride)
+        for (const side of [-1, 1]) {
+          const zh = fz + side * fw,
+            zr = j % fs.crossed_every === 0 ? fz - side * fw : zh;
+          spokes.push(...rad(fs.inner, j * ds, zh), ...rad(fs.outer, j * ds, zr));
         }
+    }
+    // The farm ring's own four shafts, the same layout as the tori's, wings inboard of the ring.
+    shaftsAndWings(L, fz, g.hub_radius, L.shafts.farm_top, L.wings.farm, k * L.shafts.stagger,
+                   $("radiators").checked && d.tiers_lit > 0);
   }
+  segments(chords, materials.line);
+  segments(hubLines, materials.line);
+  segments(spokes, materials.line);
+  segments(braces, materials.brace);
   if (!section) {
     const hub = mesh(
       new THREE.CylinderGeometry(

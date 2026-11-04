@@ -54,5 +54,34 @@ class ExplorerTests(unittest.TestCase):
                 self.assertGreater(response['results']['mass']['total'], 0)
 
 
+
+class LayoutTests(unittest.TestCase):
+    """The drawing layout follows the detailed models' rules."""
+
+    def test_nets_lattice_and_wings_agree_with_the_models(self):
+        from habitat_model import cavity, layout
+        from habitat_model.assumptions import load, params
+        from habitat_model.model import evaluate
+        from structure_model import cable_net
+        from dynamics_model import links
+        p = params(load())
+        for radius, n, tiers in ((900, 6, 2), (1600, 2, 3)):
+            res = evaluate(p, Design(radius_m=radius, n_tori=n, tiers_lit=tiers))
+            g, m, lay = res['geometry'], res['mass'], res['layout']
+            net = cable_net.compute(radius, m['rim'], g['omega'], g['hub_radius'], p.wire_stress_mpa * 1e6,
+                                    p.steel_density, anchor_spacing=p.cell_size_m)
+            self.assertEqual(lay['net']['anchors'], net['n_chords'])
+            self.assertAlmostEqual(lay['net']['tangent_radius'] / net['tangent_radius'], 1, delta=0.03)
+            self.assertAlmostEqual(lay['lattice']['radius'], links.link_radius(g))
+            scene = cavity.assembled_scene(g, n, layout='inboard')
+            self.assertEqual(tuple(lay['wings']['main']['band']), scene.bands[0])
+            self.assertEqual(tuple(lay['wings']['farm']['band']), scene.bands[-1])
+            for key, group in (('main', 0), ('farm', 1)):
+                w = lay['wings'][key]
+                wings = cavity.Wings(scene, [w['coverage'] if gr == group else 0.0 for gr in scene.groups])
+                k = scene.groups.index(group)
+                self.assertAlmostEqual(wings.beta[k], w['angle'], places=9)
+
+
 if __name__ == '__main__':
     unittest.main()

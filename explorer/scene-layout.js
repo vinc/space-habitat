@@ -6,10 +6,6 @@ export function solarLayout(stackLength, totalArea) {
   return { side, z, normal: [1, 0, 0], toSun: [1, 0, 0] };
 }
 
-export function farmRadiatorBounds(g) {
-  return [[g.hub_radius, g.farm_radius - g.farm_height / 2 - 1]];
-}
-
 // Coordinates on a toroidal cross-section. Floor is the outer semicircle,
 // offset inward by the fill depth; its axial span is 2 * (tubeRadius - fill).
 export function valleyPoint(centre, tubeRadius, fill, theta, phi, z) {
