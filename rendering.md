@@ -1,6 +1,6 @@
 # Blender rendering choices
 
-This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with Vincent's bottom camera added on 4 November. The [browser explorer](explorer/README.md) is a separate visualization.
+This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting and Vincent's bottom camera added on 4 November. The [browser explorer](explorer/README.md) is a separate visualization.
 
 The Blender file is maintained manually. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
 
@@ -50,7 +50,9 @@ The band arrangement, rails, perimeter frame, hollow mast and open hub mount are
 
 The native Sun illuminates the scene from +X, with the habitat spin axis along +Z. A visible disk follows the Sun light's direction and angular size without adding illumination a second time.
 
-The current Sun uses a **1 AU reference**: approximately 550 W/m² as a visible-band rendering approximation to the 1,361 W/m² all-spectrum solar constant, and an angular diameter of about 1,919 arcseconds. This differs from the **Eros-aphelion sunlight used to size the array**. The image is not calibrated to that operating point.
+The Sun now uses **Eros perihelion, 1.133324 AU**, from the [ESA NEOCC orbital solution](https://neo.ssa.esa.int/search-for-asteroids?des=433+Eros&tab=obs) dated 9 October 2026. Total sunlight scales from 1,361 W/m² at 1 AU to approximately **1,059.62 W/m²**. The RGB render retains the existing 40.39% visible-band approximation, giving a native Sun Strength of **427.98 W/m²**, with an angular diameter of **0.470347°** (about 1,693 arcseconds). This is an RGB lighting approximation rather than a spectral or thermal simulation.
+
+Select **Sun > Light Data > Custom Properties > Distance (AU)** to change the reference distance. Native drivers keep irradiance proportional to the inverse square of distance and update the apparent diameter. The visible disk follows both values. The **solar array remains sized for aphelion**, when less sunlight is available; changing the lighting distance does not resize it. The numerical model uses rounded Eros orbital elements for that sizing, while this scene's perihelion distance uses the cited ESA value.
 
 Camera exposure, AgX colour management and material roughness substantially affect the result. The supplied exterior camera uses −5.5 stops and the interior camera uses 0. These settings serve the image rather than predicting human visibility.
 
@@ -68,7 +70,7 @@ The material uses an approximate, Sun-dependent Hapke-style reflectance treatmen
 
 ### Cameras
 
-Cameras are viewing aids. Vincent added a bottom camera at location **(0, 0, −3000) m**, with XYZ Euler rotation **(−180°, 0°, 0°)**. Its placement is recorded here from his description; it does not change the habitat geometry or the numerical model.
+Cameras are viewing aids. Vincent added a bottom camera at location **(0, 0, −3000) m**, with XYZ Euler rotation **(−180°, 0°, 0°)**. The updated file includes that camera with the supplied exterior exposure of −5.5 stops. Its placement does not change the habitat geometry or the numerical model.
 
 ## What the scene leaves out
 
