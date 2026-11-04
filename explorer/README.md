@@ -2,7 +2,7 @@
 
 3D interface to `habitat_model`, available locally or as a static GitHub Pages site. Uses Three.js for rendering and the existing Python calculations for all reported quantities. No formulas are reimplemented in JavaScript.
 
-From the repository root, with Python 3.11+ and Node/npm installed:
+From the repository root, with Python 3.13 (pinned in `mise.toml`: `mise install`) and Node/npm installed:
 
 ```sh
 pip install -r requirements.txt
