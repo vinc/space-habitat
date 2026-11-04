@@ -107,8 +107,11 @@ python -m unittest discover -s rendering -p 'test_*.py' -v
 ## Sources and credit
 
 - [ESA NEO orbit viewer](https://neotools.neo.s2p.esa.int/ovt?object=433%20Eros).
-- [Viewer's Milky Way texture](https://neotools.neo.s2p.esa.int/static/textures/MilkyWay.png),
-  credited by the viewer to [Gaia EDR3](https://www.esa.int/ESA_Multimedia/Images/2020/12/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_32).
+- [Original Gaia EDR3 PNG, 4000 × 2000](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png),
+  with [ESA's image description](https://www.esa.int/ESA_Multimedia/Images/2020/12/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_32).
+- [Viewer's Milky Way texture, 2160 × 1080](https://neotools.neo.s2p.esa.int/static/textures/MilkyWay.png).
+  The generator downloads this processed viewer texture; the original PNG above
+  is linked as its reference source. The viewer credits it to the same Gaia EDR3 map.
   Credit **ESA/Gaia/DPAC**, [CC BY-SA 3.0 IGO](https://creativecommons.org/licenses/by-sa/3.0/igo/).
   The generated texture retains this credit and licence. Changes include
   smoothing, brightness scaling, reprojection and the added catalogue stars.
