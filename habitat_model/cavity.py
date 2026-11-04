@@ -41,6 +41,7 @@ from typing import Optional
 
 import numpy as np
 
+from . import wing_geometry
 from .heat import radiator_flux
 
 EPS = 1e-6
@@ -89,11 +90,10 @@ class Wings:
             for g in set(scene.groups):
                 idx = np.flatnonzero(groups == g)
                 self.phi0[idx] = np.arange(len(idx)) * sector / len(idx)
-        f = lambda q: q * q / 2 * np.arcsin(edge / q) + edge / 2 * np.sqrt(q * q - edge * edge)
-        area = np.asarray(cover) * math.pi * (self.r1 ** 2 - self.r0 ** 2)
-        self.beta = (area / (2 * shafts) + f(self.r1) - f(self.r0)) * 2 / (self.r1 ** 2 - self.r0 ** 2)
-        if (area > 0).any() and (self.beta[area > 0] > sector / 2).any():
-            raise ValueError("coverage too high for the wings: neighbouring wings would overlap")
+        # Exact angle per plane (wing_geometry); zero coverage is no wing at all (beta = 0 hits nothing).
+        # Coverage above the attainable maximum (neighbouring wings meeting) raises ValueError.
+        self.beta = np.array([wing_geometry.angle(c, a, b, edge, shafts)
+                              for c, a, b in zip(np.asarray(cover, dtype=float), self.r0, self.r1)])
 
     def _local(self, x, y, k):
         sector = 2 * math.pi / self.shafts
@@ -102,10 +102,13 @@ class Wings:
 
     def hit(self, x, y, k):
         rr, a = self._local(x, y, k)
-        return (rr >= self.r0[k]) & (rr <= self.r1[k]) & (a <= self.beta[k]) & (rr * np.sin(a) >= self.edge)
+        return ((self.beta[k] > 0) & (rr >= self.r0[k]) & (rr <= self.r1[k]) & (a <= self.beta[k])
+                & (rr * np.sin(a) >= self.edge))
 
     def sample(self, k, rng):
         """Uniform points on plane k's wings (k: one plane index per point)."""
+        if (self.beta[k] <= 0).any():
+            raise ValueError("no wings to emit from on some of these planes")
         n = len(k)
         rho, ph = np.empty(n), np.empty(n)
         todo = np.arange(n)
@@ -120,6 +123,41 @@ class Wings:
         ph = (ph * np.where(rng.random(n) < 0.5, 1.0, -1.0) + self.phi0[k]
               + rng.integers(0, self.shafts, n) * 2 * math.pi / self.shafts)
         return rho * np.cos(ph), rho * np.sin(ph)
+
+
+def net_crossing(hit, v, nets, rng):
+    """Rays crossing a net's plane at points `hit` with directions `v`: which meet a chord, and the new
+    directions of those (insulated chords re-emit all they catch).
+
+    The chords, of either handedness, cross a circle of radius rho at sin(alpha) = c / rho off the
+    radial. A ray meets one with the chords' projected-width share there, times sqrt(1 - (v.t)^2) / |v_z|
+    for chord direction t. Reciprocity: a diffuse isothermal cylinder emits per unit solid angle in
+    proportion to its projected width, sqrt(1 - (d.t)^2), so the caught rays are re-emitted with that
+    distribution about the same chord (an isotropic field crossing the net is left unchanged). A thin
+    layer: for rays within ~f of grazing (f the chords' share of the plane, ~6-13% from 0.4 r out, more
+    near the hub) the catch probability saturates at 1, and the layer is no longer reciprocal there."""
+    n = len(hit)
+    rho = np.hypot(hit[:, 0], hit[:, 1])
+    c = nets["c"]
+    inside = (rho > c) & (rho < nets["R"])
+    rs = np.maximum(rho, c * (1 + 1e-9))
+    cos_a = np.sqrt(np.clip(1 - (c / rs) ** 2, 1e-12, 1))
+    share = np.where(inside, nets["N"] * nets["d"] / (cos_a * math.pi * rs), 0.0)
+    alpha = np.arcsin(np.clip(c / rs, 0, 1)) * np.where(rng.random(n) < 0.5, 1.0, -1.0)
+    ph = np.arctan2(hit[:, 1], hit[:, 0]) + alpha
+    t = np.stack([np.cos(ph), np.sin(ph), np.zeros(n)], axis=1)
+    across = np.sqrt(np.clip(1 - np.einsum("ij,ij->i", v, t) ** 2, 0, 1))
+    prob = np.minimum(1.0, share * across / np.maximum(np.abs(v[:, 2]), 1e-6))
+    caught = rng.random(n) < prob
+    new = v.copy()
+    todo = np.flatnonzero(caught)
+    while len(todo):                                   # rejection sampling of sqrt(1 - (d.t)^2)
+        u = rng.normal(size=(len(todo), 3))
+        u /= np.linalg.norm(u, axis=1, keepdims=True)
+        keep = rng.random(len(todo)) < np.sqrt(np.clip(1 - np.einsum("ij,ij->i", u, t[todo]) ** 2, 0, 1))
+        new[todo[keep]] = u[keep]
+        todo = todo[~keep]
+    return caught, new
 
 
 def nets_of(geo, n, chords, diameter, tangent_radius):
@@ -371,23 +409,10 @@ def escape_probability(scene, coverage, emissivity, n_rays=20000, seed=0, max_st
         if body.any():
             new_d[body] = _diffuse(radial[body], rng)
 
-        # A net's plane: meets a chord with the probability its projected width gives (the chords, of
-        # either handedness, cross a circle of radius rho at sin(alpha) = c / rho off the radial).
+        # A net's plane: chords caught and re-emitted reciprocally (net_crossing).
         net = event == 8
         if net.any():
-            rho = np.hypot(hit[net, 0], hit[net, 1])
-            c = nets["c"]
-            inside = (rho > c) & (rho < nets["R"])
-            rs = np.maximum(rho, c * (1 + 1e-9))
-            cos_a = np.sqrt(np.clip(1 - (c / rs) ** 2, 1e-12, 1))
-            share = np.where(inside, nets["N"] * nets["d"] / (cos_a * math.pi * rs), 0.0)
-            alpha = np.arcsin(np.clip(c / rs, 0, 1)) * np.where(rng.random(net.sum()) < 0.5, 1.0, -1.0)
-            ph = np.arctan2(hit[net, 1], hit[net, 0]) + alpha
-            along = v[net, 0] * np.cos(ph) + v[net, 1] * np.sin(ph)
-            prob = np.minimum(1.0, share * np.sqrt(np.clip(1 - along ** 2, 0, 1)) / np.maximum(np.abs(v[net, 2]), 1e-6))
-            caught = np.flatnonzero(net)[rng.random(net.sum()) < prob]
-            u = rng.normal(size=(len(caught), 3))
-            new_d[caught] = u / np.linalg.norm(u, axis=1, keepdims=True)   # insulated: re-emitted all round
+            _, new_d[net] = net_crossing(hit[net], v[net], nets, rng)
 
         idx = np.flatnonzero(alive)
         fate[idx] = new_fate
@@ -463,12 +488,19 @@ def check_assembled(p, d, geo, heat, n_rays=8000, seed=0, grid=GRID, stop_when_f
     is the grid point with the best worse-of-the-two margin.
     """
     scene = assembled_scene(geo, d.n_tori, layout=layout)
+    if wings is not None:
+        # Wings can't cover the whole band (neighbouring wings meet): sweep up to what they can reach.
+        opts = {"edge": wings.get("edge", wing_geometry.EDGE), "shafts": wings.get("shafts", wing_geometry.SHAFTS)}
+        tops = [wing_geometry.max_coverage(*scene.bands[scene.groups.index(g)], **opts) for g in (0, 1)]
+        grids = [sorted({min(f, top) for f in grid}) for top in tops]
+    else:
+        grids = [grid, grid]
     flux, eps = radiator_flux(p.radiator_temp_k), p.radiator_emissivity
     loads = (heat["main_stack"], heat["farm_stack"])
     annuli = (scene.annulus(0), scene.annulus(1))
     points = []
-    for fm in grid:
-        for ff in grid:
+    for fm in grids[0]:
+        for ff in grids[1]:
             escape, output = [], []
             for group, f in ((0, fm), (1, ff)):
                 e = (escape_probability(scene, (fm, ff), eps, n_rays, seed, source=group, wings=wings, nets=nets)["escape"]

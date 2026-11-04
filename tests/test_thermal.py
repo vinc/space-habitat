@@ -147,6 +147,50 @@ class TestWings(unittest.TestCase):
         turned, _, _ = wings.margins(P, 900, 6, 2, cover, {}, n_rays=6000, seeds=(0,))
         self.assertGreater(turned[0], aligned[0] * 1.1)
 
+    def test_wing_geometry_is_exact_and_bounded(self):
+        from habitat_model import wing_geometry as wg
+        r0, r1 = 61.75, 355.75
+        self.assertEqual(wg.angle(0.0, r0, r1), 0.0)
+        self.assertEqual(wg.area(0.0, r0, r1), 0.0)
+        for c in (0.01, 0.05, 0.35, 0.9):          # small wings start past the shaft, near the axis
+            self.assertAlmostEqual(wg.area(wg.angle(c, r0, r1), r0, r1) / (c * math.pi * (r1 ** 2 - r0 ** 2)), 1, places=9)
+        top = wg.max_coverage(r0, r1)
+        self.assertLess(top, 1.0)
+        with self.assertRaises(ValueError):
+            wg.angle(min(1.0, top + 0.01), r0, r1)
+        import numpy as np
+        w = cavity.Wings(self.scene, np.where(np.array(self.scene.groups) == 0, 0.05, 0.0))
+        x, y = np.random.default_rng(1).uniform(-900, 900, (2, 100000))
+        farm = len(self.scene.groups) - 1
+        self.assertFalse(w.hit(x, y, np.full(len(x), farm)).any())      # zero coverage: no phantom panels
+        grid = cavity.check_assembled(P, Design(radius_m=900, n_tori=2, tiers_lit=2), *[evaluate(P, Design(
+            radius_m=900, n_tori=2, tiers_lit=2))[k] for k in ("geometry", "heat")], n_rays=300,
+            grid=(0.05, 1.0), layout="inboard", wings={})
+        self.assertLess(max(q["coverage"][1] for q in grid["points"]), 1.0)  # clipped to what wings reach
+
+    def test_net_leaves_an_isotropic_field_unchanged(self):
+        # Reciprocity: rays crossing a net's plane from an isotropic field (cosine-weighted about the
+        # plane's normal) leave with the same angular distribution, passed or re-emitted. Checked where
+        # the wings are (0.4 r to the drum) and off grazing (|v_z| >= 0.25), where a thin layer of chords
+        # is a fair model; re-emitting uniformly over the sphere tilts it by ~2% and fails.
+        import numpy as np
+        rng = np.random.default_rng(3)
+        net = wings.nets(P, self.res, 6, 10.0)[0]
+        n = 1000000
+        rho = np.sqrt(rng.uniform(360 ** 2, 836 ** 2, n))
+        ph = rng.uniform(0, 2 * math.pi, n)
+        hit = np.stack([rho * np.cos(ph), rho * np.sin(ph), np.zeros(n)], axis=1)
+        v = cavity._diffuse(np.stack([np.zeros(n), np.zeros(n), np.where(rng.random(n) < .5, 1., -1.)], axis=1), rng)
+        caught, out = cavity.net_crossing(hit, v, net, rng)
+        self.assertGreater(caught.mean(), 0.05)
+        edges = np.linspace(0.25, 1, 7)
+        ratio = np.histogram(np.abs(out[:, 2]), edges)[0] / np.histogram(np.abs(v[:, 2]), edges)[0]
+        self.assertLess(np.ptp(ratio), 0.006)
+        u = rng.normal(size=(n, 3))
+        uniform = np.where(caught[:, None], u / np.linalg.norm(u, axis=1, keepdims=True), v)
+        tilted = np.histogram(np.abs(uniform[:, 2]), edges)[0] / np.histogram(np.abs(v[:, 2]), edges)[0]
+        self.assertGreater(np.ptp(tilted), 0.02)
+
     def test_nets_shade_and_default_trace_is_unchanged(self):
         base = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0)["escape"]
         again = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings=None, nets=None)

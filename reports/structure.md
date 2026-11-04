@@ -331,12 +331,12 @@ The net's mass and the hub's margins don't depend on the number of chords; the r
 
 | Torus | Anchors per segment | Chords per net | Chord diameter | Per chord end (MN) | Stabilising lines | Hub's lateral margin | Skins' bending / shear (MPa) | Extra skin / bulkheads (kt) | On hull and frames | Closed ring: spin limit | Shortest arcs, locked: spin limit | Locked joints while building (GN·m) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 900 m | 6 (9.4 m) | 600 | 25 cm | 49.0 | 1,200 | 21.0 | 3 / 59 | +0.06 / +0 | +0.0% | 1.00 | 0.71 | 3 |
-| 900 m | 3 (18.8 m) | 300 | 36 cm | 98.0 | 600 | 21.0 | 13 / 123 | +0.9 / +8 | +3.1% | 1.00 | 0.71 | 3 |
+| 900 m | 6 (9.4 m) | 600 | 25 cm | 49.0 | 1,200 | 21.0 | 4 / 58 | +0.06 / +0 | +0.0% | 1.00 | 0.71 | 3 |
+| 900 m | 3 (18.8 m) | 300 | 36 cm | 98.0 | 600 | 21.0 | 16 / 116 | +0.9 / +8 | +3.1% | 1.00 | 0.71 | 3 |
 | 900 m | 2 (28.3 m) | 200 | 44 cm | 147 | 400 | 21.0 | 37 / 174 | +4 / +10 | +5.7% | 1.00 | 0.73 | 10 |
-| 1.6 km | 10 (10.1 m) | 1,000 | 35 cm | 90.2 | 2,000 | 12.9 | 2 / 60 | +1 / +0.2 | +0.0% | 1.00 | 0.72 | 10 |
-| 1.6 km | 5 (20.1 m) | 500 | 49 cm | 180 | 1,000 | 12.9 | 7 / 127 | +6 / +30 | +3.3% | 1.00 | 0.72 | 10 |
-| 1.6 km | 4 (25.1 m) | 400 | 55 cm | 226 | 800 | 12.9 | 11 / 158 | +10 / +40 | +4.3% | 1.00 | 0.70 | 50 |
+| 1.6 km | 10 (10.1 m) | 1,000 | 35 cm | 90.2 | 2,000 | 12.9 | 3 / 60 | +1 / +0.2 | +0.0% | 1.00 | 0.72 | 10 |
+| 1.6 km | 5 (20.1 m) | 500 | 49 cm | 180 | 1,000 | 12.9 | 9 / 120 | +6 / +30 | +3.3% | 1.00 | 0.72 | 10 |
+| 1.6 km | 4 (25.1 m) | 400 | 55 cm | 226 | 800 | 12.9 | 14 / 150 | +10 / +40 | +4.4% | 1.00 | 0.70 | 50 |
 
 At one anchor per ~10 m the beam adds nothing, as the cross-section model assumes. Halving or thirding the chords costs ~1% of a torus's steel and leaves the finished ring and the first arcs as they are, but the anchor fittings carry 2–3× the load, the skins at the tube's sides take ~120–170 MPa of lengthwise shear, and at two anchors per segment the joints locked while building carry ~3.5–4× the bending. First-order: the segment is a deep beam (span ~ tube width); a 3D shell model of a segment with its anchors and joints, and the larger fittings, are still open.
 

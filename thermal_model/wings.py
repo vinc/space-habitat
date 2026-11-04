@@ -10,7 +10,7 @@ staggered wings, and the tori's tangent-chord nets (cable_net) as shading in the
 import math
 
 from habitat_model import Design, evaluate
-from habitat_model import cavity
+from habitat_model import cavity, wing_geometry
 from habitat_model.heat import radiator_flux
 from structure_model import cable_net
 
@@ -52,6 +52,9 @@ def margins(p, radius, n_tori, tiers, cover, wings=None, net_spacing=None, n_ray
 
 def least_farm(p, radius, n_tori, tiers, wings=None, net_spacing=None, main=MAIN_COVER, grid=FARM_GRID):
     """Least farm coverage meeting the target with the main section at `main`, or the best reached."""
+    res, scene, _ = scene_of(p, radius, n_tori, tiers)
+    top = wing_geometry.max_coverage(*scene.bands[-1])          # the farm band: wings can't cover it all
+    grid = sorted({min(f, top) for f in grid})
     best = None
     for f in grid:
         m, scene, _ = margins(p, radius, n_tori, tiers, (main, f), wings, net_spacing)

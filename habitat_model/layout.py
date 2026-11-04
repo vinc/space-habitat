@@ -17,6 +17,8 @@ number of parts without reimplementing formulas in JavaScript:
 
 import math
 
+from . import wing_geometry
+
 TANGENT_MARGIN = 1.1          # chords tangent at this multiple of the hub radius (cable_net)
 SHAFTS = 4                    # elevator shafts per torus and per farm ring, one per quadrant
 SHAFT_WIDTH_M = 8.0           # placeholder truss width, not sized (cavity.Wings: edge = width / 2 + 1 m)
@@ -41,12 +43,8 @@ def farm_cover(n_tori, tiers, radius):
 
 
 def wing_angle(cover, r0, r1, edge, shafts=SHAFTS):
-    """Angle beta (rad) of each wing: an annular sector r0..r1 from the shaft's edge (a straight line
-    `edge` off its centre line) out to beta, so that 2 x shafts wings cover `cover` of the band."""
-    if cover <= 0:
-        return 0.0
-    f = lambda q: q * q / 2 * math.asin(edge / q) + edge / 2 * math.sqrt(q * q - edge * edge)
-    return (cover * math.pi * (r1 * r1 - r0 * r0) / (2 * shafts) + f(r1) - f(r0)) * 2 / (r1 * r1 - r0 * r0)
+    """Half-angle of each wing for this coverage of the band (wing_geometry, exact; 0: no wings)."""
+    return wing_geometry.angle(cover, r0, r1, edge, shafts)
 
 
 def compute(p, d, geo):
