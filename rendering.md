@@ -1,6 +1,6 @@
 # Blender rendering choices
 
-This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting and Vincent's bottom camera added on 4 November. The [browser explorer](explorer/README.md) is a separate visualization.
+This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](explorer/README.md) is a separate visualization.
 
 The Blender file is maintained manually. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
 
@@ -67,10 +67,6 @@ The star field is synthetic, with brightness boosted for the camera. It contribu
 Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427), so its overall shape comes from spacecraft data. Its placement at X = −90 km, Y = 0, Z = −60 km and its orientation are composition choices, without a dated ephemeris or a selected habitat orbit.
 
 The material uses an approximate, Sun-dependent Hapke-style reflectance treatment. It has not been validated as a spectral or photometric reconstruction. Blender calculates its reflected light separately from the numerical habitat power and thermal models.
-
-### Cameras
-
-Cameras are viewing aids. Vincent added a bottom camera at location **(0, 0, −3000) m**, with XYZ Euler rotation **(−180°, 0°, 0°)**. The updated file includes that camera with the supplied exterior exposure of −5.5 stops. Its placement does not change the habitat geometry or the numerical model.
 
 ## What the scene leaves out
 
