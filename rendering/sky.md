@@ -37,13 +37,20 @@ Edit `rendering/sky.json` and run the generator again.
 | Parameter | Default | Effect |
 | --- | --- | --- |
 | `zero_magnitude_flux` | 80 | Brightness of the catalogue stars; doubling it doubles their flux. |
-| `milky_way_gain` | 0.35 | Brightness of the diffuse panorama; zero removes that layer. |
+| `milky_way_gain` | 8.0 | Brightness of the diffuse panorama; zero removes that layer. |
 | `magnitude_limit` | 6.5 | Faintest catalogue entries included; a smaller number gives fewer stars. |
 | `star_fwhm_arcmin` | 3.5 | Apparent image-profile width, in arcminutes; a display choice rather than a stellar diameter. |
 | `star_colour_strength` | 0.35 | Zero gives white stars; one uses the full approximate temperature colours. |
 | `milky_way_blur_deg` | 0.4 | FWHM of smoothing applied to the source panorama, in degrees. |
 | `yaw_deg` | 0 | Rotates both layers together around world Z. |
 | `width` | 8192 | Image width; height is half this value. Higher resolutions need more memory. |
+
+The source panorama is already dimmed for ESA's viewer. The default Milky Way
+gain of 8.0 makes the band and its dust lanes visible at the supplied exterior
+exposure of −5.5 stops and sky Strength 10. A gain around 4 is fainter; 12 is
+more pronounced. Change this parameter independently of the catalogue-star flux.
+Gaia maps integrated stellar brightness and obscuring dust; it does not include
+all the emission and reflection nebulosity seen in deep photographs of Orion.
 
 The generator preserves flux ratios of `10 ** (-0.4 * magnitude)` before display
 colour management. Gaussian star profiles account for pixel solid angle, so
