@@ -62,64 +62,32 @@ Artificial light sources are shared for common colour and power controls. The re
 
 The sky is one packed **8192 × 4096 linear EXR**, combining the original **4000 × 2000** [Gaia EDR3 PNG](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png) with **8,404 Yale Bright Star Catalogue entries through visual magnitude 6.5**. The stars use catalogue positions and magnitude-based flux ratios; there are no random stars. The panorama and stars share a J2000 ecliptic orientation, with +X toward the equinox and +Z toward ecliptic north. This is a scene convention, without a dated alignment of the Sun or updates for proper motion and parallax.
 
-The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the supplied exterior exposure and 0.15° smoothing. The gain is calibrated to the original PNG's brightness and adjusted independently of the catalogue stars. The PNG's gamma metadata is decoded before filtering; the 8192 × 4096 output preserves the original map's finer detail without adding detail beyond that source. Gaia shows integrated stellar brightness and dark dust lanes; it does not provide all the nebulosity seen in deep Orion photographs. Absolute visibility, approximate temperature colours and finite star-image profiles are display choices. **Visible sky - camera background only > Strength** controls overall brightness; the supplied value is 10. The sky provides no illumination or reflections. Uniform background fill is zero, and the independent Sun disk and Eros lighting remain separate.
+The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the supplied exterior exposure and 0.15° smoothing. The gain is tuned to the original PNG's brightness and adjusted independently of the catalogue stars. The PNG's gamma metadata is decoded before filtering; the 8192 × 4096 output preserves the original map's finer detail without adding detail beyond that source. Gaia shows integrated stellar brightness and dark dust lanes; it does not provide all the nebulosity seen in deep Orion photographs. Absolute visibility, approximate temperature colours and finite star-image profiles are display choices. **Visible sky - camera background only > Strength** controls overall brightness; the supplied value is 5. The sky provides no illumination or reflections. Uniform background fill is zero, and the independent Sun disk and Eros lighting remain separate.
 
 The [generator](rendering/generate_sky.py) and editable [recipe](rendering/sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](rendering/sky.md) for dependencies, controls, packing instructions, source hashes and attribution.
 
-### Adaptive sky and solar glare
+### Manual sky brightness and optional Sun halo
 
-The compositor contains one group, **Sky adaptation and Sun glare**. It adjusts
-only the visible background and adds a camera-lens halo around the visible Sun.
-These are image-processing choices, not changes to the model or its lighting.
+Change **Shading > Shader Editor > World > Visible sky - camera background
+only > Strength** directly before rendering. The saved value is **5**.
+A value of 2.5 gives half this radiance; 10 gives twice this radiance.
+The Milky Way and catalogue stars share this control. Their brightness is a
+display choice, without an absolute photometric calibration.
 
-The sky response uses exposure-adjusted foreground luminance, excluding the
-environment. Each pixel is capped before averaging, and the mean is normalized
-by foreground coverage. Small reflections and lamps therefore have limited
-influence, and empty sky does not dilute the measurement. A smooth transition
-reduces sky radiance to 50% in bright views and retains up to 100% in dark views.
-Sunlit Eros counts as bright foreground even when the habitat is in shadow.
+There is no foreground metering or automatic background adjustment. Film
+transparency stays off. Saved viewport settings use Scene World, full background
+opacity and no environment blur. Use Material Preview or Rendered shading.
 
-| Group control | Test value | Purpose |
-| --- | --- | --- |
-| Adaptive sky | 1 | Use the measured foreground; set to 0 for a fixed multiplier. |
-| Minimum sky | 0.5 | Sky multiplier for bright foreground. |
-| Maximum sky | 1 | Sky multiplier for dark foreground. |
-| Fixed sky | 0.5 | Multiplier used when Adaptive sky is 0; lower it for a darker fallback. |
-| Dark threshold | 0.015 | Mean exposed linear luminance giving the maximum sky multiplier. |
-| Bright threshold | 0.07 | Mean exposed linear luminance giving the minimum sky multiplier. |
-| Sun glare | 1 | Optical halo amount; 0 disables it. |
+The compositor contains only three nodes: **Scene render**, **Sun halo - mute
+to disable**, and **Final image**. The Glare node adds a restrained soft halo
+around very bright highlights, with a high threshold chosen to isolate the
+visible Sun in this scene. Its source is capped to keep the halo bounded.
+It is an artistic approximation of lens scatter, without a calibrated lens
+model. Select the Glare node and press **M** to disable the effect. It does not
+meter or rescale the background.
 
-The threshold values refer to exposure-adjusted linear pixels, not screen
-brightness. Multipliers scale linear radiance: 0.5 is one stop darker and need
-not look exactly half as bright on the display. The exposure input follows
-scene colour-management exposure automatically.
-
-Solar glare is seeded only by visible solar pixels, isolated from the catalogue
-stars and steel highlights. A bounded source feeds a soft halo and weaker wide
-scatter, added after foreground occlusion. Objects covering the Sun remove the
-corresponding source pixels before glare is calculated. This suggests light
-scattering within a lens; there is no atmospheric halo or space-filling fog.
-Its size and intensity are artistic approximations, without a specified lens
-or a calibrated optical scattering model.
-
-Film transparency stays **off**, so the packed sky and visible Sun remain available
-in ordinary renders and while editing. In the viewport, use **Material Preview**
-or **Rendered** shading with **Scene World** enabled. The viewport shows the
-unprocessed world; adaptive sky brightness and solar glare are final-render
-effects. No manual transparency toggle is needed.
-
-The compositor measures the foreground by subtracting the Environment pass
-from the full render. A Mist pass supplies antialiased background coverage;
-its start follows the active camera's far clipping distance, so every visible
-surface lies before the transition. This pass is only a mask and adds no fog.
-Sky correction is applied directly to the existing world contribution, preserving
-foreground pixels and avoiding a second alpha multiplication at object edges.
-Keep compositing enabled for the final effects. No script or add-on is needed.
-
-For the original sky, set **Adaptive sky = 0, Fixed sky = 1, Sun glare = 0**.
-For the darker fallback, set **Adaptive sky = 0, Fixed sky = 0.5** or lower.
-A 50% sky reduction is a visual compromise; it does not make the photograph
-radiometrically calibrated.
+The compositor requires no Environment or Mist pass. No script or add-on is
+needed. Ordinary World Strength editing works independently of the halo.
 
 ### Eros
 

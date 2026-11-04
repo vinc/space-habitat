@@ -47,7 +47,7 @@ Edit `rendering/sky.json` and run the generator again.
 
 The original PNG has a much wider brightness range than the viewer texture.
 Its default gain of 0.4 keeps the Milky Way visible at the supplied exterior
-exposure of −5.5 stops and sky Strength 10. A gain around 0.2 is fainter; 0.6 is
+exposure of −5.5 stops and sky Strength 5. A gain around 0.2 is fainter; 0.6 is
 more pronounced. Change this parameter independently of the catalogue-star flux.
 The 0.15° smoothing retains more of the source's detail while softening its
 point sources beneath the sharp catalogue layer.
@@ -76,7 +76,7 @@ Rec.709** colour space, then use **File > External Data > Pack Resources** and
 save the Blender file. If reusing the same image path, reload it before packing.
 
 The Background node labelled **Visible sky - camera background only** controls
-overall visibility. The supplied value is 10, paired with the existing exterior
+overall visibility. The supplied value is 5, paired with the existing exterior
 exposure of −5.5 stops. The packed sky contributes no scene illumination or
 reflections. The independent Sun disk and the light reflected from Eros remain
 separate from this texture.
