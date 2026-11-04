@@ -50,6 +50,8 @@ The band arrangement, rails, perimeter frame, hollow mast and open hub mount are
 
 The native Sun illuminates the scene from +X, with the habitat spin axis along +Z. A visible disk follows the Sun light's direction and angular size without adding illumination a second time.
 
+Here perihelion specifies the Sun's distance, irradiance and apparent diameter. Its fixed +X direction is illustrative; it does not establish a dated orbital configuration.
+
 The Sun now uses **Eros perihelion, 1.133324 AU**, from the [ESA NEOCC orbital solution](https://neo.ssa.esa.int/search-for-asteroids?des=433+Eros&tab=obs) dated 9 October 2026. Total sunlight scales from 1,361 W/m² at 1 AU to approximately **1,059.62 W/m²**. The RGB render retains the existing 40.39% visible-band approximation, giving a native Sun Strength of **427.98 W/m²**, with an angular diameter of **0.470347°** (about 1,693 arcseconds). This is an RGB lighting approximation rather than a spectral or thermal simulation.
 
 Select **Sun > Light Data > Custom Properties > Distance (AU)** to change the reference distance. Native drivers keep irradiance proportional to the inverse square of distance and update the apparent diameter. The visible disk follows both values. The **solar array remains sized for aphelion**, when less sunlight is available; changing the lighting distance does not resize it. The numerical model uses rounded Eros orbital elements for that sizing, while this scene's perihelion distance uses the cited ESA value.
@@ -91,7 +93,39 @@ needed. Ordinary World Strength editing works independently of the halo.
 
 ### Eros
 
-Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427), so its overall shape comes from spacecraft data. Its centre is **200 km from the habitat**, at approximately **X = −141.421 km, Y = 0, Z = −141.421 km**. With the Sun toward +X and below defined as −Z, Eros is halfway between directly behind and directly below an observer facing the Sun: 45° below the direction opposite the Sun. Direct sunlight and light reflected from Eros therefore arrive from opposite sides, with the reflected light also arriving from below. The position and orientation are composition choices, without a dated ephemeris or a propagated habitat orbit.
+Eros uses the [NEAR/Gaskell shape model](https://doi.org/10.26033/d0gq-9427),
+so its overall shape comes from spacecraft data. Its centre is **325 km from
+the habitat**, at **X = 0, Y = +325 km, Z = 0**. With the Sun toward +X, direct
+sunlight and reflected light from Eros arrive from directions approximately
+90° apart. The placement is a composition choice, without a dated ephemeris
+or a propagated habitat orbit.
+
+### Orienting Eros without changing its spin pole
+
+The mesh's **local +Z** is its spin pole. The measured pole is approximately
+J2000 right ascension **11.3692°**, declination **17.2273°**
+([NEAR navigation results](https://ipnpr.jpl.nasa.gov/progress_report/42-152/152F.pdf)).
+Converted to this scene's ecliptic frame, one matching **XYZ Euler** orientation
+is **X = 0°, Y = 78.65°, Z = 17.24°**.
+
+This is an orientation relative to the stars, not one associated with a particular
+date. The scene's XY plane is the ecliptic, and the habitat ring currently lies
+in that plane. Eros's own orbital plane is inclined by about 10.83° to it; the
+spin pole is about 1° above that orbital plane, compared with 11.35° above the
+ecliptic. These are compatible measurements in different frames. Reinterpreting
+the habitat ring plane as Eros's orbital plane while keeping the Sun at +X would
+require a consistent rotation of the star background and the pole as well.
+
+After aligning the pole, select Eros and press **R → Z → Z**, enter an angle,
+and confirm. The second Z selects the object's **local Z axis**, so this changes
+the rotational phase while preserving the pole direction. All three displayed
+Euler values may change; editing one global Euler field independently is not
+equivalent.
+
+The saved crater-facing phase uses XYZ Euler rotation
+**(−47.725°, 72.9887°, 328.242°)**. This phase is chosen for the image, without
+matching a specific epoch. The pole is aligned to the star background, while
+the Sun direction remains the scene convention described above.
 
 The material uses an approximate, Sun-dependent Hapke-style reflectance treatment. It has not been validated as a spectral or photometric reconstruction. Blender calculates its reflected light separately from the numerical habitat power and thermal models.
 
