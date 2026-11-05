@@ -130,12 +130,13 @@ def net_crossing(hit, v, nets, rng):
     directions of those (insulated chords re-emit all they catch).
 
     The chords, of either handedness, cross a circle of radius rho at sin(alpha) = c / rho off the
-    radial. A ray meets one with the chords' projected-width share there, times sqrt(1 - (v.t)^2) / |v_z|
-    for chord direction t. Reciprocity: a diffuse isothermal cylinder emits per unit solid angle in
-    proportion to its projected width, sqrt(1 - (d.t)^2), so the caught rays are re-emitted with that
-    distribution about the same chord (an isotropic field crossing the net is left unchanged). A thin
-    layer: for rays within ~f of grazing (f the chords' share of the plane, ~6-13% from 0.4 r out, more
-    near the hub) the catch probability saturates at 1, and the layer is no longer reciprocal there."""
+    radial. A ray meets one with probability min(1, s sqrt(1 - (v.t)^2) / |v_z|), s the chords' projected-
+    width share of the plane there and t the chord's direction: a single layer, saturating for rays near
+    grazing and where the chords overlap (near the hub). Reciprocity: in an isotropic field the rays caught
+    per unit solid angle are then proportional to min(|v_z|, s sqrt(1 - (v.t)^2)), so the caught rays are
+    re-emitted with that same density about the same chord (sampled by rejection), and the field crossing
+    the net is left unchanged everywhere, saturation included (for a diffuse cylinder, s sqrt(1 - (d.t)^2)
+    is its projected width, the unsaturated limit)."""
     n = len(hit)
     rho = np.hypot(hit[:, 0], hit[:, 1])
     c = nets["c"]
@@ -151,10 +152,12 @@ def net_crossing(hit, v, nets, rng):
     caught = rng.random(n) < prob
     new = v.copy()
     todo = np.flatnonzero(caught)
-    while len(todo):                                   # rejection sampling of sqrt(1 - (d.t)^2)
+    while len(todo):                 # rejection sampling of min(|d_z|, s sqrt(1 - (d.t)^2)), bound min(1, s)
         u = rng.normal(size=(len(todo), 3))
         u /= np.linalg.norm(u, axis=1, keepdims=True)
-        keep = rng.random(len(todo)) < np.sqrt(np.clip(1 - np.einsum("ij,ij->i", u, t[todo]) ** 2, 0, 1))
+        s = share[todo]
+        density = np.minimum(np.abs(u[:, 2]), s * np.sqrt(np.clip(1 - np.einsum("ij,ij->i", u, t[todo]) ** 2, 0, 1)))
+        keep = rng.random(len(todo)) * np.minimum(1.0, s) < density
         new[todo[keep]] = u[keep]
         todo = todo[~keep]
     return caught, new
