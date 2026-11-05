@@ -66,18 +66,21 @@ fixed angular width, not a fixed number of pixels. At low resolutions, increase
 
 ## Use it in Blender
 
-The supplied `.blend` already contains the packed image. No script is required
-to open or render it.
+The supplied split scene loads `output/habitat-sky.exr` through the relative
+path `//output/habitat-sky.exr`. Keep the EXR in this location beside the scene
+folder. No script is required to render when this file is present. If it is
+missing, run the generator above; its default output matches the scene path.
 
 For a regenerated image, open the World Shader Editor and select the Environment
 Texture node labelled **Gaia and catalogue stars - packed equirectangular sky**.
 Open the new EXR in that node, keep **Equirectangular** projection and **Linear
-Rec.709** colour space, then use **File > External Data > Pack Resources** and
-save the Blender file. If reusing the same image path, reload it before packing.
+Rec.709** colour space, save the Blender file with the image path relative to the scene. Keep
+**Automatically Pack Resources** disabled. If reusing the same image path,
+reload the image before rendering.
 
 The Background node labelled **Visible sky - camera background only** controls
 overall visibility. The supplied value is 5, paired with the existing exterior
-exposure of −5.5 stops. The packed sky contributes no scene illumination or
+exposure of −5.5 stops. The external sky contributes no scene illumination or
 reflections. The independent Sun disk and the light reflected from Eros remain
 separate from this texture.
 

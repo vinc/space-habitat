@@ -6,6 +6,64 @@ The Blender file is maintained manually. Editing it does not update the calculat
 
 See [TODO.md](TODO.md) for the planned grass and tree improvements.
 
+## Split Blender scene
+
+Open `rendering/space-habitat-900m.blend` in Blender 5.2.3 or newer.
+Keep `rendering/output/habitat-sky.exr` beside it in the supplied folder layout.
+The scene loads the sky through the relative path `//output/habitat-sky.exr`.
+Automatically Pack Resources is disabled.
+
+The scene is 37.6 MiB; the external sky is 114.1 MiB.
+Eros is linked from `assets/eros.blend` (4.34 MiB). Keep that file in place too.
+The Eros object, transforms and material remain editable in the main scene;
+only its mesh comes from the external library.
+The sky bytes are unchanged from the packed original; no texture conversion,
+resampling or geometry reduction was applied.
+
+For the GitHub repository, commit the scene and leave the generated EXR outside
+regular Git (it exceeds GitHub's 100 MiB per-file limit). The existing generator
+writes to this exact location. From the repository root:
+
+    python -m venv rendering/.venv
+    source rendering/.venv/bin/activate
+    python -m pip install -r rendering/requirements.txt
+    python rendering/generate_sky.py
+
+Generator and source credits: https://github.com/vinc/space-habitat/pull/24
+Sky credit: ESA/Gaia/DPAC, CC BY-SA 3.0 IGO; reprojected and combined with
+catalogue stars. See the repository's rendering/sky.md for the full source
+credits, processing details, and MIT notices.
+
+## Scene files and renders
+
+Open [space-habitat-900m.blend](space-habitat-900m.blend) in Blender 5.2.3 or newer. Keep the following folder layout; the scene uses relative paths.
+
+| File | Purpose | Size |
+| --- | --- | --- |
+| `space-habitat-900m.blend` | Editable habitat scene | 37.6 MiB |
+| `assets/eros.blend` | Linked Eros mesh | 4.34 MiB |
+| `output/habitat-sky.exr` | External sky texture | 114.1 MiB |
+
+The Eros object, transform and material remain editable in the main scene; its mesh is linked from the asset file. Keep automatic resource packing disabled so the sky stays external. The generated EXR is excluded from Git and can be recreated with the [sky generator](sky.md).
+
+The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Use these settings for new renders.
+
+### Exterior, dock side
+
+![Exterior, dock side](exterior-dock.png)
+
+### Exterior, Eros view
+
+![Exterior, Eros view](exterior-eros.png)
+
+### Exterior, Sun view
+
+![Exterior, Sun view](exterior-sun.png)
+
+### Interior valley
+
+![Interior valley](interior-valley.png)
+
 ## What comes from the model
 
 The scene uses a 900 m habitat floor radius, a 56.25 m torus tube diameter, a 5.5 m rock jacket and a 60.75 m hub radius. The pressure shell, shielding and cable nets follow the model's geometry and structural concept. Individual meshes may lag subsequent structural revisions.
@@ -106,11 +164,11 @@ Artificial light sources are shared for common colour and power controls. The re
 
 ### Stars
 
-The sky is one packed **8192 × 4096 linear EXR**, combining the original **4000 × 2000** [Gaia EDR3 PNG](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png) with **8,404 Yale Bright Star Catalogue entries through visual magnitude 6.5**. The stars use catalogue positions and magnitude-based flux ratios; there are no random stars. The panorama and stars share a J2000 ecliptic orientation, with +X toward the equinox and +Z toward ecliptic north. The dated solar direction is expressed in this same frame. Proper motion and parallax updates remain omitted.
+The sky is one external **8192 × 4096 linear EXR**, combining the original **4000 × 2000** [Gaia EDR3 PNG](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png) with **8,404 Yale Bright Star Catalogue entries through visual magnitude 6.5**. The stars use catalogue positions and magnitude-based flux ratios; there are no random stars. The panorama and stars share a J2000 ecliptic orientation, with +X toward the equinox and +Z toward ecliptic north. The dated solar direction is expressed in this same frame. Proper motion and parallax updates remain omitted.
 
 The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the supplied exterior exposure and 0.15° smoothing. The gain is tuned to the original PNG's brightness and adjusted independently of the catalogue stars. The PNG's gamma metadata is decoded before filtering; the 8192 × 4096 output preserves the original map's finer detail without adding detail beyond that source. Gaia shows integrated stellar brightness and dark dust lanes; it does not provide all the nebulosity seen in deep Orion photographs. Absolute visibility, approximate temperature colours and finite star-image profiles are display choices. **Visible sky - camera background only > Strength** controls overall brightness; the supplied value is 5. The sky provides no illumination or reflections. Uniform background fill is zero, and the independent Sun disk and Eros lighting remain separate.
 
-The [generator](generate_sky.py) and editable [recipe](sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](sky.md) for dependencies, controls, packing instructions, source hashes and attribution.
+The [generator](generate_sky.py) and editable [recipe](sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](sky.md) for dependencies, controls, loading instructions, source hashes and attribution.
 
 ### Manual sky brightness and optional Sun halo
 
