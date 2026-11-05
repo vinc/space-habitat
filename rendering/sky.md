@@ -67,9 +67,10 @@ fixed angular width, not a fixed number of pixels. At low resolutions, increase
 ## Use it in Blender
 
 The supplied split scene loads `output/habitat-sky.exr` through the relative
-path `//output/habitat-sky.exr`. Keep the EXR in this location beside the scene
-folder. No script is required to render when this file is present. If it is
-missing, run the generator above; its default output matches the scene path.
+path `//output/habitat-sky.exr`. Keep the EXR inside `rendering/output/`,
+relative to `rendering/space-habitat-900m.blend`. No script is required to
+render when this file is present. If it is missing, run the generator above;
+its default output matches the scene path.
 
 For a regenerated image, open the World Shader Editor and select the Environment
 Texture node labelled **Gaia and catalogue stars - packed equirectangular sky**.
@@ -96,11 +97,16 @@ The EXR follows Blender's environment convention: +X at image centre, +Y at
 one-quarter width and +Z at the top. It is not mirrored as an ordinary
 longitude-increasing panorama would be.
 
-This is a scene orientation convention. The Sun's fixed +X direction has not
-been matched to Eros perihelion at a particular epoch. Proper motions, parallax,
-variable-star changes, planets and zodiacal light are omitted. Temperature
-colours, image-profile sizes and the absolute brightness of both layers are
-visual approximations, not a calibrated prediction of human vision.
+The texture defines the stellar coordinate frame; it does not determine the
+Sun direction. The Blender scene uses the dated geometric Sun direction at
+Eros perihelion on 22 November 2027, recorded in
+[solar-reference.json](solar-reference.json) and explained in the
+[rendering guide](README.md#sun-and-exposure). Do not rotate the sky to align
+the Sun: the light and visible Sun disk use that same fixed stellar frame.
+Proper motions, parallax, variable-star changes, planets and zodiacal light
+are omitted from the texture. Temperature colours, image-profile sizes and
+the absolute brightness of both layers are visual approximations, not a
+calibrated prediction of human vision.
 
 The source Gaia image already contains integrated starlight. Smoothing and a
 low gain make it a diffuse backdrop to the sharp catalogue layer; this blend

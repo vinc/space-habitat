@@ -6,47 +6,46 @@ The Blender file is maintained manually. Editing it does not update the calculat
 
 See [TODO.md](TODO.md) for the planned grass and tree improvements.
 
-## Split Blender scene
+## Open the scene
 
-Open `rendering/space-habitat-900m.blend` in Blender 5.2.3 or newer.
-Keep `rendering/output/habitat-sky.exr` beside it in the supplied folder layout.
-The scene loads the sky through the relative path `//output/habitat-sky.exr`.
-Automatically Pack Resources is disabled.
+Open [space-habitat-900m.blend](space-habitat-900m.blend) in Blender 5.2.3 or newer. Paths in the table below are relative to this directory.
 
-The scene is 37.6 MiB; the external sky is 114.1 MiB.
-Eros is linked from `assets/eros.blend` (4.34 MiB). Keep that file in place too.
-The Eros object, transforms and material remain editable in the main scene;
-only its mesh comes from the external library.
-The sky bytes are unchanged from the packed original; no texture conversion,
-resampling or geometry reduction was applied.
+| File | Purpose | Size | Stored in Git |
+| --- | --- | --- | --- |
+| `space-habitat-900m.blend` | Editable habitat scene | 37.6 MiB | Yes |
+| `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
+| `output/habitat-sky.exr` | Generated sky texture | 114.1 MiB | No |
 
-For the GitHub repository, commit the scene and leave the generated EXR outside
-regular Git (it exceeds GitHub's 100 MiB per-file limit). The existing generator
-writes to this exact location. From the repository root:
+The main scene loads Eros from `//assets/eros.blend` and the sky from `//output/habitat-sky.exr`. Keep this folder layout. The Eros object, transforms and material remain editable in the main scene; only its mesh is linked. Keep **Automatically Pack Resources** disabled so the assets stay separate.
 
-    python -m venv rendering/.venv
-    source rendering/.venv/bin/activate
-    python -m pip install -r rendering/requirements.txt
-    python rendering/generate_sky.py
+A fresh checkout contains the scene and Eros mesh. Generate the missing sky before rendering. From the repository root, using Python 3.11 or newer:
 
-Generator and source credits: https://github.com/vinc/space-habitat/pull/24
-Sky credit: ESA/Gaia/DPAC, CC BY-SA 3.0 IGO; reprojected and combined with
-catalogue stars. See the repository's rendering/sky.md for the full source
-credits, processing details, and MIT notices.
+```sh
+python -m venv rendering/.venv
+source rendering/.venv/bin/activate
+python -m pip install -r rendering/requirements.txt
+python rendering/generate_sky.py
+```
 
-## Scene files and renders
+This writes `rendering/output/habitat-sky.exr`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
 
-Open [space-habitat-900m.blend](space-habitat-900m.blend) in Blender 5.2.3 or newer. Keep the following folder layout; the scene uses relative paths.
+## Render the views
 
-| File | Purpose | Size |
+The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Set **Output Properties > Resolution** to 1600 × 1200 at 100%, **Render Properties > Device** to GPU Compute, and the render maximum samples to 4096. Select a compatible compute backend and GPU in Blender's **Preferences > System > Cycles Render Devices**; this selection depends on the local machine.
+
+The currently committed scene still has the older **1500 × 1100, CPU, 512 samples** defaults. Apply the settings above before rendering; the images describe the intended render baseline.
+
+Select the camera in **Scene Properties > Camera**. Camera object names in the Outliner differ from their camera-data names; use the object names below.
+
+| View | Camera object | Exposure |
 | --- | --- | --- |
-| `space-habitat-900m.blend` | Editable habitat scene | 37.6 MiB |
-| `assets/eros.blend` | Linked Eros mesh | 4.34 MiB |
-| `output/habitat-sky.exr` | External sky texture | 114.1 MiB |
+| Dock end, on the spin axis | `Camera - bottom` | −5.5 stops |
+| Eros background | `Camera - Orion` | −5.5 stops |
+| Sun background | `Camera - Sun` | −5.5 stops |
+| Valley interior | `Camera - interior` | 0 stops |
+| Additional exterior overview | `Camera - exterior` | −5.5 stops |
 
-The Eros object, transform and material remain editable in the main scene; its mesh is linked from the asset file. Keep automatic resource packing disabled so the sky stays external. The generated EXR is excluded from Git and can be recreated with the [sky generator](sky.md).
-
-The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Use these settings for new renders.
+Set **Render Properties > Color Management > Exposure** explicitly when changing between exterior and interior views; the shared scene exposure is not a separate saved value for each camera. Keep AgX colour management and World Strength 5. Render with **F12** and save the result as PNG using the filenames below. There is one scene; switching views does not require duplicating it.
 
 ### Exterior, dock side
 

@@ -1,6 +1,6 @@
 # Space Habitat
 
-![Space habitat near Eros](rendering/exterior-sun.png)
+[![Space habitat near Eros](rendering/exterior-sun.png)](rendering/README.md)
 
 A personal hobby project to study rotating space habitats built from asteroid materials, with space for people and nature, and factories to build more habitats.
 
