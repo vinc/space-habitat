@@ -1,8 +1,10 @@
 # Blender rendering choices
 
-This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](explorer/README.md) is a separate visualization.
+This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](../explorer/README.md) is a separate visualization.
 
 The Blender file is maintained manually. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
+
+See [TODO.md](TODO.md) for the planned grass and tree improvements.
 
 ## What comes from the model
 
@@ -10,7 +12,7 @@ The scene uses a 900 m habitat floor radius, a 56.25 m torus tube diameter, a 5.
 
 Six tori and no farm rings are the selected configuration. The torus array leaves about 10 m between outer skins. Its 80.274 m pitch includes rendered skin thicknesses; the idealized model pitch is 80.25 m.
 
-The solar collecting area comes from [power.py](habitat_model/power.py) and the [model assumptions](habitat_model/assumptions.toml), evaluated at commit [feb36fd](https://github.com/vinc/space-habitat/commit/feb36fd0d105c47ebc1a326653dcc655a2c60f1f):
+The solar collecting area comes from [power.py](../habitat_model/power.py) and the [model assumptions](../habitat_model/assumptions.toml), evaluated at commit [feb36fd](https://github.com/vinc/space-habitat/commit/feb36fd0d105c47ebc1a326653dcc655a2c60f1f):
 
 | Sizing input | Scene configuration |
 | --- | --- |
@@ -50,7 +52,7 @@ The band arrangement, rails, perimeter frame, hollow mast and open hub mount are
 
 The scene uses the geometric Sun direction at **Eros perihelion on
 22 November 2027, about 14:18 TDB**, from [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/).
-The stored [solar reference](rendering/solar-reference.json) includes the exact
+The stored [solar reference](solar-reference.json) includes the exact
 query, state vector and coordinate definitions. Perihelion was located by the
 zero crossing of heliocentric position dotted with velocity.
 
@@ -76,7 +78,7 @@ changing this lighting reference does not resize it.
 
 ### Habitat axis relative to the stars
 
-The [adopted design](notes.md#orientation-adopted) keeps the spin axis inertially
+The [adopted design](../notes.md#orientation-adopted) keeps the spin axis inertially
 fixed, perpendicular to the host asteroid's heliocentric orbital plane. For
 Eros this is **10.8281° from ecliptic north**, rather than ecliptic north itself.
 
@@ -108,7 +110,7 @@ The sky is one packed **8192 × 4096 linear EXR**, combining the original **4000
 
 The Milky Way remains subdued but visible, using `milky_way_gain = 0.4` at the supplied exterior exposure and 0.15° smoothing. The gain is tuned to the original PNG's brightness and adjusted independently of the catalogue stars. The PNG's gamma metadata is decoded before filtering; the 8192 × 4096 output preserves the original map's finer detail without adding detail beyond that source. Gaia shows integrated stellar brightness and dark dust lanes; it does not provide all the nebulosity seen in deep Orion photographs. Absolute visibility, approximate temperature colours and finite star-image profiles are display choices. **Visible sky - camera background only > Strength** controls overall brightness; the supplied value is 5. The sky provides no illumination or reflections. Uniform background fill is zero, and the independent Sun disk and Eros lighting remain separate.
 
-The [generator](rendering/generate_sky.py) and editable [recipe](rendering/sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](rendering/sky.md) for dependencies, controls, packing instructions, source hashes and attribution.
+The [generator](generate_sky.py) and editable [recipe](sky.json) reproduce the texture without Blender or `bpy`. See [sky.md](sky.md) for dependencies, controls, packing instructions, source hashes and attribution.
 
 ### Manual sky brightness and optional Sun halo
 
@@ -175,4 +177,4 @@ The material uses an approximate, Sun-dependent Hapke-style reflectance treatmen
 
 The scene has no farm rings, factory, radiators or docking facilities. It also omits detailed inter-torus structural connections, pressure tunnels and engineered cable fittings. Repeated hub sleeves alone do not establish a structurally complete six-torus assembly.
 
-Omitting something from the picture does not remove it from the wider design study. Use the [model reports](reports/) for numerical results.
+Omitting something from the picture does not remove it from the wider design study. Use the [model reports](../reports/) for numerical results.
