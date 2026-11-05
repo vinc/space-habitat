@@ -1,6 +1,6 @@
 """Chain the modules into one evaluation of a design. All results are in SI units (m, kg, W, J)."""
 
-from . import food, geometry, heat, mass, materials, power, replication, stability
+from . import food, geometry, heat, layout, mass, materials, power, replication, stability
 from .assumptions import load, params
 
 
@@ -19,6 +19,7 @@ def evaluate(p, d):
         "heat": heat.compute(p, d, geo, pw),
         "stability": stability.compute(p, d, geo, m["total"], m["farm_total"]),
         "replication": replication.compute(p, d, geo, m, mat),
+        "layout": layout.compute(p, d, geo),
     }
 
 

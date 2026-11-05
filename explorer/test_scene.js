@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   solarLayout,
-  farmRadiatorBounds,
   valleyPoint,
   frameBounds,
   depthRange,
+  wingMesh,
 } from "./scene-layout.js";
 
 test("solar normal faces the Sun and is perpendicular to spin axis", () => {
@@ -18,16 +18,6 @@ test("solar normal faces the Sun and is perpendicular to spin axis", () => {
   assert.ok(Math.abs(p.side ** 2 - 3e6) < 1e-6);
   assert.ok(p.z - p.side / 2 > 900 / 2);
 });
-test("farm panels stay between hub and farm ring", () => {
-  const g = {
-    hub_radius: 60,
-    farm_radius: 360,
-    farm_height: 8.5,
-    farm_radiator_outer: 900,
-  };
-  assert.deepEqual(farmRadiatorBounds(g, "inboard"), [[60, 354.75]]);
-});
-
 test("floor spans the outer half instead of an intersecting narrow cylinder", () => {
   const a = 28.125,
     fill = 2,
@@ -75,4 +65,24 @@ test("overview depth range preserves nearby surfaces without clipping the scene"
   const inside = depthRange(10, 2000);
   assert.equal(inside.near, 0.05);
   assert.ok(inside.far > 2010);
+});
+
+test("wing mesh starts where the wing clears the shaft, as the thermal model", () => {
+  // 900 m, width ratio 32, one farm tier (10%): the band starts at 31.375 m, the wing at ~48.1 m.
+  const r0 = 31.375,
+    r1 = 355.75,
+    edge = 5,
+    beta = 0.10414777800725403;
+  const m = wingMesh(r0, r1, edge, beta, 1, 12, 12);
+  assert.ok(Math.abs(m.start - 48.0956) < 1e-3);
+  for (let i = 0; i < m.vertices.length; i += 3) {
+    const [x, y] = [m.vertices[i], m.vertices[i + 1]],
+      rho = Math.hypot(x, y),
+      angle = Math.atan2(y, x);
+    assert.ok(rho >= m.start - 1e-9 && rho <= r1 + 1e-9);
+    assert.ok(angle <= beta + 1e-12);
+    assert.ok(y >= edge - 1e-9);                       // outside the shaft's clearance
+  }
+  assert.equal(wingMesh(r0, r1, edge, 0, 1), null);    // no coverage: no wing
+  assert.equal(wingMesh(r0, 40, edge, beta, 1), null); // never clears the shaft within the band
 });
