@@ -66,9 +66,9 @@ fixed angular width, not a fixed number of pixels. At low resolutions, increase
 
 ## Use it in Blender
 
-The supplied split scene loads `assets/sky.exr` through the relative
-path `//assets/sky.exr`. Keep the EXR inside `rendering/assets/`,
-relative to `rendering/space-habitat-900m.blend`. No script is required to
+The supplied `rendering/assets/scene.blend` loads the sky through the relative
+path `//sky.exr`. Keep the EXR at `rendering/assets/sky.exr`, beside the main
+scene and its linked mesh libraries. No script is required to
 render when this file is present. If it is missing, run the generator above;
 its default output matches the scene path.
 

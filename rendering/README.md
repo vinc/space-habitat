@@ -1,6 +1,6 @@
 # Blender rendering choices
 
-This note records the visual additions in `space-habitat-900m.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](../explorer/README.md) is a separate visualization.
+This note records the visual additions in `assets/scene.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](../explorer/README.md) is a separate visualization.
 
 The Blender file is maintained manually. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
 
@@ -8,17 +8,21 @@ See [TODO.md](TODO.md) for the planned grass and tree improvements.
 
 ## Open the scene
 
-Open [space-habitat-900m.blend](space-habitat-900m.blend) in Blender 5.2.3 or newer. Paths in the table below are relative to this directory.
+Open [assets/scene.blend](assets/scene.blend) in Blender 5.2.3 or newer. Paths in the table below are relative to this directory.
 
 | File | Purpose | Size | Stored in Git |
 | --- | --- | --- | --- |
-| `space-habitat-900m.blend` | Editable habitat scene | 37.6 MiB | Yes |
+| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 203 KiB | Yes |
+| `assets/habitat.blend` | Linked structural meshes | 24.7 MiB | Yes |
+| `assets/vegetation.blend` | Linked tree and grass meshes; future shrubs belong here | 12.8 MiB | Yes |
 | `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
 | `assets/sky.exr` | Generated sky texture | 114.1 MiB | No |
 
-The main scene loads Eros from `//assets/eros.blend` and the sky from `//assets/sky.exr`. Keep this folder layout. The Eros object, transforms and material remain editable in the main scene; only its mesh is linked. Keep **Automatically Pack Resources** disabled so the assets stay separate.
+All four Blender files share the `assets/` directory. The main scene uses `//habitat.blend`, `//vegetation.blend`, `//eros.blend` and `//sky.exr`, relative to `assets/scene.blend`. Keep these files together. Keep **Automatically Pack Resources** disabled.
 
-A fresh checkout contains the scene and Eros mesh. Generate the missing sky before rendering. From the repository root, using Python 3.11 or newer:
+Mesh geometry lives in the linked asset files. Object transforms, materials, modifiers, vegetation placement, density, slope exclusions and distance controls remain editable in `scene.blend`. Structural geometry changes require editing `habitat.blend`; changes to plant source geometry require editing `vegetation.blend`. The Eros object and its material remain local to the scene, while its mesh is linked.
+
+A fresh checkout contains the main scene and all three linked mesh libraries. Generate the missing sky before rendering. From the repository root, using Python 3.11 or newer:
 
 ```sh
 python -m venv rendering/.venv
@@ -29,7 +33,7 @@ python rendering/generate_sky.py
 
 This writes `rendering/assets/sky.exr` and its generated manifest, `rendering/assets/sky.json`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
 
-For an existing checkout, move the texture from `rendering/output/habitat-sky.exr` to `rendering/assets/sky.exr`. In Blender, open the World Environment Texture node, load the moved image and save its path as `//assets/sky.exr`. Once the image is moved, delete the old `.part0*` download fragments and the unused `rendering/output/` directory.
+When migrating from the unsplit scene, retain the sky at `rendering/assets/sky.exr` and open `assets/scene.blend`. If the texture is still under `rendering/output/`, move it into `assets/` first. Once the new scene opens correctly, remove the old `rendering/space-habitat-900m.blend`, the old `.part0*` download fragments and the unused `rendering/output/` directory.
 
 ## Render the views
 
