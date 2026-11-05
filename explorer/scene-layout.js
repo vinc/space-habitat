@@ -53,3 +53,30 @@ export function depthRange(distance, radius) {
     far: Math.max(100, (distance + radius) * 1.25),
   };
 }
+
+// A radiator wing in its ring's plane (faces along the axis), on one side of its shaft (at angle 0):
+// the points of the band r0..r1 within `beta` of the shaft's centre line and at least `edge` from it.
+// Near the axis a narrow wing doesn't clear the shaft, so it starts at max(r0, edge / sin(beta)), as in
+// habitat_model/wing_geometry.py; null when it never does. Vertices in the plane z = 0.
+export function wingMesh(r0, r1, edge, beta, side, nr = 24, na = 24) {
+  if (!(beta > 0)) return null;
+  const start = Math.max(r0, edge / Math.sin(beta));
+  if (start >= r1) return null;
+  const vertices = [],
+    indices = [];
+  for (let i = 0; i <= nr; i++) {
+    const rho = start + ((r1 - start) * i) / nr,
+      p0 = Math.asin(Math.min(1, edge / rho));
+    for (let j = 0; j <= na; j++) {
+      const ph = p0 + ((beta - p0) * j) / na;
+      vertices.push(rho * Math.cos(ph), side * rho * Math.sin(ph), 0);
+    }
+  }
+  for (let i = 0; i < nr; i++)
+    for (let j = 0; j < na; j++) {
+      const a = i * (na + 1) + j,
+        b = a + na + 1;
+      indices.push(a, b, a + 1, a + 1, b, b + 1);
+    }
+  return { vertices, indices, start };
+}

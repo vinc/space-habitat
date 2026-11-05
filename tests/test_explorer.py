@@ -38,7 +38,7 @@ class ExplorerTests(unittest.TestCase):
         cases = [None, [], {'oops': 1}, {'design': []}, {'overrides': []},
                  {'design': {'n_tori': 1.5}}, {'design': {'tiers_lit': True}},
                  {'design': {'radius_m': math.nan}}, {'design': {'radius_m': math.inf}},
-                 {'design': {'radius_m': 0}}, {'design': {'g': -1}},
+                 {'design': {'radius_m': 0}}, {'design': {'radius_m': 400}}, {'design': {'g': -1}},
                  {'design': {'seasonal_sky': 'false'}}, {'design': {'site': 'unknown'}},
                  {'design': {'c_partner': 'Eros'}}, {'overrides': {'width_ratio': 0}},
                  {'overrides': {'not_a_parameter': 1}}]
@@ -47,7 +47,7 @@ class ExplorerTests(unittest.TestCase):
                 server.calculate(payload)
 
     def test_exploration_bounds_are_evaluable(self):
-        for radius in [200, 900, 2500]:
+        for radius in [900, 1600, 2500]:
             for gravity in [.1, 1.2]:
                 response = server.calculate({'design': {'radius_m': radius, 'g': gravity, 'n_tori': 32},
                                              'overrides': {'width_ratio': 8, 'fill_depth_m': 0}})

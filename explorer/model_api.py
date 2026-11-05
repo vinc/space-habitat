@@ -7,7 +7,7 @@ from habitat_model.model import evaluate
 
 # Deliberately bounded UI domain, not a claim of physical validation.
 DESIGN_RANGES = {
-    'radius_m': (200, 2500), 'n_tori': (1, 32), 'tiers_lit': (0, 3),
+    'radius_m': (900, 2500), 'n_tori': (1, 32), 'tiers_lit': (0, 3),
     'gap_m': (0, 100), 'g': (0.1, 1.2), 'factory_power_gw': (0.1, 20),
 }
 OVERRIDE_RANGES = {

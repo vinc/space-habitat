@@ -12,7 +12,7 @@ python explorer/server.py
 
 Open http://127.0.0.1:8000. The server binds to loopback by default. It is a local development tool, not a hardened public service. It needs no external services after installation.
 
-Change the radius, spin gravity, number of rings, clear gap, lit farm tiers, host orbit, assumed chondrite class or volatile supplier. Expand **Model assumptions** for width, shielding, fill, pressure, factory power. Orbit and composition are independent. The available bodies are those supported by `habitat_model.design`, not the entire research catalogue.
+Change the radius (900 m to 2.5 km, the intended design family), spin gravity, number of rings, clear gap, lit farm tiers, host orbit, assumed chondrite class or volatile supplier. Expand **Model assumptions** for width, shielding, fill, pressure, factory power. Orbit and composition are independent. The available bodies are those supported by `habitat_model.design`, not the entire research catalogue.
 
 WebGL is used when available; a reduced-detail SVG fallback works without it.
 

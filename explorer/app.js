@@ -4,6 +4,7 @@ import {
   valleyPoint,
   frameBounds,
   depthRange,
+  wingMesh,
 } from "./scene-layout.js";
 import * as THREE from "three";
 import { SVGRenderer } from "three/addons/renderers/SVGRenderer.js";
@@ -416,30 +417,13 @@ function segments(points, mat, group = assembly) {
   group.add(obj);
   return obj;
 }
-// A radiator wing in its ring's plane (faces along the axis): an annular sector r0..r1, from the
-// shaft's edge (a straight line `edge` off its centre line, at angle 0) out to `beta`, on one side.
+// A radiator wing (scene-layout.js wingMesh), as a mesh in its ring's plane; null when empty.
 function wingGeometry(r0, r1, edge, beta, side) {
-  const nr = software ? 6 : 24,
-    na = software ? 6 : 24,
-    v = [],
-    idx = [];
-  for (let i = 0; i <= nr; i++) {
-    const rho = r0 + ((r1 - r0) * i) / nr,
-      p0 = Math.asin(Math.min(1, edge / rho));
-    for (let j = 0; j <= na; j++) {
-      const ph = p0 + ((beta - p0) * j) / na;
-      v.push(rho * Math.cos(ph), side * rho * Math.sin(ph), 0);
-    }
-  }
-  for (let i = 0; i < nr; i++)
-    for (let j = 0; j < na; j++) {
-      const a = i * (na + 1) + j,
-        b = a + na + 1;
-      idx.push(a, b, a + 1, a + 1, b, b + 1);
-    }
+  const m = wingMesh(r0, r1, edge, beta, side, software ? 6 : 24, software ? 6 : 24);
+  if (!m) return null;
   const g = new THREE.BufferGeometry();
-  g.setAttribute("position", new THREE.Float32BufferAttribute(v, 3));
-  g.setIndex(idx);
+  g.setAttribute("position", new THREE.Float32BufferAttribute(m.vertices, 3));
+  g.setIndex(m.indices);
   g.computeVertexNormals();
   return g;
 }
@@ -452,7 +436,7 @@ function shaftsAndWings(L, z, inner, top, wing, turn, withWings) {
   const rail = new THREE.BoxGeometry(len, 0.9, 0.9);
   const wings =
     withWings && wing.angle > 0
-      ? [1, -1].map((side) => wingGeometry(wing.band[0], wing.band[1], L.wings.edge, wing.angle, side))
+      ? [1, -1].map((side) => wingGeometry(wing.band[0], wing.band[1], L.wings.edge, wing.angle, side)).filter(Boolean)
       : [];
   const frames = [];
   for (let x = inner + 12; x < top; x += 12) {
