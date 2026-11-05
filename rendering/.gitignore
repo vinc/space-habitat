@@ -1,4 +1,6 @@
-assets/*
-!assets/eros.blend
-output/
+assets/sky.exr
+assets/sky.json
+assets/gaia-edr3-original.png
+assets/bsc.json
+assets/*.download
 .venv/

@@ -235,7 +235,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=root / "sky.json")
     parser.add_argument("--assets-dir", type=Path, default=root / "assets")
-    parser.add_argument("--output", type=Path, default=root / "output/habitat-sky.exr")
+    parser.add_argument("--output", type=Path, default=root / "assets/sky.exr")
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
     validate(config)

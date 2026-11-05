@@ -14,9 +14,9 @@ Open [space-habitat-900m.blend](space-habitat-900m.blend) in Blender 5.2.3 or ne
 | --- | --- | --- | --- |
 | `space-habitat-900m.blend` | Editable habitat scene | 37.6 MiB | Yes |
 | `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
-| `output/habitat-sky.exr` | Generated sky texture | 114.1 MiB | No |
+| `assets/sky.exr` | Generated sky texture | 114.1 MiB | No |
 
-The main scene loads Eros from `//assets/eros.blend` and the sky from `//output/habitat-sky.exr`. Keep this folder layout. The Eros object, transforms and material remain editable in the main scene; only its mesh is linked. Keep **Automatically Pack Resources** disabled so the assets stay separate.
+The main scene loads Eros from `//assets/eros.blend` and the sky from `//assets/sky.exr`. Keep this folder layout. The Eros object, transforms and material remain editable in the main scene; only its mesh is linked. Keep **Automatically Pack Resources** disabled so the assets stay separate.
 
 A fresh checkout contains the scene and Eros mesh. Generate the missing sky before rendering. From the repository root, using Python 3.11 or newer:
 
@@ -27,13 +27,15 @@ python -m pip install -r rendering/requirements.txt
 python rendering/generate_sky.py
 ```
 
-This writes `rendering/output/habitat-sky.exr`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
+This writes `rendering/assets/sky.exr` and its generated manifest, `rendering/assets/sky.json`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
+
+For an existing checkout, move the texture from `rendering/output/habitat-sky.exr` to `rendering/assets/sky.exr`. In Blender, open the World Environment Texture node, load the moved image and save its path as `//assets/sky.exr`. Once the image is moved, delete the old `.part0*` download fragments and the unused `rendering/output/` directory.
 
 ## Render the views
 
 The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Set **Output Properties > Resolution** to 1600 × 1200 at 100%, **Render Properties > Device** to GPU Compute, and the render maximum samples to 4096. Select a compatible compute backend and GPU in Blender's **Preferences > System > Cycles Render Devices**; this selection depends on the local machine.
 
-The currently committed scene still has the older **1500 × 1100, CPU, 512 samples** defaults. Apply the settings above before rendering; the images describe the intended render baseline.
+The scene saves these resolution, GPU Compute and sampling settings. The compute backend and physical GPU selection remain local Blender preferences.
 
 Select the camera in **Scene Properties > Camera**. Camera object names in the Outliner differ from their camera-data names; use the object names below.
 

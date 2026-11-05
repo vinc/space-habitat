@@ -17,7 +17,7 @@ python -m pip install -r rendering/requirements.txt
 python rendering/generate_sky.py
 ```
 
-This creates `rendering/output/habitat-sky.exr` and `habitat-sky.json`.
+This creates `rendering/assets/sky.exr` and `rendering/assets/sky.json`.
 Blender and `bpy` are not required to generate the texture.
 The first run downloads about 19 MB into `rendering/assets/`; subsequent runs
 reuse those files. Both source files are checked against SHA-256 hashes pinned
@@ -66,8 +66,8 @@ fixed angular width, not a fixed number of pixels. At low resolutions, increase
 
 ## Use it in Blender
 
-The supplied split scene loads `output/habitat-sky.exr` through the relative
-path `//output/habitat-sky.exr`. Keep the EXR inside `rendering/output/`,
+The supplied split scene loads `assets/sky.exr` through the relative
+path `//assets/sky.exr`. Keep the EXR inside `rendering/assets/`,
 relative to `rendering/space-habitat-900m.blend`. No script is required to
 render when this file is present. If it is missing, run the generator above;
 its default output matches the scene path.
