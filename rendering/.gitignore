@@ -1,0 +1,7 @@
+assets/sky.exr
+assets/sky.manifest.json
+assets/gaia-edr3-original.png
+assets/bsc.json
+assets/*.download
+.venv/
+*.blend[0-9]*

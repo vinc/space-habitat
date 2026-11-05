@@ -1,0 +1,40 @@
+{
+  "source": "NASA/JPL Horizons, 433 Eros heliocentric geometric vectors",
+  "query_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27433%3B%27&CENTER=%27500%4010%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&OUT_UNITS=%27AU-D%27&VEC_TABLE=%272%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&OBJ_DATA=%27NO%27&TLIST=%272461732.095552678220%27&TIME_TYPE=%27TDB%27&TLIST_TYPE=%27JD%27&TIME_DIGITS=%27FRACSEC%27",
+  "jd_tdb": 2461732.095552678,
+  "calendar_tdb": "A.D. 2027-Nov-22 14:17:35.7514",
+  "heliocentric_position_au": [
+    -0.6211917236587293,
+    0.9479094062106926,
+    0.003887646014306012
+  ],
+  "heliocentric_velocity_au_per_day": [
+    -0.01468548785146417,
+    -0.009610048753446346,
+    -0.003356247890657761
+  ],
+  "distance_au": 1.1333254226903866,
+  "sun_direction_j2000_ecliptic": [
+    0.5481141702301977,
+    -0.8363964905688454,
+    -0.0034302998383969707
+  ],
+  "sun_ecliptic_longitude_deg": 303.2379540308006,
+  "sun_ecliptic_latitude_deg": -0.19654208865622355,
+  "radial_dot_au2_per_day": -4.9914323434034624e-14,
+  "time_tolerance_seconds": 60,
+  "habitat_axis_j2000_ecliptic": [
+    -0.1552563790371672,
+    -0.1057721390835129,
+    0.9821953529527441
+  ],
+  "habitat_top_ra_deg": 252.34275838015475,
+  "habitat_top_dec_deg": 59.21264442302698,
+  "coordinate_frame": "J2000 mean ecliptic / ICRF; +X equinox, +Z ecliptic north",
+  "sun_direction_definition": "-heliocentric position / heliocentric distance",
+  "habitat_axis_definition": "normalized cross product of heliocentric position and velocity; prograde orbital north",
+  "habitat_bottom_ra_deg": 72.34275838015475,
+  "habitat_bottom_dec_deg": -59.21264442302698,
+  "habitat_top_constellation": "Draco",
+  "habitat_bottom_constellation": "Dorado"
+}
