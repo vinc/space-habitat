@@ -17,7 +17,9 @@ python -m pip install -r rendering/requirements.txt
 python rendering/generate_sky.py
 ```
 
-This creates `rendering/assets/sky.exr` and `rendering/assets/sky.json`.
+This creates `rendering/assets/sky.exr` and `rendering/assets/sky.manifest.json`.
+The manifest uses a separate filename so choosing `--output rendering/sky.exr`
+preserves the recipe at `rendering/sky.json`.
 Blender and `bpy` are not required to generate the texture.
 The first run downloads about 19 MB into `rendering/assets/`; subsequent runs
 reuse those files. Both source files are checked against SHA-256 hashes pinned
@@ -122,8 +124,8 @@ python -m unittest discover -s rendering -p 'test_*.py' -v
 ## Sources and credit
 
 - [ESA NEO orbit viewer](https://neotools.neo.s2p.esa.int/ovt?object=433%20Eros).
-- [Original Gaia EDR3 PNG, 4000 × 2000](https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png),
-  with [ESA's image description](https://www.esa.int/ESA_Multimedia/Images/2020/12/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_32).
+- [Original Gaia EDR3 PNG, 4000 × 2000](https://media.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png),
+  with [ESA's image description](https://www.esa.int/media/the-colour-of-the-sky-from-gaia-s-early-data-release-3).
   This original PNG is the generator's diffuse-background input.
   Credit **ESA/Gaia/DPAC**, [CC BY-SA 3.0 IGO](https://creativecommons.org/licenses/by-sa/3.0/igo/).
   The generated texture retains this credit and licence. Changes include

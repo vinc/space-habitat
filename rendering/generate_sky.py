@@ -9,17 +9,24 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 from urllib.request import urlopen
 
-import numpy as np
-from PIL import Image
-import OpenEXR
+try:
+    import numpy as np
+    from PIL import Image
+    import OpenEXR
+except ModuleNotFoundError as exc:
+    raise SystemExit(
+        f"Missing sky generator dependency: {exc.name}. Install with:\n"
+        f'  "{sys.executable}" -m pip install -r "{Path(__file__).with_name("requirements.txt")}"'
+    ) from None
 
 
 SOURCES = {
     "gaia-edr3-original.png": {
-        "url": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png",
+        "url": "https://media.esa.int/var/esa/storage/images/esa_multimedia/images/2020/12/the_colour_of_the_sky_from_gaia_s_early_data_release_32/22358132-1-eng-GB/The_colour_of_the_sky_from_Gaia_s_Early_Data_Release_3.png",
         "sha256": "68fef2ee355015f84a43105bbf296f5a8d8b38d2fe8fe1a068ba1402e9ce5550",
         "credit": "ESA/Gaia/DPAC; acknowledgement A. Moitinho; CC BY-SA 3.0 IGO",
         "dimensions": [4000, 2000],
@@ -230,13 +237,18 @@ def validate(config):
         raise ValueError("Milky Way gain and blur must be non-negative")
 
 
-def main():
+def main(argv=None):
     root = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=root / "sky.json")
     parser.add_argument("--assets-dir", type=Path, default=root / "assets")
     parser.add_argument("--output", type=Path, default=root / "assets/sky.exr")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if args.output.suffix.lower() != ".exr":
+        parser.error("--output must have an .exr extension")
+    manifest_path = args.output.with_suffix(".manifest.json")
+    if args.config.resolve() in (args.output.resolve(), manifest_path.resolve()):
+        parser.error("The output image and manifest must not overwrite --config")
     config = json.loads(args.config.read_text())
     validate(config)
     files = {name: source_file(args.assets_dir, name) for name in SOURCES}
@@ -256,7 +268,7 @@ def main():
                 "colour_space": "linear Rec.709/sRGB primaries, 16-bit float RGB EXR",
                 "photometric_calibration": False,
                 "generator_sha256": sha256(Path(__file__)), "output_sha256": sha256(args.output)}
-    args.output.with_suffix(".json").write_text(json.dumps(manifest, indent=2) + "\n")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({"output": str(args.output), "size": [config["width"], config["width"]//2], "stars": count, "sha256": manifest["output_sha256"]}))
 
 

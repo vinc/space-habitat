@@ -6,8 +6,14 @@ from pathlib import Path
 import tempfile
 import unittest
 import struct
+import contextlib
+import io
+import subprocess
+import sys
+from unittest.mock import patch
 
 import numpy as np
+import OpenEXR
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 
@@ -15,6 +21,62 @@ import generate_sky as sky
 
 
 class SkyTests(unittest.TestCase):
+    def test_missing_dependency_explains_installation(self):
+        result = subprocess.run(
+            [sys.executable, "-S", str(Path(sky.__file__))],
+            capture_output=True, text=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing sky generator dependency", result.stderr)
+        self.assertIn("-m pip install -r", result.stderr)
+        self.assertIn("requirements.txt", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_output_must_not_overwrite_recipe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            config = Path(directory)/"sky.manifest.json"
+            config.write_text("recipe must survive")
+            for output in [config, config.with_name("sky.exr")]:
+                with self.subTest(output=output), contextlib.redirect_stderr(io.StringIO()):
+                    with self.assertRaises(SystemExit):
+                        sky.main(["--config", str(config), "--output", str(output)])
+                self.assertEqual(config.read_text(), "recipe must survive")
+
+    def test_offline_generation_writes_exr_and_preserves_recipe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            panorama = root/"gaia-edr3-original.png"
+            catalogue = root/"bsc.json"
+            Image.new("RGB", (32, 16), (128, 64, 32)).save(panorama)
+            catalogue.write_text(json.dumps([[0, 0, 6000, 1], [6, 20, 6000, 7]]))
+            sources = {p.name: {"url": "https://invalid.example/unused", "sha256": sky.sha256(p)}
+                       for p in [panorama, catalogue]}
+            config = json.loads(Path(sky.__file__).with_name("sky.json").read_text())
+            config.update(width=1024, star_fwhm_arcmin=30)
+            recipe = root/"sky.json"
+            recipe.write_text(json.dumps(config))
+            original = recipe.read_bytes()
+            output = root/"sky.exr"
+            with patch.dict(sky.SOURCES, sources, clear=True), patch.object(sky, "urlopen") as fetch:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    sky.main(["--config", str(recipe), "--assets-dir", str(root), "--output", str(output)])
+                fetch.assert_not_called()
+            self.assertEqual(recipe.read_bytes(), original)
+            manifest = json.loads((root/"sky.manifest.json").read_text())
+            self.assertEqual(manifest["catalogue_rows"], 2)
+            self.assertEqual(manifest["stars_drawn"], 1)
+            self.assertEqual(manifest["parameters"], config)
+            self.assertEqual(manifest["output_sha256"], sky.sha256(output))
+            self.assertEqual(manifest["sources"], sources)
+            with OpenEXR.File(str(output)) as exr:
+                pixels = exr.channels()["RGB"].pixels
+                self.assertEqual(pixels.shape, (512, 1024, 3))
+                self.assertEqual(pixels.dtype, np.float16)
+                self.assertTrue(np.isfinite(pixels).all())
+                expected = sky.srgb_to_linear(np.array([128, 64, 32])/255) * config["milky_way_gain"]
+                np.testing.assert_allclose(pixels[0, 0], expected, rtol=.001)
+                self.assertGreater(float(pixels.max()), float(expected.max()))
+
     def test_png_gamma_is_decoded_before_filtering(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)/"gamma.png"

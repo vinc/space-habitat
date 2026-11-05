@@ -12,7 +12,7 @@ Open [assets/scene.blend](assets/scene.blend) in Blender 5.2.3 or newer. Paths i
 
 | File | Purpose | Size | Stored in Git |
 | --- | --- | --- | --- |
-| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 203 KiB | Yes |
+| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 2.2 MiB | Yes |
 | `assets/habitat.blend` | Linked structural meshes | 24.7 MiB | Yes |
 | `assets/vegetation.blend` | Linked tree and grass meshes; future shrubs belong here | 12.8 MiB | Yes |
 | `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
@@ -31,13 +31,15 @@ python -m pip install -r rendering/requirements.txt
 python rendering/generate_sky.py
 ```
 
-This writes `rendering/assets/sky.exr` and its generated manifest, `rendering/assets/sky.json`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
+This writes `rendering/assets/sky.exr` and its generated manifest, `rendering/assets/sky.manifest.json`. See [sky.md](sky.md) for dependencies, regeneration and reloading instructions, source credits and licences. The EXR exceeds GitHub's 100 MiB per-file limit and is excluded from Git, along with the downloaded generator inputs.
 
-When migrating from the unsplit scene, retain the sky at `rendering/assets/sky.exr` and open `assets/scene.blend`. If the texture is still under `rendering/output/`, move it into `assets/` first. Once the new scene opens correctly, remove the old `rendering/space-habitat-900m.blend`, the old `.part0*` download fragments and the unused `rendering/output/` directory.
+Save `scene.blend` with **Compress** disabled so Git can store small changes efficiently. The mesh libraries may remain compressed. Blender backup files such as `scene.blend1` are ignored.
 
 ## Render the views
 
 The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Set **Output Properties > Resolution** to 1600 × 1200 at 100%, **Render Properties > Device** to GPU Compute, and the render maximum samples to 4096. Select a compatible compute backend and GPU in Blender's **Preferences > System > Cycles Render Devices**; this selection depends on the local machine.
+
+These images were rendered before the scene was split into linked libraries. The split preserves the scene data; the images are retained with their source-file metadata removed.
 
 The scene saves these resolution, GPU Compute and sampling settings. The compute backend and physical GPU selection remain local Blender preferences.
 
