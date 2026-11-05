@@ -11,7 +11,7 @@ from habitat_model import Design, evaluate, load, params
 from habitat_model.__main__ import parse_override
 from habitat_model.report import num, table
 
-from . import cable_net, hub, net_statics, nonlinear, rest, sequence, spinup, tube_section, wire
+from . import anchor_span, cable_net, hub, net_statics, nonlinear, rest, sequence, spinup, tube_section, wire
 
 SIZES = (400, 900, 1600, 2500)
 
@@ -598,6 +598,60 @@ def hub_report(p):
     ])
 
 
+def anchor_spacing_section(p):
+    """Fewer, thicker chords: k anchors per segment against the baseline's one per ~10 m bulkhead."""
+    rows = []
+    sigma = p.wire_stress_mpa * 1e6
+    for r, ks in ((900, (6, 3, 2)), (1600, (10, 5, 4))):
+        res = evaluate(p, Design(radius_m=r, n_tori=1))
+        g, m = res["geometry"], res["mass"]
+        lam = m["rim"] / (2 * math.pi * r)
+        n_arc = round(math.pi * r / g["width"])
+        n_arc += n_arc % 2                       # an even number per half ring: joints fall between anchors
+        seg = math.pi * r / n_arc
+        for k in ks:
+            spacing = seg / k
+            h = hub.compute(p, g, m, anchor_spacing=spacing)
+            net = h["net"]
+            span = anchor_span.check(p, r, k, segment_length=seg)
+            ring = net_statics.solve(r, net["tangent_radius"], lam, g["omega"], net["wire_area_uniform"], p.steel_density,
+                                     arc_length=None, segment_length=seg, anchor_spacing=spacing, joints="sliding",
+                                     stress_pa=sigma)
+            arcs = net_statics.solve(r, net["tangent_radius"], lam, g["omega"], net["wire_area_uniform"], p.steel_density,
+                                     arc_length=4 * net["theta"] * r, segment_length=seg, anchor_spacing=spacing,
+                                     joints="locked", stress_pa=sigma)
+            fmt = lambda f: "—" if f is None else f"{min(f, 1.0):.2f}"
+            extra = span["skin_added"] + span["bulkheads_added"] if k * 10.5 < seg else 0.0
+            rows.append([size_label(r), f"{k} ({spacing:.1f} m)", num(net["n_chords"]),
+                         f"{2 * math.sqrt(net['wire_area_uniform'] / 2 / math.pi) * 100:.0f} cm",
+                         num(net["tension_end"] / 2 / 1e6), num(h["n_lines"]), f"{h['margin']:.1f}",
+                         f"{span['bending_stress'] / 1e6:.0f} / {span['shear_stress'] / 1e6:.0f}",
+                         f"+{num(span['skin_added'] / 1e6, 1)} / +{num(span['bulkheads_added'] / 1e6, 1)}",
+                         f"{extra / span['hull_frames']:+.1%}",
+                         fmt(ring["max_spin_fraction"]), fmt(arcs["max_spin_fraction"]),
+                         num(arcs["joint_moment_max"] / 1e9, 1)])
+    return "\n\n".join([
+        "## Anchor spacing: fewer, thicker chords (option, not adopted)",
+        "The net's mass and the hub's margins don't depend on the number of chords; the rim does. The baseline "
+        "anchors at every ~10 m bulkhead. With k anchors per ring segment (segments as long as the tube is wide, "
+        "an even number per half ring so the joints fall midway between anchors), each segment carries its load "
+        "lengthwise to them as a beam (`structure_model/anchor_span.py`): the skins' lengthwise bending and shear "
+        "are added to their cross-section forces and thickened where needed; the anchored bulkheads carry s metres "
+        "of load, the others stay at minimum gauge. The assembled statics (`net_statics`) check the closed ring "
+        "with sliding joints and the shortest arcs hung with locked joints.",
+        table(["Torus", "Anchors per segment", "Chords per net", "Chord diameter", "Per chord end (MN)",
+               "Stabilising lines", "Hub's lateral margin", "Skins' bending / shear (MPa)",
+               "Extra skin / bulkheads (kt)", "On hull and frames", "Closed ring: spin limit",
+               "Shortest arcs, locked: spin limit", "Locked joints while building (GN·m)"], rows),
+        "At one anchor per ~10 m the beam adds nothing, as the cross-section model assumes. Halving or thirding "
+        "the chords costs ~1% of a torus's steel and leaves the finished ring and the first arcs as they are, "
+        "but the anchor fittings carry 2–3× the load, the skins at the tube's sides take ~120–170 MPa of "
+        "lengthwise shear, and at two anchors per segment the joints locked while building carry ~3.5–4× the "
+        "bending. First-order: the segment is a deep beam (span ~ tube width); a 3D shell model of a segment "
+        "with its anchors and joints, and the larger fittings, are still open.",
+    ])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m structure_model", description=__doc__)
     ap.add_argument("--anchor-spacing", type=float, default=10.0, help="m of rim per anchor (default 10)")
@@ -607,7 +661,8 @@ def main(argv=None):
     p = params(load(), **dict(args.set))
     print("\n\n".join(["# Structure: wire, cable net, spin-up and the tube's cross-section", wire_section(p),
                        net_section(p, args.anchor_spacing), construction_section(p), rest_section(p), sequence_section(p),
-                       imbalance_section(p, args.mismatch), hub_report(p), tube_section_report(p)]) + "\n")
+                       imbalance_section(p, args.mismatch), hub_report(p), tube_section_report(p),
+                       anchor_spacing_section(p)]) + "\n")
     return 0
 
 

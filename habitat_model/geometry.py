@@ -74,7 +74,7 @@ def compute(p, d):
         "farm_volume": 2 * math.pi * farm_radius * farm_width * p.farm_ring_height_m,
         "radiator_inner": p.radiator_inner_frac * r,
         "farm_radiator_outer": p.farm_radiator_outer_frac * r,
-        "farm_radius": farm_radius,
+        "farm_radius": farm_radius,                              # centre of the ring's radial height
         "farm_width": farm_width,
         "farm_height": p.farm_ring_height_m,
         "farm_gravity": d.g * p.farm_ring_radius_frac,

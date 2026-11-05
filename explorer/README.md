@@ -2,7 +2,7 @@
 
 3D interface to `habitat_model`, available locally or as a static GitHub Pages site. Uses Three.js for rendering and the existing Python calculations for all reported quantities. No formulas are reimplemented in JavaScript.
 
-From the repository root, with Python 3.11+ and Node/npm installed:
+From the repository root, with Python 3.13 (pinned in `mise.toml`: `mise install`) and Node/npm installed:
 
 ```sh
 pip install -r requirements.txt
@@ -27,7 +27,7 @@ Drag to orbit, scroll to zoom, or choose an axial, side or tube-section view. **
 - **Inside valley · eye level** places the camera 1.7 m above the floor, looking along the ring, with the hub overhead. A 2 m path and 1 m posts every 20 m provide scale. Terrain, trees, buildings and the final light-box ceiling have not been designed here. The path is illustrative and excluded from resource calculations.
 - Two tangent-chord side nets, hub lines, farm spokes and rim-gap X braces illustrate the structural architecture. Counts are reduced for clarity; sizes, exact anchor positions and fittings are not engineering drawings. No detailed structural solve runs in the viewer.
 - Solar area is the per-torus aphelion-sized system-model array multiplied by ring count, drawn as one square beyond the farm end of the hub (+Z), opposite the dock (−Z), normal to the Sun direction (+X); the spin axis is +Z. The entire panel lies beyond the stack end to avoid stack shadows. The narrow mast and sunlight arrow are illustrative, not structurally sized. This placement is illustrative. The factory's power supply is not included in that array.
-- Farm radiators are inboard and passive, between the hub and the farm rings. No outboard radiator extensions or heat-rejection pumps are adopted. The LED study gives ~1.2–1.3× farm margin for three-tier six-stacks (below the former 1.5× target) and ~1.8× for two tiers at 900 m. These margins are not recalculated by the viewer.
+- Farm radiators are inboard and passive, between the hub and the farm rings. No outboard radiator extensions or heat-rejection pumps are adopted. The LED study gives ~1.2× farm margin for three-tier six-stacks (below the former 1.5× target) and ~1.8× for two tiers at 900 m. These margins are not recalculated by the viewer.
 - Radiator sectors show available radial reach only. They are not sized to the heat load. The reported panel area is a black-body, two-sided lower bound, not the rendered sectors' area or a mutually shaded thermal solution.
 - Torus mass excludes the separately reported farm and the hub/factory, array and radiators. No incomplete sum is labelled total stack mass.
 - Stability outputs are **rigid thin-ring inertia bounds**, not flexible whirl margins. The favourable baseline depends on the lattice in the detailed dynamics work. Heat margin is the **main drum's ideal end-aperture bound**, not assembled radiative exchange.

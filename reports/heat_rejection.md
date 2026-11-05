@@ -1,23 +1,23 @@
 # Heat rejection: radiator layout, sunlight, coolant loops and the valley's swing
 
-**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former alternative. Three-tier six-stacks accept the reported ~1.2–1.3× farm margin rather than the earlier 1.5× target. Inboard thermosiphon hardware and a new maximum-stack sweep remain open.
-
 Plan §6 (`thermal_model/`), building on the assembled radiative exchange of `habitat_model/cavity.py` (`reports/thermal.md`): radiators at ~285 K, emissivity ~0.9.
 
 ## The farm radiators: where, and how far out
+
+**Design update, 1 Nov 2026:** the baseline now uses passive inboard farm radiators only. The comparisons below are unchanged model results; outboard pump loads, areas and maximum-stack figures describe the former alternative. Three-tier six-stacks accept the reported ~1.2× farm margin (~1.2–1.3× before the farm ring was centred on 0.4 r, 3 Nov 2026) rather than the earlier 1.5× target. Inboard thermosiphon hardware and a new maximum-stack sweep remain open.
 
 Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the former baseline, from the rings out to ~1 r), the warm coolant must sink against spin gravity: pumped loops. **Inboard** (from the hub to the rings), it rises: passive thermosiphons, as in the main section, but the radiators then sit in the space the farm rings enclose. The whole stack traced as one scene (`habitat_model/cavity.py`), both sections' panel coverages swept on a finer grid; best margins main / farm, and the least panel area (one face, main / farm section) that keeps both at 1.5× (coverage in steps of 5%, so areas move in steps of ~25%).
 
 | Stack, tiers lit | Farm radiators | Best margins, main / farm | At coverage, main / farm | Least panels for 1.5× (ha), main / farm | Tiers the passive set alone carries |
 |---|---|---|---|---|---|
-| 900 m pair, 3 tiers | outboard | 13 / 13 | 100% / 100% | 17.9 / 21.2 | — |
-| 900 m pair, 3 tiers | inboard | 3.8 / 3.5 | 10% / 100% | 17.9 / 19.8 | 11 |
-| 900 m six, 2 tiers | outboard | 6.0 / 6.2 | 100% / 25% | 53.8 / 63.5 | — |
-| 900 m six, 2 tiers | inboard | 3.1 / 1.8 | 10% / 100% | 53.8 / 83.0 | 3.5 |
-| 900 m six, 3 tiers | outboard | 5.3 / 5.5 | 100% / 50% | 53.8 / 63.5 | — |
-| 900 m six, 3 tiers | inboard | 1.7 / 1.3 | 5% / 75% | **not reached** | 3.8 |
-| 1.6 km six, 3 tiers | outboard | 5.3 / 5.3 | 100% / 50% | 171 / 202 | — |
-| 1.6 km six, 3 tiers | inboard | 1.8 / 1.2 | 5% / 100% | **not reached** | 3.7 |
+| 900 m pair, 3 tiers | outboard | 13 / 13 | 100% / 100% | 17.9 / 21.3 | — |
+| 900 m pair, 3 tiers | inboard | 3.9 / 3.5 | 10% / 100% | 17.9 / 19.3 | 10 |
+| 900 m six, 2 tiers | outboard | 5.9 / 6.2 | 100% / 25% | 53.8 / 63.8 | — |
+| 900 m six, 2 tiers | inboard | 1.8 / 1.8 | 5% / 50% | 53.8 / 81.0 | 3.5 |
+| 900 m six, 3 tiers | outboard | 5.3 / 5.6 | 100% / 50% | 53.8 / 63.8 | — |
+| 900 m six, 3 tiers | inboard | 1.7 / 1.2 | 5% / 100% | **not reached** | 3.7 |
+| 1.6 km six, 3 tiers | outboard | 5.1 / 5.3 | 100% / 50% | 171 / 202 | — |
+| 1.6 km six, 3 tiers | inboard | 1.8 / 1.2 | 5% / 100% | **not reached** | 3.5 |
 
 **Inboard radiators cool a six-stack's farm passively, but below 1.5× in some cases** (~1.2× at worst, ~3.5 tiers' heat): no pumps needed with all tiers lit, outboard pumped radiators for a full margin, the inboard set as their passive fallback.
 
@@ -26,7 +26,7 @@ Heat flows from the farm rings at 0.4 r to their radiators. **Outboard** (the fo
 | Stack, tiers lit | Reach for 1× | Reach for 1.5× |
 |---|---|---|
 | 900 m six, 3 tiers | 0.45 | 0.49 |
-| 1.6 km six, 3 tiers | 0.46 | 0.50 |
+| 1.6 km six, 3 tiers | 0.45 | 0.50 |
 | 900 m six, 2 tiers | 0.45 | 0.45 |
 
 ## How many tori the radiators can cool
@@ -54,10 +54,10 @@ The axis points at the orbit's pole (notes §11), so sunlight arrives edge-on to
 | Axis tilt from the pole | Main section (drum) | Farm section (open) |
 |---|---|---|
 | 0.27° | 0 MW (0.0%) | 0.49 MW (0.2%) |
-| 0.5° | 0 MW (0.0%) | 0.91 MW (0.4%) |
+| 0.5° | 0 MW (0.0%) | 0.92 MW (0.4%) |
 | 1° | 0 MW (0.0%) | 1.8 MW (0.8%) |
-| 1.5° | 0.36 MW (0.2%) | 2.7 MW (1.2%) |
-| 2° | 0.64 MW (0.4%) | 3.6 MW (1.6%) |
+| 1.5° | 0.36 MW (0.2%) | 2.8 MW (1.2%) |
+| 2° | 0.64 MW (0.4%) | 3.7 MW (1.6%) |
 | 3° | 0.84 MW (0.5%) | 5.4 MW (2.4%) |
 | 5° | 2.3 MW (1.3%) | 8.7 MW (3.9%) |
 
@@ -69,8 +69,8 @@ Single-phase water, 10 K warmer leaving the heat source, 12 loops per torus or f
 
 | Torus | Valley's heat | Pipe (each loop) | Speed | Buoyancy head | Water in the loops | Farm ring's heat | Pipe (each loop) | Pumping |
 |---|---|---|---|---|---|---|---|---|
-| 900 m | 28.8 MW | 0.35 m | 0.61 m/s | 4.2 kPa | 0.55 kt | 37.4 MW | 0.22 m | 105 kW (0.28%) |
-| 1.6 km | 91.1 MW | 0.53 m | 0.81 m/s | 7.4 kPa | 2.3 kt | 118 MW | 0.39 m | 310 kW (0.26%) |
+| 900 m | 28.8 MW | 0.35 m | 0.61 m/s | 4.2 kPa | 0.55 kt | 37.4 MW | 0.22 m | 106 kW (0.28%) |
+| 1.6 km | 91.1 MW | 0.53 m | 0.81 m/s | 7.4 kPa | 2.3 kt | 118 MW | 0.39 m | 312 kW (0.26%) |
 
 **Main section: passive, as intended.** A few tenths of a kPa per kelvin of buoyancy, over hundreds of metres of spin gravity, drive ~0.3 m pipes at under 1 m/s; the loops hold ~0.5 kt of water per 900 m torus (~0.8% of its water budget, local). **Farm section: pumps** of ~0.3% of its heat.
 
@@ -95,4 +95,36 @@ Steady-periodic swing of a 900 m valley under a 12 h day (`thermal_model/valley.
 
 Left to itself the valley swings a few kelvin: the soil's admittance (~5–17 W/m²K at a daily period) and the ponds hold it, so a wet valley stays within ~2–4 K and a dry canyon ~4–11 K. Wider swings (the notes' ~15 °C canyon) need the cooling scheduled: more at night through the cold ceiling, less by day.
 
-Not modelled: the spokes and cables in the ray tracing, the envelopes' rounded inner faces, the radiators' own tubes and their pressure, freezing in cold panels when the load drops, sunlight reflected between panels, the despun array's shadow, and the valley's air movement.
+## Radiator wings on the elevator shafts
+
+Each torus and each farm ring carries its radiators on four elevator shafts in its mid-plane, one per quadrant, a wing on both sides of each: an annular sector from the band's inner to outer radius (arcs of circle at both ends), from the shaft's edge (5 m off its centre line) out to the angle that gives the plane's coverage (`habitat_model/cavity.py`, `Wings`). Margins main / farm, inboard farm radiators, 20000 rays per section and seed, 2 seeds:
+
+| Panels | 900 m pair, 3 tiers at 5% / 25% | 900 m six, 2 tiers at 5% / 35% |
+|---|---|---|
+| Evenly spread panels (the sweeps above) | 2.01 / 1.49 | 1.76 / 1.55 |
+| Wings, aligned in every ring | 1.79 / 1.28 | 1.47 / 1.37 |
+| Wings, each ring turned 90°/N from its neighbour | 2.03 / 1.60 | 1.83 / 1.52 |
+
+Wings at the same angles in every ring face each other along the axis and lose ~10–15%; turned ring to ring they do slightly better than evenly spread panels, which block every crossing a little.
+
+**Least farm coverage for 1.5×** with staggered wings, the valleys' at 5% (one face, per farm ring):
+
+| Stack, tiers lit | 900 m | 1.6 km | 2.5 km |
+|---|---|---|---|
+| pair, 1 tier | 10% (3.86 ha) | 10% (12.3 ha) | 10% (30.2 ha) |
+| pair, 2 tiers | 20% (7.71 ha) | 20% (24.6 ha) | 15% (45.4 ha) |
+| pair, 3 tiers | 25% (9.64 ha) | 25% (30.8 ha) | 25% (75.6 ha) |
+| six, 1 tier | 10% (3.86 ha) | 10% (12.3 ha) | 10% (30.2 ha) |
+| six, 2 tiers | 35% (13.5 ha) | 40% (49.3 ha) | 40% (121 ha) |
+| six, 3 tiers | not reached: 1.21× at 90% | not reached: 1.15× at 80% | not reached: 1.13× at 80% |
+
+**The chord nets' shading.** The tori's two side nets sit between the valleys' wings and the drum's open ends; traced as thin insulated cylinders at the anchor spacing's chord count and diameter, margins main / farm at 5% / 35% (no nets, then nets with anchors every ~10 m, ~19–20 m and ~25–28 m):
+
+| Stack | No nets | Anchors ~10 m | ~19–20 m | ~25–28 m |
+|---|---|---|---|---|
+| 900 m six, 2 tiers | 1.83 / 1.52 | 1.74 / 1.37 (9 m, 25 cm) | 1.77 / 1.39 (19 m, 36 cm) | 1.78 / 1.41 (28 m, 44 cm) |
+| 1.6 km six, 2 tiers | 1.87 / 1.48 | 1.75 / 1.28 (10 m, 35 cm) | 1.78 / 1.31 (20 m, 49 cm) | 1.80 / 1.32 (25 m, 55 cm) |
+
+The nets take ~5–12% off both sections' margins (the farm section looks back at the tori through them); fewer, thicker chords block less (√N), but the gain is a few percent. Not included: the farm spokes (~1% of their annulus) and the stabilising lines.
+
+Not modelled: the farm spokes and stabilising lines in the ray tracing (the chord nets only in the wing section), the envelopes' rounded inner faces, the radiators' own tubes and their pressure, freezing in cold panels when the load drops, sunlight reflected between panels, the despun array's shadow, and the valley's air movement.

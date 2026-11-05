@@ -76,7 +76,7 @@ Trace elements (demands mostly guesses from the notes; `--trace` for the table):
 
 Preliminary radiative exchange (ray tracing, emissivity 0.9), each section on its own:
 - main section (drum, ends only): rejects at most 1.23 GW (75% of its ideal limit), a margin of 21×; needs 8.69 ha of panels (2% of its radiator annuli), against 8.56 ha ideally.
-- farm section (open, radiators to 900 m): rejects at most 1.53 GW, a margin of 61×; needs 3.74 ha of panels (1% of its radiator annuli), against 3.70 ha ideally.
+- farm section (open, radiators to 900 m): rejects at most 1.54 GW, a margin of 62×; needs 3.74 ha of panels (1% of its radiator annuli), against 3.70 ha ideally.
 - the whole stack, traced together: margins of 16× (main) and 22× (farm) at 100% / 35% panel coverage, so both sections can be cooled.
 
 ## Stability (rigid stack)

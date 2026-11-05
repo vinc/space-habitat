@@ -2,7 +2,7 @@ import math
 import unittest
 
 from habitat_model import Design, cavity, evaluate, load, params
-from thermal_model import coolant, layout, sunlight, valley
+from thermal_model import coolant, layout, sunlight, valley, wings
 
 P = params(load())
 
@@ -82,7 +82,9 @@ class TestSunlight(unittest.TestCase):
 class TestLayout(unittest.TestCase):
     def test_layouts(self):
         g = evaluate(P, Design(radius_m=900))["geometry"]
-        self.assertEqual(cavity._farm_band(g, "inboard"), (g["hub_radius"] + 1.0, g["farm_radius"]))
+        self.assertEqual(cavity._farm_band(g, "inboard"),
+                         (g["hub_radius"] + 1.0, g["farm_radius"] - g["farm_height"] / 2))
+        self.assertEqual(cavity._farm_band(g, "outboard")[0], g["farm_radius"] + g["farm_height"] / 2)
         with self.assertRaises(ValueError):
             cavity._farm_band(g, "sideways")
 
@@ -117,6 +119,89 @@ class TestLayout(unittest.TestCase):
 
     def test_passive_tiers(self):
         self.assertAlmostEqual(layout.passive_tiers({"farm": 0.5, "loads": (0, 300.0)}, 100.0), 1.5)
+
+
+class TestWings(unittest.TestCase):
+    def setUp(self):
+        res = evaluate(P, Design(radius_m=900, n_tori=6, tiers_lit=2))
+        self.res, self.geo = res, res["geometry"]
+        self.scene = cavity.assembled_scene(self.geo, 6, layout="inboard")
+
+    def test_wings_have_their_coverage_and_samples_lie_on_them(self):
+        import numpy as np
+        cover = np.where(np.array(self.scene.groups) == 0, 0.05, 0.35)
+        w = cavity.Wings(self.scene, cover)
+        rng = np.random.default_rng(0)
+        for k in (0, 6):                                   # a torus plane and a farm plane
+            r0, r1 = self.scene.bands[k]
+            x, y = rng.uniform(-r1, r1, (2, 400000))
+            share = w.hit(x, y, np.full(len(x), k)).mean() * (2 * r1) ** 2 / (math.pi * (r1 ** 2 - r0 ** 2))
+            self.assertAlmostEqual(share / cover[k], 1.0, delta=0.03)
+            xs, ys = w.sample(np.full(20000, k), rng)
+            self.assertTrue(w.hit(xs, ys, np.full(20000, k)).all())
+            self.assertLessEqual(np.hypot(xs, ys).max(), r1)   # the wings end on an arc, inside the band
+
+    def test_staggered_wings_beat_aligned_ones(self):
+        cover = (0.05, 0.35)
+        aligned, _, _ = wings.margins(P, 900, 6, 2, cover, {"stagger": False}, n_rays=6000, seeds=(0,))
+        turned, _, _ = wings.margins(P, 900, 6, 2, cover, {}, n_rays=6000, seeds=(0,))
+        self.assertGreater(turned[0], aligned[0] * 1.1)
+
+    def test_wing_geometry_is_exact_and_bounded(self):
+        from habitat_model import wing_geometry as wg
+        r0, r1 = 61.75, 355.75
+        self.assertEqual(wg.angle(0.0, r0, r1), 0.0)
+        self.assertEqual(wg.area(0.0, r0, r1), 0.0)
+        for c in (0.01, 0.05, 0.35, 0.9):          # small wings start past the shaft, near the axis
+            self.assertAlmostEqual(wg.area(wg.angle(c, r0, r1), r0, r1) / (c * math.pi * (r1 ** 2 - r0 ** 2)), 1, places=9)
+        top = wg.max_coverage(r0, r1)
+        self.assertLess(top, 1.0)
+        with self.assertRaises(ValueError):
+            wg.angle(min(1.0, top + 0.01), r0, r1)
+        import numpy as np
+        w = cavity.Wings(self.scene, np.where(np.array(self.scene.groups) == 0, 0.05, 0.0))
+        x, y = np.random.default_rng(1).uniform(-900, 900, (2, 100000))
+        farm = len(self.scene.groups) - 1
+        self.assertFalse(w.hit(x, y, np.full(len(x), farm)).any())      # zero coverage: no phantom panels
+        grid = cavity.check_assembled(P, Design(radius_m=900, n_tori=2, tiers_lit=2), *[evaluate(P, Design(
+            radius_m=900, n_tori=2, tiers_lit=2))[k] for k in ("geometry", "heat")], n_rays=300,
+            grid=(0.05, 1.0), layout="inboard", wings={})
+        self.assertLess(max(q["coverage"][1] for q in grid["points"]), 1.0)  # clipped to what wings reach
+
+    def test_net_leaves_an_isotropic_field_unchanged(self):
+        # Reciprocity: rays crossing a net's plane from an isotropic field (cosine-weighted about the
+        # plane's normal) leave with the same angular distribution, passed or re-emitted, over the whole
+        # radial range the radiators use (hub to drum: the dense, saturated net near the hub included)
+        # and every direction, grazing ones included. Re-emitting by the cylinder's unsaturated
+        # sqrt(1 - (d.t)^2) alone fails it, as uniform re-emission does.
+        import numpy as np
+        rng = np.random.default_rng(3)
+        net = wings.nets(P, self.res, 6, 10.0)[0]
+        n = 2000000
+        for lo, hi in ((self.geo["hub_radius"] + 1, 360.0), (360.0, self.geo["drum_radius"])):
+            rho = np.sqrt(rng.uniform(lo ** 2, hi ** 2, n))
+            ph = rng.uniform(0, 2 * math.pi, n)
+            hit = np.stack([rho * np.cos(ph), rho * np.sin(ph), np.zeros(n)], axis=1)
+            v = cavity._diffuse(np.stack([np.zeros(n), np.zeros(n), np.where(rng.random(n) < .5, 1., -1.)], axis=1), rng)
+            caught, out = cavity.net_crossing(hit, v, net, rng)
+            self.assertGreater(caught.mean(), 0.05)
+            edges = np.linspace(0, 1, 9)
+            h_in = np.histogram(np.abs(v[:, 2]), edges)[0]
+            ratio = np.histogram(np.abs(out[:, 2]), edges)[0] / h_in
+            self.assertLess(np.abs(ratio - 1).max(), 3 / np.sqrt(h_in.min()) + 0.003, (lo, hi, ratio))
+            u = rng.normal(size=(n, 3))
+            uniform = np.where(caught[:, None], u / np.linalg.norm(u, axis=1, keepdims=True), v)
+            off = np.histogram(np.abs(uniform[:, 2]), edges)[0] / h_in
+            self.assertGreater(np.abs(off - 1).max(), 0.05)
+
+    def test_nets_shade_and_default_trace_is_unchanged(self):
+        base = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0)["escape"]
+        again = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings=None, nets=None)
+        self.assertEqual(base, again["escape"])
+        net = wings.nets(P, self.res, 6, 10.0)[0]
+        shaded = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings={}, nets=net)
+        bare = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0, wings={})
+        self.assertLess(shaded["escape"], bare["escape"])
 
 
 if __name__ == "__main__":

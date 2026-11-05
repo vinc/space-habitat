@@ -19,9 +19,8 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: explorer/package-lock.json
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      # Python comes from mise.toml (Pyodide 0.29 in the browser is Python 3.13 too).
+      - uses: jdx/mise-action@v2
       # Keep the same Markdown rendering and URLs as branch-based Pages.
       # Run before npm install so dependencies are not copied into the site.
       - name: Build existing Markdown site
