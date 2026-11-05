@@ -184,7 +184,7 @@ Check the design's load-bearing assumptions with models before going deeper. The
 - [ ] Sweep maximum stack length for the inboard layout. The earlier 40-torus result belongs to outboard radiators.
 - [ ] Recheck sunlight and detailed shading for the adopted panel layout.
 - [x] Panels laid out as wings on the elevator shafts (`thermal_model/wings.py`): turned ring to ring they match or beat evenly spread panels; least farm coverage for 1.5× per stack and tiers lit
-- [ ] Include the chord nets in the coverage sweeps: they take ~5–12% off both sections' margins (a 900 m six-stack with two tiers lit: farm ~1.38× at 35%)
+- [ ] Include the chord nets in the coverage sweeps: they take ~5–12% off both sections' margins (a 900 m six-stack with two tiers lit: farm ~1.37× at 35%)
 
 The completed work below records the earlier comparisons, not the adopted baseline. Its outboard pump loads, panel areas and maximum stack counts must not be reused for inboard cooling.
 

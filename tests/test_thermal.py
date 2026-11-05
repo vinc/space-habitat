@@ -170,26 +170,29 @@ class TestWings(unittest.TestCase):
 
     def test_net_leaves_an_isotropic_field_unchanged(self):
         # Reciprocity: rays crossing a net's plane from an isotropic field (cosine-weighted about the
-        # plane's normal) leave with the same angular distribution, passed or re-emitted. Checked where
-        # the wings are (0.4 r to the drum) and off grazing (|v_z| >= 0.25), where a thin layer of chords
-        # is a fair model; re-emitting uniformly over the sphere tilts it by ~2% and fails.
+        # plane's normal) leave with the same angular distribution, passed or re-emitted, over the whole
+        # radial range the radiators use (hub to drum: the dense, saturated net near the hub included)
+        # and every direction, grazing ones included. Re-emitting by the cylinder's unsaturated
+        # sqrt(1 - (d.t)^2) alone fails it, as uniform re-emission does.
         import numpy as np
         rng = np.random.default_rng(3)
         net = wings.nets(P, self.res, 6, 10.0)[0]
-        n = 1000000
-        rho = np.sqrt(rng.uniform(360 ** 2, 836 ** 2, n))
-        ph = rng.uniform(0, 2 * math.pi, n)
-        hit = np.stack([rho * np.cos(ph), rho * np.sin(ph), np.zeros(n)], axis=1)
-        v = cavity._diffuse(np.stack([np.zeros(n), np.zeros(n), np.where(rng.random(n) < .5, 1., -1.)], axis=1), rng)
-        caught, out = cavity.net_crossing(hit, v, net, rng)
-        self.assertGreater(caught.mean(), 0.05)
-        edges = np.linspace(0.25, 1, 7)
-        ratio = np.histogram(np.abs(out[:, 2]), edges)[0] / np.histogram(np.abs(v[:, 2]), edges)[0]
-        self.assertLess(np.ptp(ratio), 0.006)
-        u = rng.normal(size=(n, 3))
-        uniform = np.where(caught[:, None], u / np.linalg.norm(u, axis=1, keepdims=True), v)
-        tilted = np.histogram(np.abs(uniform[:, 2]), edges)[0] / np.histogram(np.abs(v[:, 2]), edges)[0]
-        self.assertGreater(np.ptp(tilted), 0.02)
+        n = 2000000
+        for lo, hi in ((self.geo["hub_radius"] + 1, 360.0), (360.0, self.geo["drum_radius"])):
+            rho = np.sqrt(rng.uniform(lo ** 2, hi ** 2, n))
+            ph = rng.uniform(0, 2 * math.pi, n)
+            hit = np.stack([rho * np.cos(ph), rho * np.sin(ph), np.zeros(n)], axis=1)
+            v = cavity._diffuse(np.stack([np.zeros(n), np.zeros(n), np.where(rng.random(n) < .5, 1., -1.)], axis=1), rng)
+            caught, out = cavity.net_crossing(hit, v, net, rng)
+            self.assertGreater(caught.mean(), 0.05)
+            edges = np.linspace(0, 1, 9)
+            h_in = np.histogram(np.abs(v[:, 2]), edges)[0]
+            ratio = np.histogram(np.abs(out[:, 2]), edges)[0] / h_in
+            self.assertLess(np.abs(ratio - 1).max(), 3 / np.sqrt(h_in.min()) + 0.003, (lo, hi, ratio))
+            u = rng.normal(size=(n, 3))
+            uniform = np.where(caught[:, None], u / np.linalg.norm(u, axis=1, keepdims=True), v)
+            off = np.histogram(np.abs(uniform[:, 2]), edges)[0] / h_in
+            self.assertGreater(np.abs(off - 1).max(), 0.05)
 
     def test_nets_shade_and_default_trace_is_unchanged(self):
         base = cavity.escape_probability(self.scene, (0.05, 0.35), 0.9, 6000, 0, source=0)["escape"]
