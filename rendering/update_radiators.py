@@ -256,6 +256,9 @@ def main():
     col["regenerate"] = "Run rendering/update_radiators.py after changing the torus Array count/pitch"
     col["shaft_scope"] = "8 m truss placeholder; 5 m sliding guide schematic; fittings and penetrations not engineered"
     col["panel_scope"] = "5% coverage; two-sided; 60 mm visual thickness; visible shader is not thermal emissivity"
+    if bpy.data.collections.get("Elevator inspection lights"):
+        from rendering.update_shaft_lights import rebuild
+        rebuild(geo, drawing, count, pitch, origin)
     bpy.context.view_layer.update()
     validate(geo, drawing, count, pitch, origin)
     bpy.ops.wm.save_as_mainfile(filepath=str(scene_path), compress=False, relative_remap=True)

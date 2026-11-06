@@ -12,7 +12,7 @@ Open [assets/scene.blend](assets/scene.blend) in Blender 5.2.3 or newer. Paths i
 
 | File | Purpose | Size | Stored in Git |
 | --- | --- | --- | --- |
-| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 2.5 MiB | Yes |
+| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 4.3 MiB | Yes |
 | `assets/habitat.blend` | Linked structural meshes, including shafts and radiator wings | 24.8 MiB | Yes |
 | `assets/vegetation.blend` | Linked tree and grass meshes; future shrubs belong here | 12.8 MiB | Yes |
 | `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
@@ -133,6 +133,22 @@ To check the saved additions without writing either file:
 ```sh
 blender -b --factory-startup --python-exit-code 1 --python rendering/update_radiators.py -- --check-only
 ```
+
+### Shaft inspection lights
+
+**Habitat stack > Elevator inspection lights** contains **16 pairs per shaft**, at about **48.94 m spacing**. There is one lamp on each axial side of the shaft at every station: **32 lamps per shaft, 768 across the six tori**. The first and last stations are half an interval from the hub and train-level ends. The lamps sit 6 m either side of each torus's mid-plane, beyond the 8 m truss, and follow its 15° stagger and the habitat's inertial attitude.
+
+The housings and warm-white lenses reuse the hub fittings' linked mesh and materials. All shaft lamps share one separate light-data block, **Shaft inspection lights - shared power and colour**. Its starting colour and render power match the hub's, with a wider **150° spotlight beam** aimed 45° along the shaft and back towards its plane to illuminate the structure and both radiator wings. Change the shared data block's Power or Color to adjust all shaft lamps without changing the hub lamps. These are render settings, not established electrical ratings or demonstrated inspection illuminance; the exterior-light loads remain outside the numerical budgets.
+
+Each lamp is a collection instance of the same fitting and source, with no duplicated fixture meshes. The prototype collection, **Shaft inspection light source**, is referenced by the instances and is not linked directly into the scene.
+
+To change the number of pairs, edit **Pairs per shaft** in the inspection collection's Custom Properties, then run:
+
+```sh
+blender -b --factory-startup --python-exit-code 1 --python rendering/update_shaft_lights.py
+```
+
+This writes only `scene.blend`, saves it uncompressed, reopens it and checks the count, spacing, two-sided placement, aiming, shared source and preservation of the original objects, hub light and render settings. Add `-- --check-only` for a read-only check. Regenerating the radiator/shaft collection with `update_radiators.py` also refreshes existing shaft lights to follow the saved torus Array while preserving their shared brightness settings.
 
 ## Additions made for the image
 
