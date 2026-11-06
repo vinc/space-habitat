@@ -1,8 +1,8 @@
 # Blender rendering choices
 
-This note records the visual additions in `assets/scene.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November. The [browser explorer](../explorer/README.md) is a separate visualization.
+This note records the visual additions in `assets/scene.blend`, separately from the numerical habitat model. It describes the six-torus scene prepared on 3 November 2026, with perihelion lighting updated on 4 November and elevator shafts and radiator wings added on 6 November. The [browser explorer](../explorer/README.md) is a separate visualization.
 
-The Blender file is maintained manually. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
+The Blender file is maintained manually, with a small update script for the elevator shafts and radiator wings. Editing it does not update the calculations, and changes to the calculations do not automatically update the scene.
 
 See [TODO.md](TODO.md) for the planned grass and tree improvements.
 
@@ -12,8 +12,8 @@ Open [assets/scene.blend](assets/scene.blend) in Blender 5.2.3 or newer. Paths i
 
 | File | Purpose | Size | Stored in Git |
 | --- | --- | --- | --- |
-| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 2.2 MiB | Yes |
-| `assets/habitat.blend` | Linked structural meshes | 24.7 MiB | Yes |
+| `assets/scene.blend` | Main scene, assembly, cameras, lights, materials and controls | 4.3 MiB | Yes |
+| `assets/habitat.blend` | Linked structural meshes, including shafts and radiator wings | 24.8 MiB | Yes |
 | `assets/vegetation.blend` | Linked tree and grass meshes; future shrubs belong here | 12.8 MiB | Yes |
 | `assets/eros.blend` | Linked Eros mesh | 4.34 MiB | Yes |
 | `assets/sky.exr` | Generated sky texture | 114.1 MiB | No |
@@ -39,7 +39,7 @@ Save `scene.blend` with **Compress** disabled so Git can store small changes eff
 
 The four images below were rendered at **1600 × 1200**, using **Cycles on the GPU with 4096 samples**. Set **Output Properties > Resolution** to 1600 × 1200 at 100%, **Render Properties > Device** to GPU Compute, and the render maximum samples to 4096. Select a compatible compute backend and GPU in Blender's **Preferences > System > Cycles Render Devices**; this selection depends on the local machine.
 
-These images were rendered before the scene was split into linked libraries. The split preserves the scene data; the images are retained with their source-file metadata removed.
+These four images were rendered before the scene was split into linked libraries and before the elevator shafts and radiator wings were added. The split preserves the original scene data; the images are retained with their source-file metadata removed. The inspection view below shows the new geometry.
 
 The scene saves these resolution, GPU Compute and sampling settings. The compute backend and physical GPU selection remain local Blender preferences.
 
@@ -90,6 +90,65 @@ The solar collecting area comes from [power.py](../habitat_model/power.py) and t
 This covers the modeled valley lighting and other habitat loads. Factory demand and the exterior lights added for the render are excluded. The area counts the aperture once, even though the rendered array has active surfaces on both faces.
 
 Changing the number of tori in Blender does not recalculate the solar array.
+
+### Elevator shafts and radiator wings
+
+The **Habitat stack > Elevators and radiator wings** collection contains four shafts and eight radiator wings per torus: 24 shafts and 48 wings in the saved six-torus scene. The collection is outside the repeated habitat module, so each torus's set can turn **15°** relative to its neighbour. All its objects follow **Habitat - inertial attitude**.
+
+The dimensions come from [layout.py](../habitat_model/layout.py) and [wing_geometry.py](../habitat_model/wing_geometry.py), as in the explorer and the [wing study](../reports/heat_rejection.md#radiator-wings-on-the-elevator-shafts):
+
+| Feature | Saved scene |
+| --- | --- |
+| Shaft positions | Four, one per quadrant, in each torus's mid-plane between the two cable nets |
+| Shaft extent | Hub at 60.75 m to train level at 843.75 m radius |
+| Nominal shaft envelope | 8 m square truss |
+| Radiator band in the numerical model | 360–836.75 m radius |
+| Radiator area per torus, one face | 89,622 m²; 5% of the model's band |
+| Wings | One on each side of every shaft, about 2.729° from its centre line |
+| Panel inner edge beside the shaft | 5 m from its centre line, leaving 1 m beyond the nominal truss |
+| Rim connection | Open sliding guide, illustrating the proposed 5 m travel |
+
+The panel's outer radius is trimmed by about 50 mm to leave 10 mm clearance from the rendered bumper's polygonal surface, whose steel is outside the numerical model's ideal envelope. The wing angle is adjusted to preserve the model's panel area. Both faces render; the 60 mm panel thickness and matte visible material are appearance choices, without a panel construction design or a calibrated thermal-emissivity shader.
+
+The truss has 0.9 m rails, 0.22 m braces and roughly 12 m bays. These dimensions, the small wing brackets, the hub attachment and the sliding guides are schematic. The shafts do not replace the load-bearing cable nets. Cars, pressure enclosures, services, detailed fittings and openings through the torus shells are not modelled. The source study has not sized the shafts or their joints. Its coverage sweeps also leave the chord nets' shading open; drawing the wings does not establish a new thermal margin.
+
+![Elevator shafts and staggered radiator wings](radiators-preview.png)
+
+This is an 800 × 800 inspection render: blue identifies the radiator wings and orange the shaft trusses. It uses temporary studio fill lighting and omits fine vegetation and interior fittings. It is separate from the four full-quality views above. These preview changes are not saved in `scene.blend`. Regenerate it with:
+
+```sh
+blender -b --factory-startup --python-exit-code 1 --python rendering/render_radiators_preview.py
+```
+
+To regenerate this collection after changing the existing torus Array's count or axial spacing, run from the repository root with Blender 5.2.3 or newer:
+
+```sh
+blender -b --factory-startup --python-exit-code 1 --python rendering/update_radiators.py
+```
+
+The script reads the saved Array, floor radius and actual bumper clearance, updates only its own tagged geometry in `habitat.blend` and objects in `scene.blend`, then saves and reopens the scene to check counts, placement, panel area, clearance and relative library links. Existing cameras, lighting, planting, original meshes and 1600 × 1200 / GPU / 4096-sample settings are preserved. Run it on a committed or backed-up scene because it writes both Blender files. This is for the existing main-section scene; it does not generate farm rings or resize the rest of the habitat.
+
+To check the saved additions without writing either file:
+
+```sh
+blender -b --factory-startup --python-exit-code 1 --python rendering/update_radiators.py -- --check-only
+```
+
+### Shaft inspection lights
+
+**Habitat stack > Elevator inspection lights** contains **16 pairs per shaft**, at about **48.94 m spacing**. There is one lamp on each axial side of the shaft at every station: **32 lamps per shaft, 768 across the six tori**. The first and last stations are half an interval from the hub and train-level ends. The lamps sit 6 m either side of each torus's mid-plane, beyond the 8 m truss, and follow its 15° stagger and the habitat's inertial attitude.
+
+The housings and warm-white lenses reuse the hub fittings' linked mesh and materials. All shaft lamps share one separate light-data block, **Shaft inspection lights - shared power and colour**. Its starting colour and render power match the hub's, with a wider **150° spotlight beam** aimed 45° along the shaft and back towards its plane to illuminate the structure and both radiator wings. Change the shared data block's Power or Color to adjust all shaft lamps without changing the hub lamps. These are render settings, not established electrical ratings or demonstrated inspection illuminance; the exterior-light loads remain outside the numerical budgets.
+
+Each lamp is a collection instance of the same fitting and source, with no duplicated fixture meshes. The prototype collection, **Shaft inspection light source**, is referenced by the instances and is not linked directly into the scene.
+
+To change the number of pairs, edit **Pairs per shaft** in the inspection collection's Custom Properties, then run:
+
+```sh
+blender -b --factory-startup --python-exit-code 1 --python rendering/update_shaft_lights.py
+```
+
+This writes only `scene.blend`, saves it uncompressed, reopens it and checks the count, spacing, two-sided placement, aiming, shared source and preservation of the original objects, hub light and render settings. Add `-- --check-only` for a read-only check. Regenerating the radiator/shaft collection with `update_radiators.py` also refreshes existing shaft lights to follow the saved torus Array while preserving their shared brightness settings.
 
 ## Additions made for the image
 
@@ -240,6 +299,6 @@ The material uses an approximate, Sun-dependent Hapke-style reflectance treatmen
 
 ## What the scene leaves out
 
-The scene has no farm rings, factory, radiators or docking facilities. It also omits detailed inter-torus structural connections, pressure tunnels and engineered cable fittings. Repeated hub sleeves alone do not establish a structurally complete six-torus assembly.
+The scene has no farm rings, factory or docking facilities. It also omits detailed inter-torus structural connections, pressure tunnels and engineered cable and elevator fittings. Repeated hub sleeves alone do not establish a structurally complete six-torus assembly.
 
 Omitting something from the picture does not remove it from the wider design study. Use the [model reports](../reports/) for numerical results.
