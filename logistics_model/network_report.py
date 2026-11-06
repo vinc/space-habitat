@@ -79,7 +79,7 @@ def generate():
         "Didymos, 1991 VH, Yuliya, Norwan, Bacchus | Ryugu and Bennu, or characterised dark candidates | "
         "The full-size valley and, last, the farm rings and ecosystem | "
         "A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~15–35 tori each; 1991 VH is a fast-rotating binary |",
-        "| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros, Geographos | "
+        "| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros first; Geographos as the alternative | "
         "Anteros: Ryugu at 5.3 km/s (sampled, within the cutoff) and dark candidates from 3.65 km/s; "
         "Geographos: dark candidates only, no sampled supplier below the 6 km/s cutoff | "
         "Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | "
