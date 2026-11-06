@@ -58,22 +58,42 @@ def generate():
     lines=["# Asteroid host–supplier networks", "",
         "A first screening study, 31 October 2026. Extends the Eros reference to other silicate near-Earth hosts. "
         "The result is a shortlist for investigation, not a verified resource inventory or an executable transport plan.", "",
-        "## Ranked research shortlist", "",
-        "This is a judgement about which networks to investigate first for this project's near-Earth, "
-        "locally built habitats. It is not a universal optimum. Long-term inventory and evidence quality "
-        "take precedence over a small saving in the best transfer found.", "",
-        "| Priority | Host and supplier network | Reason to investigate | Main reservation |",
-        "|---|---|---|---|",
-        "| 1 | Eros + 1999 XX262 / 2015 DX198; Ryugu and Bennu as sampled comparisons | Large, spacecraft-characterised host; several alternative delivery routes | Strong seasons; XX262 hydration is tentative and the dark suppliers' nitrogen is unknown |",
-        "| 2 | 1991 VH + 2011 AM24 / 2015 CV13 / 2015 AY245 | Milder seasons and an unusually inexpensive AM24 route | Finite LL-like metal inventory; fast-rotating binary; no sampled supplier below the adopted cutoff |",
-        "| 3 | 1999 YB + Bennu and the additional candidates in the dated table | Mildest seasons among the retained hosts, with a sampled-source comparison | Host diameter is inferred from H and assumed albedo; potentially only a few small tori |",
-        "| 4 | Torifune + 2001 WT1 / 2009 FD | Smaller solar array and a low-cost WT1 route; possible nursery | Limited host inventory, uncertain WT1 resources; catalogue size needs replacing with a volume model |", "",
-        "Geographos, Bacchus, Norwan and 2001 QQ142 remain trade-off alternatives in the tables; their "
-        "presence on the central-estimate Pareto front does not establish a superior settlement site. "
-        "Itokawa and Apophis are useful transport comparisons, but the conservative LL free-metal model "
-        "gives only about one complete 900 m torus, before recovery/accessibility losses: that does not "
-        "support a self-reproducing pair at those sites without another material source. "
-        "L/H-rich material or silicate iron extraction changes that conclusion and needs its own evidence.", "",
+        "## Settlement ladder (working scenario)", "",
+        "Each step goes to a new host and is a little larger than the last, so every host is chosen for the "
+        "step it serves rather than ranked against Eros. The hosts fall into three size groups below Eros. "
+        "Later habitats move on to the next group once a host's inventory is committed, by which time the "
+        "smaller and darker bodies will be better characterised. This is the project's plan, not a universal optimum.", "",
+        "| Step | Habitat | Host group | Candidate hosts | Supply | What it proves | Main reservation |",
+        "|---|---|---|---|---|---|---|",
+        "| 1 | One 400 m torus, no farm tiers and no ecosystem: a synthetic environment for a small crew | 0.3–0.6 km | "
+        "Apophis (post-2029 orbit) or Itokawa | ~0.7 kt N₂: Ryugu (sampled) reaches Apophis at 5.6 km/s; "
+        "Itokawa's sampled routes exceed the 6 km/s cutoff (Ryugu 6.3 km/s), its dark candidates don't | "
+        "Rock jacket and double skin, cable spokes, despun array, nitrogen supply and life support, the factory "
+        "chain, 1.5 rpm gravity; mining and controlling a potentially hazardous asteroid | "
+        "A day–night cycle, if kept, leaves the power load unbalanced; Apophis's surface after its 2029 flyby is still to be seen |",
+        "| 2 | A 400 m pair, again without farms or ecosystem | 0.3–0.6 km | The other of Apophis and Itokawa; "
+        "Torifune, 1999 YB, 2001 QQ142 and the H-sized hosts in the table as alternatives | As step 1 | "
+        "The co-rotating stack, the pair rule and the first build by an existing habitat's factory | "
+        "Most of the group's sizes come from H at an assumed albedo |",
+        "| 3 | One 900 m torus, then a 900 m pair, then a pair with farms | 0.8–1.0 km | "
+        "Didymos, 1991 VH, Yuliya, Norwan, Bacchus | Ryugu and Bennu, or characterised dark candidates | "
+        "The full-size valley and, last, the farm rings and ecosystem | "
+        "A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~15–35 tori each; 1991 VH is a fast-rotating binary |",
+        "| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros, Geographos | "
+        "Dark candidates once characterised; no sampled supplier below the 6 km/s cutoff from Geographos | "
+        "Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | "
+        "Anteros has no dated routes yet and its 2.3 km size is from 1994; Geographos is the costliest host to reach from Earth |",
+        "| 5 | The first large habitat: 1.6 km six-stacks | Eros | Eros | Ryugu and Bennu: the only measured "
+        "nitrogen, enough for about two six-stacks at 70% recovery | The archipelago's main island | "
+        "Routes to Ryugu and Bennu cost 4.5–5.9 km/s with up to 7.5 years between selected arrivals; "
+        "their inventory can't be counted again for other hosts |", "",
+        "The 400 m tori never carry farm tiers or an ecosystem; nor do the first 900 m torus and pair: farms start with the "
+        "next 900 m pair. "
+        "The silicate NEAs between this size and Eros (Ivar, Eric, Sisyphus) and Ganymed above it fail the host "
+        "orbit filter; the [evidence audit](asteroid-evidence.md) lists them and why. "
+        "Apophis is used only on its post-2029 orbit. "
+        "The torus counts below are material scenarios with every row's whole asteroid accessible; "
+        "recovery and access losses reduce them.", "",
         "## What was searched", "",
         f"The JPL SBDB query returned {len(hd['query_snapshot']['data'])} asteroids with a recorded spectral classification. "
         f"The stated cuts retained {len(hosts)} hosts: S-complex/Q, or L/K silicate candidates, with q > 0.7 AU, Q < 2.5 AU, "
@@ -182,8 +202,8 @@ def generate():
         "1. Keep Eros as the large, spacecraft-characterised reference; compare 1991 VH as a smaller mild-season "
         "LL-like host and 1999 YB as a low-eccentricity but poorly sized host. Their finite metal inventory matters "
         "more than a small Δv saving if the goal is many generations at the same site.",
-        "2. Treat Torifune and Itokawa as nursery candidates rather than automatically extrapolating to an indefinitely "
-        "growing cluster. Keep all mass estimates separate from measured free-metal abundance.",
+        "2. Treat the 0.3–0.6 km hosts (Apophis, Itokawa, Torifune) as demonstrator sites for one torus or one pair, "
+        "not as clusters that grow indefinitely. Keep all mass estimates separate from measured free-metal abundance.",
         "3. Obtain or reanalyse spectra for the low-cost dark candidates before resource planning; for XX262, "
         "confirm the weak hydration feature and measure the 3 µm region. No unvisited candidate here has a verified "
         "recoverable-nitrogen inventory.",
