@@ -29,8 +29,12 @@ SCREEN_DATA = DATA / "network_screen.json"
 WINDOW_DATA = DATA / "network_windows.json"
 NETWORK_VECTORS = DATA / "network_vectors.npz"
 EVIDENCE_DATA = DATA / "network_evidence.json"
+PHYSICAL_DATA = DATA / "network_physical.json"
+G_SI = 6.674e-11
 CHECK_DATA = DATA / "network_endpoint_checks.json"
-DATED_HOSTS = ("433", "137799", "35107", "98943", "1620", "1943", "65803", "25143", "99942")
+# Reference hosts and the settlement ladder's hosts (demonstrator and 0.8-1.0 km groups included).
+DATED_HOSTS = ("433", "137799", "35107", "98943", "1620", "1943", "65803", "25143", "99942",
+               "15745", "302311", "36017", "152560", "22099")
 ALIASES = {"433": "Eros", "25143": "Itokawa", "98943": "Torifune", "65803": "Didymos",
            "99942": "Apophis", "162173": "Ryugu", "101955": "Bennu",
            "275611": "1999 XX262", "252558": "2001 WT1", "2015 DX198": "2015 DX198"}
@@ -181,12 +185,52 @@ def supplier_scenarios(key, body, radius=900):
             supplier_capacity(body, .0025, .9, 1600, 1.2, radius))
 
 
+def published_size(body):
+    """SsODNet's best-estimate diameter for a host (thermal model, radar or spacecraft), if any."""
+    if not PHYSICAL_DATA.exists():
+        return None
+    entry=json.loads(PHYSICAL_DATA.read_text())["hosts"].get(body["designation"],{})
+    return entry.get("ssodnet") if entry.get("ssodnet",{}).get("diameter_km") else None
+
+
+def host_diameter(body):
+    """(km, source): SsODNet's best estimate where published, else SBDB's, else H at albedo 0.23."""
+    pub=published_size(body)
+    if pub:
+        return pub["diameter_km"], "SsODNet: "+", ".join(pub["methods"])
+    return body["diameter_km"], body["diameter_source"]
+
+
+def spin_ratio(body, density=2000.0):
+    """Centrifugal over gravitational acceleration where the spin pulls hardest: at the equator of a
+    sphere ((P_c / P)², P_c = sqrt(3π / Gρ) ≈ 2.33 h at 2 t/m³, whatever the size), and at the tips of
+    the long axis of a homogeneous ellipsoid where SBDB gives a shape. Above 1, loose material there is
+    not held. None without a rotation period."""
+    phys=body["physical_parameters"]
+    if "rot_per" not in phys:
+        return None
+    period=float(phys["rot_per"]["value"])*3600
+    omega=2*math.pi/period
+    sphere=omega**2/(4/3*math.pi*G_SI*density)
+    tips=None
+    if "extent" in phys:
+        axes=sorted((float(x) for x in re.findall(r"[\d.]+",phys["extent"]["value"])),reverse=True)
+        if len(axes)>=2:
+            a,b=axes[0]*500,axes[1]*500
+            c=axes[2]*500 if len(axes)>2 else b
+            tt=np.linspace(0,math.pi/2,200001)[:-1]; u=np.tan(tt)**2*a*a
+            du=2*a*a*np.tan(tt)/np.cos(tt)**2*(tt[1]-tt[0])
+            a1=a*b*c*np.sum(du/((a*a+u)*np.sqrt((a*a+u)*(b*b+u)*(c*c+u))))
+            tips=omega**2*a/(2*math.pi*G_SI*density*a1*a)
+    return {"period_h":period/3600,"sphere_equator":sphere,"ellipsoid_tips":tips}
+
+
 def host_mass(body):
     """Prefer a measured GM, otherwise show the explicit 2 t/m³ proxy."""
     physical=body["physical_parameters"]
     if "GM" in physical:
         return float(physical["GM"]["value"]) * 1e9 / 6.67430e-11
-    return bulk_mass(body["diameter_km"],2000)
+    return bulk_mass(host_diameter(body)[0],2000)
 
 
 def host_capacity(body, radius=900, metal_class="LL"):
@@ -196,15 +240,17 @@ def host_capacity(body, radius=900, metal_class="LL"):
 
 
 def pareto_front(hosts, screen):
-    """No arbitrary weighted score: central-estimate nondominance on four axes.
-    Smaller seasonal ratio, array factor and phase-free delta-v; larger LL inventory.
+    """No arbitrary weighted score: central-estimate nondominance on three axes.
+    Smaller array factor and phase-free delta-v; larger LL inventory. The seasonal ratio is not an
+    axis: the array is sized at aphelion and the perihelion surplus goes to industry (notes §15), so
+    the array factor already carries the cost of the seasons.
     Evidence quality is not a numeric score; this front is not uncertainty-robust.
     """
     objectives={}
     for k,h in hosts.items():
         sun=screen["hosts"][k]["sunlight"]
         dv=min(v["best"] for v in screen["hosts"][k]["suppliers"].values() if "best" in v)
-        objectives[k]=(sun["season_ratio"],sun["array_factor"],dv,-host_capacity(h))
+        objectives[k]=(sun["array_factor"],dv,-host_capacity(h))
     return [k for k,v in objectives.items() if not any(
         all(a<=b for a,b in zip(w,v)) and any(a<b for a,b in zip(w,v))
         for j,w in objectives.items() if j!=k)]
@@ -487,6 +533,37 @@ def compute_dated():
     return out
 
 
+def fetch_physical():
+    """Snapshot of SsODNet's best-estimate sizes and NASA's NHATS round trips for every host."""
+    hosts=json.loads(HOST_DATA.read_text())["hosts"]
+    out={}
+    for key in sorted(hosts,key=int):
+        entry={}
+        try:
+            card=get_json("https://ssp.imcce.fr/webservices/ssodnet/api/ssocard.php",{"q":key})
+            d=card.get("parameters",{}).get("physical",{}).get("diameter",{})
+            if d.get("value"):
+                entry["ssodnet"]={"diameter_km":float(d["value"]),
+                    "error_km":(d.get("error") or {}).get("max"),
+                    "methods":[m.get("name") for m in d.get("method") or []],
+                    "bibref":[b.get("shortbib") for b in d.get("bibref") or []]}
+            else:
+                entry["ssodnet"]={"diameter_km":None}
+        except Exception as exc:
+            entry["ssodnet"]={"unavailable":str(exc)}
+        try:
+            nh=get_json("https://ssd-api.jpl.nasa.gov/nhats.api",{"des":key})
+            entry["nhats"]=({"min_dv_km_s":float(nh["min_dv"]["dv"]),"duration_d":int(nh["min_dv"]["dur"])}
+                            if "min_dv" in nh else {"listed":False})
+        except Exception as exc:
+            entry["nhats"]={"listed":False,"note":str(exc)[:120]}
+        out[key]=entry
+        print("physical",key,flush=True)
+    PHYSICAL_DATA.write_text(json.dumps({"fetched":date.today().isoformat(),
+        "source":"IMCCE SsODNet ssoCard (best estimates); NASA/JPL NHATS API (round trips within its 12 km/s and 450-day limits)",
+        "hosts":out},indent=1)+"\n")
+
+
 def fetch_evidence():
     """Keep the selected suppliers' catalogue provenance and all SsODNet types.
     Unavailable records stay explicitly unavailable; no inferred composition is inserted.
@@ -579,6 +656,7 @@ def main(argv=None):
     ap.add_argument("--refresh-vectors", action="store_true", help="fetch every selected body again from Horizons")
     ap.add_argument("--windows", action="store_true")
     ap.add_argument("--fetch-evidence", action="store_true")
+    ap.add_argument("--fetch-physical", action="store_true", help="SsODNet sizes and NHATS round trips")
     ap.add_argument("--spectral", action="store_true")
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--verify", action="store_true")
@@ -595,6 +673,8 @@ def main(argv=None):
         compute_dated()
     if args.fetch_evidence:
         fetch_evidence()
+    if args.fetch_physical:
+        fetch_physical()
     if args.verify:
         verify_endpoints()
     if args.report:

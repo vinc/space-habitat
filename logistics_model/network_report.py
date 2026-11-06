@@ -40,6 +40,83 @@ def evidence_class(key, body, audit):
     return (body["spec"]+" / dark; N unknown") if body["spec"] else "dark only; N unknown"
 
 
+LADDER = (   # (step, habitat, design: radius, tori, farm tiers lit, hosts)
+    ("1", "400 m torus", (400, 1, 0), ("99942", "25143")),
+    ("2", "400 m pair", (400, 2, 0), ("99942", "25143", "98943", "302311", "152560", "36017", "137799", "22099", "139622")),
+    ("3", "900 m torus, then pair; then a pair with farms", (900, 2, 3), ("65803", "35107", "15745", "7480", "2063")),
+    ("4", "900 m and 1.6 km stacks with farms", (1600, 6, 3), ("1943", "1620")),
+    ("5", "1.6 km six-stacks", (1600, 6, 3), ("433",)),
+)
+SAMPLED = ("101955", "162173")
+
+
+def ladder_sections(hosts, dated, candidates, audit):
+    """Size, spin and access of the ladder's hosts; supply per step."""
+    from habitat_model import Design, evaluate, load, params
+    physical=json.loads(networks.PHYSICAL_DATA.read_text())["hosts"] if networks.PHYSICAL_DATA.exists() else {}
+    lines=["", "## Ladder hosts: size, spin and access", "",
+        "Sizes are SsODNet's best estimates where published, with the catalogue size for comparison. "
+        "Spin ÷ gravity is the centrifugal acceleration over gravity at 2 t/m³: at a sphere's equator "
+        "(it depends only on the period, reaching 1 at ~2.33 h) and at the tips of the long axis of a homogeneous "
+        "ellipsoid where SBDB gives a shape. Real tapered ends hold less; above ~0.5, anchoring and excavation "
+        "need a shape-model gravity field. The Earth round trip is NASA's NHATS minimum (crewed-mission accounting "
+        "from low Earth orbit, within its 12 km/s and 450-day limits); a dash means no trip within those limits. "
+        "The heliocentric Earth → host cost of the dated stage is given for every host.", "",
+        "| Step | Host | D km (source) | Catalogue D km | Rotation h | Spin ÷ gravity: equator / tips | Earth → host, dated km/s | Earth round trip, NHATS km/s |",
+        "|---|---|---|---:|---:|---|---:|---:|"]
+    seen=set()
+    for step,_,_,ids in LADDER:
+        for k in ids:
+            if k in seen or k not in hosts:
+                continue
+            seen.add(k);h=hosts[k]
+            d,src=networks.host_diameter(h)
+            spin=networks.spin_ratio(h)
+            spin_txt="—" if spin is None else (f"{spin['sphere_equator']:.2f} / "
+                + (f"{spin['ellipsoid_tips']:.2f}" if spin["ellipsoid_tips"] is not None else "—"))
+            rot="—" if spin is None else f"{spin['period_h']:.2f}"
+            nh=physical.get(k,{}).get("nhats",{})
+            nh_txt=f"{nh['min_dv_km_s']:.2f} ({nh['duration_d']} d)" if "min_dv_km_s" in nh else "—"
+            earth=dated["pairs"].get("Earth->"+k)
+            earth_txt=f"{earth['best'][0]/1000:.2f}" if earth else "not dated"
+            src_short="H, albedo 0.23" if src.startswith("H ") else src.replace("SsODNet: ","").replace("SBDB physical parameter","SBDB")
+            lines.append(f"| {step} | {h['name']} | {d:.3g} ({src_short}) | {h['diameter_km']:.3g} | {rot} | {spin_txt} | {earth_txt} | {nh_txt} |")
+    lines+=["", "## Supply per ladder step", "",
+        "Volatiles shipped per torus (N₂, water and organics for the soil; the system model's demand for the step's "
+        "design, LL host), the best sampled and dark routes from the dated stage, and the illustrative stock "
+        "for one torus per ten years through the largest gap between selected arrivals (sampled sources only, "
+        "then all dated candidates). Dark candidates' nitrogen is unmeasured and can be zero.", "",
+        "| Step | Habitat | Shipped per torus kt | Host | Best sampled route | Best dark route | Stock, sampled / all kt |",
+        "|---|---|---:|---|---|---|---:|"]
+    p=params(load())
+    for step,label,(r,n,tiers),ids in LADDER:
+        shipped=evaluate(p,Design(radius_m=r,n_tori=n,tiers_lit=tiers,host_class="LL"))["replication"]["shipped"]
+        for k in ids:
+            routes=[v for v in dated["pairs"].values() if v["target"]==k and v["origin"]!="Earth"]
+            if not routes:
+                lines.append(f"| {step} | {label} | {shipped/1e6:.2f} | {hosts[k]['name']} | not dated | not dated | — |")
+                continue
+            def best(pred):
+                cand=[v for v in routes if pred(v["origin"])]
+                if not cand: return None
+                return min(cand,key=lambda v:v["best"][0])
+            def fmt(v):
+                if v is None: return "—"
+                return (f"{candidates[v['origin']]['name']}: {v['best'][0]/1000:.2f} km/s, "
+                        f"{len(v['service_windows'])} opportunities")
+            sampled=best(lambda o:o in SAMPLED); dark=best(lambda o:o not in SAMPLED)
+            def gap(pred):
+                dates=[w[1]+w[2] for v in routes if pred(v["origin"]) for w in v["service_windows"]]
+                return networks.opportunity_gaps(dates,dated["start_jd"],dated["end_jd"])["max_years"]
+            gs,ga=gap(lambda o:o in SAMPLED),gap(lambda o:True)
+            lines.append(f"| {step} | {label} | {shipped/1e6:.2f} | {hosts[k]['name']} | {fmt(sampled)} | {fmt(dark)} | "
+                         f"{shipped*gs/10/1e6:.1f} / {shipped*ga/10/1e6:.1f} |")
+    lines+=["", "A 44-year gap means no selected arrival in the 2028–2072 horizon: that route never comes within "
+        "the 6 km/s cutoff, so the stock column is the whole horizon's demand. The 400 m tori carry no farm, so their "
+        "nitrogen is the valley's air alone; their soil organics are still counted, and a synthetic interior would need less."]
+    return lines
+
+
 def generate():
     hd=json.loads(networks.HOST_DATA.read_text())
     hosts=hd["hosts"]
@@ -66,24 +143,29 @@ def generate():
         "| Step | Habitat | Host group | Candidate hosts | Supply | What it proves | Main reservation |",
         "|---|---|---|---|---|---|---|",
         "| 1 | One 400 m torus, no farm tiers and no ecosystem: a synthetic environment for a small crew | 0.3–0.6 km | "
-        "Apophis (post-2029 orbit) or Itokawa | ~0.7 kt N₂: Ryugu (sampled) reaches Apophis at 5.6 km/s; "
+        "Apophis (post-2029 orbit; crewed round trip from 6.05 km/s) or Itokawa (from 9.41 km/s) | "
+        "~20 kt of volatiles per torus (~0.7 kt of it N₂): Ryugu (sampled) reaches Apophis at 5.6 km/s; "
         "Itokawa's sampled routes exceed the 6 km/s cutoff (Ryugu 6.3 km/s), its dark candidates don't | "
         "Rock jacket and double skin, cable spokes, despun array, nitrogen supply and life support, the factory "
         "chain, 1.5 rpm gravity; mining and controlling a potentially hazardous asteroid | "
         "A day–night cycle, if kept, leaves the power load unbalanced; Apophis's surface after its 2029 flyby is still to be seen |",
         "| 2 | A 400 m pair, again without farms or ecosystem | 0.3–0.6 km | The other of Apophis and Itokawa; "
-        "Torifune, 1999 YB, 2001 QQ142 and the H-sized hosts in the table as alternatives | As step 1 | "
+        "alternatives: Torifune, 1999 ND43, 1999 YB and 2001 QQ142 (Bennu within the cutoff for the last three), "
+        "2000 EX106, 2002 AA, 1991 BN | As step 1 | "
         "The co-rotating stack, the pair rule and the first build by an existing habitat's factory | "
-        "Most of the group's sizes come from H at an assumed albedo |",
+        "Thermal-model sizes cut Torifune to 0.38 km, 2002 AA to 0.32 and 1991 BN to 0.29 (each ~1–2 such tori); "
+        "1999 YB, 1999 ND43 and 2001 QQ142 are still sized from H |",
         "| 3 | One 900 m torus, then a 900 m pair, then a pair with farms | 0.8–1.0 km | "
-        "Didymos, 1991 VH, Yuliya, Norwan, Bacchus | Ryugu and Bennu, or characterised dark candidates | "
+        "Didymos, 1991 VH, Yuliya (0.77 km), Norwan, Bacchus | Bennu for Didymos (5.2 km/s) and Bacchus (3.9 km/s); "
+        "dark candidates only for 1991 VH, Yuliya and Norwan | "
         "The full-size valley and, last, the farm rings and ecosystem | "
-        "A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~15–35 tori each; 1991 VH is a fast-rotating binary |",
+        "A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~14–35 tori each; Didymos spins at the limit for "
+        "loose material at 2 t/m³ and 1991 VH is a fast-rotating binary |",
         "| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros first; Geographos as the alternative | "
         "Anteros: Ryugu at 5.3 km/s (sampled, within the cutoff) and dark candidates from 3.65 km/s; "
         "Geographos: dark candidates only, no sampled supplier below the 6 km/s cutoff | "
         "Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | "
-        "Anteros's 2.3 km size dates from 1994 and it spins in 2.87 h; Geographos is the costliest host to reach "
+        "Anteros spins in 2.87 h (spin ÷ gravity ~0.66 at its equator); Geographos is the costliest host to reach "
         "from Earth (10.4 km/s, against 6.5 for Anteros) |",
         "| 5 | The first large habitat: 1.6 km six-stacks | Eros | Eros | Ryugu and Bennu: the only measured "
         "nitrogen, enough for about two six-stacks at 70% recovery | The archipelago's main island | "
@@ -125,16 +207,19 @@ def generate():
     for k,h in sorted(hosts.items(),key=lambda kv:networks.sunlight_metrics(kv[1]["elements"])["season_ratio"]):
         sun=screen["hosts"][k]["sunlight"]
         best=min(v["best"] for v in screen["hosts"][k]["suppliers"].values() if "best" in v)/1000
-        marker="*" if h["diameter_source"].startswith("H ") else ""
+        diameter,source=networks.host_diameter(h)
+        marker="*" if source.startswith("H ") else "†" if source.startswith("SsODNet") else ""
         caps=[networks.host_capacity(h,r,c) for r,c in ((900,"LL"),(900,"L"),(1600,"LL"),(1600,"L"))]
-        lines.append(f"| {h['name']} | {h['spec']} | {h['diameter_km']:.3g}{marker} | {sun['year_earth_years']:.2f} | "
+        lines.append(f"| {h['name']} | {h['spec']} | {diameter:.3g}{marker} | {sun['year_earth_years']:.2f} | "
             f"{sun['min_sunlight']:.2f}–{sun['max_sunlight']:.2f} | {sun['season_ratio']:.2f} | {sun['array_factor']:.2f} | "
             f"{caps[0]:.1f} / {caps[1]:.1f} | {caps[2]:.1f} / {caps[3]:.1f} | {best:.2f} km/s |")
-    lines += ["", "* Diameter estimated from H at an assumed albedo of 0.23. These are not measured sizes. "
+    lines += ["", "† SsODNet's best estimate (thermal model, radar or spacecraft; `logistics_model/data/network_physical.json`), "
+        "which replaces the SBDB catalogue size; unmarked sizes are SBDB's. "
+        "* Diameter estimated from H at an assumed albedo of 0.23. These are not measured sizes. "
         "Mass uses measured GM where present (notably Eros and Itokawa); otherwise it uses diameter and 2 t/m³. "
         "For H-only sizes, albedos 0.1–0.4 change mass to about 0.44–3.49× the tabulated proxy, before density uncertainty. "
         "For a thermally modelled diameter, even a small formal error may exclude substantial model uncertainty.", "",
-        "Central-estimate Pareto front (smaller array, smaller seasonal ratio, smaller best Δv, larger LL inventory): "
+        "Central-estimate Pareto front (smaller array, smaller best Δv, larger LL inventory; the seasonal ratio is not an axis, since the array is sized at aphelion and the perihelion surplus goes to industry): "
         + "; ".join(hosts[k]["name"] for k in front)+". This front ignores evidence quality and is not robust to uncertain sizes/compositions. "
         "The dated stage covers it plus the named reference and ladder hosts: "
         + ", ".join(hosts[k]["name"] for k in networks.DATED_HOSTS if k not in front) + ".", "",
@@ -169,6 +254,7 @@ def generate():
         gs=networks.opportunity_gaps(sample_dates,dated["start_jd"],dated["end_jd"])
         earth=dated["pairs"]["Earth->"+h]["best"][0]/1000
         lines.append(f"| {hosts[h]['name']} | {earth:.2f} | {gs['max_years']:.1f} | {g['max_years']:.1f} | {shipped*g['max_years']/10/1e6:.0f} |")
+    lines += ladder_sections(hosts, dated, candidates, audit)
     lines += ["", "## Resource sensitivity", "",
         "For unmeasured suppliers the evidence-based lower bound is **zero useful nitrogen**. "
         "The positive cases below are deliberately illustrative, not confidence intervals or measured ore grades. "
@@ -182,7 +268,7 @@ def generate():
         "The Ryugu interval is the published ±2σ uncertainty on the sample-based mean, not a bound on the whole asteroid. "
         "Both bodies use 50 / 70 / 90% industrial recovery, an assumption separate from the sample measurements. "
         "Ryugu's base capacity is consequently ~54 small tori rather than ~89 under the common Bennu-like proxy. "
-        "The wider habitat model retains that common proxy; only this network comparison uses body-specific N. "
+        "The habitat model also sizes Ryugu's C-type at its measured grade; unvisited candidates keep the common proxy. "
         "Extracting soil organics/other nutrients, excavation accessibility and maintaining "
         "a residual asteroid are outside this capacity calculation.", "",
         "| Supplier | Catalogue D km | Evidence | 900 m tori: lower positive / base / higher | 1.6 km tori: lower positive / base / higher |",
@@ -214,8 +300,8 @@ def generate():
         "intervals and supplier throughput. Include multi-revolution arcs and perturbations along the transfer itself. "
         "The current model uses integrated endpoint states but a two-body transfer arc.",
         "5. Assess mining mechanics separately: spin, binaries, gravity, anchoring and excavation can distinguish "
-        "otherwise similar orbits. 1991 VH is a binary and a fast rotator; low seasonal variation does not make "
-        "its surface operations easy.", "",
+        "otherwise similar orbits. The ladder-host table screens spin only: Didymos (~1.1 at 2 t/m³), 1991 VH (~0.8, "
+        "a binary), Anteros (~0.7), Eros's tips (~0.6) and Yuliya (~0.5) need shape-model gravity fields first.", "",
         "## Validation", "",
         "The logistics and network tests cover a circular-orbit Lambert solution, the Hohmann transfer, "
         "resource bottlenecks, orbital sunlight, opportunity unions and the flight-time bounds. "
@@ -225,14 +311,14 @@ def generate():
         "See `logistics_model/data/network_endpoint_checks.json` for the states and numerical differences.", "",
         "## Reproduce", "", "```bash", "python -m logistics_model.networks --fetch",
         "python -m logistics_model.networks --screen --spectral",
-        "python -m logistics_model.networks --fetch-vectors --fetch-evidence",
+        "python -m logistics_model.networks --fetch-vectors --fetch-evidence --fetch-physical",
         "python -m logistics_model.networks --windows",
         "python -m logistics_model.networks --verify",
         "python -m logistics_model.networks --report", "python -m unittest tests.test_networks tests.test_logistics", "```", "",
         "Use --fetch-vectors to resume missing bodies without changing the acquisition dates of cached data. "
         "Use --refresh-vectors to fetch every selected body again, then --windows to recompute routes. "
         "Screen caches are matched to hashes of their host/supplier inputs, and dated windows to a hash of the ephemeris bytes. "
-        "The report rejects stale inputs/results. Only --fetch, --fetch-vectors, --refresh-vectors, --fetch-evidence and --verify "
+        "The report rejects stale inputs/results. Only --fetch, --fetch-vectors, --refresh-vectors, --fetch-evidence, --fetch-physical and --verify "
         "need network access. The dated selection is the "
         "central-estimate Pareto front plus the named reference/comparison hosts, each with its three lowest refined "
         "costs, best screened spectral C-complex supplier, Ryugu, Bennu and Earth. Snapshots contain the exact selection "
