@@ -111,7 +111,9 @@ def ladder_sections(hosts, dated, candidates, audit):
             gs,ga=gap(lambda o:o in SAMPLED),gap(lambda o:True)
             lines.append(f"| {step} | {label} | {shipped/1e6:.2f} | {hosts[k]['name']} | {fmt(sampled)} | {fmt(dark)} | "
                          f"{shipped*gs/10/1e6:.1f} / {shipped*ga/10/1e6:.1f} |")
-    lines+=["", "A 44-year gap means no selected arrival in the 2028–2072 horizon: that route never comes within "
+    lines+=["", "Steps 1–2 are supplied from around Earth (the dated Earth → host costs are in the table above); "
+        "their asteroid routes are listed for comparison and for later habitats at the same hosts. "
+        "A 44-year gap means no selected arrival in the 2028–2072 horizon: that route never comes within "
         "the 6 km/s cutoff, so the stock column is the whole horizon's demand. The 400 m tori carry no farm, so their "
         "nitrogen is the valley's air alone; their soil organics are still counted, and a synthetic interior would need less."]
     return lines
@@ -144,8 +146,8 @@ def generate():
         "|---|---|---|---|---|---|---|",
         "| 1 | One 400 m torus, no farm tiers and no ecosystem: a synthetic environment for a small crew | 0.3–0.6 km | "
         "Apophis (post-2029 orbit; crewed round trip from 6.05 km/s) or Itokawa (from 9.41 km/s) | "
-        "~20 kt of volatiles per torus (~0.7 kt of it N₂): Ryugu (sampled) reaches Apophis at 5.6 km/s; "
-        "Itokawa's sampled routes exceed the 6 km/s cutoff (Ryugu 6.3 km/s), its dark candidates don't | "
+        "From around Earth: ~20 kt of volatiles per torus (~0.7 kt of it N₂), Earth → Apophis 3.90 km/s and "
+        "→ Itokawa 4.30 km/s heliocentric; the asteroid suppliers below are for later | "
         "Rock jacket and double skin, cable spokes, despun array, nitrogen supply and life support, the factory "
         "chain, 1.5 rpm gravity; mining and controlling a potentially hazardous asteroid | "
         "A day–night cycle, if kept, leaves the power load unbalanced; Apophis's surface after its 2029 flyby is still to be seen |",
