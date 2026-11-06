@@ -41,7 +41,7 @@ class Body:
     e: float
     mass_mt: Optional[float]
     note: str = ""
-    nitrogen_wt: Optional[float] = None  # a C-type's own measured N (wt fraction); None: the generic c_nitrogen_wt
+    nitrogen_param: Optional[str] = None  # a C-type's own measured N (assumption name); None: c_nitrogen_wt
 
     @property
     def aphelion_sunlight(self):
@@ -62,7 +62,7 @@ SITES = {
     "Torifune": Body("Torifune", "S", "L", 1.03, 0.22, 100, "L-like spectra; ~40 Mt at the smallest size"),
     "Bennu": Body("Bennu", "C", None, 1.13, 0.20, 73),
     "Ryugu": Body("Ryugu", "C", None, 1.19, 0.19, 450,
-                  "samples 1454 ± 17 µg/g N (Yokoyama et al. 2025)", nitrogen_wt=0.001454),
+                  "its samples' nitrogen (Yokoyama et al. 2025)", nitrogen_param="ryugu_nitrogen_wt"),
 }
 
 # §15, rendezvous delta-v from C-type to S-type site, km/s (dated where the notes give it).

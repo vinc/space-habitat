@@ -93,13 +93,13 @@ CHECKS = [
     *_sizes("§7", "Spin-up propellant (water, 3 km/s)", "Mt", lambda r: r["mass"]["spinup_propellant"] / MT,
             {900: 0.40, 1600: 1.7, 2500: 5.6}),
     *_sizes("§7", "C-type sized by nitrogen", "Mt", lambda r: r["materials"]["c_type"] / MT,
-            {900: 5, 1600: 27, 2500: 100}),
+            {900: 8.3, 1600: 45, 2500: 170}),
     Check("§7", "C-type with water spin-up, 900 m", _d(900, water_spinup=True),
-          lambda r: r["materials"]["c_type"] / MT, 7.2, "Mt"),
+          lambda r: r["materials"]["c_type"] / MT, 8.3, "Mt"),
     *_sizes("§10", "C-type water contained", "Mt", lambda r: r["materials"]["c_water_contained"] / MT,
-            {900: 0.32, 1600: 1.7, 2500: 6.5}),
+            {900: 0.53, 1600: 2.9, 2500: 11}),
     *_sizes("§10", "C-type diameter", "m", lambda r: r["materials"]["c_diameter"],
-            {900: 200, 1600: 350, 2500: 540}),
+            {900: 240, 1600: 420, 2500: 650}),
     *_sizes("§10", "Total metal (with hub, dock, factory)", "Mt", lambda r: r["materials"]["metal_needed"] / MT,
             {900: 1.5, 1600: 7.5, 2500: 28}),
     *_sizes("§10", "Regolith (0.5 m)", "Mt", lambda r: r["mass"]["regolith"] / MT, {900: 0.29, 1600: 0.9, 2500: 2.2}),
@@ -189,7 +189,7 @@ CHECKS = [
     Check("§15", "1.6 km tori supported by Ryugu", _d(1600), lambda r: r["_tori"]["Ryugu"], 10, "tori"),
     # §13, §15 processing and shipping
     Check("§15", "Processing energy, 900 m", _d(900, host_class="H"),
-          lambda r: r["replication"]["processing"] / GW_YR, 0.3, "GW·yr", tol=0.15),
+          lambda r: r["replication"]["processing"] / GW_YR, 0.4, "GW·yr", tol=0.15),
     *[Check("§15", f"Shipping energy at {dv} km/s", _d(900), lambda r, dv=dv: r["_ship"](dv), ref, "J/kg")
       for dv, ref in ((4.5, 1.2e8), (6.3, 1.75e8), (8.5, 2.5e8))],
 ]

@@ -22,7 +22,7 @@
     "n2_kt": 7.916699567236057,
     "water_mt": 0.06561989997304822,
     "s_type_mt": 16.41007684504316,
-    "c_type_mt": 5.049245354956591,
+    "c_type_mt": 8.334380228263974,
     "people": 1017.2569895960609,
     "people_per_tier": 1017.2569895960609,
     "power_mw": 41.30770840460903,
@@ -35,7 +35,7 @@
   "stack": {
     "floor_ha": 63.61725123519331,
     "mass_mt": 25.49404297980088,
-    "mined_mt": 42.9186443999995,
+    "mined_mt": 49.48891414661427,
     "length_m": 331.75,
     "people": 2034.5139791921217,
     "power_mw": 82.61541680921806,
@@ -49,8 +49,8 @@
     "main_inertia_ratio": 1.9920807871762567,
     "main_max_tori": 22,
     "energy_pj": null,
-    "processing_energy_pj": 17.937449128527113,
+    "processing_energy_pj": 27.79285374844926,
     "generation_time_yr": null,
-    "generation_time_lower_bound_yr": 0.5684034631444442
+    "generation_time_lower_bound_yr": 0.8807023901833237
   }
 }

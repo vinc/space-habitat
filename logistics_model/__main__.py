@@ -5,6 +5,7 @@ python -m logistics_model [--set name=value ...]
 
 import argparse
 import functools
+from dataclasses import replace
 import sys
 
 import numpy as np
@@ -174,8 +175,10 @@ def transfer_section():
 
 def partner_section(p):
     data = catalogue.load()
-    ref = Design(radius_m=900, n_tori=6, tiers_lit=3, host_class="LL", site="Eros", c_partner="Ryugu")
+    # Unvisited candidates take the generic Bennu-like nitrogen grade (Bennu as the partner); Ryugu its own.
+    ref = Design(radius_m=900, n_tori=6, tiers_lit=3, host_class="LL", site="Eros", c_partner="Bennu")
     c_per_torus = evaluate(p, ref)["materials"]["c_type"]
+    ryugu_per_torus = evaluate(p, replace(ref, c_partner="Ryugu"))["materials"]["c_type"]
     cand_rows = []
     for host in catalogue.HOSTS:
         for key, c, dv, days in catalogue.ranked(data, host, 4):
@@ -196,7 +199,7 @@ def partner_section(p):
     for partner, dv_pair in (("Ryugu", ("Ryugu", "Eros")), ("1999 XX262", NEW_PAIRS[0]), ("2015 DX198", NEW_PAIRS[1])):
         dv = dated(*dv_pair)["notes_span"][0] / 1e3
         res = evaluate(p, Design(radius_m=1600, n_tori=6, tiers_lit=3, host_class="LL", site="Eros",
-                                 c_partner="Ryugu", delta_v_km_s=dv))
+                                 c_partner="Ryugu" if partner == "Ryugu" else "Bennu", delta_v_km_s=dv))
         rep_ = res["replication"]
         energy_rows.append([f"{partner} → Eros", f"{num(dv, 3)} km/s", f"{num(rep_['shipping'] / PJ)} PJ",
                             f"{num(rep_['energy_per_torus'] / PJ)} PJ", num(rep_["generation_time_yr"], 3)])
@@ -214,10 +217,10 @@ def partner_section(p):
         "dark in NEOWISE's albedos (< 0.08, at least 0.3 km across), each with its phase-free Δv to the hosts, "
         "screened on a coarse grid and refined for the best dozen per host. Mass at Ryugu's bulk density "
         f"(1.19 t/m³); tori its nitrogen could supply at ~{num(c_per_torus / MT, 2)} Mt of C-type per 900 m torus "
-        "(the system model's).",
+        "(the system model's, at the generic Bennu-like grade; their nitrogen is unmeasured and could be zero).",
         table(["Host", "Candidate", "Type", "Albedo", "Diameter", "Mass", "900 m tori supplied", "Best phase"],
               cand_rows),
-        f"Ryugu ({num(ryugu / MT)} Mt, ~{ryugu / c_per_torus:,.0f} tori) is at 4.5 km/s from Eros, 6.3 from "
+        f"Ryugu ({num(ryugu / MT)} Mt, ~{ryugu / ryugu_per_torus:,.0f} tori at its measured nitrogen) is at 4.5 km/s from Eros, 6.3 from "
         "Itokawa and 7.6 from Torifune. Dated, on Horizons' ephemerides:",
         table(["Transfer", "Best, 2030–2060", f"Best, {SPAN[0]}–{SPAN[1]}", "Usable windows, 2028–2072"], ref_rows),
         "And what the lower Δv saves, per torus of a 1.6 km six-stack at Eros (electric thrusters, the system "

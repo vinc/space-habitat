@@ -16,7 +16,7 @@ Built up from its uses instead of fitted to the notes' totals: soil moisture (25
 | **Total** | **0.066 Mt** | **0.22 Mt** | **0.56 Mt** |
 | Notes until now (fitted, no breakdown) | ~0.15 Mt | ~0.4 Mt | ~0.9 Mt |
 | Spin-up with water thrusters, if chosen | 0.40 Mt | 1.7 Mt | 5.6 Mt |
-| Water in the nitrogen-sized C-type | 0.32 Mt | 1.8 Mt | 6.6 Mt |
+| Water in the nitrogen-sized C-type | 0.53 Mt | 2.9 Mt | 11 Mt |
 
 Soil moisture is about 60% of it, the ballast about a fifth, the ponds about a tenth. The C-type sized by nitrogen holds ~5–12× the water needed, so water never sizes the C-type unless spin-up uses water thrusters (900 m).
 
@@ -63,7 +63,7 @@ The dated search lands on the notes' quoted values within ~0.1 km/s (Bennu → E
 
 ## Better C-type partners
 
-A catalogue search (`logistics_model/catalogue.py`, JPL's Small-Body Database, fetched 2026-10-30): 365 near-Earth asteroids that are classified in the C complex (19) or dark in NEOWISE's albedos (< 0.08, at least 0.3 km across), each with its phase-free Δv to the hosts, screened on a coarse grid and refined for the best dozen per host. Mass at Ryugu's bulk density (1.19 t/m³); tori its nitrogen could supply at ~5.0 Mt of C-type per 900 m torus (the system model's).
+A catalogue search (`logistics_model/catalogue.py`, JPL's Small-Body Database, fetched 2026-10-30): 365 near-Earth asteroids that are classified in the C complex (19) or dark in NEOWISE's albedos (< 0.08, at least 0.3 km across), each with its phase-free Δv to the hosts, screened on a coarse grid and refined for the best dozen per host. Mass at Ryugu's bulk density (1.19 t/m³); tori its nitrogen could supply at ~5.0 Mt of C-type per 900 m torus (the system model's, at the generic Bennu-like grade; their nitrogen is unmeasured and could be zero).
 
 | Host | Candidate | Type | Albedo | Diameter | Mass | 900 m tori supplied | Best phase |
 |---|---|---|---|---|---|---|---|
@@ -84,7 +84,7 @@ A catalogue search (`logistics_model/catalogue.py`, JPL's Small-Body Database, f
 | Didymos | 190161 (2005 TJ174) | — | 0.040 | 3.0 km | 17,500 Mt | ~3,470 | **3.9 km/s** |
 | Didymos | (2003 SS214) | — | 0.022 | 0.86 km | 391 Mt | ~77 | **4.4 km/s** |
 
-Ryugu (448 Mt, ~89 tori) is at 4.5 km/s from Eros, 6.3 from Itokawa and 7.6 from Torifune. Dated, on Horizons' ephemerides:
+Ryugu (448 Mt, ~54 tori at its measured nitrogen) is at 4.5 km/s from Eros, 6.3 from Itokawa and 7.6 from Torifune. Dated, on Horizons' ephemerides:
 
 | Transfer | Best, 2030–2060 | Best, 2028–2072 | Usable windows, 2028–2072 |
 |---|---|---|---|
@@ -100,7 +100,7 @@ And what the lower Δv saves, per torus of a 1.6 km six-stack at Eros (electric 
 
 | Volatiles from | Δv (best, 2030–2060) | Shipping | Energy per torus | Generation (yr) |
 |---|---|---|---|---|
-| Ryugu → Eros | 4.66 km/s | 45.8 PJ | 101 PJ | 19.3 |
+| Ryugu → Eros | 4.66 km/s | 45.8 PJ | 128 PJ | 24.4 |
 | 1999 XX262 → Eros | 3.95 km/s | 38.4 PJ | 93.9 PJ | 17.9 |
 | 2015 DX198 → Eros | 3.60 km/s | 34.8 PJ | 90.3 PJ | 17.2 |
 
@@ -113,11 +113,11 @@ Per torus's cargo (the water route), Ryugu → Eros at the notes' 4.7 km/s. Elec
 | Stack (per torus) | Option | Exhaust | Efficiency | Propellant | Available at the C-type | Electricity | Thrust |
 |---|---|---|---|---|---|---|---|
 | 900 m pair | Electric thrusters (baseline) | 30 km/s | 60% | 0.018 Mt | — | 13.5 PJ | 40.0 N/MW |
-| 900 m pair | Electrothermal, water | 6.0 km/s | 35% | 0.13 Mt | 0.26 Mt | 6.47 PJ | 117 N/MW |
-| 900 m pair | Mass driver, energy-optimal | 2.9 km/s | 50% | 0.42 Mt | 4.5 Mt | 3.61 PJ | 339 N/MW |
+| 900 m pair | Electrothermal, water | 6.0 km/s | 35% | 0.13 Mt | 0.47 Mt | 6.47 PJ | 117 N/MW |
+| 900 m pair | Mass driver, energy-optimal | 2.9 km/s | 50% | 0.42 Mt | 7.4 Mt | 3.61 PJ | 339 N/MW |
 | 1.6 km six-stack | Electric thrusters (baseline) | 30 km/s | 60% | 0.062 Mt | — | 46.2 PJ | 40.0 N/MW |
-| 1.6 km six-stack | Electrothermal, water | 6.0 km/s | 35% | 0.43 Mt | 1.5 Mt | 22.2 PJ | 117 N/MW |
-| 1.6 km six-stack | Mass driver, energy-optimal | 2.9 km/s | 50% | 1.4 Mt | 25 Mt | 12.4 PJ | 339 N/MW |
+| 1.6 km six-stack | Electrothermal, water | 6.0 km/s | 35% | 0.43 Mt | 2.7 Mt | 22.2 PJ | 117 N/MW |
+| 1.6 km six-stack | Mass driver, energy-optimal | 2.9 km/s | 50% | 1.4 Mt | 41 Mt | 12.4 PJ | 339 N/MW |
 
 Efficiencies are estimates or guesses (mass driver 50%, range 30–80%); the mass driver uses less electricity than the baseline down to ~13% efficiency.
 
@@ -134,17 +134,17 @@ A parent stack builds a child stack torus by torus, so a cluster doubles once pe
 
 | Stack (per torus) | Processing | Shipping | Generation (yr) | Best combination | Generation (yr) |
 |---|---|---|---|---|---|
-| 900 m pair | 10.4 PJ | 13.5 PJ | 1.5 | 14.0 PJ | 0.89 |
-| 1.6 km six-stack | 55.6 PJ | 46.2 PJ | 19 | 67.9 PJ | 13 |
+| 900 m pair | 15.3 PJ | 13.5 PJ | 1.8 | 18.9 PJ | 1.2 |
+| 1.6 km six-stack | 82.4 PJ | 46.2 PJ | 24 | 94.8 PJ | 18 |
 
 **Rates for a given generation**, per torus of the parent (a stack's lines handle n times these), against Earth benchmarks (orders of magnitude, unsourced): the largest open-pit mines move ~0.5 Mt of material a day, a large steelworks makes ~10 Mt of steel a year. Cargo per window, on average: one usable Ryugu → Eros window every ~5.7 years (dated search, above). The windows cluster, so the stock the C-type's plant must hold through the longest gap (20 years, 2036–2056) is the larger figure: a store at the C-type and a fleet sized for it, or departures off-window at a higher Δv.
 
 | Stack | Generation | S-type mined a day (share of a large mine) | Metal a day (share of a large steelworks) | Rock placed a day | C-type baked a day | Cargo per window, average | Stock through the longest gap | Mean power |
 |---|---|---|---|---|---|---|---|---|
-| 900 m pair | 10 yr | 8.99 kt (1.8%) | 404 t (1.5%) | 3.16 kt | 1.4 kt | 60.1 kt | 209 kt | 75.5 MW |
-| 900 m pair | 25 yr | 3.59 kt (0.7%) | 162 t (0.6%) | 1.26 kt | 0.55 kt | 24.0 kt | 83.4 kt | 30.2 MW |
-| 1.6 km six-stack | 10 yr | 45.9 kt (9.2%) | 2,060 t (7.5%) | 9.64 kt | 7.5 kt | 206 kt | 715 kt | 322 MW |
-| 1.6 km six-stack | 25 yr | 18.3 kt (3.7%) | 826 t (3.0%) | 3.86 kt | 3.0 kt | 82.4 kt | 286 kt | 129 MW |
+| 900 m pair | 10 yr | 8.99 kt (1.8%) | 404 t (1.5%) | 3.16 kt | 2.3 kt | 60.1 kt | 209 kt | 91.1 MW |
+| 900 m pair | 25 yr | 3.59 kt (0.7%) | 162 t (0.6%) | 1.26 kt | 0.91 kt | 24.0 kt | 83.4 kt | 36.5 MW |
+| 1.6 km six-stack | 10 yr | 45.9 kt (9.2%) | 2,060 t (7.5%) | 9.64 kt | 12 kt | 206 kt | 715 kt | 408 MW |
+| 1.6 km six-stack | 25 yr | 18.3 kt (3.7%) | 826 t (3.0%) | 3.86 kt | 5.0 kt | 82.4 kt | 286 kt | 163 MW |
 
 **Growth.** A cluster started by one stack, doubling every generation, until Ryugu's nitrogen runs out:
 

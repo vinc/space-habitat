@@ -37,12 +37,12 @@
 | Metal needed (with hub, dock, factory) | 1.48 Mt | 2.95 Mt |
 | S-type (L host), sized by metal | 16.4 Mt (~250 m) | 32.8 Mt |
 | Spare tailings | 3.64 Mt |  |
-| C-type, sized by nitrogen | 5.05 Mt (~200 m) | 10.1 Mt |
-| Water / carbon in the C-type | 0.323 / 0.227 Mt |  |
-| **Mined** | **21.5 Mt** | **42.9 Mt** |
-| Copper contained (S + C) | 1.49 + 0.636 kt |  |
+| C-type, sized by nitrogen | 8.33 Mt (~237 m) | 16.7 Mt |
+| Water / carbon in the C-type | 0.533 / 0.375 Mt |  |
+| **Mined** | **24.7 Mt** | **49.5 Mt** |
+| Copper contained (S + C) | 1.49 + 1.05 kt |  |
 
-Trace elements (demands mostly guesses from the notes; `--trace` for the table): short: K; unbudgeted: Cr, Zn, Mo, Sn.
+Trace elements (demands mostly guesses from the notes; `--trace` for the table): all budgeted elements covered at their high demand; unbudgeted: Cr, Zn, Mo, Sn.
 
 ## Power and light
 
@@ -90,7 +90,7 @@ Preliminary radiative exchange (ray tracing, emissivity 0.9), each section on it
 
 |  | Per torus | Stack of 2 |
 |---|---|---|
-| Crushing S-type / baking C-type | 1.39 / 7.57 PJ |  |
+| Crushing S-type / baking C-type | 1.39 / 12.5 PJ |  |
 | Shipping 0.106 Mt of volatiles (Ryugu → 1 AU, no Δv known: pass --dv) | unknown |  |
 | Energy, processing + shipping | unknown | unknown |
-| Generation time at 1 GW (energy only) |  | unknown (≥ 0.57 years for processing alone) |
+| Generation time at 1 GW (energy only) |  | unknown (≥ 0.88 years for processing alone) |
