@@ -1494,7 +1494,7 @@ Solar sail (~7.7 µN/m² at 1 AU, averaged over the orbit and halved for steerin
 | Habitat | Over 300 years | Over 1,000 years |
 |---|---|---|
 | 900 m pair at Itokawa | ~5,800 km² (~76 km square), ~60 kt of film | ~1,750 km² (~42 km square), ~18 kt |
-| 900 m pair at Apophis (e = 0.19) | ~3,100 km² (~55 km square), ~30 kt | ~920 km² (~30 km square), ~9 kt |
+| 900 m pair at Apophis after 2029 (e = 0.19) | ~4,100 km² (~64 km square), ~40 kt | ~1,200 km² (~35 km square), ~12 kt |
 | 1.6 km six-stack at Eros | ~53,000 km² (~230 km square), ~0.5 Mt | ~16,000 km² (~127 km square), ~160 kt |
 
 Thrusters, with propellants the asteroids supply (xenon is a vitamin):
@@ -1520,7 +1520,7 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 | Asteroid | Type | Size | Mass | Orbit (a, e, i) | Sunlight, aphelion → perihelion | Year | 900 m tori supported |
 |---|---|---|---|---|---|---|---|
 | Itokawa | S, LL-like (samples) | ~330 m | ~35 Mt | 1.32 AU, 0.28, 1.6° | 0.35× → 1.10× | ~1.52 yr | ~1 by free metal (preliminary design); ~3 with iron from the silicates (not yet factored) |
-| Apophis | Sq, LL-like (spectra) | ~340–370 m | ~40–60 Mt | today 0.92 AU, 0.19, 3.3°; after 2029 ~1.10 AU, ~0.19 | today 0.83× → 1.8×; after 2029 ~0.55× → 1.2× | ~1.2 yr after 2029 | ~1–2 by free metal (a pair only at the upper mass estimate); ~3–4 with iron from the silicates (not yet factored) |
+| Apophis (after the 2029 flyby) | Sq, LL-like (spectra) | ~340–370 m | ~40–60 Mt | ~1.10 AU, ~0.19, 3.3° | ~0.58× → 1.25× | ~1.16 yr | ~1–2 by free metal (a pair only at the upper mass estimate); ~3–4 with iron from the silicates (not yet factored) |
 | Bennu | B (C-complex) | ~490 m | ~73 Mt | 1.13 AU, 0.20, 6.0° | 0.54× → 1.24× | ~1.2 yr | ~15 (N-limited) |
 | Ryugu | Cb | ~900 m | ~450 Mt | 1.19 AU, 0.19, 5.9° | 0.50× → 1.09× | ~1.3 yr | ~90 (N-limited) |
 | Eros | S, L- or LL-like (NEAR) | ~17 km | ~6.7 × 10¹⁵ kg | 1.46 AU, 0.22, 10.8° | 0.32× → 0.78× | ~1.76 yr | hundreds of thousands |
@@ -1533,7 +1533,7 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 
 **Note on Torifune (added as a candidate, proposed).** Hayabusa2 flew past it at ~1 km on 5 July 2026 on the way to 1998 KY26; the flyby showed a contact binary, and its data are still arriving.
 - **Composition:** ground-based spectra classify it Sq, best matched by L ordinary chondrites (Château-Renard, L6); its older "L-type" label is a spectral class, now superseded, not the L chondrite group. At ~9 wt% free metal, a 900 m torus takes ~16 Mt of its rock, so ~100 Mt supports ~6 tori: a 900 m pair, perhaps three, or many 400 m pairs. If the smallest size estimate (~340 m, ~40 Mt) holds, it is Apophis-class: one pair.
-- **The mildest orbit of the candidates:** sunlight swings only ~2.4× (0.63× at aphelion, the brightest winter of any candidate, to 1.54× at perihelion, a hot summer like Apophis's today) over a year of ~1.05 Earth years. The array is the smallest of the candidates (section 15, seasonal sizing), and the biological year is nearly Earth's.
+- **The mildest orbit of the candidates:** sunlight swings only ~2.4× (0.63× at aphelion, the brightest winter of any candidate, to 1.54× at perihelion, a hot summer) over a year of ~1.05 Earth years. The array is the smallest of the candidates (section 15, seasonal sizing), and the biological year is nearly Earth's.
 - **It could hold the demonstration and the first 900 m pair at one site,** if its mass is near the upper estimates.
 - **Logistics:** easy to reach from Earth's orbit (~4.0 km/s, heliocentric) and from Itokawa (~3.6 km/s, perihelia ~23° apart), but poorly aligned with the known C-types: ~7.6 km/s from Ryugu and ~8.4 from Bennu (perihelia ~150–190° apart), so volatiles cost ~3–4 GW·yr per 0.5 Mt, affordable but a reason to look for a better-aligned C-type. Its period is so close to Earth's that their relative position repeats only every ~22 years, so transfer windows from Earth come in clusters decades apart. It doesn't come close to Earth (minimum orbit distance ~0.08 AU).
 
@@ -1566,7 +1566,7 @@ Rendezvous Δv (departure + arrival burns), two-body heliocentric orbits from pu
 | Transfer | Best phase | Dated, 2030–2060 | Note |
 |---|---|---|---|
 | Bennu → Itokawa | 8.3 km/s | 8.5 km/s (depart 2048, 540 d) | perihelia almost opposite |
-| Bennu → Apophis | 7.4 km/s (post-2029) | 9.2 km/s before the 2029 flyby | |
+| Bennu → Apophis | 7.4 km/s (post-2029) | — | |
 | Bennu → Eros | 5.8 km/s | 6.2 km/s (depart 2045, 220 d) | |
 | **Ryugu → Itokawa** | 6.3 km/s | 6.3 km/s (depart 2033, 350 d) | better than Bennu |
 | **Ryugu → Apophis** | 5.5 km/s (post-2029) | — | better than Bennu |
@@ -1619,7 +1619,6 @@ The habitat adapts to its environment: the sky follows the host asteroid's seaso
 | Site | Sunlight at aphelion | 900 m valley, constant / seasonal sky | 900 m, + per farm tier lit | 1.6 km valley, constant / seasonal sky | 1.6 km, + per farm tier lit |
 |---|---|---|---|---|---|
 | 1 AU (reference) | 1× | 0.13 / 0.078 km² | 0.058 km² | 0.42 / 0.25 km² | 0.18 km² |
-| Apophis today | 0.83× | 0.16 / 0.093 km² | 0.069 km² | 0.50 / 0.29 km² | 0.22 km² |
 | Apophis after 2029 (approx.) | 0.58× | 0.23 / 0.13 km² | 0.099 km² | 0.72 / 0.42 km² | 0.31 km² |
 | Itokawa | 0.35× | 0.38 / 0.22 km² | 0.16 km² | 1.2 / 0.70 km² | 0.52 km² |
 | Eros | 0.32× | 0.42 / 0.25 km² | 0.18 km² | 1.3 / 0.78 km² | 0.58 km² |
@@ -2139,6 +2138,9 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 - **1 Nov 2026: passive farm cooling adopted.** Inboard radiators only, without outboard extensions or heat-rejection pumps. The existing LED study supports all tiers at ~1.2–1.3× farm margin in six-stacks; this lower margin is accepted rather than retaining pumps to reach the earlier 1.5× target. Older outboard figures below are historical comparisons. The despun array is beyond the farm end of the hub, with the dock at the opposite main-torus end.
 
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
+
+**6 November 2026**
+- **Apophis only after its 2029 flyby (section 15):** settlement can't start before the flyby, so the pre-flyby orbit is dropped everywhere: the `Apophis` site and its Bennu Δv in `habitat_model`, its elements in the logistics model (Horizons' integrated orbit, flyby included, is kept for the dated windows), and the "today" rows and columns here. The sail-towing row is rescaled to the post-2029 orbit (~31% more area: lower sunlight, slightly lower orbital speed).
 
 **3 November 2026**
 - **Elevators in four shafts per torus and per farm ring, carrying the radiators (sections 0, 12, 13; proposed):** one shaft per quadrant in each mid-plane, hung from the hub and sliding at the rim end (they can't share the rim's load, 17.9), each with a radiator wing on both sides; the farm rings get the same layout. Traced (`thermal_model/wings.py`): turned 90°/N ring to ring, the wings match or beat evenly spread panels; aligned they lose ~10–15%. Least farm coverage for 1.5× tabulated by stack and tiers lit; a six-stack with three tiers lit stays at ~1.2× at best.

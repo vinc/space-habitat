@@ -1,6 +1,6 @@
 # Validation against the notes
 
-193 figures from notes.md checked: **190 within 5%**; 192 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 1 known mismatches, 0 unexplained.
+192 figures from notes.md checked: **189 within 5%**; 191 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 1 known mismatches, 0 unexplained.
 
 This checks that the model reproduces the notes' own figures from the same assumptions; it does not validate the physical design.
 
@@ -186,7 +186,6 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §15 | Array, 900 m valley, constant sky, Itokawa | 0.380 km² | 0.380 km² | +0.0% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Eros | 0.420 km² | 0.422 km² | +0.6% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Torifune | 0.210 km² | 0.210 km² | +0.1% | ✓ |
-| §15 | Array, 900 m valley, constant sky, Apophis | 0.160 km² | 0.160 km² | -0.3% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, 1 AU | 0.0780 km² | 0.0776 km² | -0.6% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, Itokawa | 0.220 km² | 0.221 km² | +0.7% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, Eros | 0.250 km² | 0.246 km² | -1.6% | ✓ |

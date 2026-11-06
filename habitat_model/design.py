@@ -55,8 +55,7 @@ class Body:
 SITES = {
     "1 AU": Body("1 AU", "", None, 1.0, 0.0, None, "reference circular orbit"),
     "Itokawa": Body("Itokawa", "S", "LL", 1.32, 0.28, 35, "LL-like samples"),
-    "Apophis": Body("Apophis", "S", "LL", 0.92, 0.19, 50, "today's orbit; ~40-60 Mt"),
-    "Apophis 2029": Body("Apophis 2029", "S", "LL", 1.103, 0.189, 50, "orbit after the 2029 flyby (approx.)"),
+    "Apophis 2029": Body("Apophis 2029", "S", "LL", 1.103, 0.189, 50, "orbit after the 2029 flyby (approx.); ~40-60 Mt; the pre-flyby orbit is not used"),
     "Eros": Body("Eros", "S", "LL", 1.46, 0.22, 6.7e6, "L- or LL-like; LL taken"),
     "Didymos": Body("Didymos", "S", "L", 1.64, 0.38, 500, "L-like spectra"),
     "Torifune": Body("Torifune", "S", "L", 1.03, 0.22, 100, "L-like spectra; ~40 Mt at the smallest size"),
@@ -72,7 +71,6 @@ DELTA_V_KM_S = {
     ("Ryugu", "Torifune"): 7.6,
     ("Bennu", "Eros"): 6.2,
     ("Bennu", "Itokawa"): 8.5,
-    ("Bennu", "Apophis"): 9.2,
     ("Bennu", "Apophis 2029"): 7.4,
     ("Bennu", "Torifune"): 8.4,
 }

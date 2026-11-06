@@ -171,7 +171,7 @@ CHECKS = [
     # §15 seasonal sizing at the sites
     *[Check("§15", f"Array, 900 m valley, constant sky, {site}", _d(900, site=site, seasonal_sky=False, tiers_lit=0),
             lambda r: r["power"]["array_site"] / KM2, ref, "km²")
-      for site, ref in (("Itokawa", 0.38), ("Eros", 0.42), ("Torifune", 0.21), ("Apophis", 0.16))],
+      for site, ref in (("Itokawa", 0.38), ("Eros", 0.42), ("Torifune", 0.21))],
     *[Check("§15", f"Array, 900 m valley, seasonal sky, {site}", _d(900, site=site, tiers_lit=0),
             lambda r: r["power"]["array_site"] / KM2, ref, "km²")
       for site, ref in (("1 AU", 0.078), ("Itokawa", 0.22), ("Eros", 0.25), ("Torifune", 0.12))],
