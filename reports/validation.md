@@ -199,9 +199,9 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.07 tori | +6.6% | ✓ (tolerance 15%) |
 | §15 | 900 m tori supported by Didymos | 30.0 tori | 30.5 tori | +1.6% | ✓ |
 | §15 | 900 m tori supported by Torifune | 6.00 tori | 6.09 tori | +1.6% | ✓ |
-| §15 | 900 m tori supported by Ryugu | 90.0 tori | 89.1 tori | -1.0% | ✓ |
+| §15 | 900 m tori supported by Ryugu | 54.0 tori | 54.0 tori | -0.0% | ✓ |
 | §15 | 900 m tori supported by Bennu | 15.0 tori | 14.5 tori | -3.6% | ✓ |
-| §15 | 1.6 km tori supported by Ryugu | 17.0 tori | 16.3 tori | -3.9% | ✓ |
+| §15 | 1.6 km tori supported by Ryugu | 10.0 tori | 9.90 tori | -1.0% | ✓ |
 | §15 | Processing energy, 900 m | 0.300 GW·yr | 0.277 GW·yr | -7.8% | ✓ (tolerance 15%) |
 | §15 | Shipping energy at 4.5 km/s | 120,000,000 J/kg | 121,000,000 J/kg | +1.1% | ✓ |
 | §15 | Shipping energy at 6.3 km/s | 175,000,000 J/kg | 175,000,000 J/kg | +0.1% | ✓ |

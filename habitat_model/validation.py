@@ -185,8 +185,8 @@ CHECKS = [
     # §15 tori supported by the candidate bodies
     *[Check("§15", f"900 m tori supported by {name}", _d(900),
             lambda r, name=name: r["_tori"][name], ref, "tori", tol=0.15)
-      for name, ref in (("Itokawa", 1), ("Didymos", 30), ("Torifune", 6), ("Ryugu", 90), ("Bennu", 15))],
-    Check("§15", "1.6 km tori supported by Ryugu", _d(1600), lambda r: r["_tori"]["Ryugu"], 17, "tori"),
+      for name, ref in (("Itokawa", 1), ("Didymos", 30), ("Torifune", 6), ("Ryugu", 54), ("Bennu", 15))],
+    Check("§15", "1.6 km tori supported by Ryugu", _d(1600), lambda r: r["_tori"]["Ryugu"], 10, "tori"),
     # §13, §15 processing and shipping
     Check("§15", "Processing energy, 900 m", _d(900, host_class="H"),
           lambda r: r["replication"]["processing"] / GW_YR, 0.3, "GW·yr", tol=0.15),

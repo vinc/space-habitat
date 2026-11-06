@@ -150,9 +150,9 @@ A parent stack builds a child stack torus by torus, so a cluster doubles once pe
 
 | Stack | Generation | Tori after 50 years | After 100 years | Tori Ryugu supports | Years to reach it |
 |---|---|---|---|---|---|
-| 900 m pair | 10 yr | 64 | 2,048 | 89 | 55 |
-| 900 m pair | 25 yr | 8 | 32 | 89 | 140 |
-| 1.6 km six-stack | 10 yr | 192 | 6,144 | 16 | 14 |
-| 1.6 km six-stack | 25 yr | 24 | 96 | 16 | 36 |
+| 900 m pair | 10 yr | 64 | 2,048 | 54 | 48 |
+| 900 m pair | 25 yr | 8 | 32 | 54 | 120 |
+| 1.6 km six-stack | 10 yr | 192 | 6,144 | 10 | 7.2 |
+| 1.6 km six-stack | 25 yr | 24 | 96 | 10 | 18 |
 
 Not modelled: factory throughput as a function of its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' own mass and power (their solar arrays from the same semiconductor works), failures and spares, low-thrust and multi-revolution transfers, and gravity assists.

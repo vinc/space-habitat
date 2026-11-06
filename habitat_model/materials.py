@@ -98,13 +98,18 @@ def s_type_needed(p, mass, host_class):
     }
 
 
+def c_nitrogen_wt(p, body):
+    """A C-type's nitrogen: its own sample value where measured (Ryugu), else the generic Bennu-like one."""
+    return body.nitrogen_wt if body is not None and body.nitrogen_wt is not None else p.c_nitrogen_wt
+
+
 def compute(p, d, geo, mass):
     s = s_type_needed(p, mass, d.host_class)
     tailings = s["s_type"] * (1 - metal_fraction(p, d.host_class))
 
     water = mass["water_needed"] + (mass["spinup_propellant"] if d.water_spinup else 0.0)
     n2 = mass["n2"] + mass["farm_n2"]          # the valley's air and the farm ring's
-    c_for_n = n2 / (p.c_nitrogen_wt * p.nitrogen_recovery)
+    c_for_n = n2 / (p.c_nitrogen_wt * p.nitrogen_recovery)   # sized at the generic grade, whatever the partner
     c_for_water = water / p.c_water_wt
     c_type = max(c_for_n, c_for_water)
 
@@ -135,11 +140,14 @@ def compute(p, d, geo, mass):
 
 
 def tori_supported(p, body, mass, materials):
-    """How many tori of this size a body supplies: an S-type by its own class's free metal, a C-type by nitrogen."""
+    """How many tori of this size a body supplies: an S-type by its own class's free metal, a C-type by nitrogen
+    (its own measured grade where known, e.g. Ryugu's; the per-torus C-type mass stays at the generic grade)."""
     if body.mass_mt is None:
         return None
     if body.kind == "S":
         needed = s_type_needed(p, mass, body.host_class)["s_type"]
     else:
-        needed = materials["c_type"]
+        n2 = mass["n2"] + mass["farm_n2"]
+        needed = max(n2 / (c_nitrogen_wt(p, body) * p.nitrogen_recovery),
+                     materials["water_to_source"] / p.c_water_wt)
     return body.mass_mt * 1e9 / needed
