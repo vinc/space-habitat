@@ -26,7 +26,6 @@ ELEMENTS = {
     "Bennu": (1.1264, 0.2037, 6.035, 2.06, 66.22),
     "Eros": (1.4580, 0.2227, 10.828, 304.27, 178.93),
     "Itokawa": (1.3241, 0.2801, 1.621, 69.08, 162.81),
-    "Apophis": (0.9224, 0.1911, 3.339, 203.96, 126.67),
     "Apophis 2029": (1.103, 0.189, 3.339, 203.96, 126.67),
     "Didymos": (1.6427, 0.3839, 3.408, 73.20, 319.32),
     "Torifune": (1.0324, 0.2194, 4.81, 75.63, 179.38),
@@ -35,7 +34,8 @@ ELEMENTS = {
 
 try:
     from .ephemeris import elements as _fetched
-    ELEMENTS.update(_fetched())
+    # Apophis's pre-flyby SBDB orbit is never used: only "Apophis 2029" (above) or Horizons' integrated orbit.
+    ELEMENTS.update({k: v for k, v in _fetched().items() if k != "Apophis"})
 except (OSError, ValueError):
     pass
 

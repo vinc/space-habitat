@@ -146,6 +146,15 @@ class TestShippingCache(unittest.TestCase):
                 if physical:self.assertNotEqual(study.trajectory_identity(),trajectory_id)
                 else:self.assertEqual(study.trajectory_identity(),trajectory_id)
 
+    def test_report_text_does_not_invalidate_the_cache(self):
+        from logistics_model import network_report
+        report_id=study.identity()
+        with self.changed_source(network_report):
+            self.assertEqual(study.identity(),report_id)
+        deps={p.name for p in study.project_dependencies(study.__file__)}
+        self.assertIn("mass.py",deps);self.assertIn("low_thrust.py",deps)
+        self.assertNotIn("network_report.py",deps);self.assertNotIn("report.py",deps)
+
     def test_report_rejects_a_changed_interpreter_before_writing(self):
         with tempfile.TemporaryDirectory() as td:
             results=Path(td)/"results.json";output=Path(td)/"report.md"

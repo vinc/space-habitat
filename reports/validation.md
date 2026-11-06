@@ -1,6 +1,6 @@
 # Validation against the notes
 
-193 figures from notes.md checked: **190 within 5%**; 192 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 1 known mismatches, 0 unexplained.
+192 figures from notes.md checked: **189 within 5%**; 191 within their configured tolerance (5%, or 10–15% for 8 checks of counts and energies quoted as ranges); 1 known mismatches, 0 unexplained.
 
 This checks that the model reproduces the notes' own figures from the same assumptions; it does not validate the physical design.
 
@@ -85,16 +85,16 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §7 | Spin-up propellant (water, 3 km/s), 900 m | 0.400 Mt | 0.400 Mt | +0.1% | ✓ |
 | §7 | Spin-up propellant (water, 3 km/s), 1.6 km | 1.70 Mt | 1.73 Mt | +1.8% | ✓ |
 | §7 | Spin-up propellant (water, 3 km/s), 2.5 km | 5.60 Mt | 5.61 Mt | +0.1% | ✓ |
-| §7 | C-type sized by nitrogen, 900 m | 5.00 Mt | 5.05 Mt | +1.0% | ✓ |
-| §7 | C-type sized by nitrogen, 1.6 km | 27.0 Mt | 27.5 Mt | +2.0% | ✓ |
-| §7 | C-type sized by nitrogen, 2.5 km | 100 Mt | 104 Mt | +3.6% | ✓ |
-| §7 | C-type with water spin-up, 900 m | 7.20 Mt | 7.28 Mt | +1.1% | ✓ |
-| §10 | C-type water contained, 900 m | 0.320 Mt | 0.323 Mt | +1.0% | ✓ |
-| §10 | C-type water contained, 1.6 km | 1.70 Mt | 1.76 Mt | +3.7% | ✓ |
-| §10 | C-type water contained, 2.5 km | 6.50 Mt | 6.63 Mt | +2.0% | ✓ |
-| §10 | C-type diameter, 900 m | 200 m | 200 m | +0.2% | ✓ |
-| §10 | C-type diameter, 1.6 km | 350 m | 353 m | +0.7% | ✓ |
-| §10 | C-type diameter, 2.5 km | 540 m | 548 m | +1.5% | ✓ |
+| §7 | C-type sized by nitrogen, 900 m | 8.30 Mt | 8.33 Mt | +0.4% | ✓ |
+| §7 | C-type sized by nitrogen, 1.6 km | 45.0 Mt | 45.5 Mt | +1.0% | ✓ |
+| §7 | C-type sized by nitrogen, 2.5 km | 170 Mt | 171 Mt | +0.6% | ✓ |
+| §7 | C-type with water spin-up, 900 m | 8.30 Mt | 8.33 Mt | +0.4% | ✓ |
+| §10 | C-type water contained, 900 m | 0.530 Mt | 0.533 Mt | +0.6% | ✓ |
+| §10 | C-type water contained, 1.6 km | 2.90 Mt | 2.91 Mt | +0.3% | ✓ |
+| §10 | C-type water contained, 2.5 km | 11.0 Mt | 10.9 Mt | -0.5% | ✓ |
+| §10 | C-type diameter, 900 m | 240 m | 237 m | -1.4% | ✓ |
+| §10 | C-type diameter, 1.6 km | 420 m | 417 m | -0.8% | ✓ |
+| §10 | C-type diameter, 2.5 km | 650 m | 648 m | -0.3% | ✓ |
 | §10 | Total metal (with hub, dock, factory), 900 m | 1.50 Mt | 1.48 Mt | -1.5% | ✓ |
 | §10 | Total metal (with hub, dock, factory), 1.6 km | 7.50 Mt | 7.54 Mt | +0.5% | ✓ |
 | §10 | Total metal (with hub, dock, factory), 2.5 km | 28.0 Mt | 27.9 Mt | -0.5% | ✓ |
@@ -186,7 +186,6 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §15 | Array, 900 m valley, constant sky, Itokawa | 0.380 km² | 0.380 km² | +0.0% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Eros | 0.420 km² | 0.422 km² | +0.6% | ✓ |
 | §15 | Array, 900 m valley, constant sky, Torifune | 0.210 km² | 0.210 km² | +0.1% | ✓ |
-| §15 | Array, 900 m valley, constant sky, Apophis | 0.160 km² | 0.160 km² | -0.3% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, 1 AU | 0.0780 km² | 0.0776 km² | -0.6% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, Itokawa | 0.220 km² | 0.221 km² | +0.7% | ✓ |
 | §15 | Array, 900 m valley, seasonal sky, Eros | 0.250 km² | 0.246 km² | -1.6% | ✓ |
@@ -200,10 +199,10 @@ This checks that the model reproduces the notes' own figures from the same assum
 | §15 | 900 m tori supported by Itokawa | 1.00 tori | 1.07 tori | +6.6% | ✓ (tolerance 15%) |
 | §15 | 900 m tori supported by Didymos | 30.0 tori | 30.5 tori | +1.6% | ✓ |
 | §15 | 900 m tori supported by Torifune | 6.00 tori | 6.09 tori | +1.6% | ✓ |
-| §15 | 900 m tori supported by Ryugu | 90.0 tori | 89.1 tori | -1.0% | ✓ |
+| §15 | 900 m tori supported by Ryugu | 54.0 tori | 54.0 tori | -0.0% | ✓ |
 | §15 | 900 m tori supported by Bennu | 15.0 tori | 14.5 tori | -3.6% | ✓ |
-| §15 | 1.6 km tori supported by Ryugu | 17.0 tori | 16.3 tori | -3.9% | ✓ |
-| §15 | Processing energy, 900 m | 0.300 GW·yr | 0.277 GW·yr | -7.8% | ✓ (tolerance 15%) |
+| §15 | 1.6 km tori supported by Ryugu | 10.0 tori | 9.90 tori | -1.0% | ✓ |
+| §15 | Processing energy, 900 m | 0.400 GW·yr | 0.433 GW·yr | +8.2% | ✓ (tolerance 15%) |
 | §15 | Shipping energy at 4.5 km/s | 120,000,000 J/kg | 121,000,000 J/kg | +1.1% | ✓ |
 | §15 | Shipping energy at 6.3 km/s | 175,000,000 J/kg | 175,000,000 J/kg | +0.1% | ✓ |
 | §15 | Shipping energy at 8.5 km/s | 250,000,000 J/kg | 246,000,000 J/kg | -1.7% | ✓ |

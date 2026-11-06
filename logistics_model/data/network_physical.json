@@ -1,0 +1,257 @@
+{
+ "fetched": "2026-11-06",
+ "source": "IMCCE SsODNet ssoCard (best estimates); NASA/JPL NHATS API (round trips within its 12 km/s and 450-day limits)",
+ "hosts": {
+  "433": {
+   "ssodnet": {
+    "diameter_km": 17.6,
+    "error_km": 1.2,
+    "methods": [
+     "Rendez-vous with a spacecraft"
+    ],
+    "bibref": [
+     "Thomas+2000"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "1620": {
+   "ssodnet": {
+    "diameter_km": 2.441,
+    "error_km": 0.044,
+    "methods": [
+     "ThermoPhysical Model"
+    ],
+    "bibref": [
+     "Rozitis&Green2014",
+     "MacLennan+2022b"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "1943": {
+   "ssodnet": {
+    "diameter_km": 2.305,
+    "error_km": 0.049,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Nugent+2015",
+     "Harris+2011",
+     "Trilling+2010",
+     "M\u00fcller+2011b"
+    ]
+   },
+   "nhats": {
+    "min_dv_km_s": 11.705,
+    "duration_d": 370
+   }
+  },
+  "2063": {
+   "ssodnet": {
+    "diameter_km": 1.03,
+    "error_km": 0.03,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Nugent+2016"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "7480": {
+   "ssodnet": {
+    "diameter_km": null
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "15745": {
+   "ssodnet": {
+    "diameter_km": 0.77,
+    "error_km": 0.169,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Trilling+2010",
+     "Harris+2011"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "22099": {
+   "ssodnet": {
+    "diameter_km": 0.579,
+    "error_km": 0.109,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Nugent+2016",
+     "M\u00fcller+2011b"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "25143": {
+   "ssodnet": {
+    "diameter_km": 0.326,
+    "error_km": 0.011,
+    "methods": [
+     "Rendez-vous with a spacecraft"
+    ],
+    "bibref": [
+     "Fujiwara+2006"
+    ]
+   },
+   "nhats": {
+    "min_dv_km_s": 9.409,
+    "duration_d": 210
+   }
+  },
+  "35107": {
+   "ssodnet": {
+    "diameter_km": 0.914,
+    "error_km": 0.035,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Nugent+2016",
+     "Nugent+2015",
+     "Masiero+2021",
+     "M\u00fcller+2011b",
+     "Mainzer+2014b"
+    ]
+   },
+   "nhats": {
+    "min_dv_km_s": 11.162,
+    "duration_d": 370
+   }
+  },
+  "36017": {
+   "ssodnet": {
+    "diameter_km": null
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "65803": {
+   "ssodnet": {
+    "diameter_km": 0.761,
+    "error_km": 0.026,
+    "methods": [
+     "Rendez-vous with a spacecraft"
+    ],
+    "bibref": [
+     "Daly+2023"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "98943": {
+   "ssodnet": {
+    "diameter_km": 0.383,
+    "error_km": 0.037,
+    "methods": [
+     "ThermoPhysical Model"
+    ],
+    "bibref": [
+     "Wright+2025"
+    ]
+   },
+   "nhats": {
+    "min_dv_km_s": 8.989,
+    "duration_d": 450
+   }
+  },
+  "99942": {
+   "ssodnet": {
+    "diameter_km": 0.34,
+    "error_km": 0.04,
+    "methods": [
+     "Radar shape modeling"
+    ],
+    "bibref": [
+     "Brozovi\u0107+2018b"
+    ]
+   },
+   "nhats": {
+    "min_dv_km_s": 6.049,
+    "duration_d": 354
+   }
+  },
+  "137799": {
+   "ssodnet": {
+    "diameter_km": null
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "139622": {
+   "ssodnet": {
+    "diameter_km": null
+   },
+   "nhats": {
+    "min_dv_km_s": 11.792,
+    "duration_d": 370
+   }
+  },
+  "152560": {
+   "ssodnet": {
+    "diameter_km": 0.29,
+    "error_km": 0.14,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Trilling+2016"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "189040": {
+   "ssodnet": {
+    "diameter_km": null
+   },
+   "nhats": {
+    "listed": false
+   }
+  },
+  "302311": {
+   "ssodnet": {
+    "diameter_km": 0.32,
+    "error_km": 0.086,
+    "methods": [
+     "Near-Earth Asteroid Thermal Model"
+    ],
+    "bibref": [
+     "Masiero+2020a"
+    ]
+   },
+   "nhats": {
+    "listed": false
+   }
+  }
+ }
+}

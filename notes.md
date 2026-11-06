@@ -7,7 +7,7 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 **Guiding principles (adopted):**
 
 1. **Simplest long-lasting design first.** Given how many unknowns remain, prefer designs where *nothing has to keep working* for the habitat to stay safe: no heavy bearings, no perpetual active control, no nested bodies needing station-keeping. (The one bearing, for the despun solar array, is light and slow, and the array still keeps the habitat alive if it locks.)
-2. **Bulk materials come from the asteroids.** Every material used in large quantity must be sourced from the asteroids and be common enough to be gathered along with everything else, without becoming a limiting factor (section 10). Only true "vitamins" in small quantities may be imported. **The more common a material or source body, the better.** The solar array and the lamps are made locally too: a habitat that can't build its own power and light can't replicate, so a seed sent to a new asteroid carries the factories, a semiconductor works among them (section 13); only its computing and sensors are imported.
+2. **Bulk materials come from the asteroids.** Every material used in large quantity must be sourced from the asteroids and be common enough to be gathered along with everything else, without becoming a limiting factor (section 10). Only true "vitamins" in small quantities may be imported. **Exception: the 400 m demonstrators** (section 15, phases) are supplied from around Earth; the rule applies from the first 900 m habitat on. **The more common a material or source body, the better.** The solar array and the lamps are made locally too: a habitat that can't build its own power and light can't replicate, so a seed sent to a new asteroid carries the factories, a semiconductor works among them (section 13); only its computing and sensors are imported.
 3. **Conservative starting points.** Where the right value is unknown, design for the familiar or harder case and adapt later: 1 g, because healthy lower gravity is unknown (lower is better if it proves healthy); **L or LL host asteroids**, the best-studied candidates, though H-type hosts with ~4× the free metal are better (section 10); a **near-Earth location**, knowing the archipelago will spread through the Solar System later (with larger, concentrating solar arrays, or nuclear power if it ever passes the sourcing rule; section 13). **Promising but unproven options** (iron from the silicates by molten-oxide electrolysis, solar concentrators, lower gravity) are noted where they arise but not factored into the preliminary design.
 
 ---
@@ -60,7 +60,7 @@ All numbers are first-order estimates. Assumptions are listed in each section an
 |---|---|---|
 | Floor area | 64 ha | 192 ha |
 | Mass (excl. shared hub and factory) | ~26 Mt | ~77 Mt |
-| Material mined (H-like host) | ~37 Mt | ~110 Mt |
+| Material mined (H-like host) | ~44 Mt | ~130 Mt |
 | Main section length (10–40 m clear gaps between the envelopes) | ~160–220 m | ~480–660 m |
 | Whole stack with its farm section (50 m between sections, 10 m between farm rings) | ~330 m | ~900 m |
 | People fed, 1 / 2 / 3 tiers lit | ~2,000 / ~4,000 / ~6,100 | ~6,000 / ~12,000 / ~18,300 |
@@ -480,13 +480,13 @@ A metre of fill shields like ~1.84 t/m² of the rock jacket, so the jacket under
 
 With the rock jacket, water is a small need and **nitrogen sizes the C-type** (section 10):
 
-| Radius | Water needed (soil, ponds, O₂, ballast, vegetation) | + spin-up with water thrusters | N₂ | C-type sized by nitrogen | Water it contains (~6.4%) |
+| Radius | Water needed (soil, ponds, O₂, ballast, vegetation) | + spin-up with water thrusters | N₂ | C-type sized by nitrogen (Ryugu, ~0.145% N) | Water it contains (~6.4%) |
 |---|---|---|---|---|---|
-| 900 m | ~0.066 Mt | ~0.40 Mt | 8 kt | ~5 Mt | ~0.32 Mt |
-| 1.6 km | ~0.22 Mt | ~1.7 Mt | 45 kt | ~27 Mt | ~1.7 Mt |
-| 2.5 km | ~0.56 Mt | ~5.6 Mt | 170 kt | ~100 Mt | ~6.5 Mt |
+| 900 m | ~0.066 Mt | ~0.40 Mt | 8 kt | ~8 Mt | ~0.53 Mt |
+| 1.6 km | ~0.22 Mt | ~1.7 Mt | 45 kt | ~45 Mt | ~2.9 Mt |
+| 2.5 km | ~0.56 Mt | ~5.6 Mt | 170 kt | ~170 Mt | ~11 Mt |
 
-Water is in excess, except at 900 m with water spin-up (the C-type grows to ~7 Mt, or spin-up uses rock in a mass driver, section 15). Spin-up propellant with water thrusters: `m_p ≈ M·v/vₑ`, ~3–5% of the habitat at vₑ ≈ 3 km/s.
+Water is in excess at every size, even with water spin-up (at 900 m, ~0.47 Mt needed against ~0.53 Mt contained). Spin-up propellant with water thrusters: `m_p ≈ M·v/vₑ`, ~3–5% of the habitat at vₑ ≈ 3 km/s.
 
 **Water by use (logistics model, `logistics_model/`, plan §5):** built up from its parts instead of fitted to the totals above:
 
@@ -556,17 +556,17 @@ Rock jacket and cable spokes (section 5c):
 | Steel per torus / per m² | ~1.2 Mt / ~3.7 t | ~6.0 Mt / ~6.0 t | ~22 Mt / ~9 t |
 | Air per m² of floor (buffer against drift) | ~37 kg | ~65 kg | ~100 kg |
 | Nitrogen per torus / per m² | 8 kt / 25 kg | 45 kt / 45 kg | 170 kt / 70 kg |
-| C-type per torus (sized by nitrogen) | ~5 Mt (~200 m) | ~27 Mt (~350 m) | ~100 Mt (~540 m) |
-| Tori per Ryugu-sized C-type (~450 Mt) | ~90 | ~17 | ~4.5, less than a six-stack |
+| C-type per torus (sized by nitrogen, Ryugu's grade) | ~8 Mt (~240 m) | ~45 Mt (~420 m) | ~170 Mt (~650 m) |
+| Tori per Ryugu (~450 Mt, its measured ~0.145 wt% N) | ~54 | ~10 | ~2.6, less than half a six-stack |
 | S-type per torus | ~14 Mt, sized by the shield | ~44 Mt, shield and metal nearly balanced | ~165 Mt, sized by the metal (~28 Mt) if H-like; ~2× for an L host, ~4× for LL, unless iron comes from the silicates |
 | Lighting (LEDs, daily average): valley + per farm tier lit | ~24 + ~12.5 MW | ~76 + ~39 MW | ~186 + ~96 MW |
 | Despun array at 1 AU (survival sizing): valley + per tier lit | ~0.13 + ~0.06 km² | ~0.42 + ~0.18 km² | ~1.03 + ~0.44 km² |
-| Material mined per torus (H-like host) | ~18 Mt (1×) | ~71 Mt (~4×) | ~265 Mt (~15×) |
+| Material mined per torus (H-like host) | ~22 Mt (1×) | ~90 Mt (~4×) | ~335 Mt (~15×) |
 
 **2.5 km (candidate, to decide):**
 - **Structurally fine.** At 157 m/s the spoke cables' own spin stress is only ~10% of their working stress; spokes take ~22% of the rim's mass, and the mass per m² of floor is only ~8% above 1.6 km.
 - **What it buys:** a valley 156 m wide and tall (taller trees, room for real weather), ~120 ha of wilderness per torus and ~735 ha in a six-stack (the most robust biosphere), three times the air per m² of a 900 m torus to buffer the atmosphere against drift (Biosphere 2's problem, section 16), slower spin and weaker Coriolis.
-- **What it costs:** nitrogen grows with the air column, ~70 kg per m² of floor, so a torus needs ~100 Mt of C-type and a Ryugu-sized partner supports fewer than one six-stack; the S-type becomes metal-bound (~150–180 Mt per torus, so Itokawa- or Apophis-sized hosts are out, Eros is fine); each generation moves ~15× the material of a 900 m torus, so the archipelago replicates more slowly.
+- **What it costs:** nitrogen grows with the air column, ~70 kg per m² of floor, so a torus needs ~170 Mt of Ryugu's C-type and Ryugu supports less than half a six-stack; the S-type becomes metal-bound (~150–180 Mt per torus, so Itokawa- or Apophis-sized hosts are out, Eros is fine); each generation moves ~15× the material of a 900 m torus, so the archipelago replicates more slowly.
 - **Fit:** a later step for mature clusters with a large C-type (or comet) partner, after the 1.6 km stacks. Lower pressure or better nitrogen recovery would ease it. A seed factory builds it on site, like the 1.6 km stacks (its 156 m segments are too wide for a smaller parent's dock).
 
 **Shortlist: 900 m / 60 s and 1.6 km / 80 s, with 2.5 km / 100 s as a candidate (to decide).** 400 m remains possible with thicker steel, less mass, and people sleeping and working in extra-shielded zones. Steel is a poor cosmic-ray shield per tonne (secondary neutrons), so hydrogen-rich layers should protect the living zones.
@@ -680,19 +680,19 @@ The tailings cover the regolith fill.
 
 ### C-type (Bennu-like: ~1.2 t/m³) — volatiles and soil base
 
-Bennu samples: ~4.5 wt% carbon, ~0.23–0.25 wt% nitrogen, ammonia-rich. Water is bound in hydrated phyllosilicates: remote sensing gives ~0.71 wt% hydrogen at the surface, equivalent to **~6.4 wt% water**, assumed recoverable by heating.
+Bennu samples: ~4.5 wt% carbon, ~0.23–0.25 wt% nitrogen, ammonia-rich. Ryugu's samples hold less nitrogen, **~0.145 wt%** (1454 ± 17 µg/g, Yokoyama et al. 2025), and Ryugu is the reference partner, so its C-type is sized at that grade; unmeasured candidates keep Bennu's. Water is bound in hydrated phyllosilicates: remote sensing gives ~0.71 wt% hydrogen at the surface, equivalent to **~6.4 wt% water**, assumed recoverable by heating.
 
 With the rock shield, the C-type is **sized by nitrogen**, as in the original analysis a decade ago:
 
 | | 900 m | 1.6 km | 2.5 km (candidate) |
 |---|---|---|---|
 | Nitrogen needed (N₂) | 8 kt | 45 kt | 170 kt |
-| C-type mass (~0.24% N, ~70% recovered) | ~5 Mt | ~27 Mt | ~100 Mt |
-| Diameter | ~200 m | ~350 m | ~540 m |
-| Water contained (6.4%) | ~0.32 Mt (needs ~0.066 Mt + spin-up) | ~1.7 Mt (needs ~0.22 Mt + spin-up) | ~6.5 Mt (needs ~0.56 Mt + spin-up) |
-| Carbon contained | ~0.2 Mt | ~1.2 Mt | ~4.5 Mt |
+| C-type mass (Ryugu, ~0.145% N, ~70% recovered) | ~8 Mt | ~45 Mt | ~170 Mt |
+| Diameter | ~240 m | ~420 m | ~650 m |
+| Water contained (6.4%) | ~0.53 Mt (needs ~0.066 Mt + spin-up) | ~2.9 Mt (needs ~0.22 Mt + spin-up) | ~11 Mt (needs ~0.56 Mt + spin-up) |
+| Carbon contained | ~0.37 Mt | ~2.0 Mt | ~7.7 Mt |
 
-If spin-up uses water thrusters (~0.40 Mt at 900 m, ~1.7 Mt at 1.6 km, ~5.6 Mt at 2.5 km), the 900 m C-type grows to ~7 Mt; at 1.6 km and 2.5 km the nitrogen-sized body roughly covers it.
+If spin-up uses water thrusters (~0.40 Mt at 900 m, ~1.7 Mt at 1.6 km, ~5.6 Mt at 2.5 km), the nitrogen-sized body covers it at every size (at 900 m, ~0.53 Mt contained against ~0.47 Mt needed).
 
 A C-type also supplies a soil base (clays, organics, P, K, S) and sulfur for the lamps. Its clays carry ~1% nickel and ~0.27% chromium, so making soil means leaching them out, which recovers useful nickel, chromium and cobalt.
 
@@ -714,23 +714,23 @@ Logistically hard: most known nuclei are km-scale, and comets have awkward orbit
 
 ### Sourcing rule check
 
-Every bulk material against what one 900 m torus's source bodies contain (~12 Mt S-type, ~5 Mt C-type). C-type figures use Ryugu's measured abundances (close to CI chondrites); S-type figures are ordinary-chondrite values (H for the major elements; the candidate hosts are L or LL, with less metal, nickel and cobalt). Sources and the full list are in the trace-element table below.
+Every bulk material against what one 900 m torus's source bodies contain (~12 Mt S-type, ~8 Mt C-type). C-type figures use Ryugu's measured abundances (close to CI chondrites); S-type figures are ordinary-chondrite values (H for the major elements; the candidate hosts are L or LL, with less metal, nickel and cobalt). Sources and the full list are in the trace-element table below.
 
 | Material | Rough need | Available (S-type / C-type) | Status |
 |---|---|---|---|
-| Iron (hull, wire, frames) | ~1.4 Mt | ~1.4 Mt as metal grains if H-like, ~0.5 Mt if LL-like (the rest as iron oxide in the silicates) / ~0.9 Mt in oxides and sulfides | ✓ H / ⚠ L, LL: more rock or iron from the silicates |
+| Iron (hull, wire, frames) | ~1.4 Mt | ~1.4 Mt as metal grains if H-like, ~0.5 Mt if LL-like (the rest as iron oxide in the silicates) / ~1.5 Mt in oxides and sulfides | ✓ H / ⚠ L, LL: more rock or iron from the silicates |
 | Silicate rock (shield, regolith) | ~10.4 Mt | ~10.6 Mt tailings / — | ✓ (sets the S-type's size) |
-| Nickel (cladding, Invar) | tens of kt | ~190 kt / ~50 kt | ✓ |
-| Water | ~0.066 Mt (+ ~0.40 Mt if water spin-up) | — / ~0.32 Mt | ✓ / ⚠ with water spin-up |
+| Nickel (cladding, Invar) | tens of kt | ~190 kt / ~100 kt | ✓ |
+| Water | ~0.066 Mt (+ ~0.40 Mt if water spin-up) | — / ~0.53 Mt | ✓, with water spin-up too |
 | Nitrogen | 8 kt | — / ~12 kt (~8 kt recovered) | ⚠ sets the C-type's size |
-| Carbon (steel, CO, organics) | ~20 kt | — / ~0.2 Mt | ✓ |
-| Sulfur (lamps, chemistry) | small | troilite / ~0.27 Mt | ✓ |
-| Silicon (glass, quartz, PV) | a few kt | ~2 Mt / ~0.5 Mt | ✓ (purity is a processing problem, not a scarcity) |
-| Phosphorus (soil) | ~0.3 kt | ~13 kt / ~5 kt | ✓ |
-| Potassium (soil, battery electrolyte) | a few kt | ~10 kt / ~2.7 kt | ✓ (needs leaching) |
-| Copper (wiring, motors, magnetrons, waveguides, rotary transformer) | ~0.1–1 kt (guess) | ~1.1 kt / ~0.6 kt (measured: ~86–97 ppm in ordinary chondrites, 126 ppm in Ryugu), dispersed | ✓ if about half is recovered; ⚠ recovery |
-| Cobalt + molybdenum (maraging wire) | ~70 kt Co + ~40 kt Mo | ~10 kt Co, ~25 t Mo / ~3 kt Co, ~5 t Mo | ✗ rejected |
-| Gallium, indium (LEDs) | ~0.2 t Ga, ~3 kg In (white + blue/red LEDs, section 13) | ~65 t Ga, ~6–50 kg In / ~50 t Ga, ~0.4 t In, dispersed | contained; recovery makes them vitamins in practice |
+| Carbon (steel, CO, organics) | ~20 kt | — / ~0.37 Mt | ✓ |
+| Sulfur (lamps, chemistry) | small | troilite / ~0.45 Mt | ✓ |
+| Silicon (glass, quartz, PV) | a few kt | ~2 Mt / ~0.8 Mt | ✓ (purity is a processing problem, not a scarcity) |
+| Phosphorus (soil) | ~0.3 kt | ~13 kt / ~11 kt | ✓ |
+| Potassium (soil, battery electrolyte) | a few kt | ~10 kt / ~4.3 kt | ✓ (needs leaching) |
+| Copper (wiring, motors, magnetrons, waveguides, rotary transformer) | ~0.1–1 kt (guess) | ~1.1 kt / ~1.0 kt (measured: ~86–97 ppm in ordinary chondrites, 126 ppm in Ryugu), dispersed | ✓ if about half is recovered; ⚠ recovery |
+| Cobalt + molybdenum (maraging wire) | ~70 kt Co + ~40 kt Mo | ~10 kt Co, ~25 t Mo / ~5 kt Co, ~8 t Mo | ✗ rejected |
+| Gallium, indium (LEDs) | ~0.2 t Ga, ~3 kg In (white + blue/red LEDs, section 13) | ~65 t Ga, ~6–50 kg In / ~85 t Ga, ~0.65 t In, dispersed | contained; recovery makes them vitamins in practice |
 
 Consequences:
 
@@ -743,34 +743,34 @@ Consequences:
 
 Ryugu's samples are the best-measured asteroid material: close to CI chondrites, "more chemically pristine" than any meteorite. Itokawa's samples are LL ordinary chondrite; Apophis's spectra are LL-like, Didymos's L-like, and NEAR found Eros consistent with L or LL chondrites (its surface sulfur depletion likely a space-weathering effect). Bennu's samples are CI-like too. S-type values below are ordinary-chondrite falls (medians of H, L and LL where given; "one H5" marks a single meteorite).
 
-| Element | S-type (ordinary chondrite) | C-type (Ryugu, measured) | Contained in ~12 Mt S + ~5 Mt C | Use and status |
+| Element | S-type (ordinary chondrite) | C-type (Ryugu, measured) | Contained in ~12 Mt S + ~8 Mt C | Use and status |
 |---|---|---|---|---|
-| Copper | 86–97 ppm | 126 ppm | ~1.1 kt + ~0.6 kt | wiring, motors, magnetrons, PV contacts; enough if about half is recovered |
-| Nickel | ~1.6% (H; less in L, LL) | 1.19% | ~190 kt + ~59 kt | cladding, Invar, nickel-iron batteries |
-| Cobalt | ~0.08% (H) | 582 ppm | ~10 kt + ~3 kt | by-product |
-| Chromium | — | 2,681 ppm | — + ~13 kt | heat-resisting steels (receivers, furnaces) |
-| Manganese | ~0.23% (H) | 2,489 ppm | ~28 kt + ~12 kt | steelmaking |
-| Titanium | ~0.06% (H) | 474 ppm | ~7 kt + ~2.4 kt | not needed in bulk |
-| Vanadium | — | 61 ppm | — + ~0.3 kt | alloying |
-| Zinc | 46–55 ppm | 346 ppm | ~0.6 kt + ~1.7 kt | coatings |
-| Phosphorus | ~0.11% (H) | 1,302 ppm | ~13 kt + ~6.5 kt | soil |
-| Potassium | ~0.08% (H) | 522 ppm | ~10 kt + ~2.6 kt | soil, battery electrolyte |
-| Sodium | ~0.6% (one H5) | 6,099 ppm | ~74 kt + ~30 kt | soda-lime glass, salts |
-| Chlorine | — | 776 ppm | — + ~3.9 kt | silicon purification, chemistry |
-| Boron | — | 1.33 ppm | — + ~6.7 t | PV doping (grams a year): available; MgB₂ superconductors (kilotonnes): not |
-| Lithium | ~1.3 ppm (one H5) | 1.38 ppm | ~16 t + ~7 t | batteries (nickel-iron preferred) |
-| Gallium | 5.1–6.0 ppm | 10 ppm | ~65 t + ~50 t | LEDs (kilograms): contained, recovery is the hard part |
-| Germanium | 8–11 ppm | 33 ppm | ~120 t + ~165 t | electronics, infrared optics |
-| Selenium | 8–9 ppm | ~20 ppm (CI) | ~100 t + ~100 t | — |
-| Molybdenum | ~2 ppm (one H5) | 1.02 ppm | ~25 t + ~5 t | small alloying only; maraging steel fails |
-| Tungsten | — | 0.125 ppm | — + ~0.6 t | lamp and magnetron cathodes (kilograms) |
-| Tin | 0.33–0.59 ppm | 1.85 ppm | ~4–7 t + ~9 t | solder; a float-glass tin bath is out |
-| Silver | 36–66 ppb | 0.195 ppm | ~0.4–0.8 t + ~1 t | PV contacts would need ~0.3 t a year: copper instead |
-| Indium | ~0.5–4 ppb | ~78 ppb (CI) | ~6–50 kg + ~0.4 t | LEDs: grams for blue, ~3 kg per torus with red AlGaInP (section 13) |
-| Platinum, palladium, iridium, gold | — | 0.83, 0.74, 0.48, 0.16 ppm | — + ~4, ~4, ~2.4, ~0.8 t | catalysts (kilograms) |
-| Neodymium, lanthanum | — | ~0.47, ~0.24 ppm (CI; Ryugu enriched and variable) | — + ~2.4, ~1.2 t | permanent magnets: tonnes at most, so wound-field machines |
+| Copper | 86–97 ppm | 126 ppm | ~1.1 kt + ~1.0 kt | wiring, motors, magnetrons, PV contacts; enough if about half is recovered |
+| Nickel | ~1.6% (H; less in L, LL) | 1.19% | ~190 kt + ~100 kt | cladding, Invar, nickel-iron batteries |
+| Cobalt | ~0.08% (H) | 582 ppm | ~10 kt + ~5 kt | by-product |
+| Chromium | — | 2,681 ppm | — + ~22 kt | heat-resisting steels (receivers, furnaces) |
+| Manganese | ~0.23% (H) | 2,489 ppm | ~28 kt + ~21 kt | steelmaking |
+| Titanium | ~0.06% (H) | 474 ppm | ~7 kt + ~4 kt | not needed in bulk |
+| Vanadium | — | 61 ppm | — + ~0.5 kt | alloying |
+| Zinc | 46–55 ppm | 346 ppm | ~0.6 kt + ~2.9 kt | coatings |
+| Phosphorus | ~0.11% (H) | 1,302 ppm | ~13 kt + ~11 kt | soil |
+| Potassium | ~0.08% (H) | 522 ppm | ~10 kt + ~4.3 kt | soil, battery electrolyte |
+| Sodium | ~0.6% (one H5) | 6,099 ppm | ~74 kt + ~51 kt | soda-lime glass, salts |
+| Chlorine | — | 776 ppm | — + ~6.5 kt | silicon purification, chemistry |
+| Boron | — | 1.33 ppm | — + ~11 t | PV doping (grams a year): available; MgB₂ superconductors (kilotonnes): not |
+| Lithium | ~1.3 ppm (one H5) | 1.38 ppm | ~16 t + ~11 t | batteries (nickel-iron preferred) |
+| Gallium | 5.1–6.0 ppm | 10 ppm | ~65 t + ~85 t | LEDs (kilograms): contained, recovery is the hard part |
+| Germanium | 8–11 ppm | 33 ppm | ~120 t + ~275 t | electronics, infrared optics |
+| Selenium | 8–9 ppm | ~20 ppm (CI) | ~100 t + ~170 t | — |
+| Molybdenum | ~2 ppm (one H5) | 1.02 ppm | ~25 t + ~8 t | small alloying only; maraging steel fails |
+| Tungsten | — | 0.125 ppm | — + ~1.0 t | lamp and magnetron cathodes (kilograms) |
+| Tin | 0.33–0.59 ppm | 1.85 ppm | ~4–7 t + ~15 t | solder; a float-glass tin bath is out |
+| Silver | 36–66 ppb | 0.195 ppm | ~0.4–0.8 t + ~1.6 t | PV contacts would need ~0.3 t a year: copper instead |
+| Indium | ~0.5–4 ppb | ~78 ppb (CI) | ~6–50 kg + ~0.65 t | LEDs: grams for blue, ~3 kg per torus with red AlGaInP (section 13) |
+| Platinum, palladium, iridium, gold | — | 0.83, 0.74, 0.48, 0.16 ppm | — + ~7, ~6, ~4, ~1.3 t | catalysts (kilograms) |
+| Neodymium, lanthanum | — | ~0.47, ~0.24 ppm (CI; Ryugu enriched and variable) | — + ~3.9, ~2.0 t | permanent magnets: tonnes at most, so wound-field machines |
 
-- **Copper is not scarce, just dispersed:** ~1.7 kt per 900 m torus's source bodies, ~7 kt per 1.6 km torus, ~28 kt per 2.5 km torus, against a guessed need of ~0.1–1 kt per 900 m torus. At ~100 ppm it is ~50–100× leaner than terrestrial ore, but the rock is crushed and processed anyway, so recovery is the marginal cost of a leach line (sulfuric acid, electrowinning), the same line that strips nickel and chromium from the soil clays.
+- **Copper is not scarce, just dispersed:** ~2.1 kt per 900 m torus's source bodies, ~10 kt per 1.6 km torus, ~37 kt per 2.5 km torus, against a guessed need of ~0.1–1 kt per 900 m torus. At ~100 ppm it is ~50–100× leaner than terrestrial ore, but the rock is crushed and processed anyway, so recovery is the marginal cost of a leach line (sulfuric acid, electrowinning), the same line that strips nickel and chromium from the soil clays.
 - **Most "vitamins" are present in tonnes; extraction, not abundance, makes them vitamins.** Boron for PV doping and the platinum-group catalysts are available outright; tin, silver, tungsten and rare earths only in tonnes, which rules out bulk uses (a float-glass tin bath, silver PV contacts, rare-earth magnets).
 
 ---
@@ -1186,7 +1186,7 @@ Part of every factory, carried by every seed: it makes the array's cells, the LE
   - **The rectenna is almost a cap:** at ~1 kW/m² of microwaves, ~420 m across for a 900 m pair, ~730 m for a 900 m six-stack and ~1.3 km for a 1.6 km six-stack (~20% of an end opening), across the docking lane and the radiator vent. At 5.8 GHz, transmitter and receiver a few hundred metres across can be up to ~1,000 km apart (~200 km at 915 MHz).
   - Station-keeping is trivial (~4.6 N per km² of array), but the habitat would depend on an actively pointed free-flier. Magnetrons are local; rectenna diodes would come from the semiconductor works, with vacuum-tube cyclotron-wave converters (~70–80%) a less mature local alternative.
   - **Superseded** for the habitat by the despun array (~3× the cylinder per m² of PV, ~1–2% losses, no cap-sized receiver, no free-flier to keep in place). Beaming remains a way to bring power from the free-flying industrial array to the hub factory, which tolerates interruptions.
-- **Processing energy no longer sets the generation time.** With the rock shield, a 900 m torus needs ~10¹⁵ J to crush and separate ~12 Mt of S-type rock and ~10¹⁶ J to bake ~5–7 Mt of C-type at ~1–2 MJ/kg: ~2–6 months at 1 GW (≈ 1 km² of solar furnace mirror, or ≈ 3 km² of panels at 25%), ~2–5 years at 100 MW. A six-torus stack is ~6× that. Logistics and factory throughput become the pacing items. (The water jacket needed ~1.5 × 10¹⁷ J per torus to bake ~100 Mt of C-type: ~5 years at 1 GW.)
+- **Processing energy no longer sets the generation time.** With the rock shield, a 900 m torus needs ~10¹⁵ J to crush and separate ~12 Mt of S-type rock and ~10¹⁶ J to bake ~8 Mt of C-type at ~1–2 MJ/kg: ~3–7 months at 1 GW (≈ 1 km² of solar furnace mirror, or ≈ 3 km² of panels at 25%), ~3–6 years at 100 MW. A six-torus stack is ~6× that. Logistics and factory throughput become the pacing items. (The water jacket needed ~1.5 × 10¹⁷ J per torus to bake ~100 Mt of C-type: ~5 years at 1 GW.)
 - **Silicon PV is made at the host** by the factory's semiconductor works (above): silicon is plentiful in the rock (~2 Mt per torus's source bodies), chlorine and boron for refining and doping are local; the 6N refinery, crystal growth, wafering and cell processing travel with every seed. (Earlier treated as a vitamin imported from Earth, which would break replication.) Solar-thermal concentrators for the furnaces are easy to make locally.
 
 ### Distance from the Sun
@@ -1477,7 +1477,7 @@ Moving a finished habitat costs ~100–300× the energy of building one. Hohmann
 | 2 × 1.6 km | ~83 Mt | ~375 GW·yr | ~16 Mt | ~875 GW·yr | ~37 Mt |
 | 6 × 1.6 km | ~250 Mt | ~1,120 GW·yr | ~47 Mt | ~2,650 GW·yr | ~110 Mt |
 
-(1 GW·yr ≈ 3.2 × 10¹⁶ J. A rock-throwing mass driver at ~5 km/s uses less energy but ~1.8× the habitat's mass in reaction rock for Venus, ~8× for the belt. Building a 900 m torus takes ~0.3 GW·yr of processing energy.)
+(1 GW·yr ≈ 3.2 × 10¹⁶ J. A rock-throwing mass driver at ~5 km/s uses less energy but ~1.8× the habitat's mass in reaction rock for Venus, ~8× for the belt. Building a 900 m torus takes ~0.4 GW·yr of processing energy.)
 
 Consequences:
 
@@ -1494,7 +1494,7 @@ Solar sail (~7.7 µN/m² at 1 AU, averaged over the orbit and halved for steerin
 | Habitat | Over 300 years | Over 1,000 years |
 |---|---|---|
 | 900 m pair at Itokawa | ~5,800 km² (~76 km square), ~60 kt of film | ~1,750 km² (~42 km square), ~18 kt |
-| 900 m pair at Apophis (e = 0.19) | ~3,100 km² (~55 km square), ~30 kt | ~920 km² (~30 km square), ~9 kt |
+| 900 m pair at Apophis after 2029 (e = 0.19) | ~4,100 km² (~64 km square), ~40 kt | ~1,200 km² (~35 km square), ~12 kt |
 | 1.6 km six-stack at Eros | ~53,000 km² (~230 km square), ~0.5 Mt | ~16,000 km² (~127 km square), ~160 kt |
 
 Thrusters, with propellants the asteroids supply (xenon is a vitamin):
@@ -1520,20 +1520,20 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 | Asteroid | Type | Size | Mass | Orbit (a, e, i) | Sunlight, aphelion → perihelion | Year | 900 m tori supported |
 |---|---|---|---|---|---|---|---|
 | Itokawa | S, LL-like (samples) | ~330 m | ~35 Mt | 1.32 AU, 0.28, 1.6° | 0.35× → 1.10× | ~1.52 yr | ~1 by free metal (preliminary design); ~3 with iron from the silicates (not yet factored) |
-| Apophis | Sq, LL-like (spectra) | ~340–370 m | ~40–60 Mt | today 0.92 AU, 0.19, 3.3°; after 2029 ~1.10 AU, ~0.19 | today 0.83× → 1.8×; after 2029 ~0.55× → 1.2× | ~1.2 yr after 2029 | ~1–2 by free metal (a pair only at the upper mass estimate); ~3–4 with iron from the silicates (not yet factored) |
+| Apophis (after the 2029 flyby) | Sq, LL-like (spectra) | ~340–370 m | ~40–60 Mt | ~1.10 AU, ~0.19, 3.3° | ~0.58× → 1.25× | ~1.16 yr | ~1–2 by free metal (a pair only at the upper mass estimate); ~3–4 with iron from the silicates (not yet factored) |
 | Bennu | B (C-complex) | ~490 m | ~73 Mt | 1.13 AU, 0.20, 6.0° | 0.54× → 1.24× | ~1.2 yr | ~15 (N-limited) |
-| Ryugu | Cb | ~900 m | ~450 Mt | 1.19 AU, 0.19, 5.9° | 0.50× → 1.09× | ~1.3 yr | ~90 (N-limited) |
+| Ryugu | Cb | ~900 m | ~450 Mt | 1.19 AU, 0.19, 5.9° | 0.50× → 1.09× | ~1.3 yr | ~54 (N-limited, at its measured nitrogen) |
 | Eros | S, L- or LL-like (NEAR) | ~17 km | ~6.7 × 10¹⁵ kg | 1.46 AU, 0.22, 10.8° | 0.32× → 0.78× | ~1.76 yr | hundreds of thousands |
 | Didymos | S, L-like (spectra) | ~780 m | ~0.5 Gt | 1.64 AU, 0.38, 3.4° | 0.19× → 0.98× | ~2.1 yr | ~30 by free metal; ~45 with iron from the silicates |
 | Torifune (2001 CC21) | Sq, L-like (spectra; Hayabusa2 flyby 2026) | ~465 m (estimates ~340–490 m), contact binary | ~100 Mt (~2 t/m³ assumed; ~40 Mt at the smallest size) | 1.03 AU, 0.22, 4.8° | 0.63× → 1.54× | ~1.05 yr | ~6 by free metal (~2 at the smallest size); ~9 with iron from the silicates (not yet factored) |
 
-(Per 900 m torus: ~11 Mt of S-type rock for the shield and regolith and ~1.5 Mt of metal, which takes ~16 Mt of L-type or ~32 Mt of LL-type rock by free metal alone; ~5 Mt of C-type. Per 1.6 km torus: ~34 Mt of rock for the shield and regolith and ~7.5 Mt of metal (~83 Mt of L or ~165 Mt of LL rock); ~27 Mt of C-type. Ryugu supports ~17 tori of 1.6 km.)
+(Per 900 m torus: ~11 Mt of S-type rock for the shield and regolith and ~1.5 Mt of metal, which takes ~16 Mt of L-type or ~32 Mt of LL-type rock by free metal alone; ~8 Mt of C-type. Per 1.6 km torus: ~34 Mt of rock for the shield and regolith and ~7.5 Mt of metal (~83 Mt of L or ~165 Mt of LL rock); ~45 Mt of C-type. C-type masses at Ryugu's measured ~0.145 wt% N; a Bennu-like ~0.24 wt% would need ~40% less. Ryugu supports ~10 tori of 1.6 km.)
 
-**Note on Itokawa and Apophis.** With free metal only, a 900 m pair is impossible at Itokawa and uncertain at Apophis (a pair only at the upper end of its mass estimate). They demonstrate the process with **one or two 400 m / 40 s pairs** instead. A 400 m pair needs only ~0.33–0.53 Mt of metal (~7–12 Mt of LL rock) and ~5 Mt of shield rock, so each host has room for about three. **Two pairs demonstrate self-replication:** the second built by the first pair's factory (its 25 m segments pass through a ~27 m hub dock). The 900 m and 1.6 km habitats go to larger L/LL hosts, where mining more rock supplies the metal.
+**Note on Itokawa and Apophis.** With free metal only, a 900 m pair is impossible at Itokawa and uncertain at Apophis (a pair only at the upper end of its mass estimate). They host the **400 m / 40 s demonstrators** instead (phases below): one torus at one, a pair at the other. A 400 m torus needs ~0.17 Mt of metal (~3.7 Mt of LL rock) with its hub and factory, so each host has room for ~10–14. Both are potentially hazardous asteroids: mining them is also practice in turning a hazard into something controlled. Apophis is used only on its post-2029 orbit. The 900 m and 1.6 km habitats go to larger L/LL hosts, where mining more rock supplies the metal.
 
 **Note on Torifune (added as a candidate, proposed).** Hayabusa2 flew past it at ~1 km on 5 July 2026 on the way to 1998 KY26; the flyby showed a contact binary, and its data are still arriving.
 - **Composition:** ground-based spectra classify it Sq, best matched by L ordinary chondrites (Château-Renard, L6); its older "L-type" label is a spectral class, now superseded, not the L chondrite group. At ~9 wt% free metal, a 900 m torus takes ~16 Mt of its rock, so ~100 Mt supports ~6 tori: a 900 m pair, perhaps three, or many 400 m pairs. If the smallest size estimate (~340 m, ~40 Mt) holds, it is Apophis-class: one pair.
-- **The mildest orbit of the candidates:** sunlight swings only ~2.4× (0.63× at aphelion, the brightest winter of any candidate, to 1.54× at perihelion, a hot summer like Apophis's today) over a year of ~1.05 Earth years. The array is the smallest of the candidates (section 15, seasonal sizing), and the biological year is nearly Earth's.
+- **The mildest orbit of the candidates:** sunlight swings only ~2.4× (0.63× at aphelion, the brightest winter of any candidate, to 1.54× at perihelion, a hot summer) over a year of ~1.05 Earth years. The array is the smallest of the candidates (section 15, seasonal sizing), and the biological year is nearly Earth's.
 - **It could hold the demonstration and the first 900 m pair at one site,** if its mass is near the upper estimates.
 - **Logistics:** easy to reach from Earth's orbit (~4.0 km/s, heliocentric) and from Itokawa (~3.6 km/s, perihelia ~23° apart), but poorly aligned with the known C-types: ~7.6 km/s from Ryugu and ~8.4 from Bennu (perihelia ~150–190° apart), so volatiles cost ~3–4 GW·yr per 0.5 Mt, affordable but a reason to look for a better-aligned C-type. Its period is so close to Earth's that their relative position repeats only every ~22 years, so transfer windows from Earth come in clusters decades apart. It doesn't come close to Earth (minimum orbit distance ~0.08 AU).
 
@@ -1555,9 +1555,12 @@ Thrusters, with propellants the asteroids supply (xenon is a vitamin):
 
 ### Phases (adopted as the working scenario)
 
-1. **Demonstration: one or two 400 m / 40 s pairs at Itokawa and Apophis** (note under the candidate table). Per torus: a 25 m valley, ~6.3 ha of floor (~3 ha of wilderness), ~200 people per farm tier lit (~600 with three), ~2.8 Mt, ~4.8 MW for the valley's sky plus ~2.5 MW per tier (LEDs), ~0.7 kt of nitrogen. They prove the rock jacket and double skin, cable spokes, the pair rule and despun array, the light-box sky and the tiered farm ring, life support, the factory chain and the first population, and they start the long-term gravity experiment (1.5 rpm; Coriolis at a 5 m/s run ~±16% of weight). A second pair built by the first demonstrates self-replication. The valley is a planted hall rather than a landscape, and its tiny wilderness depends on exchange. Their factories also act as seed factories for the larger habitats, which are built on site (a 900 m torus's 56 m segments don't fit a 400 m pair's dock).
-2. **900 m pairs on a larger L/LL host** (Eros as the working case; Didymos possible, with a more eccentric orbit; Torifune possible for a first pair on the mildest orbit, proposed, if its mass is near the upper estimates), metal from mining more rock.
-3. **First real islands: 1.6 km six-stacks at Eros, with Ryugu as the C-type partner.** Per six-stack: ~250 Mt of habitat, ~0.5–1 Gt of Eros rock for an L or LL host by free metal (negligible against Eros's mass; an earlier ~240 Mt assumed H-like metal), ~600 ha of floor, ~270 kt of nitrogen from ~160 Mt of Ryugu. **Nitrogen limits the Eros cluster** to ~3 six-stacks per Ryugu; growing beyond needs more C-type partners or a lower atmospheric pressure.
+Each step goes to a new host, a little larger than the last; the hosts below Eros fall into three size groups (`reports/asteroid-networks.md`, settlement ladder).
+
+1. **Demonstrators at 0.3–0.6 km hosts: one 400 m / 40 s torus at Apophis (post-2029) or Itokawa, then a 400 m pair at the other** (note under the candidate table). The 400 m tori never carry farm tiers or an ecosystem: a synthetic environment for a small crew, with a day–night cycle optional (its power load is then unbalanced). Per torus: a 25 m tube, ~6.3 ha of floor, ~2.65 Mt, ~3.7 Mt of LL rock mined, ~0.7 kt of nitrogen, within ~20 kt of volatiles shipped from around Earth (Earth → Apophis ~3.9 km/s, → Itokawa ~4.3 km/s heliocentric). They prove the rock jacket and double skin, cable spokes, the despun array, nitrogen supply and life support, the factory chain and mining a potentially hazardous asteroid, and they start the long-term gravity experiment (1.5 rpm; Coriolis at a 5 m/s run ~±16% of weight). The pair adds the co-rotating stack, the pair rule and a build by an existing factory (its 25 m segments pass through a ~27 m hub dock). Their factories seed the larger habitats, which are built on site (a 900 m torus's 56 m segments don't fit a 400 m dock).
+2. **900 m habitats at 0.8–1.0 km hosts** (Didymos, 1991 VH, Yuliya, Norwan, Bacchus; ~14–35 900 m tori each by LL free metal; Bennu reaches Didymos and Bacchus within the cutoff): one 900 m torus, then a 900 m pair, then a **pair with farms**, the first farm rings and ecosystem. Metal from mining more rock.
+3. **Stacks at ~2–2.5 km hosts: Anteros first, Geographos as the alternative** (~390–460 900 m or ~75–90 1.6 km tori each by LL free metal). Anteros comes first on supply and access: Ryugu reaches it within the 6 km/s cutoff (~5.3 km/s) and it costs ~6.5 km/s from Earth, against ~10.4 for Geographos, which depends on dark candidates once they are characterised.
+4. **First large habitat: 1.6 km six-stacks at Eros, with Ryugu and Bennu as the C-type partners** (their nitrogen is the only measured supply). Per six-stack: ~250 Mt of habitat, ~0.5–1 Gt of Eros rock for an L or LL host by free metal (negligible against Eros's mass; an earlier ~240 Mt assumed H-like metal), ~600 ha of floor, ~270 kt of nitrogen from ~270 Mt of Ryugu at its measured grade. **Nitrogen limits the Eros cluster** to ~1.6 six-stacks from Ryugu, ~2 with Bennu; growing beyond needs more C-type partners or a lower atmospheric pressure. Later habitats use the better-characterised dark candidates.
 
 ### Supply and seed transfers: Δv check
 
@@ -1566,7 +1569,7 @@ Rendezvous Δv (departure + arrival burns), two-body heliocentric orbits from pu
 | Transfer | Best phase | Dated, 2030–2060 | Note |
 |---|---|---|---|
 | Bennu → Itokawa | 8.3 km/s | 8.5 km/s (depart 2048, 540 d) | perihelia almost opposite |
-| Bennu → Apophis | 7.4 km/s (post-2029) | 9.2 km/s before the 2029 flyby | |
+| Bennu → Apophis | 7.4 km/s (post-2029) | — | |
 | Bennu → Eros | 5.8 km/s | 6.2 km/s (depart 2045, 220 d) | |
 | **Ryugu → Itokawa** | 6.3 km/s | 6.3 km/s (depart 2033, 350 d) | better than Bennu |
 | **Ryugu → Apophis** | 5.5 km/s (post-2029) | — | better than Bennu |
@@ -1604,12 +1607,12 @@ A model of the logistics (`logistics_model/`, `reports/logistics.md`): the water
   The notes' dated values hold within ~0.1 km/s (Bennu → Eros ~0.3 lower, Bennu → Apophis after the flyby ~1.2 higher than the approximated orbit gave). The phase-free bound is reached about once in a few decades; usable windows average one every ~2–7 years but cluster, with gaps of up to ~10–20 years (none from Ryugu to Eros between 2036 and 2056). Volatiles move in batches, one per window, and need storage at both ends, sized for the longest gap, or departures off-window at a higher Δv.
 - **Better C-type partners exist (proposed: characterise them).** A catalogue search over 365 near-Earth asteroids classified in the C complex or dark in NEOWISE's albedos (< 0.08, ≥ 0.3 km) finds, phase-free: **1999 XX262** (~1.5 km, ~2 Gt, ~4.5× Ryugu) at ~3.6 km/s from Eros (dated ~3.95 km/s in 2044, against Ryugu's 4.66, with usable windows more often, mean gap ~2.3 years, longest ~16); **2001 WT1** (~0.5 km, ~0.1 Gt, ~19 tori of 900 m) at ~3.9 km/s from Itokawa and ~2.8–3.0 from Torifune, against Ryugu's 6.3 and 7.6; 2015 DX198 (~0.35 km) at ~3.2 km/s from Eros, too small for more than a few tori. From 1999 XX262, a 1.6 km six-stack's shipping per torus drops ~16% (~46 → ~38 PJ by electric thrusters) and its generation ~7%. **1999 XX262 is already a B-type**, like Bennu: visible and near-infrared spectra (Popescu et al. 2019; Marsset et al. 2022, the MIT–Hawaii survey) and SDSS colours (Sergeyev et al. 2023) give B, Mahlke et al. (2022) give Ch from a tentative 0.7 µm feature (S/N ~1.44) in a reanalysis of Popescu’s 2014 spectrum, not an independent hydration confirmation. The working diameter is ~1.48 km with albedo ~0.044, but the small formal error excludes thermal-model uncertainty and a published older fit gives ~2.43 km. See the [evidence audit](reports/asteroid-evidence.md). Its nitrogen is unknown: the 3 µm band of hydrated minerals and ammonium (JWST, or IRTF at its brighter 2033–2038 passes) comes next, then a sample. 2001 WT1 has only near-infrared colours (VISTA's MOVIS, too uncertain to class it) and a dark albedo: a spectrum at its October 2027 or 2035 pass first. Ryugu stays the baseline until then.
 - **Host–supplier networks (screened, not adopted):** [18 silicate hosts against the 365 candidate suppliers](reports/asteroid-networks.md), with dated transfers, sunlight/seasonal tradeoffs, selected delivery opportunities and conditional nitrogen inventories. [The source audit](reports/asteroid-evidence.md) traces classification and size uncertainties. The reference design stays at Eros with Ryugu; no unvisited supplier is assigned a verified nitrogen inventory.
-- **Slow exhaust saves energy (proposed: mass-driver freighters).** For a fixed Δv, the electricity per kg delivered, ½ (e^(Δv/vₑ) − 1) vₑ² / η, is lowest at vₑ ≈ Δv / 1.59: ~3 km/s from Ryugu to Eros, not the ~30 km/s of electric thrusters, which save propellant instead. A mass driver (O'Neill's reaction engine) at ~2.9 km/s and ~50% efficiency (a guess, 30–80%) uses ~3.7× less electricity than electric thrusters (~3.6 against ~13.5 PJ per 900 m torus). Its reaction mass is the C-type's baked residue, waste otherwise: ~0.4 Mt of ~4.5 Mt available. It also gives ~8× the thrust per watt. It keeps the lead down to ~13% efficiency. Electrothermal thrusters on the C-type's spare water fall between the two (~6.5 PJ).
+- **Slow exhaust saves energy (proposed: mass-driver freighters).** For a fixed Δv, the electricity per kg delivered, ½ (e^(Δv/vₑ) − 1) vₑ² / η, is lowest at vₑ ≈ Δv / 1.59: ~3 km/s from Ryugu to Eros, not the ~30 km/s of electric thrusters, which save propellant instead. A mass driver (O'Neill's reaction engine) at ~2.9 km/s and ~50% efficiency (a guess, 30–80%) uses ~3.7× less electricity than electric thrusters (~3.6 against ~13.5 PJ per 900 m torus). Its reaction mass is the C-type's baked residue, waste otherwise: ~0.4 Mt of ~7.4 Mt available. It also gives ~8× the thrust per watt. It keeps the lead down to ~13% efficiency. Electrothermal thrusters on the C-type's spare water fall between the two (~6.5 PJ).
 - **Ship water, not hydrogen (investigated).** Water is 89% oxygen by mass, and the S-type's silicates are ~40% oxygen, so the alternative is to split the water at the C-type (~20 MJ/kg), ship only its hydrogen and take the oxygen from the silicates by molten-oxide electrolysis (section 10; ~0.29 kg of oxygen per kg of iron, so ~3.1 kg of iron per kg of water). The hydrogen would travel as methane: storable at ~111 K, where hydrogen needs ~20 K, and its carbon replaces the organics shipped for the soil, so the cargo weighs the same as bare hydrogen (~48 instead of ~106 kt per 900 m torus). But the baseline host gets its metal as free metal and electrolyses nothing, so the oxygen costs the electrolysis (~10 MJ/kg of iron) and the furnace heat to melt the rock (~17 MJ/kg of iron), less the crushing its iron saves: ~6.4 PJ per 900 m torus. With electric thrusters that only just beats shipping the water (~12.5 against ~13.5 PJ). With mass drivers, water is far cheaper (~3.6 against ~8 PJ). **Methane pays only on a host that electrolyses its silicates for its iron anyway** (a small LL host, section 10): there the oxygen is a by-product and only the splitting is left (~2.9 against ~3.6 PJ by mass driver). Methane is also a fuel: burnt with local oxygen (methalox, ~3.6 km/s exhaust), it is a storable propellant for tugs and docking that needs no power where it is used, a reason to ship some anyway.
-- **Mass drivers drop shipping below processing:** with the factory at 1 GW per stack, the generation's energy floor goes from ~1.5 to ~0.9 years for a 900 m pair and ~19 to ~13 years for a 1.6 km six-stack (processing ~10 and ~56 PJ per torus, the rest shipping water). **Bigger stacks need more power per stack:** at 1 GW, energy alone holds a 1.6 km six-stack to ~13–19-year generations.
-- **The rates are modest by Earth's standards.** For a 10-year generation, each torus of a 900 m pair has its child mined at ~9 kt of S-type a day (~2% of the largest open-pit mines), its metal made at ~400 t a day (~1.5% of a large steelworks), ~3 kt of rock placed and ~1.4 kt of C-type baked a day, at ~75 MW on average; ~60 kt of cargo per usable Ryugu → Eros window on average (mean gap ~5.7 years, above), but ~210 kt stocked through the longest gap (2036–2056, ~20 years). A 1.6 km six-stack's lines handle ~5× that per torus, six tori at a time.
+- **Mass drivers drop shipping below processing:** with the factory at 1 GW per stack, the generation's energy floor goes from ~1.8 to ~1.2 years for a 900 m pair and ~24 to ~18 years for a 1.6 km six-stack (processing ~15 and ~82 PJ per torus, the rest shipping water). **Bigger stacks need more power per stack:** at 1 GW, energy alone holds a 1.6 km six-stack to ~18–24-year generations.
+- **The rates are modest by Earth's standards.** For a 10-year generation, each torus of a 900 m pair has its child mined at ~9 kt of S-type a day (~2% of the largest open-pit mines), its metal made at ~400 t a day (~1.5% of a large steelworks), ~3 kt of rock placed and ~2.3 kt of C-type baked a day, at ~91 MW on average; ~60 kt of cargo per usable Ryugu → Eros window on average (mean gap ~5.7 years, above), but ~210 kt stocked through the longest gap (2036–2056, ~20 years). A 1.6 km six-stack's lines handle ~5× that per torus, six tori at a time.
 - **Made locally:** ~99.2% of a child by mass comes from its host (rock, metal), ~0.8% from the C-type (nitrogen, organics, water), and ~0.0004% is imported vitamins (~50 t per 900 m torus of computing, sensors, catalysts and the like, a guess); the array's ~160 t of wafer silicon is made at the host (900 m pair at Eros; ~280 t per torus for a six-stack with three tiers lit).
-- **Ryugu's nitrogen sets the cluster's horizon.** Doubling every 10 years, a 900 m pair reaches Ryugu's ~89 tori in ~55 years; 1.6 km six-stacks reach its ~16 tori in ~14 years (~36 at 25-year generations). A second C-type partner, a lower pressure or better nitrogen recovery is needed early (section 15, phases).
+- **Ryugu's nitrogen sets the cluster's horizon.** Doubling every 10 years, a 900 m pair reaches Ryugu's ~54 tori in ~48 years; 1.6 km six-stacks reach its ~10 tori in ~7 years (~18 at 25-year generations), at its measured nitrogen. A second C-type partner, a lower pressure or better nitrogen recovery is needed early (section 15, phases).
 - **Open:** factory throughput against its own mass (how fast a factory copies itself), people and training, seed transfers to new sites, the freighters' mass and power (their solar arrays from the semiconductor works), failures and spares, low-thrust and multi-revolution trajectories, gravity assists, a dated shipping schedule (stock against off-window departures and their Δv), and the new C-type candidates' spectra.
 
 ### Solar sizing by orbit: seasonal sky (adopted)
@@ -1619,7 +1622,6 @@ The habitat adapts to its environment: the sky follows the host asteroid's seaso
 | Site | Sunlight at aphelion | 900 m valley, constant / seasonal sky | 900 m, + per farm tier lit | 1.6 km valley, constant / seasonal sky | 1.6 km, + per farm tier lit |
 |---|---|---|---|---|---|
 | 1 AU (reference) | 1× | 0.13 / 0.078 km² | 0.058 km² | 0.42 / 0.25 km² | 0.18 km² |
-| Apophis today | 0.83× | 0.16 / 0.093 km² | 0.069 km² | 0.50 / 0.29 km² | 0.22 km² |
 | Apophis after 2029 (approx.) | 0.58× | 0.23 / 0.13 km² | 0.099 km² | 0.72 / 0.42 km² | 0.31 km² |
 | Itokawa | 0.35× | 0.38 / 0.22 km² | 0.16 km² | 1.2 / 0.70 km² | 0.52 km² |
 | Eros | 0.32× | 0.42 / 0.25 km² | 0.18 km² | 1.3 / 0.78 km² | 0.58 km² |
@@ -2091,8 +2093,8 @@ Status of the gaps identified so far:
 | Copper | **Open:** extraction line for dispersed copper, high-voltage distribution, aluminium or iron conductors |
 | Attitude | Solved by the ecliptic-normal orientation |
 | Self-replication closure | **Adopted (31 Oct 2026):** the solar array, LEDs and power electronics are made locally by a semiconductor works in every factory (section 13); imports are computing, sensors and catalysts. **Open:** which other parts are vitamins (motors, bearings, seals, sensors); the works' purity at small scale; trace elements are now sourced (section 10): copper, boron and platinum-group metals are contained in useful amounts, tin, silver, tungsten and rare earths only in tonnes; iron from the silicates for L and LL hosts; bootstrap of the first habitat |
-| Location and logistics | Working scenario: demonstration 400 m pairs at Itokawa and Apophis (one or two, the second showing self-replication), 900 m pairs and 1.6 km six-stacks on larger L/LL hosts (Eros), Ryugu as C-type partner; Torifune added as a candidate with the mildest orbit (proposed); habitats built in their S-type's orbit, C-types refined at source (section 15). Catalogue search on JPL's current elements (section 15, logistics model): dark C-type candidates closer than Ryugu to every host, 1999 XX262 for Eros (~3.6 km/s, ~4.5× Ryugu's mass) and 2001 WT1 for Itokawa and Torifune (~3.9 / ~2.8 km/s), 1999 XX262 already a B/Ch type in published spectra. **Open:** their nitrogen and water (3 µm band, samples), 2001 WT1's spectrum, ranking S-types by orbit shape (low e, a near 1 AU) since the habitat keeps that orbit for good, and by metal class (H-like hosts have ~4× the free metal of LL-like ones; the current candidates are L or LL, and the known H-like near-Earth asteroids have very eccentric orbits, section 15), multi-revolution and low-thrust transfers, gravity assists |
-| Nitrogen at Eros | **Open:** Ryugu supports ~3 six-stacks of 1.6 km; more C-type partners or a lower atmospheric pressure needed beyond |
+| Location and logistics | Working scenario, a settlement ladder (section 15): a 400 m torus, then a 400 m pair, without farms or ecosystem, at Apophis (post-2029) and Itokawa; 900 m tori and pairs, the farms starting with the second pair, at 0.8–1.0 km hosts; stacks at Anteros, Geographos as the alternative; 1.6 km six-stacks at Eros with Ryugu and Bennu as C-type partners; Torifune added as a candidate with the mildest orbit (proposed); habitats built in their S-type's orbit, C-types refined at source (section 15). Catalogue search on JPL's current elements (section 15, logistics model): dark C-type candidates closer than Ryugu to every host, 1999 XX262 for Eros (~3.6 km/s, ~4.5× Ryugu's mass) and 2001 WT1 for Itokawa and Torifune (~3.9 / ~2.8 km/s), 1999 XX262 already a B/Ch type in published spectra. **Open:** their nitrogen and water (3 µm band, samples), 2001 WT1's spectrum, ranking S-types by orbit shape (low e, a near 1 AU) since the habitat keeps that orbit for good, and by metal class (H-like hosts have ~4× the free metal of LL-like ones; the current candidates are L or LL, and the known H-like near-Earth asteroids have very eccentric orbits, section 15), multi-revolution and low-thrust transfers, gravity assists |
+| Nitrogen at Eros | **Open:** at their measured nitrogen, Ryugu supports ~1.6 six-stacks of 1.6 km and Ryugu with Bennu ~2; more C-type partners or a lower atmospheric pressure needed beyond |
 | Biological year and photoperiod | **Open:** effects of 1.2–1.8-year years (Torifune's ~1.05-year year nearly avoids the question) on annual plants and insects; long-day species limited to six-stacks |
 | Power beyond the inner system | Nuclear investigated and rejected for now under the sourcing rule (section 17.22); **open:** thin-film concentrator mirrors (belt to Saturn), RTGs for emergency power |
 | Atmosphere chemistry | **Open:** CO₂ (plants want ≳ 40 Pa), humidity, condensation and rain under a 56–100 m ceiling, trace contaminants. Closed-atmosphere model (section 3d): ~5 years of O₂ in a 900 m torus's air; the whole farm dark reaches the CO₂ limit in ~22 days, held by a ~1 MW recovery plant; a new torus's imported organics respire far faster than its people breathe, so compost them first. |
@@ -2139,6 +2141,17 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 - **1 Nov 2026: passive farm cooling adopted.** Inboard radiators only, without outboard extensions or heat-rejection pumps. The existing LED study supports all tiers at ~1.2–1.3× farm margin in six-stacks; this lower margin is accepted rather than retaining pumps to reach the earlier 1.5× target. Older outboard figures below are historical comparisons. The despun array is beyond the farm end of the hub, with the dock at the opposite main-torus end.
 
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
+
+**6 November 2026**
+- **Demonstrators supplied from around Earth (principle 2, section 15):** the 400 m torus and pair take their ~20 kt of volatiles per torus from around Earth rather than from an asteroid supplier; the sourcing rule applies from the first 900 m habitat.
+- **Ladder hosts filled in (`reports/asteroid-networks.md`; `logistics_model/networks.py`):** Yuliya, 2002 AA, 1999 ND43, 1991 BN and 2000 EX106 added to the dated hosts; host sizes now SsODNet's best estimates where published (thermal model, radar or spacecraft), which shrinks Torifune to ~0.38 km, Yuliya to ~0.77, 2002 AA to ~0.32 and 1991 BN to ~0.29, and puts Geographos at ~2.44; NASA NHATS crewed round trips (Apophis 6.05 km/s, Torifune 8.99, Itokawa 9.41, the rest above ~11 or unlisted); a spin screen (Didymos at the loose-material limit at 2 t/m³, 1991 VH, Anteros and Yuliya close) and the supply of each ladder step (a 400 m torus ships ~20 kt of volatiles, ~0.7 kt of it N₂). The seasonal ratio is dropped from the Pareto front, which loses 1999 YB. The shipping study's cache now keys on the solver's own imports, so report edits no longer invalidate it.
+- **Anteros ahead of Geographos in the ladder (section 15):** better supplied (Ryugu within the cutoff) and cheaper to reach from Earth, Anteros is the first ~2–2.5 km host; Geographos stays as the alternative.
+- **Anteros added to the dated hosts (`logistics_model/networks.py`; `reports/asteroid-networks.md`):** its best dark candidates are 2007 LV19 (3.65 km/s, 17 opportunities) and 2004 KD1 (3.81 km/s), and Ryugu reaches it at 5.31 km/s (7 opportunities, largest gap ~12 years), the only sampled supplier within the cutoff for the ~2–2.5 km group; from Earth it costs 6.47 km/s, against 10.42 for Geographos.
+- **Ryugu counted at its measured nitrogen (sections 7, 15, 18; `habitat_model`):** the tori a C-type supports now use its own sample grade where one is measured: Ryugu ~0.145 wt% N (Yokoyama et al. 2025) instead of the generic Bennu-like 0.24 wt%. Ryugu supports ~54 tori of 900 m (was ~90) and ~10 of 1.6 km (was ~17): ~1.6 six-stacks, ~2 with Bennu, matching the network report. The growth horizon in the logistics report shortens accordingly.
+- **C-type rock sized at the partner's own grade (sections 7, 8, 10, 13, 15; `habitat_model`, `logistics_model`):** with Ryugu as the partner, the C-type per torus is sized at its ~0.145 wt% N (`ryugu_nitrogen_wt`, swept over its ±2σ): ~8 / ~45 / ~170 Mt per 900 m / 1.6 km / 2.5 km torus (was ~5 / ~27 / ~100 at the Bennu-like grade), ~240 / ~420 / ~650 m across. It now holds enough water even for water spin-up; its contained elements, the baking energy (~0.4 GW·yr per 900 m torus, was ~0.3), the energy-limited generation times and the daily baking rate grow by ~1.65×; potassium is no longer short at the high demand. Unmeasured dark candidates keep the generic grade.
+- **Settlement ladder replaces the demonstration pairs (section 15; `reports/asteroid-networks.md`):** one 400 m torus at Apophis (post-2029) or Itokawa, then a 400 m pair at the other, neither with farm tiers or an ecosystem (a synthetic environment for a small crew, no population of ~600); then a 900 m torus, a 900 m pair and a pair with farms at 0.8–1.0 km hosts (Didymos, 1991 VH, Yuliya, Norwan, Bacchus); stacks at ~2–2.5 km hosts (Anteros, Geographos); and the first large habitat, 1.6 km six-stacks at Eros, supplied by Ryugu and Bennu, whose nitrogen is measured. The dark candidates move to later habitats, once characterised. The network report's ranked shortlist becomes this ladder.
+- **Anchor-span beam balanced exactly (`structure_model/anchor_span.py`):** the reactions came out of an ill-conditioned solve and, on the chord-soft springs, missed global equilibrium by ~0.1–0.5% of the load, leaving a spurious end moment (~40% of the peak at 1.6 km, 10 anchors). They are now corrected to exact force and moment balance, so evenly spaced anchors share the load equally. Only the 1.6 km / 10-anchor row moves (skins' lengthwise bending 3 → 2 MPa); the CI failure of `test_beam_balances_and_supports_share_equally` (BLAS-dependent round-off) is gone.
+- **Apophis only after its 2029 flyby (section 15):** settlement can't start before the flyby, so the pre-flyby orbit is dropped everywhere: the `Apophis` site and its Bennu Δv in `habitat_model`, its elements in the logistics model (Horizons' integrated orbit, flyby included, is kept for the dated windows), and the "today" rows and columns here. The sail-towing row is rescaled to the post-2029 orbit (~31% more area: lower sunlight, slightly lower orbital speed).
 
 **3 November 2026**
 - **Elevators in four shafts per torus and per farm ring, carrying the radiators (sections 0, 12, 13; proposed):** one shaft per quadrant in each mid-plane, hung from the hub and sliding at the rim end (they can't share the rim's load, 17.9), each with a radiator wing on both sides; the farm rings get the same layout. Traced (`thermal_model/wings.py`): turned 90°/N ring to ring, the wings match or beat evenly spread panels; aligned they lose ~10–15%. Least farm coverage for 1.5× tabulated by stack and tiers lit; a six-stack with three tiers lit stays at ~1.2× at best.
@@ -2290,6 +2303,7 @@ How the design evolved, newest first. Entries before 22 October 2026 come from e
 ### Composition of the explored bodies
 
 - Lodders, *Solar System Abundances of the Elements* (2010), Table 2 — CI chondrite abundances (§10): https://arxiv.org/pdf/1010.2746
+- Yokoyama et al., Geochemical Journal (2025), Table 1 — Ryugu bulk nitrogen 1454 ± 17 µg/g (§10): https://doi.org/10.2343/geochemj.GJ25002
 - Yokoyama et al., *The Elemental Abundances of Ryugu: Assessment of Chemical Heterogeneities and the Nugget Effect* (2024) — Ryugu bulk abundances vs. CI (§10): https://arxiv.org/pdf/2405.04500
 - Yokoyama et al., *Samples returned from the asteroid Ryugu are similar to Ivuna-type carbonaceous meteorites*, Science (2022) — Ryugu ≈ CI, "more chemically pristine" (§10): https://faculty.epss.ucla.edu/~eyoung/reprints/Yokoyama_2022.pdf
 - Schaefer & Fegley, *Volatile element chemistry during metamorphism of ordinary chondritic material* — trace elements in H, L and LL falls (Cu, Zn, Ga, Ge, Sn, Ag, In, Se, Te) (§10): https://arxiv.org/pdf/0801.1099

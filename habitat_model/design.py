@@ -41,6 +41,7 @@ class Body:
     e: float
     mass_mt: Optional[float]
     note: str = ""
+    nitrogen_param: Optional[str] = None  # a C-type's own measured N (assumption name); None: c_nitrogen_wt
 
     @property
     def aphelion_sunlight(self):
@@ -55,13 +56,13 @@ class Body:
 SITES = {
     "1 AU": Body("1 AU", "", None, 1.0, 0.0, None, "reference circular orbit"),
     "Itokawa": Body("Itokawa", "S", "LL", 1.32, 0.28, 35, "LL-like samples"),
-    "Apophis": Body("Apophis", "S", "LL", 0.92, 0.19, 50, "today's orbit; ~40-60 Mt"),
-    "Apophis 2029": Body("Apophis 2029", "S", "LL", 1.103, 0.189, 50, "orbit after the 2029 flyby (approx.)"),
+    "Apophis 2029": Body("Apophis 2029", "S", "LL", 1.103, 0.189, 50, "orbit after the 2029 flyby (approx.); ~40-60 Mt; the pre-flyby orbit is not used"),
     "Eros": Body("Eros", "S", "LL", 1.46, 0.22, 6.7e6, "L- or LL-like; LL taken"),
     "Didymos": Body("Didymos", "S", "L", 1.64, 0.38, 500, "L-like spectra"),
     "Torifune": Body("Torifune", "S", "L", 1.03, 0.22, 100, "L-like spectra; ~40 Mt at the smallest size"),
     "Bennu": Body("Bennu", "C", None, 1.13, 0.20, 73),
-    "Ryugu": Body("Ryugu", "C", None, 1.19, 0.19, 450),
+    "Ryugu": Body("Ryugu", "C", None, 1.19, 0.19, 450,
+                  "its samples' nitrogen (Yokoyama et al. 2025)", nitrogen_param="ryugu_nitrogen_wt"),
 }
 
 # §15, rendezvous delta-v from C-type to S-type site, km/s (dated where the notes give it).
@@ -72,7 +73,6 @@ DELTA_V_KM_S = {
     ("Ryugu", "Torifune"): 7.6,
     ("Bennu", "Eros"): 6.2,
     ("Bennu", "Itokawa"): 8.5,
-    ("Bennu", "Apophis"): 9.2,
     ("Bennu", "Apophis 2029"): 7.4,
     ("Bennu", "Torifune"): 8.4,
 }

@@ -37,7 +37,7 @@ BODIES = {
     "Bennu": ("101955;", "101955"),
     "Eros": ("433;", "433"),
     "Itokawa": ("25143;", "25143"),
-    "Apophis": ("99942;", "99942"),
+    "Apophis": ("99942;", None),   # vectors only (2029 flyby integrated); no pre-flyby elements
     "Didymos": ("65803;", "65803"),
     "Torifune": ("98943;", "98943"),
     # The catalogue's best C-type partners (`catalogue.py`): dark, low-Δv to the hosts.

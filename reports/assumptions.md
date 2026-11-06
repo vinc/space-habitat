@@ -54,6 +54,7 @@
 | `s_bulk_density` | 2.000 | t/m3 | 1.600–2.400 | estimate | §10, S-type rubble pile |
 | `c_bulk_density` | 1.200 | t/m3 | 1.100–1.300 | sourced | §10, Bennu-like |
 | `c_nitrogen_wt` | 0.002400 | wt fraction | 0.002300–0.002500 | sourced | §10, Bennu samples ~0.23-0.25 wt% N (Glavin et al. 2025) |
+| `ryugu_nitrogen_wt` | 0.001454 | wt fraction | 0.001437–0.001471 | sourced | §10, Ryugu samples 1454 ± 17 µg/g N, 2σ on the sample-based mean (Yokoyama et al. 2025, Table 1) |
 | `nitrogen_recovery` | 0.7000 | fraction | 0.5000–0.9000 | estimate | §10, §19 |
 | `c_water_wt` | 0.06400 | wt fraction | 0.05000–0.08000 | sourced | §10, 0.71 wt% H at Bennu's surface (Praet et al. 2021) |
 | `c_carbon_wt` | 0.04500 | wt fraction | 0.04000–0.05000 | sourced | §10, Bennu samples |

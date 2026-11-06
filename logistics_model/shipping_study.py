@@ -5,6 +5,7 @@ python -m logistics_model.shipping_study --report  # offline, saved results
 """
 
 import argparse
+import ast
 from dataclasses import asdict
 import hashlib
 import json
@@ -33,12 +34,55 @@ def code_hashes(paths):
             for p in sorted(paths)}
 
 
-def identity():
-    # Hash both project packages, including imported selection/interpolation and
-    # demand helpers. Adding a project helper must not silently evade the cache.
+def project_dependencies(start):
+    """Project modules that `start` imports at module level, transitively (static, via the AST).
+
+    Imports inside functions are not followed: they load report writers and command-line
+    helpers (e.g. networks.main's network_report), which can't change a solved trajectory.
+    A new helper imported at module level by any dependency is picked up automatically."""
     root=Path(__file__).resolve().parents[1]
-    code=code_hashes(p for package in ("logistics_model","habitat_model")
-                     for p in (root/package).rglob("*.py"))
+    packages={"logistics_model","habitat_model"}
+
+    def module_file(dotted):
+        path=root.joinpath(*dotted.split("."))
+        if path.with_suffix(".py").is_file():return path.with_suffix(".py")
+        if (path/"__init__.py").is_file():return path/"__init__.py"
+        return None
+
+    def package_of(file):
+        parts=file.relative_to(root).with_suffix("").parts
+        return ".".join(parts[:-1] if parts[-1]!="__init__" else parts[:-1])
+
+    seen,stack=set(),[Path(start).resolve()]
+    while stack:
+        file=stack.pop()
+        if file in seen:continue
+        seen.add(file)
+        names=[]
+        for node in ast.parse(file.read_text()).body:
+            if isinstance(node,ast.Import):
+                names+=[a.name for a in node.names]
+            elif isinstance(node,ast.ImportFrom):
+                base=node.module or ""
+                if node.level:
+                    pkg=package_of(file).split(".")
+                    pkg=pkg[:len(pkg)-node.level+1]
+                    base=".".join(pkg+([base] if base else []))
+                names.append(base)
+                names+=[f"{base}.{a.name}" for a in node.names]
+        for name in names:
+            if name.split(".")[0] not in packages:continue
+            parts=name.split(".")
+            for i in range(1,len(parts)+1):   # each package's __init__ on the way runs too
+                f=module_file(".".join(parts[:i]))
+                if f is not None and f not in seen:stack.append(f)
+    return seen
+
+
+def identity():
+    # The solver's own module-level imports, transitively, across both packages: changing
+    # any of them, or adding a helper they import, invalidates the cache; report text does not.
+    code=code_hashes(project_dependencies(__file__))
     return content_hash({"settings":SETTINGS,"code":code,"vectors":vector_hash(),
                          "annual_demand_kg":annual_demand()})
 

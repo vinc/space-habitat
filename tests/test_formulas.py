@@ -110,5 +110,20 @@ class TestFormulas(unittest.TestCase):
         self.assertGreaterEqual(ll["spare_tailings"], 0)
 
 
+class TestDemonstratorReport(unittest.TestCase):
+    def test_single_400_m_torus_without_farm_tiers_reports(self):
+        # The farm section carries no load, so its heat margin is infinite and must still print.
+        from contextlib import redirect_stdout
+        from io import StringIO
+        from habitat_model.__main__ import main
+        from habitat_model.report import num
+        self.assertEqual(num(math.inf), "∞")
+        out = StringIO()
+        with redirect_stdout(out):
+            self.assertEqual(main(["--size", "400", "--stack", "single", "--tiers", "0", "--host", "LL",
+                                   "--site", "Apophis 2029"]), 0)
+        self.assertIn("margin of ∞×", out.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()

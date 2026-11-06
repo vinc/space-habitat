@@ -16,6 +16,8 @@ def num(x, sig=3):
         return "—"
     if x == 0:
         return "0"
+    if math.isinf(x):
+        return "∞" if x > 0 else "−∞"   # e.g. the heat margin of a section with no load (a farm with no tiers lit)
     digits = sig - 1 - math.floor(math.log10(abs(x)))
     rounded = round(x, digits)
     if digits <= 0:

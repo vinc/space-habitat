@@ -406,6 +406,14 @@ high = 0.0025
 source = "§10, Bennu samples ~0.23-0.25 wt% N (Glavin et al. 2025)"
 status = "sourced"
 
+[materials.ryugu_nitrogen_wt]
+value = 0.001454
+unit = "wt fraction"
+low = 0.001437
+high = 0.001471
+source = "§10, Ryugu samples 1454 ± 17 µg/g N, 2σ on the sample-based mean (Yokoyama et al. 2025, Table 1)"
+status = "sourced"
+
 [materials.nitrogen_recovery]
 value = 0.7
 unit = "fraction"

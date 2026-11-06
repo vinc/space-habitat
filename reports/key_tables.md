@@ -14,7 +14,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 | **Total** | **12.7 Mt** | **41.3 Mt** | **107 Mt** |
 | Mass per m² of floor | 40.1 t | 41.1 t | 43.6 t |
 | S-type mined per torus, H / L / LL host | 14 / 16 / 33 Mt | 44 / 84 / 170 Mt | 160 / 310 / 620 Mt |
-| C-type per torus (sized by nitrogen) | 5.0 Mt | 28 Mt | 100 Mt |
+| C-type per torus (sized by nitrogen) | 8.3 Mt | 45 Mt | 170 Mt |
 | Valley lighting, daily average (LEDs) | 24.1 MW | 76.0 MW | 186 MW |
 | Farm ring at ~0.4 r: crops per tier | 9.2 ha | 29 ha | 71 ha |
 | People fed, 1 / 2 / 3 tiers lit | 1,000 / 2,000 / 3,100 | 3,200 / 6,400 / 9,600 | 7,800 / 16,000 / 24,000 |
@@ -29,7 +29,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 |---|---|---|
 | Floor area | 63.6 ha | 191 ha |
 | Mass (excl. shared hub and factory) | 25.5 Mt | 76.5 Mt |
-| Material mined (H-like host) | 37.3 Mt | 112 Mt |
+| Material mined (H-like host) | 43.9 Mt | 132 Mt |
 | Main section length (10–40 m gaps between tori) | 160–220 m | 482–662 m |
 | Whole stack with its farm section (10 m gaps) | 332 m | 895 m |
 | People fed, 1 / 2 / 3 tiers lit | 2,000 / 4,100 / 6,100 | 6,100 / 12,000 / 18,000 |
@@ -44,7 +44,7 @@ Regenerates the tables of notes.md §0 from `habitat_model/assumptions.toml`. Ma
 |---|---|---|
 | Floor area | 201 ha | 603 ha |
 | Mass (excl. shared hub and factory) | 82.6 Mt | 248 Mt |
-| Material mined (H-like host) | 144 Mt | 431 Mt |
+| Material mined (H-like host) | 180 Mt | 539 Mt |
 | Main section length (10–40 m gaps between tori) | 248–308 m | 744–924 m |
 | Whole stack with its farm section (10 m gaps) | 498 m | 1,390 m |
 | People fed, 1 / 2 / 3 tiers lit | 6,400 / 13,000 / 19,000 | 19,000 / 39,000 / 58,000 |
