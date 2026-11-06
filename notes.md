@@ -2140,6 +2140,7 @@ These are the inputs of the parametric model (`habitat_model/assumptions.toml`),
 How the design evolved, newest first. Entries before 22 October 2026 come from earlier sessions: they are in order, but undated.
 
 **6 November 2026**
+- **Anchor-span beam balanced exactly (`structure_model/anchor_span.py`):** the reactions came out of an ill-conditioned solve and, on the chord-soft springs, missed global equilibrium by ~0.1–0.5% of the load, leaving a spurious end moment (~40% of the peak at 1.6 km, 10 anchors). They are now corrected to exact force and moment balance, so evenly spaced anchors share the load equally. Only the 1.6 km / 10-anchor row moves (skins' lengthwise bending 3 → 2 MPa); the CI failure of `test_beam_balances_and_supports_share_equally` (BLAS-dependent round-off) is gone.
 - **Apophis only after its 2029 flyby (section 15):** settlement can't start before the flyby, so the pre-flyby orbit is dropped everywhere: the `Apophis` site and its Bennu Δv in `habitat_model`, its elements in the logistics model (Horizons' integrated orbit, flyby included, is kept for the dated windows), and the "today" rows and columns here. The sail-towing row is rescaled to the post-2029 orbit (~31% more area: lower sunlight, slightly lower orbital speed).
 
 **3 November 2026**

@@ -56,7 +56,13 @@ def beam(length, supports, q, n=801, spring=None, ei=1.0):
         u = np.linalg.solve(k, f)
         reactions = spring * u[[2 * j for j in nodes]]
     xs = x[nodes]
-    shear = -q * x + sum(np.where(x >= s, r, 0.0) for s, r in zip(xs, reactions))
+    # The reactions come out of a stiff, ill-conditioned system (k ~ ei/h³), so round-off leaves their sum and
+    # moment off by ~1e-8 of the load, and that error depends on the BLAS build. Remove it with the smallest
+    # correction that restores global equilibrium exactly (vertical force and moment about x = 0).
+    a = np.vstack([np.ones_like(xs), xs])
+    b = np.array([q * length, q * length ** 2 / 2])
+    reactions = reactions + a.T @ np.linalg.solve(a @ a.T, b - a @ reactions)
+    shear =-q * x + sum(np.where(x >= s, r, 0.0) for s, r in zip(xs, reactions))
     moment = -q * x ** 2 / 2 + sum(np.where(x >= s, r * (x - s), 0.0) for s, r in zip(xs, reactions))
     return x, moment, shear, reactions
 
