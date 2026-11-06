@@ -35,11 +35,11 @@ Return arrivals are followed by the source turnaround before a ship is available
 | Ryugu / electric | 2041-03-09 | 2042-02-12 | 2046-02-08 | 2047-04-09 | 0.52 | 0.359 |
 | Ryugu / residue mass driver (hypothetical) | 2031-07-28 | 2032-07-07 | 2036-01-05 | 2036-11-20 | 9.12 | 0.082 |
 | Ryugu / residue mass driver (hypothetical) | 2036-03-04 | 2036-11-04 | 2041-02-15 | 2042-02-06 | 12.95 | 0.117 |
-| 1999 XX262 / electric | 2036-01-08 | 2038-05-22 | 2038-06-21 | 2039-09-09 | 1.97 | 1.365 |
+| 1999 XX262 / electric | 2036-01-08 | 2038-02-21 | 2038-05-17 | 2039-08-31 | 1.25 | 0.864 |
 | 1999 XX262 / electric | 2037-12-02 | 2040-02-18 | 2040-03-19 | 2041-07-27 | 1.35 | 0.937 |
 | 1999 XX262 / electric | 2039-10-20 | 2041-08-14 | 2043-03-08 | 2044-07-18 | 0.61 | 0.419 |
 | 1999 XX262 / residue mass driver (hypothetical) | 2036-01-08 | 2038-02-21 | 2043-03-08 | 2044-07-18 | 13.97 | 0.126 |
-| 1999 XX262 / residue mass driver (hypothetical) | 2037-12-02 | 2040-02-18 | 2040-03-19 | 2041-07-27 | 15.40 | 0.139 |
+| 1999 XX262 / residue mass driver (hypothetical) | 2037-12-02 | 2039-11-20 | 2043-03-08 | 2044-07-18 | 13.97 | 0.126 |
 | 1999 XX262 / residue mass driver (hypothetical) | 2039-10-20 | 2041-08-14 | 2043-03-08 | 2044-07-18 | 13.87 | 0.125 |
 
 ## Fleet and host-stock trade-offs
@@ -55,8 +55,8 @@ An integer linear programme allocates voyages to the verified cycles. A ship can
 | Ryugu / residue mass driver (hypothetical) | 120 | 2.40 | Not supported | | | |
 | Ryugu / residue mass driver (hypothetical) | 240 | 4.80 | 212 | 26.6 | 212.0 | 17.40 |
 | 1999 XX262 / electric | 60 | 1.20 | Not supported | | | |
-| 1999 XX262 / electric | 120 | 2.40 | 212 | 88.8 | 212.0 | 175.86 |
-| 1999 XX262 / electric | 240 | 4.80 | 212 | 88.8 | 212.0 | 115.12 |
+| 1999 XX262 / electric | 120 | 2.40 | 212 | 86.2 | 212.0 | 129.76 |
+| 1999 XX262 / electric | 240 | 4.80 | 212 | 86.2 | 212.0 | 105.31 |
 | 1999 XX262 / residue mass driver (hypothetical) | 60 | 1.20 | Not supported | | | |
 | 1999 XX262 / residue mass driver (hypothetical) | 120 | 2.40 | Not supported | | | |
 | 1999 XX262 / residue mass driver (hypothetical) | 240 | 4.80 | 212 | 86.2 | 212.0 | 26.50 |
@@ -70,14 +70,14 @@ These are actual allocations from the integer schedule, not merely candidate lau
 | Ryugu / electric | 120 | 120 | 2031-07-28 | 2032-07-07 | 120.0 | 0.0 / 120.0 |
 | Ryugu / electric | 120 | 92 | 2041-03-09 | 2042-02-12 | 92.0 | 18.3 / 110.3 |
 | Ryugu / residue mass driver (hypothetical) | 240 | 212 | 2031-07-28 | 2032-07-07 | 212.0 | 0.0 / 212.0 |
-| 1999 XX262 / electric | 120 | 92 | 2036-01-08 | 2038-05-22 | 92.0 | 0.0 / 92.0 |
-| 1999 XX262 / electric | 120 | 120 | 2039-10-20 | 2041-08-14 | 120.0 | 57.8 / 177.8 |
+| 1999 XX262 / electric | 120 | 92 | 2036-01-08 | 2038-02-21 | 92.0 | 0.0 / 92.0 |
+| 1999 XX262 / electric | 120 | 120 | 2039-10-20 | 2041-08-14 | 120.0 | 55.2 / 175.2 |
 | 1999 XX262 / residue mass driver (hypothetical) | 240 | 37 | 2036-01-08 | 2038-02-21 | 37.0 | 0.0 / 37.0 |
 | 1999 XX262 / residue mass driver (hypothetical) | 240 | 175 | 2039-10-20 | 2041-08-14 | 175.0 | 0.2 / 175.2 |
 
 ## Numerical record
 
-28 trajectory attempts, 22 independently accepted. 22 accepted legs did not converge the mass objective; their costs are feasible upper bounds. The JSON saves every control vector, engine setting, epoch, mass, optimizer status, verification error and selected ship ID. Report hashes cover both project packages, including selection and demand helpers. Trajectory hashes cover the solver, ephemeris interpreter and physical constants. Input hashes also cover settings, cargo demand and the saved orbital data; stale reports are rejected.
+29 trajectory attempts, 25 independently accepted. 25 accepted legs did not converge the mass objective; their costs are feasible upper bounds. The JSON saves every control vector, engine setting, epoch, mass, optimizer status, verification error and selected ship ID. Report hashes cover both project packages, including selection and demand helpers. Trajectory hashes cover the solver, ephemeris interpreter and physical constants. Input hashes also cover settings, cargo demand and the saved orbital data; stale reports are rejected.
 
 ## Reproduce
 
