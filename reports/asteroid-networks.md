@@ -11,7 +11,7 @@ Each step goes to a new host and is a little larger than the last, so every host
 | 1 | One 400 m torus, no farm tiers and no ecosystem: a synthetic environment for a small crew | 0.3–0.6 km | Apophis (post-2029 orbit) or Itokawa | ~0.7 kt N₂: Ryugu (sampled) reaches Apophis at 5.6 km/s; Itokawa's sampled routes exceed the 6 km/s cutoff (Ryugu 6.3 km/s), its dark candidates don't | Rock jacket and double skin, cable spokes, despun array, nitrogen supply and life support, the factory chain, 1.5 rpm gravity; mining and controlling a potentially hazardous asteroid | A day–night cycle, if kept, leaves the power load unbalanced; Apophis's surface after its 2029 flyby is still to be seen |
 | 2 | A 400 m pair, again without farms or ecosystem | 0.3–0.6 km | The other of Apophis and Itokawa; Torifune, 1999 YB, 2001 QQ142 and the H-sized hosts in the table as alternatives | As step 1 | The co-rotating stack, the pair rule and the first build by an existing habitat's factory | Most of the group's sizes come from H at an assumed albedo |
 | 3 | One 900 m torus, then a 900 m pair, then a pair with farms | 0.8–1.0 km | Didymos, 1991 VH, Yuliya, Norwan, Bacchus | Ryugu and Bennu, or characterised dark candidates | The full-size valley and, last, the farm rings and ecosystem | A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~15–35 tori each; 1991 VH is a fast-rotating binary |
-| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros, Geographos | Dark candidates once characterised; no sampled supplier below the 6 km/s cutoff from Geographos | Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | Anteros has no dated routes yet and its 2.3 km size is from 1994; Geographos is the costliest host to reach from Earth |
+| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros, Geographos | Anteros: Ryugu at 5.3 km/s (sampled, within the cutoff) and dark candidates from 3.65 km/s; Geographos: dark candidates only, no sampled supplier below the 6 km/s cutoff | Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | Anteros's 2.3 km size dates from 1994 and it spins in 2.87 h; Geographos is the costliest host to reach from Earth (10.4 km/s, against 6.5 for Anteros) |
 | 5 | The first large habitat: 1.6 km six-stacks | Eros | Eros | Ryugu and Bennu: the only measured nitrogen, enough for about two six-stacks at 70% recovery | The archipelago's main island | Routes to Ryugu and Bennu cost 4.5–5.9 km/s with up to 7.5 years between selected arrivals; their inventory can't be counted again for other hosts |
 
 The 400 m tori never carry farm tiers or an ecosystem; nor do the first 900 m torus and pair: farms start with the next 900 m pair. The silicate NEAs between this size and Eros (Ivar, Eric, Sisyphus) and Ganymed above it fail the host orbit filter; the [evidence audit](asteroid-evidence.md) lists them and why. Apophis is used only on its post-2029 orbit. The torus counts below are material scenarios with every row's whole asteroid accessible; recovery and access losses reduce them.
@@ -51,7 +51,7 @@ Compare the columns rather than one weighted score. Array × is Q²: panel area 
 
 * Diameter estimated from H at an assumed albedo of 0.23. These are not measured sizes. Mass uses measured GM where present (notably Eros and Itokawa); otherwise it uses diameter and 2 t/m³. For H-only sizes, albedos 0.1–0.4 change mass to about 0.44–3.49× the tabulated proxy, before density uncertainty. For a thermally modelled diameter, even a small formal error may exclude substantial model uncertainty.
 
-Central-estimate Pareto front (smaller array, smaller seasonal ratio, smaller best Δv, larger LL inventory): 433 Eros (A898 PA); 1620 Geographos (1951 RA); 2063 Bacchus (1977 HB); 7480 Norwan (1994 PC); 35107 (1991 VH); 98943 Torifune (2001 CC21); 137799 (1999 YB); 139622 (2001 QQ142). This front ignores evidence quality and is not robust to uncertain sizes/compositions. The dated stage covers it plus Eros, 1999 YB, 1991 VH, Torifune, Geographos, Didymos and Itokawa.
+Central-estimate Pareto front (smaller array, smaller seasonal ratio, smaller best Δv, larger LL inventory): 433 Eros (A898 PA); 1620 Geographos (1951 RA); 2063 Bacchus (1977 HB); 7480 Norwan (1994 PC); 35107 (1991 VH); 98943 Torifune (2001 CC21); 137799 (1999 YB); 139622 (2001 QQ142). This front ignores evidence quality and is not robust to uncertain sizes/compositions. The dated stage covers it plus the named reference and ladder hosts: 1943 Anteros (1973 EC), 65803 Didymos (1996 GT), 25143 Itokawa (1998 SF36), 99942 Apophis (post-2029).
 
 ## Dated host–supplier routes
 
@@ -70,6 +70,11 @@ All routes use the same 6 km/s service cutoff for comparison; it is a study choi
 | 1620 Geographos (1951 RA) | 175706 (1996 FG3) | C spectrum; N unknown | 8.08 | 2062-03-22 | 327 | 0 | 44.0 |
 | 1620 Geographos (1951 RA) | 162173 Ryugu (1999 JU3) | sample return | 12.78 | 2054-05-03 | 152 | 0 | 44.0 |
 | 1620 Geographos (1951 RA) | 101955 Bennu (1999 RQ36) | sample return | 10.00 | 2064-11-22 | 517 | 0 | 44.0 |
+| 1943 Anteros (1973 EC) | 381181 (2007 LV19) | dark only; N unknown | 3.65 | 2048-11-25 | 355 | 17 | 13.9 |
+| 1943 Anteros (1973 EC) | 276786 (2004 KD1) | dark only; N unknown | 3.81 | 2060-01-09 | 366 | 12 | 6.9 |
+| 1943 Anteros (1973 EC) | 108519 (2001 LF) | dark only; N unknown | 4.08 | 2051-05-05 | 389 | 12 | 9.6 |
+| 1943 Anteros (1973 EC) | 162173 Ryugu (1999 JU3) | sample return | 5.31 | 2060-07-31 | 343 | 7 | 12.4 |
+| 1943 Anteros (1973 EC) | 101955 Bennu (1999 RQ36) | sample return | 8.23 | 2070-10-26 | 287 | 0 | 44.0 |
 | 2063 Bacchus (1977 HB) | 101955 Bennu (1999 RQ36) | sample return | 3.94 | 2061-07-03 | 240 | 13 | 12.8 |
 | 2063 Bacchus (1977 HB) | 85774 (1998 UT18) | C spectrum; N unknown | 4.78 | 2054-07-24 | 335 | 10 | 14.0 |
 | 2063 Bacchus (1977 HB) | (2014 EQ49) | dark only; N unknown | 5.27 | 2048-09-24 | 243 | 17 | 9.6 |
@@ -127,6 +132,7 @@ The illustrative stock covers constant construction of one 900 m torus per ten y
 |---|---:|---:|---:|---:|
 | 433 Eros (A898 PA) | 6.92 | 7.5 | 2.7 | 28 |
 | 1620 Geographos (1951 RA) | 10.42 | 44.0 | 3.7 | 39 |
+| 1943 Anteros (1973 EC) | 6.47 | 12.4 | 4.1 | 43 |
 | 2063 Bacchus (1977 HB) | 8.25 | 12.8 | 7.3 | 78 |
 | 7480 Norwan (1994 PC) | 8.06 | 44.0 | 2.0 | 22 |
 | 25143 Itokawa (1998 SF36) | 4.30 | 44.0 | 4.4 | 46 |
@@ -146,6 +152,7 @@ For unvisited bodies the lower positive scenario uses 0.8× diameter, 1.0 t/m³,
 | Supplier | Catalogue D km | Evidence | 900 m tori: lower positive / base / higher | 1.6 km tori: lower positive / base / higher |
 |---|---:|---|---:|---:|
 | 101955 Bennu (1999 RQ36) | 0.484 | sample return | 9.6 / 14.0 / 18.8 | 1.8 / 2.6 / 3.4 |
+| 108519 (2001 LF) | 1.42 | dark only; N unknown | 22.8 / 355.6 / 1106.4 | 4.2 / 65.2 / 202.8 |
 | 162173 Ryugu (1999 JU3) | 0.896 | sample return | 38.0 / 53.8 / 70.0 | 7.0 / 9.9 / 12.8 |
 | 162741 (2000 WG6) | 3.94 | dark only; N unknown | 485.1 / 7576.4 / 23574.9 | 88.9 / 1389.0 / 4322.0 |
 | 175706 (1996 FG3) | 1.2 | C spectrum; N unknown | 13.5 / 211.1 / 656.9 | 2.5 / 38.7 / 120.4 |
@@ -163,6 +170,8 @@ For unvisited bodies the lower positive scenario uses 0.8× diameter, 1.0 t/m³,
 | 234145 (2000 EW70) | 0.344 | dark only; N unknown | 0.3 / 5.0 / 15.6 | 0.1 / 0.9 / 2.9 |
 | 252558 (2001 WT1) | 0.533 | dark only; N unknown | 1.2 / 18.7 / 58.1 | 0.2 / 3.4 / 10.7 |
 | 275611 (1999 XX262) | 1.48 | B spectra; tentative Ch feature | 25.8 / 402.5 / 1252.4 | 4.7 / 73.8 / 229.6 |
+| 276786 (2004 KD1) | 1.72 | dark only; N unknown | 40.2 / 627.9 / 1953.9 | 7.4 / 115.1 / 358.2 |
+| 381181 (2007 LV19) | 0.602 | dark only; N unknown | 1.7 / 26.9 / 83.8 | 0.3 / 4.9 / 15.4 |
 | 410777 (2009 FD) | 0.472 | C/Ch spectrum; N unknown | 0.8 / 13.0 / 40.4 | 0.2 / 2.4 / 7.4 |
 | 477490 (2010 CG18) | 0.652 | dark only; N unknown | 2.2 / 34.2 / 106.4 | 0.4 / 6.3 / 19.5 |
 | 480936 (2003 QH5) | 0.537 | dark only; N unknown | 1.2 / 19.1 / 59.5 | 0.2 / 3.5 / 10.9 |

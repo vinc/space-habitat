@@ -30,7 +30,7 @@ WINDOW_DATA = DATA / "network_windows.json"
 NETWORK_VECTORS = DATA / "network_vectors.npz"
 EVIDENCE_DATA = DATA / "network_evidence.json"
 CHECK_DATA = DATA / "network_endpoint_checks.json"
-DATED_HOSTS = ("433", "137799", "35107", "98943", "1620", "65803", "25143", "99942")
+DATED_HOSTS = ("433", "137799", "35107", "98943", "1620", "1943", "65803", "25143", "99942")
 ALIASES = {"433": "Eros", "25143": "Itokawa", "98943": "Torifune", "65803": "Didymos",
            "99942": "Apophis", "162173": "Ryugu", "101955": "Bennu",
            "275611": "1999 XX262", "252558": "2001 WT1", "2015 DX198": "2015 DX198"}

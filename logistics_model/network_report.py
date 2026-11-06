@@ -80,9 +80,11 @@ def generate():
         "The full-size valley and, last, the farm rings and ecosystem | "
         "A 900 m torus needs ~32 Mt of LL rock: these hosts hold ~15–35 tori each; 1991 VH is a fast-rotating binary |",
         "| 4 | 900 m and 1.6 km stacks with farms | ~2–2.5 km | Anteros, Geographos | "
-        "Dark candidates once characterised; no sampled supplier below the 6 km/s cutoff from Geographos | "
+        "Anteros: Ryugu at 5.3 km/s (sampled, within the cutoff) and dark candidates from 3.65 km/s; "
+        "Geographos: dark candidates only, no sampled supplier below the 6 km/s cutoff | "
         "Multi-torus stacks at a scale that can still be visited and supplied from a mid-sized host | "
-        "Anteros has no dated routes yet and its 2.3 km size is from 1994; Geographos is the costliest host to reach from Earth |",
+        "Anteros's 2.3 km size dates from 1994 and it spins in 2.87 h; Geographos is the costliest host to reach "
+        "from Earth (10.4 km/s, against 6.5 for Anteros) |",
         "| 5 | The first large habitat: 1.6 km six-stacks | Eros | Eros | Ryugu and Bennu: the only measured "
         "nitrogen, enough for about two six-stacks at 70% recovery | The archipelago's main island | "
         "Routes to Ryugu and Bennu cost 4.5–5.9 km/s with up to 7.5 years between selected arrivals; "
@@ -134,7 +136,8 @@ def generate():
         "For a thermally modelled diameter, even a small formal error may exclude substantial model uncertainty.", "",
         "Central-estimate Pareto front (smaller array, smaller seasonal ratio, smaller best Δv, larger LL inventory): "
         + "; ".join(hosts[k]["name"] for k in front)+". This front ignores evidence quality and is not robust to uncertain sizes/compositions. "
-        "The dated stage covers it plus Eros, 1999 YB, 1991 VH, Torifune, Geographos, Didymos and Itokawa.", "",
+        "The dated stage covers it plus the named reference and ladder hosts: "
+        + ", ".join(hosts[k]["name"] for k in networks.DATED_HOSTS if k not in front) + ".", "",
         "## Dated host–supplier routes", "",
         "All routes use the same 6 km/s service cutoff for comparison; it is a study choice, not an engineering limit. "
         "A retained opportunity is a refined local minimum, with no two departures within 120 days. "

@@ -1,6 +1,6 @@
 {
- "input_hash": "e41875654b80276a800e44973dfd0e3b85e155bfcb03c5ab4c477fde92782e5f",
- "trajectory_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
+ "input_hash": "26188f39563e4f7ef267ea53e76fd57ee410bf0a39340d2565a37e0cf8a00a26",
+ "trajectory_hash": "98e12b12c7b0c776d413498bbb2daf0d162b09b0dbfaa4c386ad47a7fc12bad1",
  "settings": {
   "start_year": 2030,
   "end_year": 2050,
@@ -33,7 +33,7 @@
   ]
  },
  "annual_demand_kg": 10591125.778697196,
- "vector_hash": "ac3add2ba20dbeb8e8018172f45ab401a3f62b9508984fbbb93e8a2d2adebc5b",
+ "vector_hash": "845364d6019f4fe76f6b1e1f2450eb11f8840d68d788551cb50da35a3d0b3059",
  "complete": true,
  "attempts": {
   "73c3d8539f31fafc3d539afdd5d8a4d7eeb6b4a82fe977969b3c21a16ddd47e6": {
@@ -157,7 +157,7 @@
    "loaded_propellant_kg": 291755.6345085307,
    "final_reserve_kg": 1200.0003403825233,
    "integrated_delta_v_m_s": 6498.979413469702,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
    "mass_objective_converged": false
   },
   "6f855e72dc2e509fb00d84af59a6a4df5b0883be7c17518c098d0409ae9cd609": {
@@ -281,7 +281,7 @@
    "loaded_propellant_kg": 326587.54745507677,
    "final_reserve_kg": 1200.0004128869257,
    "integrated_delta_v_m_s": 7191.414774995401,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
    "mass_objective_converged": false
   },
   "250fa992cecff43f5f5d80a049f627de3d5829a1eb70a67c589b3f00aff1f955": {
@@ -405,7 +405,7 @@
    "loaded_propellant_kg": 355436.892766473,
    "final_reserve_kg": 1200.0002556910695,
    "integrated_delta_v_m_s": 7753.062264236162,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
    "mass_objective_converged": false
   },
   "35b509aece0725178bd384175c8e45b4942589ccb983ad2b41a4f51ec302b27f": {
@@ -531,7 +531,7 @@
    "final_reserve_kg": 199.9999951106446,
    "integrated_delta_v_m_s": 16451.905590500104,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "5ea98bb4738908ed4b284a1cfed4059313a445832b3549f2caa42b27a658373e": {
    "origin": "433",
@@ -656,7 +656,7 @@
    "final_reserve_kg": 200.00179998240776,
    "integrated_delta_v_m_s": 14704.335692633547,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "035ee140cffc89e9e60b1f4b9ea98243e533e327bd0ff720edbb2b57bc13e04a": {
    "origin": "433",
@@ -781,7 +781,7 @@
    "final_reserve_kg": 199.99998830986243,
    "integrated_delta_v_m_s": 18029.753438781852,
    "adaptive_correction_iterations": 2,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "7c84065e385991405dabb1156016c90e7dfa5d56be114d1dd766fe5cd52bfac7": {
    "origin": "162173",
@@ -905,7 +905,7 @@
    "loaded_propellant_kg": 6923460.345300428,
    "final_reserve_kg": 1200.0047663858204,
    "integrated_delta_v_m_s": 5734.30545960327,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "4a0e5fdb753b83ce2b0804852e9e052390f032ad2c1bd99e6e423898165fff50": {
    "origin": "433",
@@ -1029,7 +1029,7 @@
    "loaded_propellant_kg": 2199999.9769700756,
    "final_reserve_kg": 200.00222519422906,
    "integrated_delta_v_m_s": 7451.721386232776,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "8150a96171443c8a4151ddc34461ed1bb0563eada9da96a9054a92024530a379": {
    "origin": "162173",
@@ -1153,7 +1153,7 @@
    "loaded_propellant_kg": 10755016.970457526,
    "final_reserve_kg": 1200.0124638879229,
    "integrated_delta_v_m_s": 6893.489858802207,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "93872fecdf7c2d3325e4c3329984a4d4ba1d10a84d55ccc3051dfb93b3caa47d": {
    "origin": "433",
@@ -1278,7 +1278,7 @@
    "final_reserve_kg": 199.99971779500748,
    "integrated_delta_v_m_s": 7451.719895492979,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "b81cd7cd06ddf9134414993cac650888fcb0ed05f1413ef3e4dce28f0c44d011": {
    "origin": "162173",
@@ -1402,7 +1402,7 @@
    "loaded_propellant_kg": 13032494.27674356,
    "final_reserve_kg": 1200.0063730430277,
    "integrated_delta_v_m_s": 7416.619851853644,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "04d67740d8a2b05fb65d50b752dcbcee330300dd0d827fc844c19cd28eb419ef": {
    "origin": "275611",
@@ -1527,7 +1527,7 @@
    "final_reserve_kg": 1199.9999021829133,
    "integrated_delta_v_m_s": 22452.752442295376,
    "adaptive_correction_iterations": 3,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "44842f105b5de6d46617efaa7e14a43997aed546c2e1e76c312ed83d97a0a670": {
    "origin": "433",
@@ -1651,7 +1651,7 @@
    "loaded_propellant_kg": 633778.9851025096,
    "final_reserve_kg": 200.00090516330005,
    "integrated_delta_v_m_s": 42799.54469891339,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "bc3a76126ef6d04c56868acb29e1adebfe914eb7a0c95dfa3f7816efd7fbe574": {
    "origin": "275611",
@@ -1775,7 +1775,7 @@
    "loaded_propellant_kg": 734404.7014516403,
    "final_reserve_kg": 1200.0005884782006,
    "integrated_delta_v_m_s": 14294.357211086617,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "8b7383e755118fdfb234a639b7152756fce5f969b99d8aeece8bd06cd5c6d338": {
    "origin": "433",
@@ -1899,7 +1899,7 @@
    "loaded_propellant_kg": 621135.9681196366,
    "final_reserve_kg": 200.00077493644852,
    "integrated_delta_v_m_s": 42341.15513404224,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "0689540be29b4c921b5550bc06a809a87d213237b213744802ae8d6624b65c32": {
    "origin": "275611",
@@ -2023,7 +2023,7 @@
    "loaded_propellant_kg": 568413.0226176211,
    "final_reserve_kg": 1200.0003194416743,
    "integrated_delta_v_m_s": 11602.844688531983,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "45ac800ced0ae4b3886e7eb87f34e4a7ebb1da321ae6f1ef3645647bc891ec60": {
    "origin": "433",
@@ -2147,7 +2147,7 @@
    "loaded_propellant_kg": 38439.645734435144,
    "final_reserve_kg": 200.0000233122634,
    "integrated_delta_v_m_s": 5243.980607672127,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "46201ce9851c4307561d61386e973161573873cdd6c90d4d1276dff35b980f2b": {
    "origin": "275611",
@@ -2271,7 +2271,7 @@
    "loaded_propellant_kg": 13199991.298506293,
    "final_reserve_kg": 1200.0053930019128,
    "integrated_delta_v_m_s": 7451.719622083979,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "2f5fc5ca5f23a8dcc9b8c4f997c067483433b41cbe76053a03732a84e5e9344b": {
    "origin": "433",
@@ -2395,7 +2395,7 @@
    "loaded_propellant_kg": 772494.937795045,
    "final_reserve_kg": 200.00039450667197,
    "integrated_delta_v_m_s": 4741.644003825694,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "1668ba9f45a8728e9dfdb6c9950d150b941fc0e0445ece99e0661e9fc5df3ca0": {
    "origin": "275611",
@@ -2520,7 +2520,7 @@
    "final_reserve_kg": 1199.999999935919,
    "integrated_delta_v_m_s": 7451.721447866405,
    "adaptive_correction_iterations": 2,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "9700d0b76cc33364449f03ae8d3038e6ec81abdf5d24ef8fc4f041075359d91a": {
    "origin": "433",
@@ -2644,7 +2644,7 @@
    "loaded_propellant_kg": 2199999.972853166,
    "final_reserve_kg": 200.00190615148128,
    "integrated_delta_v_m_s": 7451.721385867499,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "8834bafd342c0c2ac426e07f614af7370c2647982ae32ed2847919eeb0dbbab2": {
    "origin": "275611",
@@ -2768,7 +2768,380 @@
    "loaded_propellant_kg": 13099681.73113341,
    "final_reserve_kg": 1200.005632127965,
    "integrated_delta_v_m_s": 7430.748655914883,
-   "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
+  },
+  "76f57d32f7583e599be46de78f0d2aee79d88f96ea8c8fe684fb72fa23324709": {
+   "origin": "275611",
+   "target": "433",
+   "departure_jd": 2464701.171875,
+   "arrival_jd": 2465476.484375,
+   "flight_days": 775.3125,
+   "engine": {
+    "name": "electric",
+    "power_1au_w": 20000000.0,
+    "exhaust_m_s": 30000.0,
+    "efficiency": 0.65,
+    "max_wet_ratio": 12.0
+   },
+   "delivered_kg": 1200000.0,
+   "segments": 16,
+   "step_days": 1.0,
+   "optimizer_success": false,
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
+   "mass_objective_converged": false,
+   "feasibility_projection_success": true,
+   "iterations": 50,
+   "wet_ratio": 1.4977639179177291,
+   "controls": [
+    [
+     0.10601711818242075,
+     -0.3820389719700918,
+     -0.9180443289488255
+    ],
+    [
+     -0.8156591445017837,
+     -0.41072482265050597,
+     0.4048166595526354
+    ],
+    [
+     -0.9822622164624459,
+     -0.12979130682154968,
+     -0.13005624185174197
+    ],
+    [
+     -0.9066147658922351,
+     -0.24428291838301977,
+     -0.3415882067765889
+    ],
+    [
+     -0.9318368612876444,
+     0.3051343364830845,
+     0.19340411357622928
+    ],
+    [
+     -0.7204513896272784,
+     -0.5532411980504576,
+     0.4167042734995124
+    ],
+    [
+     -0.9318571164900856,
+     0.2978282181705314,
+     0.07083101911118525
+    ],
+    [
+     -0.392119735102602,
+     -0.7732721856430198,
+     0.4971520344871368
+    ],
+    [
+     0.4568896563544542,
+     0.5452556346820969,
+     0.7028144382993182
+    ],
+    [
+     0.29447595327226794,
+     0.6538574498849257,
+     0.6969607938574243
+    ],
+    [
+     0.48568401272125744,
+     0.8131173300509816,
+     -0.32084896016229036
+    ],
+    [
+     0.48088861558240875,
+     0.6465461109017806,
+     0.5916580687462092
+    ],
+    [
+     0.9027711749333515,
+     0.40391762334760956,
+     0.1453682769590474
+    ],
+    [
+     0.533172860726613,
+     -0.8436158050128707,
+     -0.05380895903763749
+    ],
+    [
+     0.42116993591102697,
+     -0.905629912074299,
+     -0.04223901397259713
+    ],
+    [
+     0.4832118693969399,
+     -0.8385538662625733,
+     -0.25166119428760264
+    ]
+   ],
+   "verification": {
+    "accepted": true,
+    "position_error_m": 712.49892904184,
+    "velocity_error_m_s": 8.200237347780031e-05,
+    "final_mass_ratio": 1.0010000003769168,
+    "minimum_mass_ratio": 1.0010000003769168,
+    "minimum_radius_au": 1.2703309549743937,
+    "max_throttle": 1.0
+   },
+   "accepted": true,
+   "shooting_direction": "backward",
+   "target_numerical_reserve_fraction": 0.001,
+   "seed_impulsive_delta_v_m_s": 4914.831264209007,
+   "propellant_kg": 596116.7010489748,
+   "energy_j": 412696177649290.25,
+   "loaded_propellant_kg": 597316.701501275,
+   "final_reserve_kg": 1200.0004523001983,
+   "integrated_delta_v_m_s": 12089.213213392299,
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
+  },
+  "456d619e37915c1e5c86481d5e23f3fa25408011e3ab89941618ea77e5732026": {
+   "origin": "433",
+   "target": "275611",
+   "departure_jd": 2465561.3671875,
+   "arrival_jd": 2466001.796875,
+   "flight_days": 440.4296875,
+   "engine": {
+    "name": "electric",
+    "power_1au_w": 20000000.0,
+    "exhaust_m_s": 30000.0,
+    "efficiency": 0.65,
+    "max_wet_ratio": 12.0
+   },
+   "delivered_kg": 200000.0,
+   "segments": 16,
+   "step_days": 1.0,
+   "optimizer_success": false,
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
+   "mass_objective_converged": false,
+   "feasibility_projection_success": true,
+   "iterations": 50,
+   "wet_ratio": 4.2580041453437785,
+   "controls": [
+    [
+     0.004570644415751999,
+     -0.6424885967173193,
+     -0.22000554357263932
+    ],
+    [
+     0.7113931029989302,
+     0.10900147790238542,
+     0.6942561836502836
+    ],
+    [
+     0.1721866272297861,
+     0.9850391847651131,
+     -0.002555099063813629
+    ],
+    [
+     0.1966631842576637,
+     -0.782294203107481,
+     -0.3039972136221765
+    ],
+    [
+     -0.16475329015764967,
+     0.6562240374363602,
+     0.7363347590980744
+    ],
+    [
+     -0.9028500657399654,
+     -0.24505539724401873,
+     -0.35328403542606795
+    ],
+    [
+     0.7235673980675768,
+     -0.6035021751244907,
+     -0.3264657849979521
+    ],
+    [
+     -0.9230454955220544,
+     -0.1692244140315989,
+     -0.34547085389668913
+    ],
+    [
+     0.22501435681278203,
+     -0.5499784754432012,
+     0.8019508637473232
+    ],
+    [
+     0.48779441261080725,
+     0.3937764652627736,
+     -0.021630606941584325
+    ],
+    [
+     0.3854248084629593,
+     -0.9140884837673551,
+     0.12049604025349148
+    ],
+    [
+     0.24069558415915618,
+     0.18780749639940478,
+     -0.9522548025238018
+    ],
+    [
+     -0.9290992166921022,
+     0.2937914491577358,
+     0.22463577166479604
+    ],
+    [
+     0.8696522282513571,
+     -0.418178252311448,
+     0.2618283701891784
+    ],
+    [
+     -0.4625191054300875,
+     0.5076019357992559,
+     -0.7268870436499456
+    ],
+    [
+     -0.242687407331316,
+     0.14588954911380622,
+     0.9584368218759719
+    ]
+   ],
+   "verification": {
+    "accepted": true,
+    "position_error_m": 973.4713964609097,
+    "velocity_error_m_s": 0.0001270680481099161,
+    "final_mass_ratio": 1.0010000043137677,
+    "minimum_mass_ratio": 1.0010000043137677,
+    "minimum_radius_au": 1.1193842877935367,
+    "max_throttle": 1.0000000000000002
+   },
+   "accepted": true,
+   "shooting_direction": "backward",
+   "target_numerical_reserve_fraction": 0.001,
+   "seed_impulsive_delta_v_m_s": 5125.999360036909,
+   "propellant_kg": 651400.8282060022,
+   "energy_j": 450969804142616.94,
+   "loaded_propellant_kg": 651600.8290687557,
+   "final_reserve_kg": 200.00086275353544,
+   "integrated_delta_v_m_s": 43434.031061121845,
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
+  },
+  "89b3b3640f77fb801a19a28f2dff6558fd697768bcba3ef20fcb82998958a2de": {
+   "origin": "275611",
+   "target": "433",
+   "departure_jd": 2465395.078125,
+   "arrival_jd": 2466113.359375,
+   "flight_days": 718.28125,
+   "engine": {
+    "name": "residue mass driver (hypothetical)",
+    "power_1au_w": 20000000.0,
+    "exhaust_m_s": 3000.0,
+    "efficiency": 0.5,
+    "max_wet_ratio": 12.0
+   },
+   "delivered_kg": 1200000.0,
+   "segments": 16,
+   "step_days": 1.0,
+   "optimizer_success": false,
+   "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
+   "mass_objective_converged": false,
+   "feasibility_projection_success": true,
+   "iterations": 50,
+   "wet_ratio": 11.999999996073843,
+   "controls": [
+    [
+     -0.06582179079475066,
+     -0.07673268047245896,
+     0.022160481719839913
+    ],
+    [
+     -0.822644990551158,
+     -0.4116473471721604,
+     -0.04512676201363767
+    ],
+    [
+     -0.019093750417464684,
+     -0.030253553157233482,
+     0.001270075362355
+    ],
+    [
+     -0.009561815584485848,
+     0.008908258465962358,
+     0.018662255215963246
+    ],
+    [
+     -0.4550172424637692,
+     -0.2116884128110292,
+     0.61374053838716
+    ],
+    [
+     -0.00017465001572839533,
+     -0.013032759284685919,
+     -0.003974849243792175
+    ],
+    [
+     0.004717019254752223,
+     -0.009025713927486544,
+     0.007666526613374426
+    ],
+    [
+     0.932949894317108,
+     -0.09351112642534905,
+     0.13040388558888324
+    ],
+    [
+     -0.08425084867638395,
+     -0.008037799052525402,
+     0.09277564084183791
+    ],
+    [
+     -0.46922091716615355,
+     0.7675799779642807,
+     0.24896314243169226
+    ],
+    [
+     -0.011281707108108286,
+     0.002105046621596617,
+     -0.005479972675748308
+    ],
+    [
+     -0.2709341571887061,
+     -0.13697918082197613,
+     0.5113287833384155
+    ],
+    [
+     -0.00910026685984439,
+     -0.0006369674746088493,
+     0.006716247453035681
+    ],
+    [
+     0.035441013331967204,
+     -0.01489053930369001,
+     0.010068758342283173
+    ],
+    [
+     0.05047919314472886,
+     -0.03747890821686861,
+     -0.0417657011233466
+    ],
+    [
+     0.1597960346633539,
+     -0.1416439973216451,
+     -0.08815637825521325
+    ]
+   ],
+   "verification": {
+    "accepted": true,
+    "position_error_m": 0.008997256047998095,
+    "velocity_error_m_s": 1.007036397823518e-09,
+    "final_mass_ratio": 1.0010000000000552,
+    "minimum_mass_ratio": 1.0010000000000552,
+    "minimum_radius_au": 1.270943603643894,
+    "max_throttle": 0.9466493592921927
+   },
+   "accepted": true,
+   "shooting_direction": "backward",
+   "target_numerical_reserve_fraction": 0.001,
+   "seed_impulsive_delta_v_m_s": 4601.9542520736195,
+   "propellant_kg": 13198799.995288545,
+   "energy_j": 118789199957596.9,
+   "loaded_propellant_kg": 13199999.99528861,
+   "final_reserve_kg": 1200.0000000662149,
+   "integrated_delta_v_m_s": 7451.721447383046,
+   "adaptive_correction_iterations": 2,
+   "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
   },
   "efd9c020f3e31cf92e431920e37d19f483482d8115fe6f4625b4719d18c860a9": {
    "origin": "433",
@@ -2892,252 +3265,6 @@
    "loaded_propellant_kg": 2738492.7453349787,
    "final_reserve_kg": 7978.640953957949,
    "integrated_delta_v_m_s": 7944.650011529086
-  },
-  "76f57d32f7583e599be46de78f0d2aee79d88f96ea8c8fe684fb72fa23324709": {
-   "origin": "275611",
-   "target": "433",
-   "departure_jd": 2464701.171875,
-   "arrival_jd": 2465476.484375,
-   "flight_days": 775.3125,
-   "engine": {
-    "name": "electric",
-    "power_1au_w": 20000000.0,
-    "exhaust_m_s": 30000.0,
-    "efficiency": 0.65,
-    "max_wet_ratio": 12.0
-   },
-   "delivered_kg": 1200000.0,
-   "segments": 16,
-   "step_days": 1.0,
-   "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
-   "mass_objective_converged": false,
-   "feasibility_projection_success": true,
-   "iterations": 50,
-   "wet_ratio": 1.4977639179177291,
-   "controls": [
-    [
-     0.10601711818242075,
-     -0.3820389719700918,
-     -0.9180443289488255
-    ],
-    [
-     -0.8156591445017837,
-     -0.41072482265050597,
-     0.4048166595526354
-    ],
-    [
-     -0.9822622164624459,
-     -0.12979130682154968,
-     -0.13005624185174197
-    ],
-    [
-     -0.9066147658922351,
-     -0.24428291838301977,
-     -0.3415882067765889
-    ],
-    [
-     -0.9318368612876444,
-     0.3051343364830845,
-     0.19340411357622928
-    ],
-    [
-     -0.7204513896272784,
-     -0.5532411980504576,
-     0.4167042734995124
-    ],
-    [
-     -0.9318571164900856,
-     0.2978282181705314,
-     0.07083101911118525
-    ],
-    [
-     -0.392119735102602,
-     -0.7732721856430198,
-     0.4971520344871368
-    ],
-    [
-     0.4568896563544542,
-     0.5452556346820969,
-     0.7028144382993182
-    ],
-    [
-     0.29447595327226794,
-     0.6538574498849257,
-     0.6969607938574243
-    ],
-    [
-     0.48568401272125744,
-     0.8131173300509816,
-     -0.32084896016229036
-    ],
-    [
-     0.48088861558240875,
-     0.6465461109017806,
-     0.5916580687462092
-    ],
-    [
-     0.9027711749333515,
-     0.40391762334760956,
-     0.1453682769590474
-    ],
-    [
-     0.533172860726613,
-     -0.8436158050128707,
-     -0.05380895903763749
-    ],
-    [
-     0.42116993591102697,
-     -0.905629912074299,
-     -0.04223901397259713
-    ],
-    [
-     0.4832118693969399,
-     -0.8385538662625733,
-     -0.25166119428760264
-    ]
-   ],
-   "verification": {
-    "accepted": true,
-    "position_error_m": 712.49892904184,
-    "velocity_error_m_s": 8.200237347780031e-05,
-    "final_mass_ratio": 1.0010000003769168,
-    "minimum_mass_ratio": 1.0010000003769168,
-    "minimum_radius_au": 1.2703309549743937,
-    "max_throttle": 1.0
-   },
-   "accepted": true,
-   "shooting_direction": "backward",
-   "target_numerical_reserve_fraction": 0.001,
-   "seed_impulsive_delta_v_m_s": 4914.831264209007,
-   "propellant_kg": 596116.7010489748,
-   "energy_j": 412696177649290.25,
-   "loaded_propellant_kg": 597316.701501275,
-   "final_reserve_kg": 1200.0004523001983,
-   "integrated_delta_v_m_s": 12089.213213392299
-  },
-  "456d619e37915c1e5c86481d5e23f3fa25408011e3ab89941618ea77e5732026": {
-   "origin": "433",
-   "target": "275611",
-   "departure_jd": 2465561.3671875,
-   "arrival_jd": 2466001.796875,
-   "flight_days": 440.4296875,
-   "engine": {
-    "name": "electric",
-    "power_1au_w": 20000000.0,
-    "exhaust_m_s": 30000.0,
-    "efficiency": 0.65,
-    "max_wet_ratio": 12.0
-   },
-   "delivered_kg": 200000.0,
-   "segments": 16,
-   "step_days": 1.0,
-   "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
-   "mass_objective_converged": false,
-   "feasibility_projection_success": true,
-   "iterations": 50,
-   "wet_ratio": 4.2580041453437785,
-   "controls": [
-    [
-     0.004570644415751999,
-     -0.6424885967173193,
-     -0.22000554357263932
-    ],
-    [
-     0.7113931029989302,
-     0.10900147790238542,
-     0.6942561836502836
-    ],
-    [
-     0.1721866272297861,
-     0.9850391847651131,
-     -0.002555099063813629
-    ],
-    [
-     0.1966631842576637,
-     -0.782294203107481,
-     -0.3039972136221765
-    ],
-    [
-     -0.16475329015764967,
-     0.6562240374363602,
-     0.7363347590980744
-    ],
-    [
-     -0.9028500657399654,
-     -0.24505539724401873,
-     -0.35328403542606795
-    ],
-    [
-     0.7235673980675768,
-     -0.6035021751244907,
-     -0.3264657849979521
-    ],
-    [
-     -0.9230454955220544,
-     -0.1692244140315989,
-     -0.34547085389668913
-    ],
-    [
-     0.22501435681278203,
-     -0.5499784754432012,
-     0.8019508637473232
-    ],
-    [
-     0.48779441261080725,
-     0.3937764652627736,
-     -0.021630606941584325
-    ],
-    [
-     0.3854248084629593,
-     -0.9140884837673551,
-     0.12049604025349148
-    ],
-    [
-     0.24069558415915618,
-     0.18780749639940478,
-     -0.9522548025238018
-    ],
-    [
-     -0.9290992166921022,
-     0.2937914491577358,
-     0.22463577166479604
-    ],
-    [
-     0.8696522282513571,
-     -0.418178252311448,
-     0.2618283701891784
-    ],
-    [
-     -0.4625191054300875,
-     0.5076019357992559,
-     -0.7268870436499456
-    ],
-    [
-     -0.242687407331316,
-     0.14588954911380622,
-     0.9584368218759719
-    ]
-   ],
-   "verification": {
-    "accepted": true,
-    "position_error_m": 973.4713964609097,
-    "velocity_error_m_s": 0.0001270680481099161,
-    "final_mass_ratio": 1.0010000043137677,
-    "minimum_mass_ratio": 1.0010000043137677,
-    "minimum_radius_au": 1.1193842877935367,
-    "max_throttle": 1.0000000000000002
-   },
-   "accepted": true,
-   "shooting_direction": "backward",
-   "target_numerical_reserve_fraction": 0.001,
-   "seed_impulsive_delta_v_m_s": 5125.999360036909,
-   "propellant_kg": 651400.8282060022,
-   "energy_j": 450969804142616.94,
-   "loaded_propellant_kg": 651600.8290687557,
-   "final_reserve_kg": 200.00086275353544,
-   "integrated_delta_v_m_s": 43434.031061121845
   },
   "fff69f35c3defa22664bc66adcccd149cde0a46eb1ada1e6c33838a63ee9d429": {
    "origin": "275611",
@@ -3507,130 +3634,6 @@
    "loaded_propellant_kg": 2478194.6295341966,
    "final_reserve_kg": -223556.93548634794,
    "integrated_delta_v_m_s": 14691.497781760509
-  },
-  "89b3b3640f77fb801a19a28f2dff6558fd697768bcba3ef20fcb82998958a2de": {
-   "origin": "275611",
-   "target": "433",
-   "departure_jd": 2465395.078125,
-   "arrival_jd": 2466113.359375,
-   "flight_days": 718.28125,
-   "engine": {
-    "name": "residue mass driver (hypothetical)",
-    "power_1au_w": 20000000.0,
-    "exhaust_m_s": 3000.0,
-    "efficiency": 0.5,
-    "max_wet_ratio": 12.0
-   },
-   "delivered_kg": 1200000.0,
-   "segments": 16,
-   "step_days": 1.0,
-   "optimizer_success": false,
-   "optimizer_message": "Iteration limit reached",
-   "mass_objective_converged": false,
-   "feasibility_projection_success": true,
-   "iterations": 50,
-   "wet_ratio": 11.999999996073843,
-   "controls": [
-    [
-     -0.06582179079475066,
-     -0.07673268047245896,
-     0.022160481719839913
-    ],
-    [
-     -0.822644990551158,
-     -0.4116473471721604,
-     -0.04512676201363767
-    ],
-    [
-     -0.019093750417464684,
-     -0.030253553157233482,
-     0.001270075362355
-    ],
-    [
-     -0.009561815584485848,
-     0.008908258465962358,
-     0.018662255215963246
-    ],
-    [
-     -0.4550172424637692,
-     -0.2116884128110292,
-     0.61374053838716
-    ],
-    [
-     -0.00017465001572839533,
-     -0.013032759284685919,
-     -0.003974849243792175
-    ],
-    [
-     0.004717019254752223,
-     -0.009025713927486544,
-     0.007666526613374426
-    ],
-    [
-     0.932949894317108,
-     -0.09351112642534905,
-     0.13040388558888324
-    ],
-    [
-     -0.08425084867638395,
-     -0.008037799052525402,
-     0.09277564084183791
-    ],
-    [
-     -0.46922091716615355,
-     0.7675799779642807,
-     0.24896314243169226
-    ],
-    [
-     -0.011281707108108286,
-     0.002105046621596617,
-     -0.005479972675748308
-    ],
-    [
-     -0.2709341571887061,
-     -0.13697918082197613,
-     0.5113287833384155
-    ],
-    [
-     -0.00910026685984439,
-     -0.0006369674746088493,
-     0.006716247453035681
-    ],
-    [
-     0.035441013331967204,
-     -0.01489053930369001,
-     0.010068758342283173
-    ],
-    [
-     0.05047919314472886,
-     -0.03747890821686861,
-     -0.0417657011233466
-    ],
-    [
-     0.1597960346633539,
-     -0.1416439973216451,
-     -0.08815637825521325
-    ]
-   ],
-   "verification": {
-    "accepted": true,
-    "position_error_m": 0.008997256047998095,
-    "velocity_error_m_s": 1.007036397823518e-09,
-    "final_mass_ratio": 1.0010000000000552,
-    "minimum_mass_ratio": 1.0010000000000552,
-    "minimum_radius_au": 1.270943603643894,
-    "max_throttle": 0.9466493592921927
-   },
-   "accepted": true,
-   "shooting_direction": "backward",
-   "target_numerical_reserve_fraction": 0.001,
-   "seed_impulsive_delta_v_m_s": 4601.9542520736195,
-   "propellant_kg": 13198799.995288545,
-   "energy_j": 118789199957596.9,
-   "loaded_propellant_kg": 13199999.99528861,
-   "final_reserve_kg": 1200.0000000662149,
-   "integrated_delta_v_m_s": 7451.721447383046,
-   "adaptive_correction_iterations": 2
   }
  },
  "networks": {
@@ -3772,7 +3775,7 @@
       "loaded_propellant_kg": 291755.6345085307,
       "final_reserve_kg": 1200.0003403825233,
       "integrated_delta_v_m_s": 6498.979413469702,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
       "mass_objective_converged": false
      },
      "return": {
@@ -3898,7 +3901,7 @@
       "final_reserve_kg": 199.9999951106446,
       "integrated_delta_v_m_s": 16451.905590500104,
       "adaptive_correction_iterations": 3,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -4029,7 +4032,7 @@
       "loaded_propellant_kg": 326587.54745507677,
       "final_reserve_kg": 1200.0004128869257,
       "integrated_delta_v_m_s": 7191.414774995401,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
       "mass_objective_converged": false
      },
      "return": {
@@ -4155,7 +4158,7 @@
       "final_reserve_kg": 200.00179998240776,
       "integrated_delta_v_m_s": 14704.335692633547,
       "adaptive_correction_iterations": 3,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -4286,7 +4289,7 @@
       "loaded_propellant_kg": 355436.892766473,
       "final_reserve_kg": 1200.0002556910695,
       "integrated_delta_v_m_s": 7753.062264236162,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303",
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b",
       "mass_objective_converged": false
      },
      "return": {
@@ -4412,7 +4415,7 @@
       "final_reserve_kg": 199.99998830986243,
       "integrated_delta_v_m_s": 18029.753438781852,
       "adaptive_correction_iterations": 2,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     }
    ],
@@ -5066,7 +5069,7 @@
       "loaded_propellant_kg": 6923460.345300428,
       "final_reserve_kg": 1200.0047663858204,
       "integrated_delta_v_m_s": 5734.30545960327,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -5190,7 +5193,7 @@
       "loaded_propellant_kg": 2199999.9769700756,
       "final_reserve_kg": 200.00222519422906,
       "integrated_delta_v_m_s": 7451.721386232776,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -5322,7 +5325,7 @@
       "loaded_propellant_kg": 10755016.970457526,
       "final_reserve_kg": 1200.0124638879229,
       "integrated_delta_v_m_s": 6893.489858802207,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -5447,7 +5450,7 @@
       "final_reserve_kg": 199.99971779500748,
       "integrated_delta_v_m_s": 7451.719895492979,
       "adaptive_correction_iterations": 3,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     }
    ],
@@ -5742,7 +5745,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -5846,7 +5849,8 @@
       "energy_j": 412696177649290.25,
       "loaded_propellant_kg": 597316.701501275,
       "final_reserve_kg": 1200.0004523001983,
-      "integrated_delta_v_m_s": 12089.213213392299
+      "integrated_delta_v_m_s": 12089.213213392299,
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -5865,7 +5869,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -5969,7 +5973,8 @@
       "energy_j": 450969804142616.94,
       "loaded_propellant_kg": 651600.8290687557,
       "final_reserve_kg": 200.00086275353544,
-      "integrated_delta_v_m_s": 43434.031061121845
+      "integrated_delta_v_m_s": 43434.031061121845,
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -6101,7 +6106,7 @@
       "loaded_propellant_kg": 734404.7014516403,
       "final_reserve_kg": 1200.0005884782006,
       "integrated_delta_v_m_s": 14294.357211086617,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -6225,7 +6230,7 @@
       "loaded_propellant_kg": 621135.9681196366,
       "final_reserve_kg": 200.00077493644852,
       "integrated_delta_v_m_s": 42341.15513404224,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -6357,7 +6362,7 @@
       "loaded_propellant_kg": 568413.0226176211,
       "final_reserve_kg": 1200.0003194416743,
       "integrated_delta_v_m_s": 11602.844688531983,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -6481,7 +6486,7 @@
       "loaded_propellant_kg": 38439.645734435144,
       "final_reserve_kg": 200.0000233122634,
       "integrated_delta_v_m_s": 5243.980607672127,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     }
    ],
@@ -7150,7 +7155,7 @@
       "loaded_propellant_kg": 13199991.298506293,
       "final_reserve_kg": 1200.0053930019128,
       "integrated_delta_v_m_s": 7451.719622083979,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -7274,7 +7279,7 @@
       "loaded_propellant_kg": 772494.937795045,
       "final_reserve_kg": 200.00039450667197,
       "integrated_delta_v_m_s": 4741.644003825694,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -7301,7 +7306,7 @@
       "segments": 16,
       "step_days": 1.0,
       "optimizer_success": false,
-      "optimizer_message": "Iteration limit reached",
+      "optimizer_message": "Revalidated feasible controls from an earlier optimiser; objective not reoptimised",
       "mass_objective_converged": false,
       "feasibility_projection_success": true,
       "iterations": 50,
@@ -7406,7 +7411,8 @@
       "loaded_propellant_kg": 13199999.99528861,
       "final_reserve_kg": 1200.0000000662149,
       "integrated_delta_v_m_s": 7451.721447383046,
-      "adaptive_correction_iterations": 2
+      "adaptive_correction_iterations": 2,
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -7530,7 +7536,7 @@
       "loaded_propellant_kg": 772494.937795045,
       "final_reserve_kg": 200.00039450667197,
       "integrated_delta_v_m_s": 4741.644003825694,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     },
     {
@@ -7662,7 +7668,7 @@
       "loaded_propellant_kg": 13099681.73113341,
       "final_reserve_kg": 1200.005632127965,
       "integrated_delta_v_m_s": 7430.748655914883,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      },
      "return": {
       "origin": "433",
@@ -7786,7 +7792,7 @@
       "loaded_propellant_kg": 772494.937795045,
       "final_reserve_kg": 200.00039450667197,
       "integrated_delta_v_m_s": 4741.644003825694,
-      "revalidated_from_solver_hash": "f50f1641c7356b394cbed939add578f571525939283b3ecf1b5ec4ba1802f303"
+      "revalidated_from_solver_hash": "6de9b52e9b0459c922b5151187aad71b01599f8ce9ab780ffe19c45eb036ca4b"
      }
     }
    ],
