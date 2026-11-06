@@ -57,6 +57,29 @@ Source: [Perna et al. (2018), Table 1](https://www.astrofit2.inaf.it/wp-content/
 
 Sources: [JPL SBDB](https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=1620), [Rozitis & Green, A&A 568, A43 (2014)](https://arxiv.org/abs/1407.2127), [Ďurech et al., A&A 489, L25 (2008)](https://www.aanda.org/10.1051/0004-6361:200810672), [Ďurech et al., A&A 657, A5 (2022)](https://arxiv.org/abs/2110.06548), [Sanchez et al., Icarus 220, 36 (2012)](https://arxiv.org/abs/1205.0248), [Bottke et al., AJ 117, 1921 (1999)](https://arxiv.org/abs/astro-ph/9812235), [NSSDC Clementine](https://nssdc.gsfc.nasa.gov/planetary/clementine.html).
 
+### Large near-Earth asteroids outside the host filter
+
+The host screen keeps S/Q-complex bodies with perihelion > 0.7 AU, aphelion < 2.5 AU, e < 0.4 and i < 15° (`host_eligible` in `logistics_model/networks.py`). Between 5 and 25 km, only Eros passes. The well-known silicate bodies below are in the spectral snapshot but excluded by orbit. They are listed so that their absence from the network tables is not mistaken for an oversight. The filter is retained.
+
+| Body | Spectral record | D km | Fails on | Sunlight × Earth | Array × | Year yr | 900 m / 1.6 km tori, LL |
+|---|---|---:|---|---|---:|---:|---:|
+| 433 Eros (reference; passes) | S/S | 16.8 | — | 0.31–0.78 | 3.18 | 1.76 | 152k / 30k |
+| 1627 Ivar | S/S | 9.1 | aphelion 2.60 AU | 0.15–0.79 | 6.78 | 2.54 | 24k / 4.7k |
+| 4954 Eric | S | 10.8 | aphelion 2.90 AU, e 0.45, i 17.4° | 0.12–0.82 | 8.42 | 2.83 | 40k / 7.9k |
+| 1866 Sisyphus | S | 8.5 | e 0.54, i 41.2°, aphelion 2.91 AU | 0.12–1.31 | 8.48 | 2.60 | 19k / 3.8k |
+| 1917 Cuyo | Sl | 5.7 | e 0.51, i 24.0°, aphelion 3.24 AU | 0.10–0.89 | 10.5 | 3.15 | 5.9k / 1.2k |
+| 3122 Florence | S | 4.9 | e 0.42, i 22.1°, aphelion 2.52 AU | 0.16–0.96 | 6.34 | 2.35 | 3.8k / 0.7k |
+| 1980 Tezcatlipoca | Sl/SU | 4.3 | i 26.9° | 0.18–0.85 | 5.45 | 2.24 | 2.5k / 0.5k |
+| 1036 Ganymed (above 25 km) | S/S | 37.7 | e 0.53, i 26.7°, aphelion 4.09 AU | 0.06–0.65 | 16.7 | 4.35 | 1.7M / 335k |
+
+Orbits and diameters are from JPL SBDB (queried 6 November 2026). Capacities use the screen's 2 t/m³ sphere proxy for every row, Eros included. The Eros row is therefore lower than the network report's measured-GM value of ~204k. No transfer or supplier analysis was run for these bodies.
+
+- **Ivar is the nearest miss.** It fails only on aphelion, by 0.1 AU, and its inclination is lower than Eros's. At the same load, its aphelion-sized array would be about 2.1× the area of Eros's.
+- **Toutatis is not a 5 km body.** SBDB's 5.4 km comes from H and albedo, but radar gives about 4.75 × 2.4 × 1.95 km, an effective diameter of ~2.5 km. Its orbit (0.95–4.13 AU, e 0.62) fails the filter. Chang'e 2 flew past it in 2012.
+- **Large dark bodies are already in the supplier screen:** (3552) Don Quixote (19 km, D-type, with weak cometary activity), (3200) Phaethon, (53319) 1999 JM8, (4015) Wilson-Harrington and (152679) 1998 KU2. Don Quixote's coarse phase-free Δv from every host is 12–17 km/s, far above the 6 km/s service cutoff.
+
+Sources: [JPL SBDB query API](https://ssd-api.jpl.nasa.gov/doc/sbdb_query.html), [Toutatis radar model, Hudson et al. (2003)](https://doi.org/10.1016/S0019-1035(02)00042-8), [Chang'e 2 Toutatis flyby, Huang et al. (2013)](https://doi.org/10.1038/srep03411).
+
 ## 1999 XX262: hydration and size remain uncertain
 
 The Mahlke et al. (2022) classification table has one entry for (275611) 1999 XX262. Its spectral reference 57 maps to Popescu et al. (2019). The M4AST observation entry is `1999XX262_20140903_950_00`: 3 September 2014. Thus Ch is a reanalysis of existing observations, not an independent new observation confirming hydration.
